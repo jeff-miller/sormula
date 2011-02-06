@@ -163,6 +163,7 @@
 	<target name="dist" description="Creates sormula.zip for distribution" depends="lib, javadoc">
 	      <zip zipfile="sormula-${version}.zip" basedir="."
 	            excludes="sormula-${version}.zip
+	      	              .hg/**/*
 	      	              target/**/*
 	      	              test-output/**/*
 	      				  *.log*

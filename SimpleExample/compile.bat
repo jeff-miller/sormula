@@ -1,0 +1,1 @@
+javac -cp sormula-1.0.0.jar;slf4j-api-1.6.1.jar *.java

@@ -1,0 +1,186 @@
+<project name="sormula" basedir="." default="help">
+	
+	
+	
+    <!-- ******* examples ******* -->
+    <target name="InsertExample1" description="Runs example">
+        <antcall target="run-example"><param name="class" value="org.sormula.examples.example1.InsertExample1"/></antcall>
+    </target>
+    <target name="SelectExample1" description="Runs example">
+        <antcall target="run-example"><param name="class" value="org.sormula.examples.example1.SelectExample1"/></antcall>
+    </target>
+    <target name="UpdateExample1" description="Runs example">
+        <antcall target="run-example"><param name="class" value="org.sormula.examples.example1.UpdateExample1"/></antcall>
+    </target>
+    <target name="DeleteExample1" description="Runs example">
+        <antcall target="run-example"><param name="class" value="org.sormula.examples.example1.DeleteExample1"/></antcall>
+    </target>
+
+	<target name="InsertExample2" description="Runs example">
+        <antcall target="run-example"><param name="class" value="org.sormula.examples.example2.InsertExample2"/></antcall>
+    </target>
+    <target name="SelectExample2" description="Runs example">
+        <antcall target="run-example"><param name="class" value="org.sormula.examples.example2.SelectExample2"/></antcall>
+    </target>
+    <target name="UpdateExample2" description="Runs example">
+        <antcall target="run-example"><param name="class" value="org.sormula.examples.example2.UpdateExample2"/></antcall>
+    </target>
+    <target name="DeleteExample2" description="Runs example">
+        <antcall target="run-example"><param name="class" value="org.sormula.examples.example2.DeleteExample2"/></antcall>
+    </target>
+
+    <target name="InsertExample3" description="Runs example">
+        <antcall target="run-example"><param name="class" value="org.sormula.examples.example3.InsertExample3"/></antcall>
+    </target>
+    <target name="SelectExample3" description="Runs example">
+        <antcall target="run-example"><param name="class" value="org.sormula.examples.example3.SelectExample3"/></antcall>
+    </target>
+    <target name="UpdateExample3" description="Runs example">
+        <antcall target="run-example"><param name="class" value="org.sormula.examples.example3.UpdateExample3"/></antcall>
+    </target>
+    <target name="DeleteExample3" description="Runs example">
+        <antcall target="run-example"><param name="class" value="org.sormula.examples.example3.DeleteExample3"/></antcall>
+    </target>
+
+    <target name="InsertExample4" description="Runs example">
+        <antcall target="run-example"><param name="class" value="org.sormula.examples.example4.InsertExample4"/></antcall>
+    </target>
+    <target name="SelectExample4" description="Runs example">
+        <antcall target="run-example"><param name="class" value="org.sormula.examples.example4.SelectExample4"/></antcall>
+    </target>
+    <target name="UpdateExample4" description="Runs example">
+        <antcall target="run-example"><param name="class" value="org.sormula.examples.example4.UpdateExample4"/></antcall>
+    </target>
+    <target name="DeleteExample4" description="Runs example">
+        <antcall target="run-example"><param name="class" value="org.sormula.examples.example4.DeleteExample4"/></antcall>
+    </target>
+    
+    <target name="run-example" description="called by other task to run an example" depends="compile-main, compile-examples">
+        <echo>Run ${class}</echo>
+        <java classname="${class}">
+            <sysproperty key="dbdir" value="${db.dir}"/>
+            <classpath refid="examples.libpath"/>
+            <classpath>
+                <path path="${target}"/>
+                <path path="${examples.srcdir}/resources"/>
+            </classpath>
+            <classpath>
+                <fileset dir="jdbc/${db.dir}" includes="*.jar"/>
+            </classpath>
+        </java> 
+    </target>
+	
+	
+
+	<!-- ******* tests ******* -->
+	<target name="tests" description="Runs tests for groups in ${groups} for database ${db.dir} defined in build.properties" depends="compile-tests">
+		<!-- testng task seems to ignore parallel and threadcount so tests are run in multiple threads -->
+        <testng verbose="2" groups="${groups}" parallel="false" threadcount="1">
+        	<sysproperty key="dbdir" value="${db.dir}"/>
+        	<sysproperty key="seed" value="${seed}"/>
+        	<classpath refid="tests.libpath"/>
+        	<classpath>
+        		<path path="${target}"/>
+        		<path path="${tests.srcdir}/resources"/>
+    		</classpath>
+        	<classpath>
+        		<fileset dir="jdbc/${db.dir}" includes="*.jar"/>
+        	</classpath>
+            <classfileset dir="${target}/org/sormula/tests" includes="${class}"/>
+        </testng>
+	</target>
+	
+	
+	
+    <!-- ******* compiles ******* -->
+    <target name="compile-main" description="Compiles all main Java source into target directory" depends="init">
+        <antcall target="compile"><param name="type" value="main"/></antcall>
+    </target>
+    
+    <target name="compile-examples" description="Compiles all examples Java source into target directory" depends="init, compile-main">
+        <antcall target="compile"><param name="type" value="examples"/></antcall>
+    </target>
+    
+    <target name="compile-tests" description="Compiles all tests Java source into target directory" depends="init, compile-main">
+        <antcall target="compile"><param name="type" value="tests"/></antcall>
+    </target>
+    
+    <target name="compile" description="called by other tasks to compile">
+        <javac 
+            destdir="${target}" 
+            source="1.5" 
+            target="1.5"
+            optimize="${optimize}"
+            debug="${debug}"
+            listfiles="true"
+        >
+            <src refid="${type}.srcpath"/>
+            <classpath refid="${type}.libpath"/>
+            <!-- <compilerarg value="-Xlint"/> -->
+        </javac>
+    </target>
+	
+	
+	
+	<!-- ******* other ******* -->
+    <target name="init" description="Creates directories and paths">
+        <tstamp/>
+        <property file="build.properties"/>
+        <mkdir dir="${target}"/>
+        
+        <path id="main.srcpath">    <pathelement path="${main.srcdir}/java"    /></path>
+        <path id="examples.srcpath"><pathelement path="${examples.srcdir}/java"/></path>
+        <path id="tests.srcpath">   <pathelement path="${tests.srcdir}/java"   /></path>
+        
+        <path id="main.libpath">    <fileset dir="${main.srcdir}/resources"     includes="*.jar"/></path>
+        <path id="examples.libpath"><fileset dir="${examples.srcdir}/resources" includes="*.jar"/></path>
+        <path id="tests.libpath">   <fileset dir="${tests.srcdir}/resources"    includes="*.jar"/></path>
+        
+        <taskdef name="testng" classpathref="tests.libpath" classname="org.testng.TestNGAntTask"/>
+    </target>
+    
+    <target name="help">
+        <echo>List all tasks:</echo>
+        <echo>ant -p</echo>
+        <echo></echo>
+        <echo>Run tests defined in build.properties:</echo>
+        <echo>ant test</echo>
+    </target>
+    
+    <target name="clean" description="Deletes all generated files in target directory" depends="init">
+        <delete dir="${target}"/>
+    	<delete dir="javadoc"/>
+    	<delete dir="test-output"/>
+    </target>
+	
+	<target name="lib" description="Creates sormula.jar" depends="compile-main">
+	      <jar jarfile="sormula-${version}.jar" basedir="${target}"
+	            excludes="org/sormula/examples/**/* 
+	      	              org/sormula/tests/**/*"
+	        />
+	</target>
+	
+	<target name="dist" description="Creates sormula.zip for distribution" depends="lib, javadoc">
+	      <zip zipfile="sormula-${version}.zip" basedir="."
+	            excludes="sormula-${version}.zip
+	      	              target/**/*
+	      	              test-output/**/*
+	      				  *.log*
+	      	"/>
+	</target>
+	
+	<target name="javadoc" description="Generates javadoc to javadoc directory" depends="compile-main">
+	        <javadoc 
+	            sourcepathref="main.srcpath" 
+	            packagenames="*"
+	            windowtitle="${ant.project.name}" 
+	            doctitle="${ant.project.name}" 
+	            destdir="javadoc" 
+	        	protected="true" 
+	            use="true"
+	            source="1.5"
+	            >
+	        	<classpath refid="main.libpath"/>
+	        </javadoc>
+	    </target>
+</project>

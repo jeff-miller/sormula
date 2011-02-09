@@ -176,7 +176,7 @@ public class SelectTest extends OperationTest<SormulaTest4>
             @Override
             protected String getSql()
             {
-                return super.getBaseSql() + " where type in(2,4,999)";
+                return getBaseSql() + " where type in(2,4,999)";
             }
         };
         

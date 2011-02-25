@@ -34,6 +34,8 @@ public class SimpleExample
         simpleExample.removeInventory(1234, 1);
         simpleExample.clearInventory("xyz");
         simpleExample.clearInventory2("xyz");
+        simpleExample.selectByRange(1, 10);
+        simpleExample.selectByRange2(1, 10);
         simpleExample.close();
         log.info("end");
     }
@@ -58,8 +60,13 @@ public class SimpleExample
     }
     
     
-    // reduce inventory quantity for a part
-    public void removeInventory(int partNumber, int quantity) throws Exception
+    /**
+     * Reduces inventory quantity for a part.
+     * 
+     * @param partNumber id of part to affect 
+     * @param delta reduce inventory quantity by this amount
+     */
+    public void removeInventory(int partNumber, int delta) throws Exception
     {
     	log.info("removeInventory");
     	
@@ -71,7 +78,7 @@ public class SimpleExample
         Inventory inventory = inventoryTable.select(partNumber);
         
         // update
-        inventory.setQuantity(inventory.getQuantity() - quantity);
+        inventory.setQuantity(inventory.getQuantity() - delta);
         inventoryTable.update(inventory);
         
         // clean up
@@ -79,7 +86,11 @@ public class SimpleExample
     }    
     
     
-    // clear inventory for a manufacturer
+    /**
+     * Clears inventory for a manufacturer.
+     *  
+     * @param manufacturerId affect all rows with this manufacturer id
+     */
     public void clearInventory(String manufacturerId) throws Exception
     {
     	log.info("clearInventory");
@@ -111,7 +122,12 @@ public class SimpleExample
     }    
     
     
-    // clear inventory for a manufacturer (alternate using FullListSelect)
+    /**
+     * Clears inventory for a manufacturer. Uses {@link FullListSelect} operation 
+     * for less Java.
+     *  
+     * @param manufacturerId affect all rows with this manufacturer id
+     */
     public void clearInventory2(String manufacturerId) throws Exception
     {
     	log.info("clearInventory2");
@@ -138,5 +154,69 @@ public class SimpleExample
         
         // clean up
         database.close();
-    }    
+    }
+    
+    
+    /**
+     * Select all inventory with quantity in a range. Part and quantity are logged for
+     * each row selected.
+     * 
+     * @param minimumQuanity select rows with quantity of at least this amount
+     * @param maximumQuantity select rows with quantity no more than this amount
+     * @see QuantityRangeSelect
+     */
+    public void selectByRange(int minimumQuanity, int maximumQuantity) throws Exception
+    {
+    	log.info("selectByRange");
+    	
+        // set up
+        Database database = new Database(getConnection());
+        Table<Inventory> inventoryTable = database.getTable(Inventory.class);
+        
+        // select operation for range
+        QuantityRangeSelect operation = new QuantityRangeSelect(inventoryTable);
+        operation.setRange(minimumQuanity, maximumQuantity);
+        operation.execute();
+        
+        // show results
+        for (Inventory inventory: operation.readAll())
+        {
+        	log.info(inventory.getPartNumber() + " quantity=" + inventory.getQuantity());
+        }
+        
+        // clean up
+        database.close();
+    }
+    
+    
+    /**
+     * Select all inventory with quantity in a range. Part and quantity are logged for
+     * each row selected.
+     * 
+     * @param minimumQuanity select rows with quantity of at least this amount
+     * @param maximumQuantity select rows with quantity no more than this amount
+     * @see QuantityRangeSelect2
+     */
+    public void selectByRange2(int minimumQuanity, int maximumQuantity) throws Exception
+    {
+    	log.info("selectByRange2");
+    	
+        // set up
+        Database database = new Database(getConnection());
+        Table<Inventory> inventoryTable = database.getTable(Inventory.class);
+        
+        // select operation for range
+        QuantityRangeSelect2 operation = new QuantityRangeSelect2(inventoryTable);
+        operation.setRange(minimumQuanity, maximumQuantity);
+        operation.execute();
+        
+        // show results
+        for (Inventory inventory: operation.readAll())
+        {
+        	log.info(inventory.getPartNumber() + " quantity=" + inventory.getQuantity());
+        }
+        
+        // clean up
+        database.close();
+    }
 }

@@ -109,14 +109,11 @@ public class ScalarSelectOperation<R> extends SqlOperation<R>
         if (rowParameters != null)
         {
             // where values from row object
-            if (log.isDebugEnabled()) log.debug("prepare parameters from row");
             prepareWhere(rowParameters);
-            
         }
-        else if (getParameters() != null)
+        else 
         {
             // where values from objects
-            if (log.isDebugEnabled()) log.debug("prepare parameters from objects");
             prepareParameters();
         }
         

@@ -97,19 +97,23 @@ public abstract class SqlOperation<R>
         prepareCheck();
         int parameterIndex = 1;
         
-        try
+        if (getParameters() != null)
         {
-            for (Object p: parameters)
-            {
-                if (log.isDebugEnabled()) log.debug("setParameters parameterIndex=" + parameterIndex + " value='" + p + "'");
-                preparedStatement.setObject(parameterIndex++, p);
-            }
-            
-            setNextParameter(parameterIndex);
-        }
-        catch (Exception e)
-        {
-            throw new OperationException("setParameters(Object... parameters) error", e);
+	        if (log.isDebugEnabled()) log.debug("prepare parameters from objects");
+	        try
+	        {
+	            for (Object p: parameters)
+	            {
+	                if (log.isDebugEnabled()) log.debug("setParameters parameterIndex=" + parameterIndex + " value='" + p + "'");
+	                preparedStatement.setObject(parameterIndex++, p);
+	            }
+	            
+	            setNextParameter(parameterIndex);
+	        }
+	        catch (Exception e)
+	        {
+	            throw new OperationException("setParameters(Object... parameters) error", e);
+	        }
         }
     }
 
@@ -407,6 +411,8 @@ public abstract class SqlOperation<R>
 
     protected void prepareWhere(R row) throws OperationException
     {
+    	if (log.isDebugEnabled()) log.debug("prepare parameters from row");
+    	
         if (getWhereTranslator() != null)
         {
             try

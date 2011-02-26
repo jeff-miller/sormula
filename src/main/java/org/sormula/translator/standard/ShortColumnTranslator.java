@@ -31,18 +31,27 @@ import org.sormula.translator.AbstractColumnTranslator;
  */
 public class ShortColumnTranslator<R> extends AbstractColumnTranslator<R, Short>
 {
+	/**
+	 * See super class constructor for description.
+	 */
     public ShortColumnTranslator(Field field, String columnName) throws Exception
     {
         super(field, columnName);
     }
     
     
+    /**
+     * {@inheritDoc}
+     */
     public void write(PreparedStatement preparedStatement, int parameterIndex, R row) throws Exception
     {
         preparedStatement.setShort(parameterIndex, getSormulaField().invokeGetMethod(row));
     }
     
     
+    /**
+     * {@inheritDoc}
+     */
     public void read(ResultSet resultSet, int parameterIndex, R row) throws Exception
     {
         getSormulaField().invokeSetMethod(row, resultSet.getShort(parameterIndex));

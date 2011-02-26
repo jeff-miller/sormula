@@ -18,7 +18,7 @@ package org.sormula.operation;
 
 
 /**
- * Scalar select operation performed as prepare, execute, read, and close in one method.
+ * {@link ScalarSelectOperation} performed as prepare, execute, read, and close in one method.
  * 
  * @since 1.0
  * @author Jeff Miller
@@ -41,7 +41,9 @@ public class FullScalarSelect<R>
     
     
     /**
-     * @return scalar select operation provided in constructor
+     * Gets select operation supplied in constructor.
+     * 
+     * @return operation that will select row
      */
     public ScalarSelectOperation<R> getSelectOperation()
     {
@@ -50,7 +52,7 @@ public class FullScalarSelect<R>
 
 
     /**
-     * Set parameters, executes, reads rows, closes.
+     * Set parameters, executes, reads one row, closes.
      * 
      * @param parameters query parameters as objects (see {@linkplain SelectOperation#setParameters(Object...)})
      * @return {@linkplain SelectOperation#readNext()}
@@ -67,7 +69,7 @@ public class FullScalarSelect<R>
     
     
     /**
-     * Set parameters, executes, reads rows, closes.
+     * Set parameters, executes, reads one row, closes.
      * 
      * @param whereParameters query parameters are read from an existing row object 
      * (see {@linkplain SelectOperation#setRowParameters(Object)})

@@ -30,7 +30,7 @@ import org.sormula.reflect.SormulaField;
  * @author Jeff Miller
  *
  * @param <S> row class of table that is source of cascade
- * @param <T> row class of table that is target of cascade (typically not known at compile time)
+ * @param <T> row class of table that is target of cascade
  */
 public class UpdateCascadeOperation<S, T> extends ModifyCascadeOperation<S, T>
 {
@@ -47,6 +47,9 @@ public class UpdateCascadeOperation<S, T> extends ModifyCascadeOperation<S, T>
     }
 
     
+    /**
+     * {@inheritDoc}
+     */
     @Override
     protected SqlOperation<?> createOperation() throws OperationException
     {

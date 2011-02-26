@@ -29,7 +29,8 @@ import org.sormula.reflect.SormulaField;
 
 
 /**
- * SQL update operation for row of type R.
+ * SQL update operation for row of type R. By default all rows will be affected unless
+ * {@link #setWhere(String)} is used.
  *
  * @param <R> class type which contains members for columns of a row in a table
  * 
@@ -39,8 +40,8 @@ import org.sormula.reflect.SormulaField;
 public class UpdateOperation<R> extends ModifyOperation<R>
 {
     /**
-     * Constructs for standard sql update statement as:
-     * UPDATE <table> SET c1=?, c2=?, c3...)
+     * Constructs for standard sql update statement as:<br>
+     * UPDATE table SET c1=?, c2=?, c3...
      * 
      * @param table update this table
      * @throws OperationException if error
@@ -52,6 +53,9 @@ public class UpdateOperation<R> extends ModifyOperation<R>
     }
 
 
+    /**
+     * Sets base sql with {@link #setBaseSql(String)}.
+     */
     protected void initBaseSql()
     {
         String tableName = getTable().getQualifiedTableName();

@@ -34,6 +34,13 @@ public class ObjectColumnTranslator<R> extends AbstractColumnTranslator<R, Objec
     String columnName;
 
     
+    /**
+     * Constructs for a field and sql column name.
+     * 
+     * @param field row field
+     * @param columnName table column name
+     * @throws Exception if error
+     */
     public ObjectColumnTranslator(Field field, String columnName) throws Exception
     {
         super(field, columnName);

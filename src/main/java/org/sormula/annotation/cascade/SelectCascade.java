@@ -30,8 +30,7 @@ import org.sormula.operation.ScalarSelectOperation;
 
 
 /**
- * Used within a {@linkplain Cascade} annotation to define a select operation on target
- * field in response to select operation that occurs on source row.  
+ * Used within a {@linkplain Cascade} annotation to define a cascade select operation.
  * 
  * @since 1.0
  * @author Jeff Miller
@@ -82,6 +81,8 @@ public @interface SelectCascade
 
     
     /**
+     * Specifies when the cascade is to occur.
+     * 
      * @return true to perform cascade after source row operation; false 
      * to perform cascade before source row operation
      */

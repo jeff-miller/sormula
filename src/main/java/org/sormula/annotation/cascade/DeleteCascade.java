@@ -25,8 +25,7 @@ import org.sormula.operation.DeleteOperation;
 
 
 /**
- * Used within a {@linkplain Cascade} annotation to define an delete operation on target
- * field in response to delete operation that occurs on source row.  
+ * Used within a {@linkplain Cascade} annotation to define a cascade delete operation.
  * 
  * @since 1.0
  * @author Jeff Miller
@@ -46,7 +45,7 @@ public @interface DeleteCascade
     
     
     /**
-     * Specifies when the delete cascade is to occur. Note that default is false which
+     * Specifies when the cascade is to occur. Note that default is false which
      * is the inverse of other cascade annotations since child row deletes
      * typically occur prior to parent row to maintain foreign key constraints.
      * 

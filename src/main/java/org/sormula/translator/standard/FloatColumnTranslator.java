@@ -31,18 +31,27 @@ import org.sormula.translator.AbstractColumnTranslator;
  */
 public class FloatColumnTranslator<R> extends AbstractColumnTranslator<R, Float>
 {
+	/**
+	 * See super class constructor for description.
+	 */
     public FloatColumnTranslator(Field field, String columnName) throws Exception
     {
         super(field, columnName);
     }
     
     
+    /**
+     * {@inheritDoc}
+     */
     public void write(PreparedStatement preparedStatement, int parameterIndex, R row) throws Exception
     {
         preparedStatement.setFloat(parameterIndex, getSormulaField().invokeGetMethod(row));
     }
     
     
+    /**
+     * {@inheritDoc}
+     */
     public void read(ResultSet resultSet, int parameterIndex, R row) throws Exception
     {
         getSormulaField().invokeSetMethod(row, resultSet.getFloat(parameterIndex));

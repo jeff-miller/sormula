@@ -24,12 +24,14 @@ import java.lang.reflect.Field;
 
 import org.sormula.Table;
 import org.sormula.translator.ColumnTranslator;
+import org.sormula.translator.NameTranslator;
 import org.sormula.translator.standard.StandardColumnTranslator;
 
 
 /**
- * Defines a column attributes for a row class variable. If no {@link Column} annotaion is
- * used for a row class variable then that is equivalent to "@Column" (all defaults are used). 
+ * Defines column attributes for a row class variable. If no {@link Column} annotaion is
+ * used for a row class variable, that is equivalent to "@Column" (all defaults are used). 
+ * Annotates a class variable.
  * 
  * @since 1.0
  * @author Jeff Miller
@@ -39,21 +41,32 @@ import org.sormula.translator.standard.StandardColumnTranslator;
 public @interface Column
 {
     /**
-     * @return name of column; if not specified then name is {@link Field#getName()}
+     * SQL name of column. If not specified then name is {@link Field#getName()} or
+     * is obtained from {@link NameTranslator#translate(String, Class)} if translator
+     * is configured for table.
+     * 
+     * @return name of column 
      */
     String name() default "";
     
     
     /**
-     * @return true if column is primary key; this must be true for columns needed 
-     * with {@link Table#select(Object...)} or if update or delete operations are 
-     * to be performed
+     * Indicates that column is the primary key for row. A composite primary key may
+     * be defined if key is composed of more than one column by annotation each key field 
+     * and setting this true.
+     * <p>
+     * This must be set to true for all columns needed with {@link Table#select(Object...)} 
+     * or if update or delete operations are to be performed.
+     *  
+     * @return true if column is primary key
      */
     boolean primaryKey() default false;
     
     
     /**
-     * @return translator to use for reading and writing values to/from the database
+     * Defines class that will read/write row members from/to database.
+     * 
+     * @return translator to use for reading and writing values from/to the database
      */
     Class<? extends ColumnTranslator> translator() default StandardColumnTranslator.class;
 }

@@ -29,7 +29,7 @@ import org.sormula.log.ClassLogger;
 
 
 /**
- * Base class for any operations that modify database.
+ * Base class for operations that modify database.
  * 
  * @since 1.0
  * @author Jeff Miller
@@ -43,6 +43,12 @@ public abstract class ModifyOperation<R> extends SqlOperation<R>
     int rowsAffected;
     
     
+    /**
+     * Constructs for a table.
+     * 
+     * @param table modify this table
+     * @throws OperationException if error
+     */
     public ModifyOperation(Table<R> table) throws OperationException
     {
         super(table);
@@ -63,7 +69,7 @@ public abstract class ModifyOperation<R> extends SqlOperation<R>
     
     
     /**
-     * Sets parameters from rows in a collection. For operations that use collection of rows.
+     * Sets parameters from rows in a collection. For operations that use {@link Collection} of rows.
      *     
      * @param rows row objects to modify
      */
@@ -77,7 +83,7 @@ public abstract class ModifyOperation<R> extends SqlOperation<R>
     
     
     /**
-     * Sets parameters from rows in a map. For operations that use map of rows.
+     * Sets parameters from rows in a map. For operations that use {@link Map} of rows.
      *     
      * @param rows row objects to modify
      */
@@ -110,9 +116,8 @@ public abstract class ModifyOperation<R> extends SqlOperation<R>
 
 
     /**
-     * Executes operation for all record parameters using current prepared statement.
-     * {@link #getRowsAffected()} will return the sum of all rows affected for
-     * each record processed.
+     * Executes operation for all row parameters using current prepared statement.
+     * {@link #getRowsAffected()} will return the sum of all rows affected.
      * 
      * @throws OperationException if error
      */
@@ -172,7 +177,9 @@ public abstract class ModifyOperation<R> extends SqlOperation<R>
 
 
     /**
-     * @return number of rows affected from most recent invocation of {@link #execute()}
+     * Gets the number of rows affected from most recent invocation of {@link #execute()}.
+     * 
+     * @return count of rows affect by most recent {@link #execute()}
      */
     public int getRowsAffected()
     {

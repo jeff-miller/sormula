@@ -20,7 +20,7 @@ import java.util.List;
 
 
 /**
- * FullSelect with List as result type.
+ * {@link FullSelect} with {@link List} as result type.
  * 
  * @since 1.0
  * @author Jeff Miller
@@ -28,6 +28,11 @@ import java.util.List;
  */
 public class FullListSelect<R> extends FullSelect<R, List<R>> 
 {
+	/**
+	 * Constructs for a {@link ListSelectOperation}.
+	 * 
+	 * @param selectOperation select operation that returns {@link List}
+	 */
     public FullListSelect(ListSelectOperation<R> selectOperation)
     {
         super(selectOperation);

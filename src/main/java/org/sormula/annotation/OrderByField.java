@@ -33,12 +33,16 @@ import java.lang.annotation.Target;
 public @interface OrderByField
 {
     /**
+     * Name of row field that is involved in order by phrase.
+     * 
      * @return field name to use
      */
     String name();
     
     
     /**
+     * Descending order.
+     * 
      * @return true for descending, false for ascending
      */
     boolean descending() default false;

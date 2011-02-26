@@ -23,7 +23,7 @@ import org.sormula.Table;
 
 
 /**
- * SelectOperation that uses Map for {@link #readAll()} results.
+ * {@link SelectOperation} that uses {@link Map} for {@link #readAll()} results. 
  * 
  * @since 1.0
  * @author Jeff Miller
@@ -35,6 +35,12 @@ public abstract class MapSelectOperation<K, R> extends SelectOperation<R, Map<K,
 	Method getKeyMethod;
 	
 	
+	/**
+	 * Constructs for a table.
+	 * 
+	 * @param table select from this table
+	 * @throws OperationException if error
+	 */
     public MapSelectOperation(Table<R> table) throws OperationException
     {
         super(table);

@@ -31,18 +31,27 @@ import org.sormula.translator.AbstractColumnTranslator;
  */
 public class BooleanColumnTranslator<R> extends AbstractColumnTranslator<R, Boolean>
 {
+	/**
+	 * See super class constructor for description.
+	 */
     public BooleanColumnTranslator(Field field, String columnName) throws Exception
     {
         super(field, columnName);
     }
     
     
+    /**
+     * {@inheritDoc}
+     */
     public void write(PreparedStatement preparedStatement, int parameterIndex, R row) throws Exception
     {
         preparedStatement.setBoolean(parameterIndex, getSormulaField().invokeGetMethod(row));
     }
     
     
+    /**
+     * {@inheritDoc}
+     */
     public void read(ResultSet resultSet, int parameterIndex, R row) throws Exception
     {
         getSormulaField().invokeSetMethod(row, resultSet.getBoolean(parameterIndex));

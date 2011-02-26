@@ -18,7 +18,7 @@ package org.sormula.operation;
 
 
 /**
- * Update operation performed as prepare, execute, and close in one method.
+ * {@link UpdateOperation} performed as prepare, execute, and close in one method.
  * 
  * @since 1.0
  * @author Jeff Miller
@@ -38,7 +38,9 @@ public class FullUpdate<R> extends FullModify<R>
     
     
     /**
-     * @return update operation supplied in constructor
+     * Gets the update operation supplied in constructor.
+     * 
+     * @return operation that will update rows 
      */
     public UpdateOperation<R> getUpdateOperation()
     {

@@ -37,9 +37,9 @@ public @interface Cascade
 {
     /**
      * Class type of target field to affect. Used as parameter to {@linkplain Database#getTable(Class)} to
-     * get table for cascade operation. If Object.class is used and target field is scalar, then target class 
-     * is obtained from target field at runtime. For parameterized target field types, like {@link Collection}
-     * types, targetClass() must be specified.
+     * get table for cascade operation. {@link #targetClass()} is optional for scalar fields since
+     * target class can be obtained from target field at runtime. For nonscalar target field types, 
+     * like {@link Collection} types, {@link #targetClass()} must be specified.
      * 
      * @return class of field that is involved in cascade; Object.class to indicate that class is
      * to be obtained from scalar field at runtime by relfection

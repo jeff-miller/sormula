@@ -32,12 +32,18 @@ import org.sormula.translator.AbstractColumnTranslator;
  */
 public class DateColumnTranslator<R> extends AbstractColumnTranslator<R, java.util.Date>
 {
+	/**
+	 * See super class constructor for description.
+	 */
     public DateColumnTranslator(Field field, String columnName) throws Exception
     {
         super(field, columnName);
     }
     
     
+    /**
+     * {@inheritDoc}
+     */
     public void write(PreparedStatement preparedStatement, int parameterIndex, R row) throws Exception
     {
         java.util.Date utilDate = getSormulaField().invokeGetMethod(row);
@@ -47,6 +53,9 @@ public class DateColumnTranslator<R> extends AbstractColumnTranslator<R, java.ut
     }
     
     
+    /**
+     * {@inheritDoc}
+     */
     public void read(ResultSet resultSet, int parameterIndex, R row) throws Exception
     {
         java.sql.Timestamp sqlTimestamp = resultSet.getTimestamp(parameterIndex);

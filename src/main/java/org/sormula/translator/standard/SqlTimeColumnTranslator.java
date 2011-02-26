@@ -32,18 +32,27 @@ import org.sormula.translator.AbstractColumnTranslator;
  */
 public class SqlTimeColumnTranslator<R> extends AbstractColumnTranslator<R, java.sql.Time>
 {
+	/**
+	 * See super class constructor for description.
+	 */
     public SqlTimeColumnTranslator(Field field, String columnName) throws Exception
     {
         super(field, columnName);
     }
     
     
+    /**
+     * {@inheritDoc}
+     */
     public void write(PreparedStatement preparedStatement, int parameterIndex, R row) throws Exception
     {
         preparedStatement.setTime(parameterIndex, getSormulaField().invokeGetMethod(row));
     }
     
     
+    /**
+     * {@inheritDoc}
+     */
     public void read(ResultSet resultSet, int parameterIndex, R row) throws Exception
     {
         getSormulaField().invokeSetMethod(row, resultSet.getTime(parameterIndex));

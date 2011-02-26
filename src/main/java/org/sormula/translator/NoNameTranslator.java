@@ -16,9 +16,12 @@
  */
 package org.sormula.translator;
 
+import org.sormula.annotation.Row;
+
 
 /**
- * No translation for names.
+ * Default name translator that simply returns java name for all name translations. Used
+ * as default for {@link Row#nameTranslator()} annotation.
  *
  * @since 1.0
  * @author Jeff Miller

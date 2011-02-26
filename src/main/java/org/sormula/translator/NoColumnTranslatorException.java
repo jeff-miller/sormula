@@ -18,7 +18,8 @@ package org.sormula.translator;
 
 
 /**
- * Failed column translator lookup exception.
+ * Failed column translator lookup exception. Thrown by translators when a column translator
+ * is expected for a row member (field) but none are defined.
  * 
  * @since 1.0
  * @author Jeff Miller

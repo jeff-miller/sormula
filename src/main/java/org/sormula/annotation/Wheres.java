@@ -23,7 +23,7 @@ import java.lang.annotation.Target;
 
 
 /**
- * Annotates a row class. Define two or more where conditions for a row class.
+ * Defines two or more {@link Where} annotations for a row class. Annotates a row class.
  *
  * @since 1.0
  * @author Jeff Miller
@@ -33,6 +33,8 @@ import java.lang.annotation.Target;
 public @interface Wheres
 {
     /**
+     * Where conditions.
+     * 
      * @return array of {@link Where} annotations for a row class
      */
     Where[] whereConditions();

@@ -32,18 +32,27 @@ import org.sormula.translator.AbstractColumnTranslator;
  */
 public class BigDecimalColumnTranslator<R> extends AbstractColumnTranslator<R, BigDecimal>
 {
+	/**
+	 * See super class constructor for description.
+	 */
     public BigDecimalColumnTranslator(Field field, String columnName) throws Exception
     {
         super(field, columnName);
     }
     
     
+    /**
+     * {@inheritDoc}
+     */
     public void write(PreparedStatement preparedStatement, int parameterIndex, R row) throws Exception
     {
         preparedStatement.setBigDecimal(parameterIndex, getSormulaField().invokeGetMethod(row));
     }
     
     
+    /**
+     * {@inheritDoc}
+     */
     public void read(ResultSet resultSet, int parameterIndex, R row) throws Exception
     {
         getSormulaField().invokeSetMethod(row, resultSet.getBigDecimal(parameterIndex));

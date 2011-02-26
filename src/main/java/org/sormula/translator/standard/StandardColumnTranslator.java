@@ -77,6 +77,9 @@ public class StandardColumnTranslator<R> implements ColumnTranslator<R>
     }
     
 
+	/**
+	 * See super class constructor for description.
+	 */
     @SuppressWarnings("unchecked") // annotations cannot be parameterized
     public StandardColumnTranslator(Field field, String columnName) throws Exception
     {

@@ -79,6 +79,8 @@ public class StandardNameTranslator implements NameTranslator
     
 
     /**
+     * Reports case of {@link #translate(String, Class)}.
+     * 
      * @return true if sql result is all uppercase; default is false
      */
     public boolean isUpperCase()
@@ -88,7 +90,7 @@ public class StandardNameTranslator implements NameTranslator
     
     
     /**
-     * Sets desired case of name.
+     * Sets desired case of {@link #translate(String, Class)}.
      * 
      * @param upperCase true for sql names in uppercase; false for all lowercase sql names
      */
@@ -99,12 +101,15 @@ public class StandardNameTranslator implements NameTranslator
     
     
     /**
+     * Gets the delimiter to use between words in sql names.
+     * 
      * @return string to insert between each word; default is "_"
      */
     public String getWordDelimiter()
     {
         return wordDelimiter;
     }
+    
     
     /**
      * Sets delimiter between words in sql names.

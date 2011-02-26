@@ -32,18 +32,27 @@ import org.sormula.translator.AbstractColumnTranslator;
  */
 public class BooleanYNColumnTranslator<R> extends AbstractColumnTranslator<R, Boolean>
 {
+	/**
+	 * See super class constructor for description.
+	 */
     public BooleanYNColumnTranslator(Field field, String columnName) throws Exception
     {
         super(field, columnName);
     }
     
     
+    /**
+     * {@inheritDoc}
+     */
     public void write(PreparedStatement preparedStatement, int parameterIndex, R row) throws Exception
     {
         preparedStatement.setString(parameterIndex, getSormulaField().invokeGetMethod(row) ? "Y" : "N");
     }
     
     
+    /**
+     * {@inheritDoc}
+     */
     public void read(ResultSet resultSet, int parameterIndex, R row) throws Exception
     {
         String b = resultSet.getString(parameterIndex);

@@ -32,6 +32,7 @@ import org.sormula.operation.cascade.CascadeOperation;
 import org.sormula.reflect.ReflectException;
 import org.sormula.reflect.SormulaField;
 import org.sormula.translator.AbstractWhereTranslator;
+import org.sormula.translator.RowTranslator;
 import org.sormula.translator.TranslatorException;
 import org.sormula.translator.WhereTranslator;
 
@@ -84,7 +85,9 @@ public abstract class SqlOperation<R>
     
     
     /**
-     * @return parameters for this operation as set by {@link #setParameters(Object...)}
+     * Gets parameters that were set by {@link #setParameters(Object...)}.
+     * 
+     * @return parameters for this operation 
      */
     public Object[] getParameters()
     {
@@ -92,6 +95,11 @@ public abstract class SqlOperation<R>
     }
 
 
+    /**
+     * Prepares statement and then sets all parameters with {@link PreparedStatement#setObject(int, Object)}.
+     * 
+     * @throws OperationException if error
+     */
     protected void prepareParameters() throws OperationException
     {
         prepareCheck();
@@ -119,9 +127,9 @@ public abstract class SqlOperation<R>
 
     
     /**
-     * Invokes some execute method on a prepared statement. The method invoked must be implemented
+     * Invokes an execute method on a prepared statement. The method invoked must be implemented
      * by subclass based upon type of operation. {@link #prepareCheck()} should be invoked
-     * prior to executing sql or some other means of set up for prepared statement.
+     * prior to executing sql or use some other means of set up for prepared statement.
      * 
      * @throws OperationException if error
      */
@@ -130,7 +138,8 @@ public abstract class SqlOperation<R>
     
     /**
      * Cleans up after operation is no longer needed. The connection is not closed but all other
-     * objects created by this operations are closed.
+     * objects created by this operations are closed. Prepared statement is closed and
+     * close method is invoked on all {@link CascadeOperation} objects.
      * 
      * @throws OperationException if error
      */
@@ -164,8 +173,8 @@ public abstract class SqlOperation<R>
 
     
     /**
-     * Invoke prior to using prepared statement to insure that prepared
-     * statement has been set up through {@link Connection#prepareStatement(String)}.
+     * Prepares statement with {@link #prepare()} if it is null. Invoke prior to using prepared statement to 
+     * insure that prepared statement has been set up through {@link Connection#prepareStatement(String)}.
      * Usually invoked prior to invoking a method on {@link PreparedStatement}. 
      * 
      * @throws OperationException if error
@@ -181,7 +190,8 @@ public abstract class SqlOperation<R>
     
     
     /**
-     * Sets up prepared statement.
+     * Creates prepared statement for this operation and invokes {@link #prepareCascades()}
+     * to prepare statements for any cascade operations.
      * 
      * @throws OperationException if error
      */
@@ -304,7 +314,7 @@ public abstract class SqlOperation<R>
      * Creates a {@linkplain SormulaField} from {@linkplain Field}.
      * 
      * @param field creates for this field
-     * @return sorm field based upon input parameter
+     * @return sormula field based upon field parameter
      * @throws OperationException if error
      */
     protected SormulaField<R, ?> createTargetField(Field field) throws OperationException
@@ -344,7 +354,9 @@ public abstract class SqlOperation<R>
     
     
     /**
-     * @return table provided in constructor
+     * Gets the table provided in the constructor.
+     * 
+     * @return table to use in this operation
      */
     public Table<R> getTable()
     {
@@ -352,6 +364,11 @@ public abstract class SqlOperation<R>
     }
 
 
+    /**
+     * Gets the jdbc connection used in this operation.
+     *  
+     * @return {@link Connection}
+     */
     protected Connection getConnection()
     {
         return connection;
@@ -359,10 +376,11 @@ public abstract class SqlOperation<R>
 
 
     /**
-     * Sets where condition.
+     * Sets where condition from annoation name as defined in {@linkplain Where#name()} for row.
      * 
-     * @param whereConditionName name of where condition to use as defined in {@linkplain Where#name()};
-     * use "primaryKey" name for key defined by {@linkplain Column#primaryKey()}; empty string for no where condition
+     * @param whereConditionName name of where condition to use; 
+     * "primaryKey" for key defined by {@linkplain Column#primaryKey()}; 
+     * empty string for no where condition
      */
     public void setWhere(String whereConditionName) throws OperationException
     {
@@ -383,12 +401,13 @@ public abstract class SqlOperation<R>
                 throw new OperationException("can't create WhereTranslator for " + whereConditionName, e);
             }
         }
-        
     }
     
     
     /** 
-     * @return where condition name set by {@link #setWhere(String)}
+     * Gets where condition name supplied in {@link #setWhere(String)}
+     * 
+     * @return where condition name
      */
     public String getWhereConditionName()
     {
@@ -396,6 +415,12 @@ public abstract class SqlOperation<R>
     }
     
 
+    /**
+     * Sets all column parameters from a row using the table's {@link RowTranslator}.
+     * 
+     * @param row get column values from this row
+     * @throws OperationException if error
+     */
     protected void prepareColumns(R row) throws OperationException
     {
         try
@@ -409,6 +434,12 @@ public abstract class SqlOperation<R>
     }
 
 
+    /**
+     * Sets all where parameters from a row using the table's {@link WhereTranslator}.
+     * 
+     * @param row get where parameters from this row
+     * @throws OperationException if error
+     */
     protected void prepareWhere(R row) throws OperationException
     {
     	if (log.isDebugEnabled()) log.debug("prepare parameters from row");
@@ -427,6 +458,12 @@ public abstract class SqlOperation<R>
     }
     
     
+    /**
+     * Gets the sql used by this operation. Typically includes command like select, update, insert, delete,
+     * and columns. Does not include where, order by, or other additional sql.
+     * 
+     * @return base sql used by this operation
+     */
     protected String getBaseSql()
     {
         return baseSql;
@@ -437,12 +474,22 @@ public abstract class SqlOperation<R>
     }
 
 
+    /**
+     * Gets the prepared statement used by this operation.
+     * 
+     * @return prepared statement or null if statement has not been prepapred
+     */
     protected PreparedStatement getPreparedStatement()
     {
         return preparedStatement;
     }
 
     
+    /**
+     * Gets the translator to map row object values into where condition.
+     * 
+     * @return where translator or null if none
+     */
     protected AbstractWhereTranslator<R> getWhereTranslator()
     {
         return whereTranslator;
@@ -453,6 +500,12 @@ public abstract class SqlOperation<R>
     }
 
 
+    /**
+     * Gets the next jdbc parameter number used by {@link PreparedStatement} to set parameters.
+     * Parameter number changes as column and where conditions are prepared.
+     *  
+     * @return the next {@link PreparedStatement} parameter to use 
+     */
     protected int getNextParameter()
     {
         return nextParameter;

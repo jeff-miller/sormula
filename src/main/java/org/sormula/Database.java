@@ -79,21 +79,10 @@ public class Database
 
 
 	/**
-     * TODO do not Closes connection and frees up all resources created by this class.
+     * Dereferences all objects used. Does not close connection.
      */
     public void close()
     {
-        /*
-        try
-        {
-            connection.close();
-        }
-        catch (SQLException e)
-        {
-            log.error("error closing connection", e);
-        }
-        */
-        
         connection = null;
         schema = null;
         tableMap = null;
@@ -101,7 +90,7 @@ public class Database
     
 
     /**
-     * Gets connection to use for sql operation. Used by {@linkplain SqlOperation} subclasses
+     * Gets connection to use for sql operations. Used by {@linkplain SqlOperation} subclasses
      * to obtain the connection to use for the operation methods.
      * 
      * @return jdbc connection
@@ -113,7 +102,9 @@ public class Database
 
 
     /**
-     * @return schema name supplied in constructor; empty string for no schema
+     * Gets the schema name supplied in constructor.
+     * 
+     * @return schema name or empty string for no schema
      */
     public String getSchema()
     {
@@ -144,14 +135,14 @@ public class Database
             addTable(table);
         }
 
-        @SuppressWarnings("unchecked") // tableMap contains different types but always same type for rowClass
+        @SuppressWarnings("unchecked") // tableMap contains different types but always same type for rowClass name
         Table<R> t = (Table<R>)table;
         return t;
     }
     
     
     /**
-     * Override default table object. Adds a table object to cache to used for row objects of type
+     * Adds a table object to cache to be used for row objects of type
      * {@linkplain Table#getClass()}. Use this method to save table in cache. This method is optional
      * for tables created outside of this class. 
      * 
@@ -161,4 +152,13 @@ public class Database
     {
         tableMap.put(table.getRowTranslator().getRowClass().getCanonicalName(), table);
     }
+    
+    /* TODO allow 1 default translator for all tables if desired
+     * table constructor calls getNameTranslator()
+    public void set/getNameTranslator(NameTranslator nameTranslator)
+    {
+    	
+    }
+    */
+
 }

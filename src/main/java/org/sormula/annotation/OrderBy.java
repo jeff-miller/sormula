@@ -23,8 +23,8 @@ import java.lang.annotation.Target;
 
 
 /**
- * Annotates a row class or used within {@linkplain OrderBys} annotation. Defines columns 
- * to be used in a order phrase. Use only one of these methods: {@link #ascending()},
+ * Defines columns to be used in a order phrase. Annotates a row class or used 
+ * within {@linkplain OrderBys} annotation. Use only one of these methods: {@link #ascending()},
  * {@link #descending()}, or {@link #orderByFields()}.
  * 
  * @since 1.0
@@ -35,36 +35,36 @@ import java.lang.annotation.Target;
 public @interface OrderBy
 {
     /**
-     * @return name of order phrase (must be unique within row class)  
+     * Name of the order by phrase. Must be unique amoung all order by names for a row class.
+     *  
+     * @return name of order phrase  
      */
     String name();
     
     
     /**
-     * Define fields where all are ascending order. This
-     * is typical situation and allows for simpler annotation syntax. Use this
-     * instead of {@link #orderByFields()}.
+     * Define fields where all are ascending order. This is typical situation and allows 
+     * for simpler annotation syntax. Use this instead of {@link #orderByFields()}.
      * 
-     * @return array of field names
+     * @return array of field names for ascending order
      */
     String[] ascending() default {};
     
     
     /**
-     * Define fields where all are descending order. This
-     * is typical situation and allows for simpler annotation syntax. Use this
-     * instead of {@link #orderByFields()}.
+     * Define fields where all are descending order. This is typical situation and allows 
+     * for simpler annotation syntax. Use this instead of {@link #orderByFields()}.
      * 
-     * @return array of field names
+     * @return array of field names for descending order
      */
     String[] descending() default {};
     
     
     /**
-     * Define fields that are mix of ascending and descending
-     * equal operator. Use this instead of {@link #ascending()} or {@link #descending()}.
+     * Define fields that are mix of ascending and descending order. Use this instead of 
+     * {@link #ascending()} or {@link #descending()}.
      * 
-     * @return array of column conditions in phrase
+     * @return array of column conditions in order phrase
      */
     OrderByField[] orderByFields() default {};
 }

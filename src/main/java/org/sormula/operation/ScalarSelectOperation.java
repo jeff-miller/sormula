@@ -19,6 +19,7 @@ package org.sormula.operation;
 import java.lang.reflect.Field;
 import java.sql.ResultSet;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import org.sormula.Table;
@@ -36,8 +37,8 @@ import org.sormula.translator.TranslatorException;
 
 
 /**
- * Select operation that reads only 1 value at a time and does not have any methods
- * that use collections.
+ * Select operation that reads one value at a time. It does not have any methods
+ * that use {@link Collection} objects.
  * 
  * @since 1.0
  * @author Jeff Miller
@@ -54,8 +55,8 @@ public class ScalarSelectOperation<R> extends SqlOperation<R>
     
     
     /**
-     * Constructs for standard sql select statement as:
-     * SELECT c1, c2, c3, ... FROM <table>
+     * Constructs for standard sql select statement as:<br>
+     * SELECT c1, c2, c3, ... FROM table
      * 
      * @param table select from this table
      * @throws OperationException if error
@@ -96,7 +97,7 @@ public class ScalarSelectOperation<R> extends SqlOperation<R>
 
 
     /**
-     * Performs query. Use {@link #readNext()} to get next row selected.
+     * Performs query. Use {@link #readNext()} to get the next row selected.
      *  
      * @throws OperationException if error
      */
@@ -155,7 +156,7 @@ public class ScalarSelectOperation<R> extends SqlOperation<R>
     /**
      * Reads one row from current result set.
      * 
-     * @return new instance of row or null if no more in current result set
+     * @return new instance of row or null if no more row in the current result set
      * @throws OperationException if error
      */
     public R readNext() throws OperationException
@@ -184,12 +185,12 @@ public class ScalarSelectOperation<R> extends SqlOperation<R>
     
 
     /**
-     * Sets order of results in list. Setting an order by condition affects the
-     * order that rows are read from database but is only meaningful for 
-     * resulting collections if the collection type is also ordered.
+     * Sets order of results in list. Setting the order condition affects the
+     * order of the rows are read from database but is only meaningful if the 
+     * resulting collection type is also ordered.
      * 
-     * @param orderByName name of order phrase to use as defined in {@linkplain OrderBy#name()};
-     * use empty string for no ordering
+     * @param orderByName name of order phrase to use as defined in {@linkplain OrderBy#name()}
+     * in {@link OrderBy} annotation on row R; use empty string for no ordering
      * @throws OperationException if error
      */
     public void setOrderBy(String orderByName) throws OperationException
@@ -215,7 +216,9 @@ public class ScalarSelectOperation<R> extends SqlOperation<R>
     
     
     /** 
-     * @return order by name set by {@link #setOrderBy(String)}
+     * Gets order by name set with {@link #setOrderBy(String)}.
+     * 
+     * @return order by name 
      */
     public String getOrderByName()
     {
@@ -223,6 +226,10 @@ public class ScalarSelectOperation<R> extends SqlOperation<R>
     }
     
     
+    /**
+     * {@inheritDoc}
+     * Order by clause is appended to super{@link #getSql()}.
+     */
     @Override
     protected String getSql()
     {
@@ -238,12 +245,20 @@ public class ScalarSelectOperation<R> extends SqlOperation<R>
     }
     
     
+    /**
+     * Gets the result set of the most recent select.
+     * 
+     * @return jdbc result set
+     */
     protected ResultSet getResultSet()
     {
         return resultSet;
     }
 
 
+    /**
+     * Sets the base sql with {@link #setBaseSql(String)}.
+     */
     protected void initBaseSql()
     {
         String tableName = getTable().getQualifiedTableName();

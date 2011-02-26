@@ -23,8 +23,8 @@ import java.lang.annotation.Target;
 
 
 /**
- * Annotates a class variable. Defines a field that is in a row class but not to 
- * be used in any database operations.
+ * Defines a field that is in a row class but not used in any database operations.
+ * Annotates a class variable. 
  * 
  * @since 1.0
  * @author Jeff Miller

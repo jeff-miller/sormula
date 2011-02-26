@@ -24,7 +24,8 @@ import org.sormula.log.ClassLogger;
 
 /**
  * Simple transaction interface for {@link Connection}. This class is not required for
- * any sormula activity. Other transaction mechanisms are compatible with sormula.
+ * any sormula programming and is only used by {@link Database} as a convience. Other 
+ * transaction mechanisms are compatible with sormula.
  * 
  * @author Jeff Miller
  */
@@ -37,24 +38,44 @@ public class Transaction
 	boolean originalAutoCommit;
 	
 	
+	/**
+	 * Constructs for a connection.
+	 * 
+	 * @param connection jdbc connection
+	 */
 	public Transaction(Connection connection)
 	{
 		this.connection = connection;
 	}
 	
 	
+	/**
+	 * Gets the connection supplied in the constructor.
+	 * 
+	 * @return connect for this transaction
+	 */
 	public Connection getConnection()
 	{
 		return connection;
 	}
 	
 	
+	/**
+	 * Reports if transaction is ongoing.
+	 * 
+	 * @return true if {@link #begin()} has been invoked but not {@link #commit()} or {@link #rollback()}
+	 */
 	public boolean isActive()
 	{
 		return active;
 	}
 	
 	
+	/**
+	 * Starts the transaction.
+	 * 
+	 * @throws SormulaException if error
+	 */
 	public void begin() throws SormulaException
 	{
 		try
@@ -72,6 +93,11 @@ public class Transaction
 	}
 	
 	
+	/** 
+	 * Commits the transaction by invoking {@link Connection#commit()}.
+	 * 
+	 * @throws SormulaException if error
+	 */
 	public void commit() throws SormulaException
 	{
 		try
@@ -90,6 +116,10 @@ public class Transaction
 	}
 	
 	
+	/**
+	 * Aborts the transaction by invoking {@link Connection#rollback()}.
+	 * @throws SormulaException
+	 */
 	public void rollback() throws SormulaException
 	{
 		try

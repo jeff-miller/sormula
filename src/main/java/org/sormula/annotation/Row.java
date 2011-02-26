@@ -26,7 +26,7 @@ import org.sormula.translator.NoNameTranslator;
 
 
 /**
- * Annotates a row class. Defines class attributes for a row class. This annotation
+ * Defines class attributes for a row class. Annotates a row class. This annotation
  * is only required if table name is different from class name or if a name
  * translator is needed.
  * 
@@ -38,13 +38,17 @@ import org.sormula.translator.NoNameTranslator;
 public @interface Row
 {
     /**
-     * @return name of table associated with row; if not specified then tableName is 
-     * {@link Class#getSimpleName()} or by {@link NameTranslator}
+     * SQL table name for row. If not specified then tableName is 
+     * {@link Class#getSimpleName()} or obtained by {@link NameTranslator#translate(String, Class)}
+     * 
+     * @return name of table for row
      */
     String tableName() default "";
     
     
     /**
+     * Class for providing sql names in place of class and field names.
+     * 
      * @return translator for mapping java names to sql names
      */
     Class<? extends NameTranslator> nameTranslator() default NoNameTranslator.class;

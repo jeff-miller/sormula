@@ -94,6 +94,8 @@ public abstract class CascadeOperation<S, T>
     
 
     /**
+     * Gets target field as {@link SormulaField}.
+     * 
      * @return field in source row to be affected by cascade operation
      */
     public SormulaField<S, ?> getTargetField()
@@ -111,6 +113,9 @@ public abstract class CascadeOperation<S, T>
     }
     
     
+    /**
+     * {@inheritDoc}
+     */
     protected SqlOperation<?> createOperation() throws OperationException
     {
         SqlOperation<?> operation = null;

@@ -25,7 +25,7 @@ import org.sormula.log.ClassLogger;
 
 
 /**
- * A field within a class with additional methods needed in sormula packages.
+ * A field within a class with additional methods needed by sormula for reflection.
  * 
  * @author Jeff Miller
  *
@@ -83,7 +83,9 @@ public class SormulaField<C, T>
     
     
     /**
-     * @return field supplied in constructor
+     * Gets field supplied in constructor.
+     * 
+     * @return field Java field
      */
     public Field getField()
     {
@@ -92,6 +94,8 @@ public class SormulaField<C, T>
 
 
     /**
+     * Reports boolean return type of field.
+     * 
      * @return true if field type is primative boolean
      */
     public boolean isBooleanMethod()
@@ -145,7 +149,9 @@ public class SormulaField<C, T>
     
     
     /**
-     * @return if field is not a {@link Collection} and not a {@link Map}
+     * Reports if field is scalar.
+     * 
+     * @return true if field is not a {@link Collection} and not a {@link Map}
      * @see #isClass(Class)
      */
     public boolean isScalar()
@@ -155,7 +161,7 @@ public class SormulaField<C, T>
 
 
     /**
-     * Tests if field is instance of class 
+     * Tests if field is instance of class.
      * 
      * @param c class to test
      * @return true if field is instance of c or subclass of c
@@ -168,6 +174,8 @@ public class SormulaField<C, T>
     
     
     /**
+     * Gets cannonical "get" method name.
+     * 
      * @return package-name.class-name#get-method-name
      */
     public String getCanonicalGetMethodName()
@@ -177,6 +185,8 @@ public class SormulaField<C, T>
     
     
     /**
+     * Gets cannonical "set" method name.
+     * 
      * @return package-name.class-name#set-method-name
      */
     public String getCanonicalSetMethodName()

@@ -29,7 +29,8 @@ import org.sormula.reflect.SormulaField;
 
 
 /**
- * Sql delete operation for row of type R.
+ * Sql delete operation for row of type R. By default all rows will be affected unless
+ * {@link #setWhere(String)} is used.
  *
  * @since 1.0
  * @author Jeff Miller
@@ -38,8 +39,8 @@ import org.sormula.reflect.SormulaField;
 public class DeleteOperation<R> extends ModifyOperation<R>
 {
     /**
-     * Constructs for standard sql delete statement as:
-     * DELETE FROM <table> 
+     * Constructs for standard sql delete statement as:<br>
+     * DELETE FROM table 
      * 
      * @param table delete from this table
      * @throws OperationException if error
@@ -58,6 +59,9 @@ public class DeleteOperation<R> extends ModifyOperation<R>
     }
 
 
+    /**
+     * Sets base sql with {@link #setBaseSql(String)}.
+     */
     protected void initBaseSql()
     {
         String tableName = getTable().getQualifiedTableName();

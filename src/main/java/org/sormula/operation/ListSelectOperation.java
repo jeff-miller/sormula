@@ -22,7 +22,7 @@ import org.sormula.Table;
 
 
 /**
- * SelectOperation that uses List for {@link #readAll()} results.
+ * {@link SelectOperation} that uses {@link List} for {@link #readAll()} results.
  * 
  * @since 1.0
  * @author Jeff Miller
@@ -30,6 +30,12 @@ import org.sormula.Table;
  */
 public abstract class ListSelectOperation<R> extends SelectOperation<R, List<R>>
 {
+	/**
+	 * Constructs for a table.
+	 * 
+	 * @param table select from this table
+	 * @throws OperationException if error
+	 */
     public ListSelectOperation(Table<R> table) throws OperationException
     {
         super(table);

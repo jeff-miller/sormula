@@ -153,6 +153,8 @@ public class ColumnsTranslator<R>
     
     
     /**
+     * Gets Java class type for row.
+     * 
      * @return row class for this translator
      */
     public Class<R> getRowClass()
@@ -239,6 +241,8 @@ public class ColumnsTranslator<R>
 
 
     /**
+     * Gets list of all column translators used by this translator.
+     * 
      * @return all column translators for this instance
      */
     public List<ColumnTranslator<R>> getColumnTranslatorList()

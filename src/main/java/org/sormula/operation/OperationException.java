@@ -30,12 +30,23 @@ public class OperationException extends SormulaException
     private static final long serialVersionUID = 1L;
 
 
+    /**
+     * Constructs for a message.
+     * 
+     * @param message expection message
+     */
     public OperationException(String message)
     {
         super(message);
     }
 
     
+    /**
+     * Constructs for a message and cause.
+     * 
+     * @param message expection message
+     * @param cause cause of exception
+     */
     public OperationException(String message, Throwable cause)
     {
         super(message, cause);

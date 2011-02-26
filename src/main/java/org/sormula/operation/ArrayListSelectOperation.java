@@ -22,7 +22,7 @@ import org.sormula.Table;
 
 
 /**
- * SelectOperation that uses ArrayList for {@link #readAll()} results.
+ * {@link ListSelectOperation} that uses {@link ArrayList} for {@link #readAll()} results.
  * 
  * @since 1.0
  * @author Jeff Miller
@@ -30,6 +30,12 @@ import org.sormula.Table;
  */
 public class ArrayListSelectOperation<R> extends ListSelectOperation<R>
 {
+	/**
+	 * Constructs for a table.
+	 * 
+	 * @param table select from this table
+	 * @throws OperationException if error
+	 */
     public ArrayListSelectOperation(Table<R> table) throws OperationException
     {
         super(table);

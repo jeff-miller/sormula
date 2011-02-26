@@ -30,12 +30,23 @@ public class ReflectException extends SormulaException
     private static final long serialVersionUID = 1L;
 
 
+    /**
+     * Constructs for a message.
+     * 
+     * @param message expection message
+     */
     public ReflectException(String message)
     {
         super(message);
     }
 
     
+    /**
+     * Constructs for a message and cause.
+     * 
+     * @param message expection message
+     * @param cause cause of exception
+     */
     public ReflectException(String message, Throwable cause)
     {
         super(message, cause);

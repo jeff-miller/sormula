@@ -26,14 +26,27 @@ package org.sormula;
 public class SormulaException extends Exception
 {
     private static final long serialVersionUID = 1L;
-    
-    public SormulaException(String message, Throwable cause)
-    {
-        super(message, cause);
-    }
 
+    
+    /**
+     * Constructs for a message.
+     * 
+     * @param message expection message
+     */
     public SormulaException(String message)
     {
         super(message);
+    }
+    
+    
+    /**
+     * Constructs for a message and cause.
+     * 
+     * @param message expection message
+     * @param cause cause of exception
+     */
+    public SormulaException(String message, Throwable cause)
+    {
+        super(message, cause);
     }
 }

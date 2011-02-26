@@ -23,8 +23,8 @@ import java.lang.annotation.Target;
 
 
 /**
- * Defines columns that are required for in a table but not used by row object. Allows updates
- * and inserts into a table where columns are required but not used by row class.
+ * Defines columns that are required for a table but are not used by row object. Allows updates
+ * and inserts into a table where columns are required but not used by row class. Annotates a row class.
  * 
  * @since 1.0
  * @author Jeff Miller
@@ -34,6 +34,8 @@ import java.lang.annotation.Target;
 public @interface UnusedColumns
 {
     /**
+     * Columns that are not used by row class.
+     * 
      * @return array of {@link UnusedColumn} annotations for row class
      */
     UnusedColumn[] unusedColumns();

@@ -23,7 +23,8 @@ import org.sormula.Table;
 
 
 /**
- * SQL select count of records operation returning a list of one integer that is the count.
+ * SQL select count of records operation. By default selects count of all rows
+ * in table. Set where condition with {@link #setWhere(String)} to count subset of all rows.
  * 
  * @since 1.0
  * @author Jeff Miller
@@ -32,8 +33,8 @@ import org.sormula.Table;
 public class SelectCountOperation<R> extends ScalarSelectOperation<R>
 {
     /**
-     * Constructs for standard sql select statement as:
-     * SELECT COUNT(*), ... FROM <table>
+     * Constructs for standard sql select statement as:<br>
+     * SELECT COUNT(*), ... FROM table
      * 
      * @param table insert into this table
      * @throws OperationException if error
@@ -45,6 +46,9 @@ public class SelectCountOperation<R> extends ScalarSelectOperation<R>
     }
 
 
+    /**
+     * Sets base sql with {@link #setBaseSql(String)}.
+     */
     protected void initBaseSql()
     {
         String tableName = getTable().getQualifiedTableName();
@@ -70,12 +74,14 @@ public class SelectCountOperation<R> extends ScalarSelectOperation<R>
     
     
     /**
-     * @return value of count or -1; if count can't be read
+     * Reads the count of rows. Invoke {@link #execute()} prior to using this method.
+     * 
+     * @return value of count or -1 if count can't be read
      * @throws OperationException if error
      */
     public Integer readCount() throws OperationException
     {
-        int count;
+        int count = -1;
         ResultSet rs = getResultSet();
         
         try
@@ -83,10 +89,6 @@ public class SelectCountOperation<R> extends ScalarSelectOperation<R>
             if (rs.next())
             {
                 count = rs.getInt(1);
-            }
-            else
-            {
-                count = -1;
             }
         }
         catch (SQLException e)

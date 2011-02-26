@@ -90,6 +90,11 @@ public class RowTranslator<R> extends ColumnsTranslator<R>
     }
 
     
+    /**
+     * Process {@link Transient} and {@link Cascade} annotations.
+     * 
+     * @throws TranslatorException if error
+     */
     @SuppressWarnings("unchecked") // annotations cannot be parameterized
     protected void initColumnTranslators() throws TranslatorException
     {
@@ -138,6 +143,12 @@ public class RowTranslator<R> extends ColumnsTranslator<R>
     }
     
     
+    /**
+     * Process {@link UnusedColumns} annotations.
+     * 
+     * @param rowClass
+     * @throws TranslatorException
+     */
     protected void initUnusedColumnSql(Class<R> rowClass) throws TranslatorException
     {
         UnusedColumns unusedColumnsAnnotation = rowClass.getAnnotation(UnusedColumns.class);

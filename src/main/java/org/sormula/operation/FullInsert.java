@@ -18,7 +18,7 @@ package org.sormula.operation;
 
 
 /**
- * Insert operation performed as prepare, execute, and close in one method.
+ * {@link InsertOperation} performed as prepare, execute, and close in one method.
  * 
  * @since 1.0
  * @author Jeff Miller
@@ -38,7 +38,9 @@ public class FullInsert<R> extends FullModify<R>
     
     
     /**
-     * @return insert operation supplied in constructor
+     * Gets insert operation supplied in constructor.
+     * 
+     * @return operation to insert rows
      */
     public InsertOperation<R> getInsertOperation()
     {

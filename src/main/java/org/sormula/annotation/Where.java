@@ -21,6 +21,8 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+import org.sormula.operation.SqlOperation;
+
 
 /**
  * Defines columns to be used in a where condition for a row class. Use this to annotate
@@ -34,17 +36,20 @@ import java.lang.annotation.Target;
 public @interface Where
 {
     /**
-     * @return name of where condition (must be unique within row class)  
+     * Name of where condition. Must be unique amoung all where conditions for a row class.
+     * 
+     * @return name of where condition
+     * @see SqlOperation#setWhere(String)  
      */
     String name();
     
     
     /**
-     * Define condition where all fields in condition use equal comparison operator and
+     * Define condition where all fields in the condition use "=" comparison operator and
      * are joined logically by "AND" boolean operator. This is a typical type of where condition
      * and allows for simpler annotation syntax. Use this instead of {@link #whereFields()}.
      * 
-     * @return array of field names
+     * @return array of field names to be used in where condition
      */
     String[] fieldNames() default {};
     

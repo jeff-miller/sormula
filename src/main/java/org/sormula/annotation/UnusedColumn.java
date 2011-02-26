@@ -37,14 +37,18 @@ import java.lang.annotation.Target;
 public @interface UnusedColumn
 {
     /**
+     * Column name. Note that this is not a field name since there is no corresponding field.
+     * 
      * @return column name
      */
     String name();
 
     
     /**
-     * @return value to use within sql statement for column when inserting or updating record; use all required sql
+     * Value to use for column for inserts or updates. Use all required SQL
      * syntax (for example surround character columns with single quotes like value="'ABC'")
+     *  
+     * @return value to use within SQL statement for column when inserting or updating record
      */
     String value() default "";
 }

@@ -18,7 +18,7 @@ package org.sormula.operation;
 
 
 /**
- * Select operation performed as prepare, execute, read, and close in one method.
+ * {@link SelectOperation} performed as prepare, execute, read, and close in one method.
  * 
  * @since 1.0
  * @author Jeff Miller
@@ -42,7 +42,9 @@ public class FullSelect<R, C>
     
     
     /**
-     * @return select operation provided in constructor
+     * Gets the select operation supplied in the constructor.
+     * 
+     * @return operation that will select rows
      */
     public SelectOperation<R, C> getSelectOperation()
     {
@@ -51,7 +53,7 @@ public class FullSelect<R, C>
 
 
     /**
-     * Set parameters, executes, reads rows, closes.
+     * Set parameters, executes, reads one row, closes.
      * 
      * @param parameters query parameters as objects (see {@linkplain SelectOperation#setParameters(Object...)})
      * @return {@linkplain SelectOperation#readNext()}
@@ -68,7 +70,7 @@ public class FullSelect<R, C>
     
     
     /**
-     * Set parameters, executes, reads rows, closes.
+     * Set parameters, executes, reads one row, closes.
      * 
      * @param whereParameters query parameters are read from an existing row object 
      * (see {@linkplain SelectOperation#setRowParameters(Object)})
@@ -86,7 +88,7 @@ public class FullSelect<R, C>
     
     
     /**
-     * Set parameters, executes, reads all records, closes.
+     * Set parameters, executes, reads all rows in result set, closes.
      * 
      * @param parameters query parameters as objects (see {@linkplain SelectOperation#setParameters(Object...)})
      * @return {@linkplain SelectOperation#readAll()}
@@ -103,7 +105,7 @@ public class FullSelect<R, C>
     
     
     /**
-     * Set parameters, executes, reads all records, closes.
+     * Set parameters, executes, reads all rows in result set, closes.
      * 
      * @param whereParameters query parameters are read from an existing row object 
      * (see {@linkplain SelectOperation#setParameters(Object...)})

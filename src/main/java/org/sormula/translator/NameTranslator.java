@@ -28,8 +28,9 @@ public interface NameTranslator
 {
     /**
      * Provides SQL name for corresponding Java class or member name
+     * 
      * @param javaName Java class or member name
-     * @param rowClass class for row objects (not parameterized so that NameTranslator's may be used in annotations)
+     * @param rowClass class for row objects (not parameterized so that {@link NameTranslator} may be used in annotations)
      * @return SQL name that corresponds to Java name
      */
     public String translate(String javaName, Class rowClass);

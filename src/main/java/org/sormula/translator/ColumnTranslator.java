@@ -32,12 +32,16 @@ import java.sql.ResultSet;
 public interface ColumnTranslator<R>
 {
     /**
+     * Gets the Java field that participates in translation.
+     * 
      * @return field within row class that corresponds to column
      */
     public Field getField();
     
     
     /**
+     * Gets the SQL column name.
+     * 
      * @return name of table column to be translated
      */
     public String getColumnName();

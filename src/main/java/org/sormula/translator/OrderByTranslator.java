@@ -181,6 +181,8 @@ public class OrderByTranslator<R> extends ColumnsTranslator<R>
 
 
     /**
+     * Creates order by phrase.
+     * 
      * @return "ORDER BY c1, c2, c3..." 
      */
     public String createSql()

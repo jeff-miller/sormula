@@ -49,7 +49,9 @@ public abstract class AbstractWhereTranslator<R> extends ColumnsTranslator<R>
     }
     
     
-    
+    /**
+     * {@inheritDoc}
+     */
     @Override
     protected void initColumnTranslatorList(int columns)
     {
@@ -60,6 +62,8 @@ public abstract class AbstractWhereTranslator<R> extends ColumnsTranslator<R>
 
 
     /**
+     * Creates SQL for where phrase.
+     * 
      * @return complete WHERE phrase
      */
     public String createSql()
@@ -69,6 +73,8 @@ public abstract class AbstractWhereTranslator<R> extends ColumnsTranslator<R>
 
 
     /**
+     * Gets row translator that was supplied in constructor.
+     * 
      * @return row translator associated with where condition
      */
     public RowTranslator<R> getRowTranslator()

@@ -23,8 +23,8 @@ import java.lang.annotation.Target;
 
 
 /**
- * Annotates a row class. Defines order phrase for row class. Use this annotation if
- * more than one {@linkplain OrderBy} is needed for a row class.
+ * Defines two or more order by phrases for row class. Use this annotation if
+ * more than one {@linkplain OrderBy} is needed for a row class. Annotates a row class.
  *
  * @since 1.0
  * @author Jeff Miller
@@ -34,6 +34,8 @@ import java.lang.annotation.Target;
 public @interface OrderBys
 {
     /**
+     * Array of order by conditions.
+     * 
      * @return array of {@link OrderBy} annotations
      */
     OrderBy[] orderByConditions();

@@ -23,8 +23,7 @@ import org.sormula.Table;
 
 
 /**
- * SelectOperation that uses HashMap for {@link #readAll()} results. Subclass must
- * override {@linkplain #getKey(Object)}.
+ * {@link MapSelectOperation} that uses {@link HashMap} for {@link #readAll()} results. 
  * 
  * @since 1.0
  * @author Jeff Miller
@@ -33,6 +32,12 @@ import org.sormula.Table;
  */
 public class HashMapSelectOperation<K, R> extends MapSelectOperation<K, R>
 {
+	/**
+	 * Constructs for a table.
+	 * 
+	 * @param table select from this table
+	 * @throws OperationException if error
+	 */
     public HashMapSelectOperation(Table<R> table) throws OperationException
     {
         super(table);

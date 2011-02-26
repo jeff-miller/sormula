@@ -18,7 +18,7 @@ package org.sormula.operation;
 
 
 /**
- * Delete operation performed as prepare, execute, and close in one method.
+ * {@link DeleteOperation} performed as prepare, execute, and close in one method.
  * 
  * @since 1.0
  * @author Jeff Miller
@@ -38,7 +38,9 @@ public class FullDelete<R> extends FullModify<R>
     
     
     /**
-     * @return delete operation supplied in constructor
+     * Gets delect operation supplied in constructor.
+     * 
+     * @return operation to delete rows
      */
     public DeleteOperation<R> getDeleteOperation()
     {

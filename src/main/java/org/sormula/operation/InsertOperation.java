@@ -30,7 +30,7 @@ import org.sormula.translator.RowTranslator;
 
 
 /**
- * Sql insert operation for row of type R.
+ * Sql insert operation for row of type R. 
  *
  * @since 1.0
  * @author Jeff Miller
@@ -39,8 +39,8 @@ import org.sormula.translator.RowTranslator;
 public class InsertOperation<R> extends ModifyOperation<R>
 {
     /**
-     * Constructs for standard sql insert statement as:
-     * INSERT INTO <table> (c1, c2, c3, ...) VALUES (?, ?, ?, ...)
+     * Constructs for standard sql insert statement as:<br>
+     * INSERT INTO table (c1, c2, c3, ...) VALUES (?, ?, ?, ...)
      * 
      * @param table insert into this table
      * @throws OperationException if error
@@ -52,6 +52,9 @@ public class InsertOperation<R> extends ModifyOperation<R>
     }
 
     
+    /**
+     * Sets base sql with {@link #setBaseSql(String)}.
+     */
     protected void initBaseSql()
     {
         String tableName = getTable().getQualifiedTableName();

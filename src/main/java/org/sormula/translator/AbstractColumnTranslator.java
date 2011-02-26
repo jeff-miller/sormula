@@ -25,7 +25,7 @@ import org.sormula.reflect.SormulaField;
 
 
 /**
- * Common functionality for translators.
+ * Common functionality for most translators.
  *
  * @since 1.0
  * @author Jeff Miller
@@ -109,7 +109,9 @@ public abstract class AbstractColumnTranslator<R, T> implements ColumnTranslator
     
     
     /**
-     * @return sorm field for field supplied in constructor
+     * Gets the field as a {@link SormulaField}.
+     * 
+     * @return {@link SormulaField} for field supplied in constructor
      */
     public SormulaField<R, T> getSormulaField()
     {

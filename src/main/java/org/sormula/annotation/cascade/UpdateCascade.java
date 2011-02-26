@@ -25,8 +25,7 @@ import org.sormula.operation.UpdateOperation;
 
 
 /**
- * Used within a {@linkplain Cascade} annotation to define an update operation on target
- * field in response to update operation that occurs on source row.  
+ * Used within a {@linkplain Cascade} annotation to define a cascade update operation.  
  * 
  * @since 1.0
  * @author Jeff Miller
@@ -46,6 +45,8 @@ public @interface UpdateCascade
     
     
     /**
+     * Specifies when the cascade is to occur.
+     * 
      * @return true to perform cascade after source row operation; false 
      * to perform cascade before source row operation
      */

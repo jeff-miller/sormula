@@ -23,7 +23,7 @@ import java.lang.annotation.Target;
 
 
 /**
- * Defines a field within a {@linkplain Where} annotation.
+ * Defines a field within a {@linkplain Where} annotation. 
  * 
  * @since 1.0
  * @author Jeff Miller
@@ -33,19 +33,25 @@ import java.lang.annotation.Target;
 public @interface WhereField
 {
     /**
+     * Name of row member involved in where condition.
+     * 
      * @return field name to use
      */
     String name();
     
     
     /**
-     * @return Boolean opearator to precede "column-name operator ?" for 2nd through last column. 
-     * Other possible operators "OR", "AND NOT", "OR NOT", "NOT", etc. 
+     * SQL boolean operator to use following this field. Possible operators are "AND", "OR", 
+     * "AND NOT", "OR NOT", "NOT", etc. Operator has no affect for last field in where condition.
+     *  
+     * @return Boolean opearator to be used after "column-name booleanOperator ?"  
      */
     String booleanOperator() default "AND";
 
     
     /**
+     * SQL comparison operator to use in condition "column-name comparisonOperator ?".
+     * 
      * @return sql comparison operator to use between column name and parameter
      */
     String comparisonOperator() default "=";

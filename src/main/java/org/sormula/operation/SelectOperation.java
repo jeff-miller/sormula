@@ -16,6 +16,8 @@
  */
 package org.sormula.operation;
 
+import java.util.Collection;
+
 import org.sormula.Table;
 import org.sormula.translator.RowTranslator;
 
@@ -36,7 +38,7 @@ public abstract class SelectOperation<R, C> extends ScalarSelectOperation<R>
     
     /**
      * Constructs for standard sql select statement as:
-     * SELECT c1, c2, c3, ... FROM <table>
+     * SELECT c1, c2, c3, ... FROM table
      * 
      * @param table select from this table
      * @throws OperationException if error
@@ -48,7 +50,9 @@ public abstract class SelectOperation<R, C> extends ScalarSelectOperation<R>
     
     
     /**
-     * @return default size to allocate for Collection to hold row objects created by {@link #createReadAllCollection()}
+     * Gets the default size to allocate for {@link Collection} C by {@link #createReadAllCollection()}.
+     * 
+     * @return default size to allocate for collection that contains row objects
      */
     public int getDefaultReadAllSize()
     {
@@ -58,7 +62,7 @@ public abstract class SelectOperation<R, C> extends ScalarSelectOperation<R>
     
     /**
      * Sets default initial capacity for collection that is to contain the selected rows. For
-     * large result sets, setting the default capcity may reduce time to build the collection.
+     * large result sets, setting the default capacity may reduce time to build the collection.
      * 
      * @param defaultReadAllSize initial collection capacity; default is 20
      */
@@ -104,8 +108,9 @@ public abstract class SelectOperation<R, C> extends ScalarSelectOperation<R>
     
     
     /**
-     * @return collection of rows that have been selected; null if {@link #readAll()} has not been
-     * invoked
+     * Gets collection of rows that were selected with {@link #readAll()}.
+     * 
+     * @return collection of rows; null if {@link #readAll()} has not been invoked
      */
     public C getSelectedRows() 
     {
@@ -114,7 +119,7 @@ public abstract class SelectOperation<R, C> extends ScalarSelectOperation<R>
 
 
 	/**
-     * Implement to create collection to use by readAll.
+     * Implement to create collection to use by {@link #readAll()}.
      * 
      * @return collection to use for {@link #readAll()}
      */
@@ -122,7 +127,7 @@ public abstract class SelectOperation<R, C> extends ScalarSelectOperation<R>
     
     
     /**
-     * Implement to add row to readAll results.
+     * Implement to add row to collection created {@link #createReadAllCollection()}.
      * 
      * @param row row to add
      * @return true if added ok

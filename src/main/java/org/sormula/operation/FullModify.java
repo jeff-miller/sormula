@@ -20,8 +20,8 @@ import java.util.Collection;
 
 
 /**
- * Modify operation performed as prepare, execute, and close in one method. Common
- * methods for update, delete, insert full classes.
+ * {@link ModifyOperation} performed as prepare, execute, and close in one method. Base
+ * class for {@link FullInsert}, {@link FullUpdate}, and {@link FullDelete}.
  * 
  * @since 1.0
  * @author Jeff Miller
@@ -43,8 +43,10 @@ public class FullModify<R>
     }
     
     
-    /**
-     * @return modify operation supplied in constructor
+    /** 
+     * Gets modify operation supplied in constructor.
+     * 
+     * @return operation that will modify rows
      */
     public ModifyOperation<R> getModifyOperation()
     {
@@ -85,7 +87,7 @@ public class FullModify<R>
 
 
     /**
-     * Modifies with all sql parametes as Objects
+     * Modifies row(s) with sql parametes as Objects
      * 
      * @param parameters operation parameters as objects (see {@linkplain ModifyOperation#setParameters(Object...)})
      * @return count of rows affected

@@ -177,7 +177,7 @@
 	            windowtitle="${ant.project.name}" 
 	            doctitle="${ant.project.name}" 
 	            destdir="javadoc" 
-	        	protected="true" 
+	        	public="true" 
 	            use="true"
 	            source="1.5"
 	            >

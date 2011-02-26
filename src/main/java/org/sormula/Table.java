@@ -76,6 +76,7 @@ public class Table<R>
         // table name from annoation
         Row rowAnnotation = rowClass.getAnnotation(Row.class);
         
+        // TODO database.getNameTranslator if != null, use it else lines 80-101
         if (rowAnnotation != null)
         {
             // row annotation was available
@@ -117,7 +118,9 @@ public class Table<R>
 
 
     /**
-     * @return database supplied in constructor
+     * Gets the database supplied in constructor.
+     * 
+     * @return database for this table
      */
     public Database getDatabase()
     {
@@ -126,6 +129,8 @@ public class Table<R>
 
 
     /**
+     * Gets the table name used in sql statements.
+     * 
      * @return table name (without schema prefix)
      */
     public String getTableName()
@@ -135,9 +140,9 @@ public class Table<R>
 
 
     /**
-     * Gets table with optional schema prefix if necessary.
+     * Gets table name used in sql statements with optional schema prefix if necessary.
      *  
-     * @return schema.tablename if schema is empty string; otherwise tablename
+     * @return schema.tablename if schema is not empty string; otherwise tablename
      */
     public String getQualifiedTableName()
     {
@@ -150,15 +155,24 @@ public class Table<R>
     /**
      * Gets translator defined by {@linkplain Row#nameTranslator()}.
      * 
-     * @return translator for converting java names to sql names
+     * @return translator for converting java names to sql table and column names
      */
     public NameTranslator getNameTranslator()
     {
         return nameTranslator;
     }
 
+    /* TODO constructor invokes so that 1 default translator defined for all tables if desired
+    public void setNameTranslator(NameTranslator nameTranslator)
+    {
+    	
+    }
+    */
+    
 
     /**
+     * Gets the row translator for converting row values to/from sql parameters.
+     * 
      * @return row translator for this table
      */
     public RowTranslator<R> getRowTranslator()
@@ -224,7 +238,7 @@ public class Table<R>
     /**
      * Creates operation for select by a named where condition.
      * 
-     * @param whereConditionName name of where condition to use or use empty string to count all rows in table
+     * @param whereConditionName name of where condition to use or use empty string to select all rows in table
      * @return select operation
      * @throws SormulaException if error
      * @see Where
@@ -238,6 +252,8 @@ public class Table<R>
     
     
     /**
+     * Gets count of all rows in table.
+     * 
      * @return count of all rows in table
      * @throws SormulaException if error
      */

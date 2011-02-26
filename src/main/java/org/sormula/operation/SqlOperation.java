@@ -202,7 +202,7 @@ public abstract class SqlOperation<R>
         
         try
         {
-            log.debug("prepare " + sql);
+            if (log.isDebugEnabled()) log.debug("prepare " + sql);
             preparedStatement = connection.prepareStatement(sql);
         }
         catch (Exception e)

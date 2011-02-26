@@ -108,7 +108,7 @@ public class RowTranslator<R> extends ColumnsTranslator<R>
             if (f.isAnnotationPresent(Transient.class))
             {
                 // transient column, don't translate
-                log.debug("transient " + rowClass.getCanonicalName() + "#" + f.getName());
+            	if (log.isDebugEnabled()) log.debug("transient " + rowClass.getCanonicalName() + "#" + f.getName());
             }
             else if (!f.isAnnotationPresent(Cascade.class))
             {

@@ -172,7 +172,7 @@ public class Database
 	 * Sets the name translator class to use for a table if no translator is specified by
 	 * {@link Column#translator()}. A new instance is created for each table.
 	 * 
-	 * @param nameTranslator default name translator
+	 * @param nameTranslatorClass default name translator class
 	 */
 	public void setNameTranslatorClass(Class<? extends NameTranslator> nameTranslatorClass) 
 	{

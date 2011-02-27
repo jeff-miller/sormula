@@ -73,36 +73,49 @@ public class Table<R>
     {
         this.database = database;
 
-        // table name from annoation
+        // process row annoation
         Row rowAnnotation = rowClass.getAnnotation(Row.class);
+        Class<? extends NameTranslator> nameTranslatorClass = null;
         
-        // TODO database.getNameTranslator if != null, use it else lines 80-101
         if (rowAnnotation != null)
         {
             // row annotation was available
-            
-            // table name
+            nameTranslatorClass = rowAnnotation.nameTranslator();
             tableName = rowAnnotation.tableName();
-            
-            try
-            {
-                nameTranslator = rowAnnotation.nameTranslator().newInstance();
-            }
-            catch (Exception e)
-            {
-                log.error("error creating name translator", e);
-            }
+        }
+        else
+        {
+        	// no row annotation
+        	nameTranslatorClass = NoNameTranslator.class;
         }
         
-        if (nameTranslator == null)
+        // default name translator check
+        if (nameTranslatorClass.getName().equals(NoNameTranslator.class.getName()))
         {
-            // no row annotation or error creating custom name translator
+        	// name translator is NoNameTranslator which does nothing
+        	Class<? extends NameTranslator> defaultNameTranslatorClass = database.getNameTranslatorClass();
+        	
+        	if (defaultNameTranslatorClass != null)
+        	{
+        		// default is available, use it
+        		nameTranslatorClass = defaultNameTranslatorClass;
+        	}
+        }
+        
+        // instantiate name translator
+        try
+        {
+            nameTranslator = nameTranslatorClass.newInstance();
+        }
+        catch (Exception e)
+        {
+            log.error("error creating name translator", e);
             nameTranslator = new NoNameTranslator();
         }
         
         if (tableName == null || tableName.length() == 0) 
         {
-            // no table name is provided, table name is class name
+            // no table name is provided, get table name from class name
             tableName = nameTranslator.translate(rowClass.getSimpleName(), rowClass);
         }
 

@@ -20,7 +20,9 @@ import java.sql.Connection;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.sormula.annotation.Column;
 import org.sormula.operation.SqlOperation;
+import org.sormula.translator.NameTranslator;
 
 
 /**
@@ -36,6 +38,7 @@ public class Database
     String schema;
     Map<String, Table<?>> tableMap; // key is row class canonical name
     Transaction transaction;
+    Class<? extends NameTranslator> nameTranslatorClass;
     
     
     /**
@@ -152,13 +155,27 @@ public class Database
     {
         tableMap.put(table.getRowTranslator().getRowClass().getCanonicalName(), table);
     }
-    
-    /* TODO allow 1 default translator for all tables if desired
-     * table constructor calls getNameTranslator()
-    public void set/getNameTranslator(NameTranslator nameTranslator)
-    {
-    	
-    }
-    */
 
+
+    /**
+     * Gets the default name translator class for tables when none is specified.
+     * 
+     * @return default name translator class
+     */
+	public Class<? extends NameTranslator> getNameTranslatorClass() 
+	{
+		return nameTranslatorClass;
+	}
+
+
+	/**
+	 * Sets the name translator class to use for a table if no translator is specified by
+	 * {@link Column#translator()}. A new instance is created for each table.
+	 * 
+	 * @param nameTranslator default name translator
+	 */
+	public void setNameTranslatorClass(Class<? extends NameTranslator> nameTranslatorClass) 
+	{
+		this.nameTranslatorClass = nameTranslatorClass;
+	}
 }

@@ -174,13 +174,6 @@ public class Table<R>
     {
         return nameTranslator;
     }
-
-    /* TODO constructor invokes so that 1 default translator defined for all tables if desired
-    public void setNameTranslator(NameTranslator nameTranslator)
-    {
-    	
-    }
-    */
     
 
     /**
@@ -218,6 +211,38 @@ public class Table<R>
     public R select(Object... parameters) throws SormulaException
     {
         return new FullScalarSelect<R>(createSelectOperation()).execute(parameters);
+    }
+    
+    
+    /**
+     * Select list of rows using custom sql.
+     * 
+     * @param customSql custom sql to be appended to base sql (for example, "where somecolumn=?")
+     * @param parameters parameter value to be set in customSql
+     * @return list of rows selected
+     * @throws SormulaException if error
+     */
+    public List<R> selectAllCustom(String customSql, Object... parameters) throws SormulaException
+    {
+    	ArrayListSelectOperation<R> operation = new ArrayListSelectOperation<R>(this);
+    	operation.setCustomSql(customSql);
+    	return new FullListSelect<R>(operation).executeAll(parameters);
+    }
+    
+    
+    /**
+     * Selects one row using custom sql.
+     *  
+     * @param customSql custom sql to be appended to base sql (for example, "where somecolumn=?")
+     * @param parameters parameter value to be set in customSql
+     * @return row or null if no rows selected
+     * @throws SormulaException if error
+     */
+    public R selectCustom(String customSql, Object... parameters) throws SormulaException
+    {
+    	ScalarSelectOperation<R> operation = new ScalarSelectOperation<R>(this);
+    	operation.setCustomSql(customSql);
+    	return new FullScalarSelect<R>(operation).execute(parameters);
     }
     
     

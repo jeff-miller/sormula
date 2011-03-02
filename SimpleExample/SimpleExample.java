@@ -173,13 +173,12 @@ public class SimpleExample
         Database database = new Database(getConnection());
         Table<Inventory> inventoryTable = database.getTable(Inventory.class);
         
-        // select operation for range
-        QuantityRangeSelect operation = new QuantityRangeSelect(inventoryTable);
-        operation.setRange(minimumQuanity, maximumQuantity);
-        operation.execute();
+        // execute
+        List<Inventory> results = inventoryTable.selectAllCustom(
+        		"where quantity between ? and ?", minimumQuanity, maximumQuantity);
         
         // show results
-        for (Inventory inventory: operation.readAll())
+        for (Inventory inventory: results)
         {
         	log.info(inventory.getPartNumber() + " quantity=" + inventory.getQuantity());
         }
@@ -195,7 +194,7 @@ public class SimpleExample
      * 
      * @param minimumQuanity select rows with quantity of at least this amount
      * @param maximumQuantity select rows with quantity no more than this amount
-     * @see QuantityRangeSelect2
+     * @see QuantityRangeSelect
      */
     public void selectByRange2(int minimumQuanity, int maximumQuantity) throws Exception
     {
@@ -206,7 +205,7 @@ public class SimpleExample
         Table<Inventory> inventoryTable = database.getTable(Inventory.class);
         
         // select operation for range
-        QuantityRangeSelect2 operation = new QuantityRangeSelect2(inventoryTable);
+        QuantityRangeSelect operation = new QuantityRangeSelect(inventoryTable);
         operation.setRange(minimumQuanity, maximumQuantity);
         operation.execute();
         

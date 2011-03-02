@@ -53,6 +53,7 @@ public abstract class SqlOperation<R>
     String whereConditionName;
     AbstractWhereTranslator<R> whereTranslator;
     String baseSql;
+    String customSql;
     PreparedStatement preparedStatement;
     int nextParameter;
     Object[] parameters;
@@ -335,8 +336,8 @@ public abstract class SqlOperation<R>
     
 
     /**
-     * Gets full sql statement to prepare. Default implementation is to include base + where.
-     * Subclasses may override to create more detailed sql.
+     * Gets full sql statement to prepare. Default implementation is to use base 
+     * sql + custom sql + where sql. Subclasses may override to create more detailed sql.
      * 
      * @return sql to use in {@link #prepare()}
      */
@@ -344,12 +345,40 @@ public abstract class SqlOperation<R>
     {
         String sql = getBaseSql();
         
+        if (customSql != null)
+        {
+        	sql += " " + customSql;
+        }
+        
         if (getWhereTranslator() != null)
         {
             sql += " " + getWhereTranslator().createSql();
         }
         
         return sql;
+    }
+    
+    
+    /**
+     * Sets sql to be appended to base sql in operation. Use this to add specialized
+     * sql for operation.
+     * 
+     * @param customSql additional sql to be added to base sql or null for none
+     */
+    public void setCustomSql(String customSql)
+    {
+    	this.customSql = customSql;
+    }
+    
+    
+    /**
+     * Gets custom sql set with {@link #setCustomSql(String)}.
+     * 
+     * @return custom sql or null if none
+     */
+    public String getCustomSql()
+    {
+    	return customSql;
     }
     
     

@@ -130,10 +130,11 @@ public class SelectCascadeOperation<S, T> extends CascadeOperation<S, T>
         	}
         }
         
-        // verify scalar field is compatible with target table row type // TODO not necessary?
+        // verify scalar field is compatible with target table row type (this test may not be necessary?)
         if (targetField.isScalar() && !targetField.isClass(getTargetTable().getRowTranslator().getRowClass()))
         {
-        	throw new OperationException("TODO");
+        	throw new OperationException(targetField.getClass().getName() + " is not assignable from " +
+        			getTargetTable().getRowTranslator().getRowClass().getName());
         }
     }
 

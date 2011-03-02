@@ -151,6 +151,9 @@
         <delete dir="${target}"/>
     	<delete dir="javadoc"/>
     	<delete dir="test-output"/>
+    	<delete file="sormula*.zip"/>
+    	<delete file="sormula*.jar"/>
+    	<delete file="example.zip"/>
     </target>
 	
 	<target name="lib" description="Creates sormula.jar" depends="compile-main">
@@ -184,4 +187,9 @@
 	        	<classpath refid="main.libpath"/>
 	        </javadoc>
 	    </target>
+    
+    <target name="example" description="Creates example.zip for distribution" depends="init">
+          <zip zipfile="example.zip" basedir="SimpleExample"
+                excludes="simpleDB.tmp .classpath .project"/>
+    </target>
 </project>

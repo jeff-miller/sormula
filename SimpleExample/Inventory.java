@@ -13,6 +13,7 @@ public class Inventory
     @Column(primaryKey=true)
     int partNumber;
     
+    // no annotation is needed when field name is same as column name
     int quantity;
     
     @Column(name="manfid")

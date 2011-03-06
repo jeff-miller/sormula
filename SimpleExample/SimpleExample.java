@@ -100,7 +100,7 @@ public class SimpleExample
         Table<Inventory> inventoryTable = database.getTable(Inventory.class);
         List<Inventory> clearList = new ArrayList<Inventory>();
         
-        // select for a specific manufacturer
+        // select for a specific manufacturer ("manf" is name of where annotation in Inventory.java)
         ListSelectOperation<Inventory> operation = inventoryTable.createSelectOperation("manf");
         operation.setParameters(manufacturerId);
         operation.execute();
@@ -137,7 +137,7 @@ public class SimpleExample
         Table<Inventory> inventoryTable = database.getTable(Inventory.class);
         List<Inventory> clearList = new ArrayList<Inventory>();
         
-        // select operation for a specific manufacturer
+        // select operation for a specific manufacturer ("manf" is name of where annotation in Inventory.java)
         FullListSelect<Inventory> operation = new FullListSelect<Inventory>(
         		inventoryTable.createSelectOperation("manf"));
         		

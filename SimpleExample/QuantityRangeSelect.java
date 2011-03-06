@@ -23,6 +23,7 @@ public class QuantityRangeSelect extends ArrayListSelectOperation<Inventory>
 	public QuantityRangeSelect(Table<Inventory> table) throws OperationException 
 	{
 		super(table);
+		// custom sql appended to "select partnumber, quantity... from inventory" during prepare
 		setCustomSql("where quantity between ? and ?");
 	}
 
@@ -39,6 +40,7 @@ public class QuantityRangeSelect extends ArrayListSelectOperation<Inventory>
 	{
 		try
 		{
+			// standard JDBC
 			PreparedStatement ps = getPreparedStatement();
 			ps.setInt(1, minimumQuanity);
 			ps.setInt(2, maximumQuantity);

@@ -151,9 +151,9 @@
         <delete dir="${target}"/>
     	<delete dir="javadoc"/>
     	<delete dir="test-output"/>
-    	<delete file="sormula*.zip"/>
-    	<delete file="sormula*.jar"/>
-    	<delete file="example.zip"/>
+    	<delete>
+    		<fileset dir="." includes="*.log sormula*.zip example.zip"/>
+    	</delete>
     </target>
 	
 	<target name="lib" description="Creates sormula.jar" depends="compile-main">

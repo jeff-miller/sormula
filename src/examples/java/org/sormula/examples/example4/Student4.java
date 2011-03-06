@@ -33,6 +33,7 @@ import org.sormula.operation.UpdateOperation;
 
 /**
  * Row class for cascade example. Student4 has one to many relationship with Enrolled class.
+ * See {@link InsertExample4} for table definition.
  */
 public class Student4
 {

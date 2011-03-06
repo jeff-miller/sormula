@@ -26,6 +26,7 @@ import org.sormula.translator.StandardNameTranslator;
 
 /**
  * Row class where table name and column names are derived from {@linkplain StandardNameTranslator}.
+ * See {@link InsertExample2} for table definition.
  */
 @Row(nameTranslator=StandardNameTranslator.class)
 @Where(name="fn", fieldNames="firstName")

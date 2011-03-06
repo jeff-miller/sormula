@@ -29,7 +29,7 @@ import org.sormula.annotation.Where;
 /**
  * Row class where table name is different from class name and some column names are different from 
  * the corresponding class variables. Field, name, is transient and is not used in database
- * input/output.
+ * input/output. See {@link InsertExample3} for table definition.
  */
 @Row(tableName="studentthree")
 @Where(name="fn", fieldNames="firstName")

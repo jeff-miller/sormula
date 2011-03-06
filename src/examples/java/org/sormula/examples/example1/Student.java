@@ -24,6 +24,7 @@ import org.sormula.annotation.Where;
 
 /**
  * Row class where table name is the same as class name and column names are the same class field names.
+ * See {@link InsertExample1} for table definition.
  */
 @Where(name="fn", fieldNames="firstName")
 public class Student

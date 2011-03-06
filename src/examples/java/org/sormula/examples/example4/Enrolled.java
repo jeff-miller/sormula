@@ -21,7 +21,8 @@ import org.sormula.annotation.Where;
 
 
 /**
- * Row class for cascade example. Enrolled is many side of 1 to many relationship with Student4.
+ * Row class for cascade example. Enrolled is many side of 1 to many relationship with {@link Student4}.
+ * See {@link InsertExample4} for table definition.
  */
 @Where(name="studentSearch", fieldNames="studentId")
 public class Enrolled

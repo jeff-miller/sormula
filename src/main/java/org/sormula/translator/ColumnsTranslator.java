@@ -83,7 +83,8 @@ public class ColumnsTranslator<R>
             for (ColumnTranslator<R> c: columnTranslatorList)
             {
                 if (log.isDebugEnabled()) log.debug("read result set parameter " + p);
-                c.read(resultSet, p++, row);
+                c.read(resultSet, p, row);
+                ++p;
             }
         }
         catch (Exception e)
@@ -115,7 +116,8 @@ public class ColumnsTranslator<R>
             for (ColumnTranslator<R> c: columnTranslatorList)
             {
                 if (log.isDebugEnabled()) log.debug("write parameter " + p);
-                c.write(preparedStatement, p++, row);
+                c.write(preparedStatement, p, row);
+                ++p;
             }
         }
         catch (Exception e)

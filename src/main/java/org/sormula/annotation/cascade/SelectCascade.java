@@ -41,7 +41,8 @@ public @interface SelectCascade
 {
     /**
      * Specifics operation to perform as a select cascade. Typical operations would be
-     * {@link ScalarSelectOperation}, {@link ArrayListSelectOperation}, {@link HashMapSelectOperation}.
+     * {@link ScalarSelectOperation}, {@link ArrayListSelectOperation}, {@link HashMapSelectOperation}
+     * or some subclass of those.
      * 
      * @return operation to use for cascade
      */

@@ -54,6 +54,10 @@
     <target name="DeleteExample4" description="Runs example">
         <antcall target="run-example"><param name="class" value="org.sormula.examples.example4.DeleteExample4"/></antcall>
     </target>
+
+    <target name="BlobExample" description="Runs example">
+        <antcall target="run-example"><param name="class" value="org.sormula.examples.blob.BlobExample"/></antcall>
+    </target>
     
     <target name="run-example" description="called by other task to run an example" depends="compile-main, compile-examples">
         <echo>Run ${class}</echo>

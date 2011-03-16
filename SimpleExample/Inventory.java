@@ -8,15 +8,14 @@ import org.sormula.annotation.Where;
  * @author Jeff Miller
  */
 @Where(name="manf", fieldNames="manufacturerId")
-public class Inventory
+public class Inventory // table name defaults to "inventory", use @Row(tableName="...") to override 
 {
-    @Column(primaryKey=true)
+    @Column(primaryKey=true) // table column name defaults "partnumber", column is primary key 
     int partNumber;
     
-    // no annotation is needed when field name is same as column name
-    int quantity;
+    int quantity; // no annotation is needed when field name is same as column name
     
-    @Column(name="manfid")
+    @Column(name="manfid") // table column name is "manfid"
     String manufacturerId;
     
     

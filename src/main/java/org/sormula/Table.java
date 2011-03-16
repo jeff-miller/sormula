@@ -20,6 +20,7 @@ import java.util.Collection;
 import java.util.List;
 
 import org.sormula.annotation.Column;
+import org.sormula.annotation.OrderBy;
 import org.sormula.annotation.Row;
 import org.sormula.annotation.Where;
 import org.sormula.log.ClassLogger;
@@ -269,6 +270,25 @@ public class Table<R>
     {
         ScalarSelectOperation<R> selectOperation = new ScalarSelectOperation<R>(this);
         selectOperation.setWhere("primaryKey");
+        return selectOperation;
+    }
+    
+    
+    /**
+     * Creates operation for select by a named where condition.
+     * 
+     * @param whereConditionName name of where condition to use or use empty string to select all rows in table
+     * @param orderByName name of order phrase; see {@link ScalarSelectOperation#setOrderBy(String)}
+     * @return select operation
+     * @throws SormulaException if error
+     * @see Where
+     * @see OrderBy
+     */
+    public ListSelectOperation<R> createSelectOperation(String whereConditionName, String orderByName) throws SormulaException
+    {
+        ListSelectOperation<R> selectOperation = new ArrayListSelectOperation<R>(this);
+        selectOperation.setWhere(whereConditionName);
+        selectOperation.setOrderBy(orderByName);
         return selectOperation;
     }
     

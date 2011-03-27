@@ -3,56 +3,56 @@
 	
 	
     <!-- ******* examples ******* -->
-    <target name="InsertExample1" description="Runs example">
-        <antcall target="run-example"><param name="class" value="org.sormula.examples.example1.InsertExample1"/></antcall>
+    <target name="BasicInsert" description="Runs example">
+        <antcall target="run-example"><param name="class" value="org.sormula.examples.basic.BasicInsert"/></antcall>
     </target>
-    <target name="SelectExample1" description="Runs example">
-        <antcall target="run-example"><param name="class" value="org.sormula.examples.example1.SelectExample1"/></antcall>
+    <target name="BasicSelect" description="Runs example">
+        <antcall target="run-example"><param name="class" value="org.sormula.examples.basic.BasicSelect"/></antcall>
     </target>
-    <target name="UpdateExample1" description="Runs example">
-        <antcall target="run-example"><param name="class" value="org.sormula.examples.example1.UpdateExample1"/></antcall>
+    <target name="BasicUpdate" description="Runs example">
+        <antcall target="run-example"><param name="class" value="org.sormula.examples.basic.BasicUpdate"/></antcall>
     </target>
-    <target name="DeleteExample1" description="Runs example">
-        <antcall target="run-example"><param name="class" value="org.sormula.examples.example1.DeleteExample1"/></antcall>
-    </target>
-
-	<target name="InsertExample2" description="Runs example">
-        <antcall target="run-example"><param name="class" value="org.sormula.examples.example2.InsertExample2"/></antcall>
-    </target>
-    <target name="SelectExample2" description="Runs example">
-        <antcall target="run-example"><param name="class" value="org.sormula.examples.example2.SelectExample2"/></antcall>
-    </target>
-    <target name="UpdateExample2" description="Runs example">
-        <antcall target="run-example"><param name="class" value="org.sormula.examples.example2.UpdateExample2"/></antcall>
-    </target>
-    <target name="DeleteExample2" description="Runs example">
-        <antcall target="run-example"><param name="class" value="org.sormula.examples.example2.DeleteExample2"/></antcall>
+    <target name="BasicDelete" description="Runs example">
+        <antcall target="run-example"><param name="class" value="org.sormula.examples.basic.BasicDelete"/></antcall>
     </target>
 
-    <target name="InsertExample3" description="Runs example">
-        <antcall target="run-example"><param name="class" value="org.sormula.examples.example3.InsertExample3"/></antcall>
+	<target name="NameInsert" description="Runs example">
+        <antcall target="run-example"><param name="class" value="org.sormula.examples.name.NameInsert"/></antcall>
     </target>
-    <target name="SelectExample3" description="Runs example">
-        <antcall target="run-example"><param name="class" value="org.sormula.examples.example3.SelectExample3"/></antcall>
+    <target name="NameSelect" description="Runs example">
+        <antcall target="run-example"><param name="class" value="org.sormula.examples.name.NameSelect"/></antcall>
     </target>
-    <target name="UpdateExample3" description="Runs example">
-        <antcall target="run-example"><param name="class" value="org.sormula.examples.example3.UpdateExample3"/></antcall>
+    <target name="NameUpdate" description="Runs example">
+        <antcall target="run-example"><param name="class" value="org.sormula.examples.name.NameUpdate"/></antcall>
     </target>
-    <target name="DeleteExample3" description="Runs example">
-        <antcall target="run-example"><param name="class" value="org.sormula.examples.example3.DeleteExample3"/></antcall>
+    <target name="NameDelete" description="Runs example">
+        <antcall target="run-example"><param name="class" value="org.sormula.examples.name.NameDelete"/></antcall>
     </target>
 
-    <target name="InsertExample4" description="Runs example">
-        <antcall target="run-example"><param name="class" value="org.sormula.examples.example4.InsertExample4"/></antcall>
+    <target name="ComplexInsert" description="Runs example">
+        <antcall target="run-example"><param name="class" value="org.sormula.examples.complex.ComplexInsert"/></antcall>
     </target>
-    <target name="SelectExample4" description="Runs example">
-        <antcall target="run-example"><param name="class" value="org.sormula.examples.example4.SelectExample4"/></antcall>
+    <target name="ComplexSelect" description="Runs example">
+        <antcall target="run-example"><param name="class" value="org.sormula.examples.complex.ComplexSelect"/></antcall>
     </target>
-    <target name="UpdateExample4" description="Runs example">
-        <antcall target="run-example"><param name="class" value="org.sormula.examples.example4.UpdateExample4"/></antcall>
+    <target name="ComplexUpdate" description="Runs example">
+        <antcall target="run-example"><param name="class" value="org.sormula.examples.complex.ComplexUpdate"/></antcall>
     </target>
-    <target name="DeleteExample4" description="Runs example">
-        <antcall target="run-example"><param name="class" value="org.sormula.examples.example4.DeleteExample4"/></antcall>
+    <target name="ComplexDelete" description="Runs example">
+        <antcall target="run-example"><param name="class" value="org.sormula.examples.complex.ComplexDelete"/></antcall>
+    </target>
+
+    <target name="CascadeInsert" description="Runs example">
+        <antcall target="run-example"><param name="class" value="org.sormula.examples.cascade.CascadeInsert"/></antcall>
+    </target>
+    <target name="CascadeSelect" description="Runs example">
+        <antcall target="run-example"><param name="class" value="org.sormula.examples.cascade.CascadeSelect"/></antcall>
+    </target>
+    <target name="CascadeUpdate" description="Runs example">
+        <antcall target="run-example"><param name="class" value="org.sormula.examples.cascade.CascadeUpdate"/></antcall>
+    </target>
+    <target name="CascadeDelete" description="Runs example">
+        <antcall target="run-example"><param name="class" value="org.sormula.examples.cascade.CascadeDelete"/></antcall>
     </target>
 
     <target name="BlobExample" description="Runs example">

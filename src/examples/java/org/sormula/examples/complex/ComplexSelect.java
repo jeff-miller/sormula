@@ -14,35 +14,34 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.sormula.examples.example3;
+package org.sormula.examples.complex;
 
 import java.sql.Connection;
-import java.util.GregorianCalendar;
-import java.util.List;
 
 import org.sormula.Database;
 import org.sormula.SormulaException;
 import org.sormula.Table;
 import org.sormula.examples.ExampleBase;
+import org.sormula.operation.ListSelectOperation;
 
 
 /**
- * Same as UpdateExample1 but does not always use default names. See {@linkplain Student3}
+ * Same as SelectExample1 but does not always use default names. See {@linkplain Student3}
  * for details about name differences.
  */
-public class UpdateExample3 extends ExampleBase
+public class ComplexSelect extends ExampleBase
 {
     Table<Student3> table;
     
     
     public static void main(String[] args) throws Exception
     {
-        new InsertExample3(); // create table and rows
-        new UpdateExample3();
+        new ComplexInsert(); // create table and rows
+        new ComplexSelect();
     }
     
     
-    public UpdateExample3() throws Exception
+    public ComplexSelect() throws Exception
     {
         // init
         openDatabase();
@@ -50,9 +49,9 @@ public class UpdateExample3 extends ExampleBase
         Database database = new Database(connection, getSchema());
         table = database.getTable(Student3.class);
         
-        updateRow();
-        updateRows();
-        printAll(table.selectAll());
+        selectRow();
+        selectAllRows();
+        selectWhere();
         
         // clean up
         database.close();
@@ -60,25 +59,36 @@ public class UpdateExample3 extends ExampleBase
     }
     
     
-    void updateRow() throws SormulaException
+    void selectRow() throws SormulaException
     {
-        int id = 9999;
-        System.out.println("table.update() " + id);
-        Student3 student = table.select(id);
-        student.setGraduationDate(new GregorianCalendar(2010, 0, 1).getTime());
-        table.update(student);
+        System.out.println("table.select(1234)=" + table.select(1234));
     }
     
     
-    void updateRows() throws SormulaException
+    void selectAllRows() throws SormulaException
     {
-        String newLastName = "Jones";
-        System.out.println("table.updateAll() set last name = " + newLastName);
-        List<Student3> list = table.selectAll();
+        System.out.println("table.selectAll():");
+        printAll(table.selectAll());
+    }
+    
+    
+    void selectWhere() throws SormulaException
+    {
+        String whereParameter = "John";
+        System.out.println("select where first name = " + whereParameter);
+        ListSelectOperation<Student3> operation = table.createSelectOperation("fn");
+        operation.setParameters(whereParameter);
         
-        for (Student3 s: list)
-            s.setLastName(newLastName);
+        System.out.println("read as a collection");
+        operation.execute();
+        for (Student3 s: operation.readAll())
+            System.out.println(s);
         
-        table.updateAll(list);
+        System.out.println("read one row at a time");
+        operation.execute();
+        for (Student3 s = operation.readNext(); s != null; s = operation.readNext())
+            System.out.println(s);
+        
+        operation.close();
     }
 }

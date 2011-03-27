@@ -14,9 +14,10 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.sormula.examples.example4;
+package org.sormula.examples.basic;
 
 import java.sql.Connection;
+import java.util.List;
 
 import org.sormula.Database;
 import org.sormula.SormulaException;
@@ -24,28 +25,29 @@ import org.sormula.Table;
 import org.sormula.examples.ExampleBase;
 
 
-public class DeleteExample4 extends ExampleBase
+public class BasicDelete extends ExampleBase
 {
-    Table<Student4> table;
+    Table<Student> table;
     
     
     public static void main(String[] args) throws Exception
     {
-        new InsertExample4(); // create table and rows
-        new DeleteExample4();
-        new SelectExample4(); // display results
+        new BasicInsert(); // create table and rows
+        new BasicDelete();
     }
     
     
-    public DeleteExample4() throws Exception
+    public BasicDelete() throws Exception
     {
         // init
         openDatabase();
         Connection connection = getConnection();
         Database database = new Database(connection, getSchema());
-        table = database.getTable(Student4.class);
+        table = database.getTable(Student.class);
         
+        deleteByPrimaryKey();
         deleteRow();
+        deleteRows();
         
         // clean up
         database.close();
@@ -53,13 +55,30 @@ public class DeleteExample4 extends ExampleBase
     }
     
     
+    void deleteByPrimaryKey() throws SormulaException
+    {
+        int id = 9999;
+        System.out.println("table.delete(" + id + ")");
+        table.delete(id);
+        printAll(table.selectAll());
+    }
+    
+    
     void deleteRow() throws SormulaException
     {
         int id = 8888;
         System.out.println("table.delete(student) id=" + id);
-        Student4 student = table.select(id);
-        
-        // deletes student and enrolled
+        Student student = table.select(id);
         table.delete(student);
+        printAll(table.selectAll());
+    }
+    
+    
+    void deleteRows() throws SormulaException
+    {
+        System.out.println("table.deleteAll()");
+        List<Student> list = table.selectAll();
+        table.deleteAll(list);
+        printAll(table.selectAll());
     }
 }

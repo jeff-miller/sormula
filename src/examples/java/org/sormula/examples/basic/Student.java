@@ -14,23 +14,20 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.sormula.examples.example2;
+package org.sormula.examples.basic;
 
 import java.util.Date;
 
 import org.sormula.annotation.Column;
-import org.sormula.annotation.Row;
 import org.sormula.annotation.Where;
-import org.sormula.translator.StandardNameTranslator;
 
 
 /**
- * Row class where table name and column names are derived from {@linkplain StandardNameTranslator}.
- * See {@link InsertExample2} for table definition.
+ * Row class where table name is the same as class name and column names are the same class field names.
+ * See {@link BasicInsert} for table definition.
  */
-@Row(nameTranslator=StandardNameTranslator.class)
 @Where(name="fn", fieldNames="firstName")
-public class Student2
+public class Student
 {
     @Column(primaryKey=true)
     int id;

@@ -14,41 +14,42 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.sormula.examples.example3;
+package org.sormula.examples.cascade;
 
 import java.util.Date;
+import java.util.List;
 
 import org.sormula.annotation.Column;
-import org.sormula.annotation.Row;
-import org.sormula.annotation.Transient;
-import org.sormula.annotation.UnusedColumn;
-import org.sormula.annotation.UnusedColumns;
-import org.sormula.annotation.Where;
+import org.sormula.annotation.cascade.Cascade;
+import org.sormula.annotation.cascade.DeleteCascade;
+import org.sormula.annotation.cascade.InsertCascade;
+import org.sormula.annotation.cascade.SelectCascade;
+import org.sormula.annotation.cascade.UpdateCascade;
+import org.sormula.operation.ArrayListSelectOperation;
+import org.sormula.operation.DeleteOperation;
+import org.sormula.operation.InsertOperation;
+import org.sormula.operation.UpdateOperation;
 
 
 /**
- * Row class where table name is different from class name and some column names are different from 
- * the corresponding class variables. Field, name, is transient and is not used in database
- * input/output. See {@link InsertExample3} for table definition.
+ * Row class for cascade example. Student4 has one to many relationship with Enrolled class.
+ * See {@link CascadeInsert} for table definition.
  */
-@Row(tableName="studentthree")
-@Where(name="fn", fieldNames="firstName")
-@UnusedColumns(unusedColumns=@UnusedColumn(name="ssn", value="0"))
-public class Student3
+public class Student4
 {
-    @Column(name="student_id", primaryKey=true)
+    @Column(primaryKey=true)
     int id;
-    
-    @Column(name="first")
     String firstName;
-    
-    @Column(name="last")
     String lastName;
-    
     Date graduationDate;
     
-    @Transient
-    String name;
+    @Cascade(targetClass=Enrolled.class,
+            selects=@SelectCascade(operation=ArrayListSelectOperation.class, sourceParameterFieldNames="id", targetWhereName="studentSearch"),
+            inserts=@InsertCascade(operation=InsertOperation.class),
+            updates=@UpdateCascade(operation=UpdateOperation.class),
+            deletes=@DeleteCascade(operation=DeleteOperation.class)
+    )
+    List<Enrolled> enrollment;
     
     
     public int getId()
@@ -68,9 +69,6 @@ public class Student3
     public void setFirstName(String firstName)
     {
         this.firstName = firstName;
-        
-        // contrived transient field
-        if (firstName != null && lastName != null) name = firstName + " " + lastName;
     }
     
     
@@ -81,9 +79,6 @@ public class Student3
     public void setLastName(String lastName)
     {
         this.lastName = lastName;
-        
-        // contrived transient field
-        if (firstName != null && lastName != null) name = firstName + " " + lastName;
     }
     
     
@@ -97,9 +92,13 @@ public class Student3
     }
     
     
-    public String getName()
+    public List<Enrolled> getEnrollment()
     {
-        return name;
+        return enrollment;
+    }
+    public void setEnrollment(List<Enrolled> enrollment)
+    {
+        this.enrollment = enrollment;
     }
     
     

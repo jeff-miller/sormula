@@ -14,42 +14,29 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.sormula.examples.example4;
+package org.sormula.examples.name;
 
 import java.util.Date;
-import java.util.List;
 
 import org.sormula.annotation.Column;
-import org.sormula.annotation.cascade.Cascade;
-import org.sormula.annotation.cascade.DeleteCascade;
-import org.sormula.annotation.cascade.InsertCascade;
-import org.sormula.annotation.cascade.SelectCascade;
-import org.sormula.annotation.cascade.UpdateCascade;
-import org.sormula.operation.ArrayListSelectOperation;
-import org.sormula.operation.DeleteOperation;
-import org.sormula.operation.InsertOperation;
-import org.sormula.operation.UpdateOperation;
+import org.sormula.annotation.Row;
+import org.sormula.annotation.Where;
+import org.sormula.translator.StandardNameTranslator;
 
 
 /**
- * Row class for cascade example. Student4 has one to many relationship with Enrolled class.
- * See {@link InsertExample4} for table definition.
+ * Row class where table name and column names are derived from {@linkplain StandardNameTranslator}.
+ * See {@link NameInsert} for table definition.
  */
-public class Student4
+@Row(nameTranslator=StandardNameTranslator.class)
+@Where(name="fn", fieldNames="firstName")
+public class Student2
 {
     @Column(primaryKey=true)
     int id;
     String firstName;
     String lastName;
     Date graduationDate;
-    
-    @Cascade(targetClass=Enrolled.class,
-            selects=@SelectCascade(operation=ArrayListSelectOperation.class, sourceParameterFieldNames="id", targetWhereName="studentSearch"),
-            inserts=@InsertCascade(operation=InsertOperation.class),
-            updates=@UpdateCascade(operation=UpdateOperation.class),
-            deletes=@DeleteCascade(operation=DeleteOperation.class)
-    )
-    List<Enrolled> enrollment;
     
     
     public int getId()
@@ -89,16 +76,6 @@ public class Student4
     public void setGraduationDate(Date graduationDate)
     {
         this.graduationDate = graduationDate;
-    }
-    
-    
-    public List<Enrolled> getEnrollment()
-    {
-        return enrollment;
-    }
-    public void setEnrollment(List<Enrolled> enrollment)
-    {
-        this.enrollment = enrollment;
     }
     
     

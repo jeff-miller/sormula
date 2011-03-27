@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.sormula.examples.example1;
+package org.sormula.examples.name;
 
 import java.sql.Connection;
 
@@ -23,27 +23,32 @@ import org.sormula.SormulaException;
 import org.sormula.Table;
 import org.sormula.examples.ExampleBase;
 import org.sormula.operation.ListSelectOperation;
+import org.sormula.translator.StandardNameTranslator;
 
 
-public class SelectExample1 extends ExampleBase
+/**
+ * Same as SelectExample1 but uses {@linkplain StandardNameTranslator} which derives
+ * column names from row class names with underscores between words. See {@linkplain Student2}.
+ */
+public class NameSelect extends ExampleBase
 {
-    Table<Student> table;
+    Table<Student2> table;
     
     
     public static void main(String[] args) throws Exception
     {
-        new InsertExample1(); // create table and rows
-        new SelectExample1();
+        new NameInsert(); // create table and rows
+        new NameSelect();
     }
     
     
-    public SelectExample1() throws Exception
+    public NameSelect() throws Exception
     {
         // init
         openDatabase();
         Connection connection = getConnection();
         Database database = new Database(connection, getSchema());
-        table = database.getTable(Student.class);
+        table = database.getTable(Student2.class);
         
         selectRow();
         selectAllRows();
@@ -72,17 +77,17 @@ public class SelectExample1 extends ExampleBase
     {
         String whereParameter = "John";
         System.out.println("select where first name = " + whereParameter);
-        ListSelectOperation<Student> operation = table.createSelectOperation("fn");
+        ListSelectOperation<Student2> operation = table.createSelectOperation("fn");
         operation.setParameters(whereParameter);
         
         System.out.println("read as a collection");
         operation.execute();
-        for (Student s: operation.readAll())
+        for (Student2 s: operation.readAll())
             System.out.println(s);
         
         System.out.println("read one row at a time");
         operation.execute();
-        for (Student s = operation.readNext(); s != null; s = operation.readNext())
+        for (Student2 s = operation.readNext(); s != null; s = operation.readNext())
             System.out.println(s);
         
         operation.close();

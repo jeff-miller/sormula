@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.sormula.examples.example3;
+package org.sormula.examples.complex;
 
 import java.sql.Connection;
 import java.util.ArrayList;
@@ -31,18 +31,18 @@ import org.sormula.examples.ExampleBase;
  * Same as InsertExample1 but does not always use default names. See {@linkplain Student3}
  * for details about name differences.
  */
-public class InsertExample3 extends ExampleBase
+public class ComplexInsert extends ExampleBase
 {
     Table<Student3> table;
     
     
     public static void main(String[] args) throws Exception
     {
-        new InsertExample3();
+        new ComplexInsert();
     }
     
     
-    public InsertExample3() throws Exception
+    public ComplexInsert() throws Exception
     {
         openDatabase();
         

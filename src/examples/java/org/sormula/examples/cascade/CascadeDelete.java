@@ -14,11 +14,9 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.sormula.examples.example1;
+package org.sormula.examples.cascade;
 
 import java.sql.Connection;
-import java.util.GregorianCalendar;
-import java.util.List;
 
 import org.sormula.Database;
 import org.sormula.SormulaException;
@@ -26,29 +24,28 @@ import org.sormula.Table;
 import org.sormula.examples.ExampleBase;
 
 
-public class UpdateExample1 extends ExampleBase
+public class CascadeDelete extends ExampleBase
 {
-    Table<Student> table;
+    Table<Student4> table;
     
     
     public static void main(String[] args) throws Exception
     {
-        new InsertExample1(); // create table and rows
-        new UpdateExample1();
+        new CascadeInsert(); // create table and rows
+        new CascadeDelete();
+        new CascadeSelect(); // display results
     }
     
     
-    public UpdateExample1() throws Exception
+    public CascadeDelete() throws Exception
     {
         // init
         openDatabase();
         Connection connection = getConnection();
         Database database = new Database(connection, getSchema());
-        table = database.getTable(Student.class);
+        table = database.getTable(Student4.class);
         
-        updateRow();
-        updateRows();
-        printAll(table.selectAll());
+        deleteRow();
         
         // clean up
         database.close();
@@ -56,25 +53,13 @@ public class UpdateExample1 extends ExampleBase
     }
     
     
-    void updateRow() throws SormulaException
+    void deleteRow() throws SormulaException
     {
-        int id = 9999;
-        System.out.println("table.update() " + id);
-        Student student = table.select(id);
-        student.setGraduationDate(new GregorianCalendar(2010, 0, 1).getTime());
-        table.update(student);
-    }
-    
-    
-    void updateRows() throws SormulaException
-    {
-        String newLastName = "Jones";
-        System.out.println("table.updateAll() set last name = " + newLastName);
-        List<Student> list = table.selectAll();
+        int id = 8888;
+        System.out.println("table.delete(student) id=" + id);
+        Student4 student = table.select(id);
         
-        for (Student s: list)
-            s.setLastName(newLastName);
-        
-        table.updateAll(list);
+        // deletes student and enrolled
+        table.delete(student);
     }
 }

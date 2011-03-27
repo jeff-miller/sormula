@@ -8,9 +8,9 @@ ant -p
 
 
 To run an example:
-ant SelectExample1
-ant SelectExample2
-ant InsertExample1
+ant BasicSelect
+ant CascadeSelect
+ant BasicInsert
 etc.
 
 

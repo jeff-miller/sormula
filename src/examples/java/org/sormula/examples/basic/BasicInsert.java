@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.sormula.examples.example2;
+package org.sormula.examples.basic;
 
 import java.sql.Connection;
 import java.util.ArrayList;
@@ -25,42 +25,37 @@ import org.sormula.Database;
 import org.sormula.SormulaException;
 import org.sormula.Table;
 import org.sormula.examples.ExampleBase;
-import org.sormula.translator.StandardNameTranslator;
 
 
-/**
- * Same as InsertExample1 but uses {@linkplain StandardNameTranslator} which derives
- * column names from row class names with underscores between words. See {@linkplain Student2}.
- */
-public class InsertExample2 extends ExampleBase
+public class BasicInsert extends ExampleBase
 {
-    Table<Student2> table;
+    Table<Student> table;
     
     
     public static void main(String[] args) throws Exception
     {
-        new InsertExample2();
+        new BasicInsert();
     }
     
     
-    public InsertExample2() throws Exception
+    public BasicInsert() throws Exception
     {
         openDatabase();
         
         // create table
-        String tableName = getSchemaPrefix() + "student2";
+        String tableName = getSchemaPrefix() + "student";
         dropTable(tableName);
         createTable("CREATE TABLE " + tableName + 
                 "(id INTEGER NOT NULL PRIMARY KEY," +
-                " first_name VARCHAR(30)," +
-                " last_name VARCHAR(30)," +
-                " graduation_date TIMESTAMP)" 
+                " firstname VARCHAR(30)," +
+                " lastname VARCHAR(30)," +
+                " graduationdate TIMESTAMP)" 
         );
         
         // init
         Connection connection = getConnection();
         Database database = new Database(connection, getSchema());
-        table = database.getTable(Student2.class);
+        table = database.getTable(Student.class);
         
         insertRow();
         insertRows();
@@ -73,7 +68,7 @@ public class InsertExample2 extends ExampleBase
     
     void insertRow() throws SormulaException
     {
-        Student2 student = new Student2();
+        Student student = new Student();
         student.setId(1234);
         student.setFirstName("Jeff");
         student.setLastName("Miller");
@@ -84,22 +79,22 @@ public class InsertExample2 extends ExampleBase
     
     void insertRows() throws SormulaException
     {
-        ArrayList<Student2> list = new ArrayList<Student2>();
-        Student2 student;
+        ArrayList<Student> list = new ArrayList<Student>();
+        Student student;
         
-        student = new Student2();
+        student = new Student();
         student.setId(9999);
         student.setFirstName("John");
         student.setLastName("Miller");
         list.add(student);
         
-        student = new Student2();
+        student = new Student();
         student.setId(8888);
         student.setFirstName("John");
         student.setLastName("Smith");
         list.add(student);
         
-        student = new Student2();
+        student = new Student();
         student.setId(7777);
         student.setFirstName("Rita");
         student.setLastName("Miller");

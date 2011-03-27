@@ -14,9 +14,10 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.sormula.examples.example3;
+package org.sormula.examples.complex;
 
 import java.sql.Connection;
+import java.util.GregorianCalendar;
 import java.util.List;
 
 import org.sormula.Database;
@@ -26,22 +27,22 @@ import org.sormula.examples.ExampleBase;
 
 
 /**
- * Same as DeleteExample1 but does not always use default names. See {@linkplain Student3}
+ * Same as UpdateExample1 but does not always use default names. See {@linkplain Student3}
  * for details about name differences.
  */
-public class DeleteExample3 extends ExampleBase
+public class ComplexUpdate extends ExampleBase
 {
     Table<Student3> table;
     
     
     public static void main(String[] args) throws Exception
     {
-        new InsertExample3(); // create table and rows
-        new DeleteExample3();
+        new ComplexInsert(); // create table and rows
+        new ComplexUpdate();
     }
     
     
-    public DeleteExample3() throws Exception
+    public ComplexUpdate() throws Exception
     {
         // init
         openDatabase();
@@ -49,9 +50,9 @@ public class DeleteExample3 extends ExampleBase
         Database database = new Database(connection, getSchema());
         table = database.getTable(Student3.class);
         
-        deleteByPrimaryKey();
-        deleteRow();
-        deleteRows();
+        updateRow();
+        updateRows();
+        printAll(table.selectAll());
         
         // clean up
         database.close();
@@ -59,30 +60,25 @@ public class DeleteExample3 extends ExampleBase
     }
     
     
-    void deleteByPrimaryKey() throws SormulaException
+    void updateRow() throws SormulaException
     {
         int id = 9999;
-        System.out.println("table.delete(" + id + ")");
-        table.delete(id);
-        printAll(table.selectAll());
-    }
-    
-    
-    void deleteRow() throws SormulaException
-    {
-        int id = 8888;
-        System.out.println("table.delete(student) id=" + id);
+        System.out.println("table.update() " + id);
         Student3 student = table.select(id);
-        table.delete(student);
-        printAll(table.selectAll());
+        student.setGraduationDate(new GregorianCalendar(2010, 0, 1).getTime());
+        table.update(student);
     }
     
     
-    void deleteRows() throws SormulaException
+    void updateRows() throws SormulaException
     {
-        System.out.println("table.deleteAll()");
+        String newLastName = "Jones";
+        System.out.println("table.updateAll() set last name = " + newLastName);
         List<Student3> list = table.selectAll();
-        table.deleteAll(list);
-        printAll(table.selectAll());
+        
+        for (Student3 s: list)
+            s.setLastName(newLastName);
+        
+        table.updateAll(list);
     }
 }

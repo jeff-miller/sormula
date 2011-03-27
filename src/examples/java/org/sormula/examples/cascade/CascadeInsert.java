@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.sormula.examples.example4;
+package org.sormula.examples.cascade;
 
 import java.sql.Connection;
 import java.util.ArrayList;
@@ -26,7 +26,7 @@ import org.sormula.Table;
 import org.sormula.examples.ExampleBase;
 
 
-public class InsertExample4 extends ExampleBase
+public class CascadeInsert extends ExampleBase
 {
     Table<Student4> table;
     int enrolledId = 1001;
@@ -34,11 +34,11 @@ public class InsertExample4 extends ExampleBase
     
     public static void main(String[] args) throws Exception
     {
-        new InsertExample4();
+        new CascadeInsert();
     }
     
     
-    public InsertExample4() throws Exception
+    public CascadeInsert() throws Exception
     {
         openDatabase();
         

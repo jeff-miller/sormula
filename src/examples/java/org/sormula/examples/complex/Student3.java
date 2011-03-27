@@ -14,26 +14,41 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.sormula.examples.example1;
+package org.sormula.examples.complex;
 
 import java.util.Date;
 
 import org.sormula.annotation.Column;
+import org.sormula.annotation.Row;
+import org.sormula.annotation.Transient;
+import org.sormula.annotation.UnusedColumn;
+import org.sormula.annotation.UnusedColumns;
 import org.sormula.annotation.Where;
 
 
 /**
- * Row class where table name is the same as class name and column names are the same class field names.
- * See {@link InsertExample1} for table definition.
+ * Row class where table name is different from class name and some column names are different from 
+ * the corresponding class variables. Field, name, is transient and is not used in database
+ * input/output. See {@link ComplexInsert} for table definition.
  */
+@Row(tableName="studentthree")
 @Where(name="fn", fieldNames="firstName")
-public class Student
+@UnusedColumns(unusedColumns=@UnusedColumn(name="ssn", value="0"))
+public class Student3
 {
-    @Column(primaryKey=true)
+    @Column(name="student_id", primaryKey=true)
     int id;
+    
+    @Column(name="first")
     String firstName;
+    
+    @Column(name="last")
     String lastName;
+    
     Date graduationDate;
+    
+    @Transient
+    String name;
     
     
     public int getId()
@@ -53,6 +68,9 @@ public class Student
     public void setFirstName(String firstName)
     {
         this.firstName = firstName;
+        
+        // contrived transient field
+        if (firstName != null && lastName != null) name = firstName + " " + lastName;
     }
     
     
@@ -63,6 +81,9 @@ public class Student
     public void setLastName(String lastName)
     {
         this.lastName = lastName;
+        
+        // contrived transient field
+        if (firstName != null && lastName != null) name = firstName + " " + lastName;
     }
     
     
@@ -73,6 +94,12 @@ public class Student
     public void setGraduationDate(Date graduationDate)
     {
         this.graduationDate = graduationDate;
+    }
+    
+    
+    public String getName()
+    {
+        return name;
     }
     
     

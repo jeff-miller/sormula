@@ -14,9 +14,11 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.sormula.examples.example4;
+package org.sormula.examples.basic;
 
 import java.sql.Connection;
+import java.util.GregorianCalendar;
+import java.util.List;
 
 import org.sormula.Database;
 import org.sormula.SormulaException;
@@ -24,27 +26,29 @@ import org.sormula.Table;
 import org.sormula.examples.ExampleBase;
 
 
-public class SelectExample4 extends ExampleBase
+public class BasicUpdate extends ExampleBase
 {
-    Table<Student4> table;
+    Table<Student> table;
     
     
     public static void main(String[] args) throws Exception
     {
-        new InsertExample4(); // create table and rows
-        new SelectExample4();
+        new BasicInsert(); // create table and rows
+        new BasicUpdate();
     }
     
     
-    public SelectExample4() throws Exception
+    public BasicUpdate() throws Exception
     {
         // init
         openDatabase();
         Connection connection = getConnection();
         Database database = new Database(connection, getSchema());
-        table = database.getTable(Student4.class);
+        table = database.getTable(Student.class);
         
-        selectAllRows();
+        updateRow();
+        updateRows();
+        printAll(table.selectAll());
         
         // clean up
         database.close();
@@ -52,18 +56,25 @@ public class SelectExample4 extends ExampleBase
     }
     
     
-    void selectAllRows() throws SormulaException
+    void updateRow() throws SormulaException
     {
-        System.out.println("table.selectAll():");
-        for (Student4 s: table.selectAll())
-        {
-            System.out.println(s);
-            System.out.println("  enrolled:");
-            
-            for (Enrolled e: s.getEnrollment())
-            {
-                System.out.println("  " + e);    
-            }
-        }
+        int id = 9999;
+        System.out.println("table.update() " + id);
+        Student student = table.select(id);
+        student.setGraduationDate(new GregorianCalendar(2010, 0, 1).getTime());
+        table.update(student);
+    }
+    
+    
+    void updateRows() throws SormulaException
+    {
+        String newLastName = "Jones";
+        System.out.println("table.updateAll() set last name = " + newLastName);
+        List<Student> list = table.selectAll();
+        
+        for (Student s: list)
+            s.setLastName(newLastName);
+        
+        table.updateAll(list);
     }
 }

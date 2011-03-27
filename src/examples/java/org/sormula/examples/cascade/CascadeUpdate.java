@@ -14,46 +14,39 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.sormula.examples.example2;
+package org.sormula.examples.cascade;
 
 import java.sql.Connection;
-import java.util.GregorianCalendar;
 import java.util.List;
 
 import org.sormula.Database;
 import org.sormula.SormulaException;
 import org.sormula.Table;
 import org.sormula.examples.ExampleBase;
-import org.sormula.translator.StandardNameTranslator;
 
 
-/**
- * Same as UpdateExample1 but uses {@linkplain StandardNameTranslator} which derives
- * column names from row class names with underscores between words. See {@linkplain Student2}.
- */
-public class UpdateExample2 extends ExampleBase
+public class CascadeUpdate extends ExampleBase
 {
-    Table<Student2> table;
+    Table<Student4> table;
     
     
     public static void main(String[] args) throws Exception
     {
-        new InsertExample2(); // create table and rows
-        new UpdateExample2();
+        new CascadeInsert(); // create table and rows
+        new CascadeUpdate();
+        new CascadeSelect(); // display results
     }
     
     
-    public UpdateExample2() throws Exception
+    public CascadeUpdate() throws Exception
     {
         // init
         openDatabase();
         Connection connection = getConnection();
         Database database = new Database(connection, getSchema());
-        table = database.getTable(Student2.class);
+        table = database.getTable(Student4.class);
         
-        updateRow();
         updateRows();
-        printAll(table.selectAll());
         
         // clean up
         database.close();
@@ -61,25 +54,20 @@ public class UpdateExample2 extends ExampleBase
     }
     
     
-    void updateRow() throws SormulaException
-    {
-        int id = 9999;
-        System.out.println("table.update() " + id);
-        Student2 student = table.select(id);
-        student.setGraduationDate(new GregorianCalendar(2010, 0, 1).getTime());
-        table.update(student);
-    }
-    
-    
     void updateRows() throws SormulaException
     {
-        String newLastName = "Jones";
-        System.out.println("table.updateAll() set last name = " + newLastName);
-        List<Student2> list = table.selectAll();
+        List<Student4> list = table.selectAll();
         
-        for (Student2 s: list)
-            s.setLastName(newLastName);
+        // change all enrollment to semester 4
+        for (Student4 s: list)
+        {
+            for (Enrolled e: s.getEnrollment())
+            {
+                e.setSemester(4);
+            }
+        }
         
+        // updates students and enrolled
         table.updateAll(list);
     }
 }

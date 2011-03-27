@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.sormula.examples.example4;
+package org.sormula.examples.cascade;
 
 import org.sormula.annotation.Column;
 import org.sormula.annotation.Where;
@@ -22,7 +22,7 @@ import org.sormula.annotation.Where;
 
 /**
  * Row class for cascade example. Enrolled is many side of 1 to many relationship with {@link Student4}.
- * See {@link InsertExample4} for table definition.
+ * See {@link CascadeInsert} for table definition.
  */
 @Where(name="studentSearch", fieldNames="studentId")
 public class Enrolled

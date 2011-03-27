@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.sormula.examples.example2;
+package org.sormula.examples.name;
 
 import java.sql.Connection;
 import java.util.List;
@@ -30,19 +30,19 @@ import org.sormula.translator.StandardNameTranslator;
  * Same as DeleteExample1 but uses {@linkplain StandardNameTranslator} which derives
  * column names from row class names with underscores between words. See {@linkplain Student2}.
  */
-public class DeleteExample2 extends ExampleBase
+public class NameDelete extends ExampleBase
 {
     Table<Student2> table;
     
     
     public static void main(String[] args) throws Exception
     {
-        new InsertExample2(); // create table and rows
-        new DeleteExample2();
+        new NameInsert(); // create table and rows
+        new NameDelete();
     }
     
     
-    public DeleteExample2() throws Exception
+    public NameDelete() throws Exception
     {
         // init
         openDatabase();

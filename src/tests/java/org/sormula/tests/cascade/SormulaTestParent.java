@@ -24,14 +24,11 @@ import org.sormula.annotation.Column;
 import org.sormula.annotation.cascade.Cascade;
 import org.sormula.annotation.cascade.DeleteCascade;
 import org.sormula.annotation.cascade.InsertCascade;
+import org.sormula.annotation.cascade.OneToManyCascade;
+import org.sormula.annotation.cascade.OneToOneCascade;
 import org.sormula.annotation.cascade.SelectCascade;
 import org.sormula.annotation.cascade.UpdateCascade;
-import org.sormula.operation.ArrayListSelectOperation;
-import org.sormula.operation.DeleteOperation;
 import org.sormula.operation.HashMapSelectOperation;
-import org.sormula.operation.InsertOperation;
-import org.sormula.operation.ScalarSelectOperation;
-import org.sormula.operation.UpdateOperation;
 
 
 /**
@@ -47,30 +44,20 @@ public class SormulaTestParent
     int child1Id;
     
     // tests 1 to many relationship
-    @Cascade(targetClass=SormulaTestChildN.class,
-    		selects=@SelectCascade(operation=ArrayListSelectOperation.class, sourceParameterFieldNames="id", targetWhereName="byParent"),
-    		inserts=@InsertCascade(operation=InsertOperation.class),
-    		updates=@UpdateCascade(operation=UpdateOperation.class),
-    		deletes=@DeleteCascade(operation=DeleteOperation.class)
-	)
+    @OneToManyCascade(targetClass=SormulaTestChildN.class, 
+            selects=@SelectCascade(sourceParameterFieldNames="id", targetWhereName="byParent"))
     List<SormulaTestChildN> childList;
     
     // tests 1 to 1 relationship
-    @Cascade(
-            selects=@SelectCascade(operation=ScalarSelectOperation.class, sourceParameterFieldNames="child1Id"),
-            inserts=@InsertCascade(operation=InsertOperation.class),
-            updates=@UpdateCascade(operation=UpdateOperation.class),
-            deletes=@DeleteCascade(operation=DeleteOperation.class)
-    )
+    @OneToOneCascade(selects=@SelectCascade(sourceParameterFieldNames="child1Id"))
     SormulaTestChild1 child;
     
-    // tests map type
+    // tests general cascade and map type
     @Cascade(targetClass=SormulaTestChildM.class,
-    		selects=@SelectCascade(operation=HashMapSelectOperation.class, 
-    				sourceParameterFieldNames="id", targetWhereName="byParent", targetKeyMethodName="getId"),
-			inserts=@InsertCascade(operation=InsertOperation.class),
-            updates=@UpdateCascade(operation=UpdateOperation.class),
-            deletes=@DeleteCascade(operation=DeleteOperation.class)
+    		selects=@SelectCascade(operation=HashMapSelectOperation.class, sourceParameterFieldNames="id", targetWhereName="byParent", targetKeyMethodName="getId"),
+			inserts=@InsertCascade(),
+            updates=@UpdateCascade(),
+            deletes=@DeleteCascade()
 	)
     Map<Integer, SormulaTestChildM> childMap;
     

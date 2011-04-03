@@ -41,7 +41,7 @@ public @interface DeleteCascade
      * 
      * @return operation to use for cascade
      */
-    Class <? extends DeleteOperation> operation();
+    Class <? extends DeleteOperation> operation() default DeleteOperation.class;
     
     
     /**

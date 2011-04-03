@@ -20,6 +20,7 @@ import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
+import java.util.List;
 
 import org.sormula.annotation.OrderBy;
 import org.sormula.annotation.Where;
@@ -43,10 +44,14 @@ public @interface SelectCascade
      * Specifics operation to perform as a select cascade. Typical operations would be
      * {@link ScalarSelectOperation}, {@link ArrayListSelectOperation}, {@link HashMapSelectOperation}
      * or some subclass of those.
+     * <p>
+     * The default value of {@link ArrayListSelectOperation} works correctly for source fields that 
+     * are scalar or {@link List}. If the source field is not scalar or {@link List}, then some other
+     * select operation must be used. 
      * 
      * @return operation to use for cascade
      */
-    Class <? extends ScalarSelectOperation> operation();
+    Class <? extends ScalarSelectOperation> operation() default ArrayListSelectOperation.class;
     
 
     /**

@@ -41,7 +41,7 @@ public @interface InsertCascade
      * 
      * @return operation to use for cascade
      */
-    Class <? extends InsertOperation> operation();
+    Class <? extends InsertOperation> operation() default InsertOperation.class;
     
     
     /**

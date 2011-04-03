@@ -40,6 +40,8 @@ import org.sormula.annotation.Transient;
 import org.sormula.annotation.UnusedColumn;
 import org.sormula.annotation.UnusedColumns;
 import org.sormula.annotation.cascade.Cascade;
+import org.sormula.annotation.cascade.OneToManyCascade;
+import org.sormula.annotation.cascade.OneToOneCascade;
 import org.sormula.log.ClassLogger;
 import org.sormula.translator.standard.StandardColumnTranslator;
 
@@ -110,7 +112,13 @@ public class RowTranslator<R> extends ColumnsTranslator<R>
                 // transient column, don't translate
             	if (log.isDebugEnabled()) log.debug("transient " + rowClass.getCanonicalName() + "#" + f.getName());
             }
-            else if (!f.isAnnotationPresent(Cascade.class))
+            else if (f.isAnnotationPresent(Cascade.class) ||
+                     f.isAnnotationPresent(OneToManyCascade.class) ||
+                     f.isAnnotationPresent(OneToOneCascade.class))
+            {
+                if (log.isDebugEnabled()) log.debug("cascade " + rowClass.getCanonicalName() + "#" + f.getName());
+            }
+            else 
             {
                 // determine column translator to use
                 String columnName = "";

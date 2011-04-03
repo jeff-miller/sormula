@@ -27,6 +27,8 @@ import org.sormula.annotation.Column;
 import org.sormula.annotation.OrderBy;
 import org.sormula.annotation.Where;
 import org.sormula.annotation.cascade.Cascade;
+import org.sormula.annotation.cascade.OneToManyCascade;
+import org.sormula.annotation.cascade.OneToOneCascade;
 import org.sormula.annotation.cascade.SelectCascade;
 import org.sormula.log.ClassLogger;
 import org.sormula.operation.cascade.CascadeOperation;
@@ -326,21 +328,44 @@ public class ScalarSelectOperation<R> extends SqlOperation<R>
     @Override
     protected List<CascadeOperation<R, ?>> prepareCascades(Field field) throws OperationException
     {
-    	Cascade cascadesAnnotation = field.getAnnotation(Cascade.class);
-        Table<?> targetTable = getTargetTable(cascadesAnnotation, field);
-        SormulaField<R, ?> targetField = createTargetField(field);
-        List<CascadeOperation<R, ?>> cascadeOperations = new ArrayList<CascadeOperation<R, ?>>(
-                cascadesAnnotation.selects().length);
+        List<CascadeOperation<R, ?>> co = null;
+        Table<?> targetTable = null;
+        SelectCascade[] selectCascades = null;
         
-        // for each cascade operation
-        for (SelectCascade c: cascadesAnnotation.selects())
+        if (field.isAnnotationPresent(OneToManyCascade.class))
         {
-            @SuppressWarnings("unchecked") // target field type is not known at compile time
-            CascadeOperation<R, ?> o = new SelectCascadeOperation(targetField, targetTable, c);
-            o.prepare();
-            cascadeOperations.add(o);
+            OneToManyCascade cascadesAnnotation = field.getAnnotation(OneToManyCascade.class);
+            targetTable = getTargetTable(cascadesAnnotation.targetClass(), field);
+            selectCascades = cascadesAnnotation.selects();            
+        }
+        else if (field.isAnnotationPresent(OneToOneCascade.class))
+        {
+            OneToOneCascade cascadesAnnotation = field.getAnnotation(OneToOneCascade.class);
+            targetTable = getTargetTable(field.getType(), field);
+            selectCascades = cascadesAnnotation.selects();            
+        }
+        else if (field.isAnnotationPresent(Cascade.class))
+        {
+            Cascade cascadesAnnotation = field.getAnnotation(Cascade.class);
+            targetTable = getTargetTable(cascadesAnnotation.targetClass(), field);
+            selectCascades = cascadesAnnotation.selects();
         }
         
-        return cascadeOperations;
+        if (targetTable != null && selectCascades != null)
+        {
+            SormulaField<R, ?> targetField = createTargetField(field);
+            co = new ArrayList<CascadeOperation<R, ?>>(selectCascades.length);
+            
+            // for each cascade operation
+            for (SelectCascade c: selectCascades)
+            {
+                @SuppressWarnings("unchecked") // target field type is not known at compile time
+                CascadeOperation<R, ?> operation = new SelectCascadeOperation(targetField, targetTable, c);
+                operation.prepare();
+                co.add(operation);
+            }
+        }
+        
+        return co;
     }
 }

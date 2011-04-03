@@ -26,16 +26,17 @@ import org.sormula.Database;
 
 
 /**
- * A general purpose cascade annotation. It may be used on any class variable that is either scalar 
- * or a collection. Use this as an alternative to {@link OneToManyCascade} or {@link OneToOneCascade}. 
- * This annotation allows more than one operation per field.
+ * Cascade annotation for a one to many relationship between source row and 
+ * target row. Insert, update, and delete cascades default to standard primary key operations. Select
+ * cascade must be defined since {@link SelectCascade#sourceParameterFieldNames()} are not known
+ * by default. For more complex cascade relationships, use {@linkplain Cascade}.
  * 
  * @since 1.0
  * @author Jeff Miller
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.FIELD)
-public @interface Cascade
+public @interface OneToManyCascade
 {
     /**
      * Class type of target field to affect. Used as parameter to {@linkplain Database#getTable(Class)} to
@@ -50,27 +51,37 @@ public @interface Cascade
     
     
     /**
-     * Select cascade operation for target fields of any type.
+     * Select cascade operations that will select target rows. Typical values would be:
+     * <ul>
+     * <li>@SelectCascade(operation=ArrayListSelectOperation.class, sourceParameterFieldNames="...")</li>
+     * <li>@SelectCascade(operation=HashMapSelectOperation.class, sourceParameterFieldNames="...")</li>
+     * </ul>
      * 
-     * @return select annotations for cascade
+     * @return select annotations for cascade; use empty array for no select cascade
      */
-    SelectCascade[] selects() default {};
+    SelectCascade[] selects();
     
     
     /**
-     * @return insert annotations for cascade
+     * The cascade operations to perform when source row is inserted.
+     * 
+     * @return insert annotations for cascade; use empty array for no insert cascade
      */
-    InsertCascade[] inserts() default {};
+    InsertCascade[] inserts() default @InsertCascade();
     
     
     /**
-     * @return update annotations for cascade
+     * The cascade operations to perform when source row is updated.
+     * 
+     * @return update annotations for cascade; use empty array for no update cascade
      */
-    UpdateCascade[] updates() default {};
+    UpdateCascade[] updates() default @UpdateCascade();
     
     
     /**
-     * @return delete annotations for cascade
+     * The cascade operations to perform when source row is deleted.
+     * 
+     * @return delete annotations for cascade; use empty array for no delete cascade
      */
-    DeleteCascade[] deletes() default {};
+    DeleteCascade[] deletes() default @DeleteCascade();
 }

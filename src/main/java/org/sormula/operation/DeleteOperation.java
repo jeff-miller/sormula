@@ -23,6 +23,8 @@ import java.util.List;
 import org.sormula.Table;
 import org.sormula.annotation.cascade.Cascade;
 import org.sormula.annotation.cascade.DeleteCascade;
+import org.sormula.annotation.cascade.OneToManyCascade;
+import org.sormula.annotation.cascade.OneToOneCascade;
 import org.sormula.operation.cascade.CascadeOperation;
 import org.sormula.operation.cascade.DeleteCascadeOperation;
 import org.sormula.reflect.SormulaField;
@@ -80,21 +82,44 @@ public class DeleteOperation<R> extends ModifyOperation<R>
     @Override
     protected List<CascadeOperation<R, ?>> prepareCascades(Field field) throws OperationException
     {
-    	Cascade cascadesAnnotation = field.getAnnotation(Cascade.class);
-        Table<?> targetTable = getTargetTable(cascadesAnnotation, field);
-        SormulaField<R, ?> targetField = createTargetField(field);
-        List<CascadeOperation<R, ?>> cascadeOperations = new ArrayList<CascadeOperation<R, ?>>(
-                cascadesAnnotation.deletes().length);
+        List<CascadeOperation<R, ?>> co = null;
+        Table<?> targetTable = null;
+        DeleteCascade[] deleteCascades = null;
         
-        // for each cascade operation
-        for (DeleteCascade c: cascadesAnnotation.deletes())
+        if (field.isAnnotationPresent(OneToManyCascade.class))
         {
-            @SuppressWarnings("unchecked") // target field type is not known at compile time
-            CascadeOperation<R, ?> o = new DeleteCascadeOperation(targetField, targetTable, c);
-            o.prepare();
-            cascadeOperations.add(o);
+            OneToManyCascade cascadesAnnotation = field.getAnnotation(OneToManyCascade.class);
+            targetTable = getTargetTable(cascadesAnnotation.targetClass(), field);
+            deleteCascades = cascadesAnnotation.deletes();            
+        }
+        else if (field.isAnnotationPresent(OneToOneCascade.class))
+        {
+            OneToOneCascade cascadesAnnotation = field.getAnnotation(OneToOneCascade.class);
+            targetTable = getTargetTable(field.getType(), field);
+            deleteCascades = cascadesAnnotation.deletes();            
+        }
+        else if (field.isAnnotationPresent(Cascade.class))
+        {
+            Cascade cascadesAnnotation = field.getAnnotation(Cascade.class);
+            targetTable = getTargetTable(cascadesAnnotation.targetClass(), field);
+            deleteCascades = cascadesAnnotation.deletes();
         }
         
-        return cascadeOperations;
+        if (targetTable != null && deleteCascades != null)
+        {
+            SormulaField<R, ?> targetField = createTargetField(field);
+            co = new ArrayList<CascadeOperation<R, ?>>(deleteCascades.length);
+            
+            // for each cascade operation
+            for (DeleteCascade c: deleteCascades)
+            {
+                @SuppressWarnings("unchecked") // target field type is not known at compile time
+                CascadeOperation<R, ?> operation = new DeleteCascadeOperation(targetField, targetTable, c);
+                operation.prepare();
+                co.add(operation);
+            }
+        }
+        
+        return co;
     }
 }

@@ -27,6 +27,8 @@ import org.sormula.Table;
 import org.sormula.annotation.Column;
 import org.sormula.annotation.Where;
 import org.sormula.annotation.cascade.Cascade;
+import org.sormula.annotation.cascade.OneToManyCascade;
+import org.sormula.annotation.cascade.OneToOneCascade;
 import org.sormula.log.ClassLogger;
 import org.sormula.operation.cascade.CascadeOperation;
 import org.sormula.reflect.ReflectException;
@@ -216,7 +218,8 @@ public abstract class SqlOperation<R>
     
     
     /**
-     * Prepares cascades for all {@linkplain Cascade} annotations on row class.
+     * Prepares cascades for all cascade annotations on row class. Cascade annotations
+     * are {@linkplain OneToManyCascade}, {@linkplain OneToOneCascade}, and {linkplain Cascade}.
      *  
      * @throws OperationException if error
      */
@@ -225,7 +228,9 @@ public abstract class SqlOperation<R>
         // for all fields
         for (Field f: getTable().getRowTranslator().getRowClass().getDeclaredFields())
         {
-            if (f.isAnnotationPresent(Cascade.class))
+            if (f.isAnnotationPresent(OneToManyCascade.class) ||
+                f.isAnnotationPresent(OneToOneCascade.class) ||
+                f.isAnnotationPresent(Cascade.class))
             {
                 // prepare cascades
                 if (log.isDebugEnabled()) log.debug("prepareCascades() for " + f.getName());
@@ -243,7 +248,7 @@ public abstract class SqlOperation<R>
 
 
     /**
-     * Creates and prepares cascade operations based upon annotation for a field.
+     * Creates and prepares cascade operations based upon cascade annotations for a field.
      * 
      * @param field annotation is for this field of row class R
      * @throws OperationException if error
@@ -277,20 +282,17 @@ public abstract class SqlOperation<R>
     /**
      * Gets a table object from database associated with this operation.
      * 
-     * @param cascadesAnnotation gets table for {@linkplain Cascade#targetClass()}
+     * @param targetClass class that cascade is to affect
      * @param targetField target of cascade (obtain target field type if not specified by annotation)
      * @return table for target class of annotation
      * @throws OperationException if error
      */
-    protected Table<?> getTargetTable(Cascade cascadesAnnotation, Field targetField) throws OperationException
+    protected Table<?> getTargetTable(Class<?> targetClass, Field targetField) throws OperationException
     {
         Table<?> targetTable;
-        Class<?> targetClass = null;
         
         try
         {
-            targetClass = cascadesAnnotation.targetClass();
-            
             if (targetClass.getName().equals("java.lang.Object"))
             {
                 // get target class based upon field type

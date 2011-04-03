@@ -20,15 +20,8 @@ import java.util.Date;
 import java.util.List;
 
 import org.sormula.annotation.Column;
-import org.sormula.annotation.cascade.Cascade;
-import org.sormula.annotation.cascade.DeleteCascade;
-import org.sormula.annotation.cascade.InsertCascade;
+import org.sormula.annotation.cascade.OneToManyCascade;
 import org.sormula.annotation.cascade.SelectCascade;
-import org.sormula.annotation.cascade.UpdateCascade;
-import org.sormula.operation.ArrayListSelectOperation;
-import org.sormula.operation.DeleteOperation;
-import org.sormula.operation.InsertOperation;
-import org.sormula.operation.UpdateOperation;
 
 
 /**
@@ -43,12 +36,8 @@ public class Student4
     String lastName;
     Date graduationDate;
     
-    @Cascade(targetClass=Enrolled.class,
-            selects=@SelectCascade(operation=ArrayListSelectOperation.class, sourceParameterFieldNames="id", targetWhereName="studentSearch"),
-            inserts=@InsertCascade(operation=InsertOperation.class),
-            updates=@UpdateCascade(operation=UpdateOperation.class),
-            deletes=@DeleteCascade(operation=DeleteOperation.class)
-    )
+    @OneToManyCascade(targetClass=Enrolled.class, 
+            selects=@SelectCascade(sourceParameterFieldNames="id", targetWhereName="studentSearch"))
     List<Enrolled> enrollment;
     
     

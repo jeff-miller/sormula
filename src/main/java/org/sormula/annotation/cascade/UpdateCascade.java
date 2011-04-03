@@ -41,7 +41,7 @@ public @interface UpdateCascade
      * 
      * @return operation to use for cascade
      */
-    Class <? extends UpdateOperation> operation();
+    Class <? extends UpdateOperation> operation() default UpdateOperation.class;
     
     
     /**

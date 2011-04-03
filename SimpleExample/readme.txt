@@ -22,4 +22,4 @@ SimpleExample.class           Example compiled class
 SimpleExample.java            Example source class
 slf4j-api-1.6.1.jar           SLF4J Logging api
 slf4j-simple-1.6.1.jar        SLF4J Logging api
-sormula-1.0.3.jar             Sormumla api
+sormula-1.0.4.jar             Sormumla api

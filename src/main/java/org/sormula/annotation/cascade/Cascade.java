@@ -28,7 +28,10 @@ import org.sormula.Database;
 /**
  * A general purpose cascade annotation. It may be used on any class variable that is either scalar 
  * or a collection. Use this as an alternative to {@link OneToManyCascade} or {@link OneToOneCascade}. 
- * This annotation allows more than one operation per field.
+ * <p>
+ * More than one operation is allowed per field even though it is not likely that you would
+ * need more than one. {@link #selects()}, {@link #updates()}, {@link #inserts()},
+ * and {@link #deletes()} accepts arrays which allow an empty array to mean "do nothing". 
  * 
  * @since 1.0
  * @author Jeff Miller
@@ -50,7 +53,8 @@ public @interface Cascade
     
     
     /**
-     * Select cascade operation for target fields of any type.
+     * Select cascade operations for target fields. Use empty array
+     * to perform no select cascades.
      * 
      * @return select annotations for cascade
      */
@@ -58,18 +62,27 @@ public @interface Cascade
     
     
     /**
+     * Insert cascade operations for target fields. Use empty array
+     * to perform no insert cascades.
+     * 
      * @return insert annotations for cascade
      */
     InsertCascade[] inserts() default {};
     
     
     /**
+     * Update cascade operations for target fields. Use empty array
+     * to perform no update cascades.
+     * 
      * @return update annotations for cascade
      */
     UpdateCascade[] updates() default {};
     
     
     /**
+     * Delete cascade operations for target fields. Use empty array
+     * to perform no delete cascades.
+     * 
      * @return delete annotations for cascade
      */
     DeleteCascade[] deletes() default {};

@@ -30,6 +30,10 @@ import org.sormula.Database;
  * target row. Insert, update, and delete cascades default to standard primary key operations. Select
  * cascade must be defined since {@link SelectCascade#sourceParameterFieldNames()} are not known
  * by default. For more complex cascade relationships, use {@linkplain Cascade}.
+ * <p>
+ * More than one operation is allowed per field even though it is not likely that you would
+ * need more than one. {@link #selects()}, {@link #updates()}, {@link #inserts()},
+ * and {@link #deletes()} accepts arrays which allow an empty array to mean "do nothing". 
  * 
  * @since 1.0
  * @author Jeff Miller

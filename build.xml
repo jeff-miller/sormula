@@ -156,7 +156,7 @@
     	<delete dir="javadoc"/>
     	<delete dir="test-output"/>
     	<delete>
-    		<fileset dir="." includes="*.log sormula*.zip example.zip"/>
+    		<fileset dir="." includes="*.log sormula*.zip example*.zip"/>
     	</delete>
     </target>
 	
@@ -193,7 +193,7 @@
 	    </target>
     
     <target name="example" description="Creates example.zip for distribution" depends="init">
-          <zip zipfile="example.zip" basedir="SimpleExample"
+          <zip zipfile="example-${version}.zip" basedir="SimpleExample"
                 excludes="simpleDB.tmp .classpath .project"/>
     </target>
 </project>

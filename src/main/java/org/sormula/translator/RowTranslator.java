@@ -94,8 +94,8 @@ public class RowTranslator<R> extends ColumnsTranslator<R>
     
     
     /**
-     * Column translator to use to set the value of a row column that is the identity column 
-     * for row. Typically used by insert operations when for column annotated with
+     * Column translator used to set the value of a row column that is the identity column 
+     * for row. Typically used by insert operations for column that is annotated with
      * {@link Column#identity()}.
      * 
      * @return column translator for identity column; null if no identity column

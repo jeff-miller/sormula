@@ -27,7 +27,7 @@ import org.sormula.annotation.Column;
  */
 public class IdentityTest
 {
-    @Column(primaryKey=true, identity=true)
+    @Column(identity=true)
     int id;
     String description;
     

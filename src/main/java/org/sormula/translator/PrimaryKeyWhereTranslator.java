@@ -23,7 +23,7 @@ import org.sormula.annotation.Column;
 
 /**
  * Translates values from row object to jdbc parameters for a where condition as defined
- * by {@linkplain Column#primaryKey()} annotations.
+ * by {@link Column#primaryKey()} or {@link Column#identity()} annotations.
  * 
  * @since 1.0
  * @author Jeff Miller
@@ -47,7 +47,7 @@ public class PrimaryKeyWhereTranslator<R> extends AbstractWhereTranslator<R>
         {
             Column columnAnnotation = f.getAnnotation(Column.class);
 
-            if (columnAnnotation != null && columnAnnotation.primaryKey())
+            if (columnAnnotation != null && (columnAnnotation.primaryKey() || columnAnnotation.identity()))
             {
                 ColumnTranslator<R> columnTranslator = rowTranslator.getColumnTranslator(f.getName());
                 

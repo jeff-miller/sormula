@@ -543,7 +543,7 @@ public abstract class SqlOperation<R>
             try
             {
                 // don't use AbstractWhereTranslator.setIncludeIdentityColumns since
-                // where translators default to true and usually always want to be true for where conditions
+                // where translators default to true and usually always should be true for where conditions
                 setNextParameter(getWhereTranslator().write(preparedStatement, getNextParameter(), row));
             }
             catch (Exception e)

@@ -63,7 +63,8 @@ public class RowTranslator<R> extends ColumnsTranslator<R>
     String unusedColumnInsertNamesSql;
     String unusedColumnInsertValuesSql;
     String unusedColumnUpdateSql;
-
+    ColumnTranslator<R> identityColumnTranslator;
+    
     
     /**
      * Constructs for a row class.
@@ -89,6 +90,20 @@ public class RowTranslator<R> extends ColumnsTranslator<R>
                 log.debug(ct.getColumnName());
             }
         }
+    }
+    
+    
+    /**
+     * Column translator to use to set the value of a row column that is the identity column 
+     * for row. Typically used by insert operations when for column annotated with
+     * {@link Column#identity()}.
+     * 
+     * @return column translator for identity column; null if no identity column
+     * @see Column#identity()
+     */
+    public ColumnTranslator<R> getIdentityColumnTranslator()
+    {
+        return identityColumnTranslator;
     }
 
     
@@ -146,6 +161,20 @@ public class RowTranslator<R> extends ColumnsTranslator<R>
                 ColumnTranslator<R> translator = (ColumnTranslator<R>)
                     AbstractColumnTranslator.newInstance(columnTranslatorClass, f, columnName);
                 addColumnTranslator(translator);
+                
+                if (translator.isIdentity())
+                {
+                    if (identityColumnTranslator == null)
+                    {
+                        // first identity column encountered
+                        identityColumnTranslator = translator;
+                    }
+                    else
+                    {
+                        throw new TranslatorException("more than one identity column declared at " + 
+                                rowClass.getCanonicalName()+ "#" + f.getName());
+                    }
+                }
             }
         }
     }
@@ -258,7 +287,7 @@ public class RowTranslator<R> extends ColumnsTranslator<R>
 
 
     /**
-     * Gets column=value for all columns for update statement.
+     * Gets column=value for all unused columns for update statement.
      * 
      * @return ", uc1=v1, uc2=v2, uc3=v3..." for all unused columns
      */

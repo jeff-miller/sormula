@@ -28,6 +28,7 @@ import org.sormula.annotation.cascade.UpdateCascade;
 import org.sormula.operation.cascade.CascadeOperation;
 import org.sormula.operation.cascade.UpdateCascadeOperation;
 import org.sormula.reflect.SormulaField;
+import org.sormula.translator.RowTranslator;
 
 
 /**
@@ -51,6 +52,13 @@ public class UpdateOperation<R> extends ModifyOperation<R>
     public UpdateOperation(Table<R> table) throws OperationException
     {
         super(table);
+        
+        if (table.getRowTranslator().getIdentityColumnTranslator() != null)
+        {
+            // has identity column, don't update it
+            setIncludeIdentityColumns(false);
+        }
+        
         initBaseSql();
     }
 
@@ -61,7 +69,9 @@ public class UpdateOperation<R> extends ModifyOperation<R>
     protected void initBaseSql()
     {
         String tableName = getTable().getQualifiedTableName();
-        String columnParameterPhrase = getTable().getRowTranslator().createColumnParameterPhrase();
+        RowTranslator<R> rowTranslator = getTable().getRowTranslator();
+        rowTranslator.setIncludeIdentityColumns(isIncludeIdentityColumns()); // usually true for updates
+        String columnParameterPhrase = rowTranslator.createColumnParameterPhrase();
         
         StringBuilder sql = new StringBuilder(columnParameterPhrase.length() +  tableName.length() + 50);
         sql.append("UPDATE ");

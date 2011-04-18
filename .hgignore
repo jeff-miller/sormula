@@ -1,1 +1,3 @@
-/target/
+^target/
+^test-output/
+^\.log$

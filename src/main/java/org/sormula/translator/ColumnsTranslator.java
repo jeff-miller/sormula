@@ -40,6 +40,7 @@ public class ColumnsTranslator<R>
     Class<R> rowClass;
     List<ColumnTranslator<R>> columnTranslatorList;
     Map<String, ColumnTranslator<R>> columnTranslatorMap; // key is field name
+    boolean includeIdentityColumns;
     
     
     /**
@@ -51,6 +52,30 @@ public class ColumnsTranslator<R>
     public ColumnsTranslator(Class<R> rowClass) throws TranslatorException
     {
         this.rowClass = rowClass;
+        includeIdentityColumns = true;
+    }
+    
+
+    /**
+     * Tests if identity columns are used by this translator. Default is true. Typically
+     * it is true except for insert operations.
+     * 
+     * @return true to include all columns; false to include only non identity columns
+     */
+    public boolean isIncludeIdentityColumns()
+    {
+        return includeIdentityColumns;
+    }
+
+
+    /**
+     * Sets when to use identity columns.
+     * 
+     * @param includeIdentityColumns true to include all columns; false to include only non identity columns
+     */
+    public void setIncludeIdentityColumns(boolean includeIdentityColumns)
+    {
+        this.includeIdentityColumns = includeIdentityColumns;
     }
     
     
@@ -82,9 +107,12 @@ public class ColumnsTranslator<R>
         {
             for (ColumnTranslator<R> c: columnTranslatorList)
             {
-                if (log.isDebugEnabled()) log.debug("read result set parameter " + p);
-                c.read(resultSet, p, row);
-                ++p;
+                if (includeIdentityColumns || !c.isIdentity())
+                {
+                    if (log.isDebugEnabled()) log.debug("read result set parameter " + p);
+                    c.read(resultSet, p, row);
+                    ++p;
+                }
             }
         }
         catch (Exception e)
@@ -115,9 +143,12 @@ public class ColumnsTranslator<R>
         {
             for (ColumnTranslator<R> c: columnTranslatorList)
             {
-                if (log.isDebugEnabled()) log.debug("write parameter " + p);
-                c.write(preparedStatement, p, row);
-                ++p;
+                if (includeIdentityColumns || !c.isIdentity())
+                {
+                    if (log.isDebugEnabled()) log.debug("write parameter " + p);
+                    c.write(preparedStatement, p, row);
+                    ++p;
+                }
             }
         }
         catch (Exception e)
@@ -163,7 +194,7 @@ public class ColumnsTranslator<R>
     {
         return rowClass;
     }
-    
+
     
     /**
      * Gets sql phrase as list of columns. Typically used in select and insert statements.
@@ -176,11 +207,14 @@ public class ColumnsTranslator<R>
         
         for (ColumnTranslator<R> c: columnTranslatorList)
         {
-            phrase.append(c.getColumnName());
-            phrase.append(", ");
+            if (includeIdentityColumns || !c.isIdentity())
+            {
+                phrase.append(c.getColumnName());
+                phrase.append(", ");
+            }
         }
 
-        if (columnTranslatorList.size() > 0)
+        if (phrase.length() > 2)
         {
             // remove last delimiter
             phrase.setLength(phrase.length() - 2);
@@ -189,7 +223,7 @@ public class ColumnsTranslator<R>
         return phrase.toString();
     }
     
-
+    
     /**
      * Creates sql phrase of column names with parameters . Typically used
      * by where clause and update statement.
@@ -202,11 +236,14 @@ public class ColumnsTranslator<R>
         
         for (ColumnTranslator<R> c: columnTranslatorList)
         {
-            phrase.append(c.getColumnName());
-            phrase.append("=?, ");
+            if (includeIdentityColumns || !c.isIdentity())
+            {
+                phrase.append(c.getColumnName());
+                phrase.append("=?, ");
+            }
         }
 
-        if (columnTranslatorList.size() > 0)
+        if (phrase.length() > 2)
         {
             // remove last delimiter
             phrase.setLength(phrase.length() - 2);
@@ -215,7 +252,7 @@ public class ColumnsTranslator<R>
         return phrase.toString();
     }
     
-    
+
     /**
      * Creates parameter placeholders for all columns. Typically used by insert statement.
      * 
@@ -223,16 +260,18 @@ public class ColumnsTranslator<R>
      */
     public String createParameterPhrase()
     {
-        int quantity = columnTranslatorList.size();
-        StringBuilder phrase = new StringBuilder(quantity * 3);
+        StringBuilder phrase = new StringBuilder(columnTranslatorList.size() * 3);
         
-        for (int i = 0; i < quantity; ++i)
+        for (ColumnTranslator<R> c: columnTranslatorList)
         {
-            phrase.append("?");
-            phrase.append(", ");
+            if (includeIdentityColumns || !c.isIdentity())
+            {
+                phrase.append("?");
+                phrase.append(", ");
+            }
         }
     
-        if (quantity > 0)
+        if (phrase.length() > 2)
         {
             // remove last delimiter
             phrase.setLength(phrase.length() - 2);

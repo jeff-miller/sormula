@@ -31,7 +31,7 @@ import org.testng.annotations.Test;
  * 
  * @author Jeff Miller
  */
-@Test(groups={"operation.select", "nd"}, dependsOnGroups="operation.insert")
+@Test(groups={"operation.select"}, dependsOnGroups="operation.insert")
 public class SelectTestMC extends OperationTest<SormulaTest4MC>
 {
 	private static final ClassLogger log = new ClassLogger();

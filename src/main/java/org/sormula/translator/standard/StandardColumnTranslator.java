@@ -114,6 +114,15 @@ public class StandardColumnTranslator<R> implements ColumnTranslator<R>
     {
         return columnTranslator.getColumnName();
     }
+    
+    
+    /**
+     * {@inheritDoc}
+     */
+    public boolean isIdentity()
+    {
+        return columnTranslator.isIdentity();
+    }
 
     
     /**

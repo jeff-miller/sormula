@@ -19,6 +19,7 @@ package org.sormula.translator;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 
+import org.sormula.annotation.Column;
 import org.sormula.log.ClassLogger;
 import org.sormula.reflect.ReflectException;
 import org.sormula.reflect.SormulaField;
@@ -38,6 +39,7 @@ public abstract class AbstractColumnTranslator<R, T> implements ColumnTranslator
     
     String columnName;
     SormulaField<R, T> sormulaField;
+    boolean identity;
     
     
     /**
@@ -80,6 +82,8 @@ public abstract class AbstractColumnTranslator<R, T> implements ColumnTranslator
         try
         {
             sormulaField = new SormulaField<R, T>(field);
+            Column columnAnnotation = field.getAnnotation(Column.class);
+            setIdentity(columnAnnotation != null && columnAnnotation.identity());
         }
         catch (ReflectException e)
         {
@@ -108,6 +112,19 @@ public abstract class AbstractColumnTranslator<R, T> implements ColumnTranslator
     }
     
     
+    /**
+     * {@inheritDoc}
+     */
+    public boolean isIdentity()
+    {
+        return identity;
+    }
+    public void setIdentity(boolean identity)
+    {
+        this.identity = identity;
+    }
+
+
     /**
      * Gets the field as a {@link SormulaField}.
      * 

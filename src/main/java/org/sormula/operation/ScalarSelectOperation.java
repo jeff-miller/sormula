@@ -35,6 +35,7 @@ import org.sormula.operation.cascade.CascadeOperation;
 import org.sormula.operation.cascade.SelectCascadeOperation;
 import org.sormula.reflect.SormulaField;
 import org.sormula.translator.OrderByTranslator;
+import org.sormula.translator.RowTranslator;
 import org.sormula.translator.TranslatorException;
 
 
@@ -264,7 +265,9 @@ public class ScalarSelectOperation<R> extends SqlOperation<R>
     protected void initBaseSql()
     {
         String tableName = getTable().getQualifiedTableName();
-        String selectColumnPhrase = getTable().getRowTranslator().createColumnPhrase(); 
+        RowTranslator<R> rowTranslator = getTable().getRowTranslator();
+        rowTranslator.setIncludeIdentityColumns(isIncludeIdentityColumns()); // usually true for selects
+        String selectColumnPhrase = rowTranslator.createColumnPhrase(); 
         StringBuilder sql = new StringBuilder(selectColumnPhrase.length() + tableName.length() + 50);
         
         sql.append("SELECT ");

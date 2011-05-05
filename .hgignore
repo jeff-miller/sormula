@@ -1,3 +1,4 @@
+^javadoc/
 ^target/
 ^test-output/
 ^\.log$

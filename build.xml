@@ -109,7 +109,7 @@
         <antcall target="compile"><param name="type" value="tests"/></antcall>
     </target>
     
-    <target name="compile" description="called by other tasks to compile">
+    <target name="compile" description="called by other tasks to compile" depends="init">
         <javac 
             destdir="${target}" 
             source="1.5" 
@@ -117,6 +117,7 @@
             optimize="${optimize}"
             debug="${debug}"
             listfiles="true"
+        	includeAntRuntime="false"
         >
             <src refid="${type}.srcpath"/>
             <classpath refid="${type}.libpath"/>

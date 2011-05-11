@@ -112,8 +112,8 @@
     <target name="compile" description="called by other tasks to compile" depends="init">
         <javac 
             destdir="${target}" 
-            source="1.5" 
-            target="1.5"
+            source="${javac.version}" 
+            target="${javac.version}"
             optimize="${optimize}"
             debug="${debug}"
             listfiles="true"
@@ -187,7 +187,7 @@
 	            destdir="javadoc" 
 	        	public="true" 
 	            use="true"
-	            source="1.5"
+	            source="${javac.version}"
 	            >
 	        	<classpath refid="main.libpath"/>
 	        </javadoc>

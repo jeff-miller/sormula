@@ -114,7 +114,8 @@ public abstract class CascadeOperation<S, T>
     
     
     /**
-     * {@inheritDoc}
+     * Creates new instance of sql operation from {@link #cascadeOperationClass} supplied in the 
+     * constructor.
      */
     protected SqlOperation<?> createOperation() throws OperationException
     {

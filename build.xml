@@ -163,24 +163,26 @@
     </target>
 	
 	<target name="lib" description="Creates sormula.jar" depends="compile-main">
-	      <jar jarfile="sormula-${version}.jar" basedir="${target}"
+	    <jar jarfile="sormula-${version}.jar" basedir="${target}"
 	            excludes="org/sormula/examples/**/* 
 	      	              org/sormula/tests/**/*"
 	        />
 	</target>
 	
-	<target name="dist" description="Creates sormula.zip for distribution" depends="lib, javadoc">
-	      <zip zipfile="sormula-${version}.zip" basedir="."
-	            excludes="sormula-${version}.zip
-	      	              .hg/**/*
-	      	              target/**/*
-	      	              test-output/**/*
-	      				  *.log*
-	      	"/>
+    <target name="dist" description="Creates sormula.zip for distribution" depends="lib, javadoc">
+        <property name="p" value="sormula"/>
+	    <zip zipfile="sormula-${version}.zip" basedir=".."
+	            includes="${p}/**/*"
+	            excludes="${p}/sormula-${version}.zip
+	    	              ${p}/.hg/**/* 
+	    	              ${p}/target/**
+	    	              ${p}/test-output/**
+	    	              ${p}/*.log*"
+	      />
 	</target>
 	
 	<target name="javadoc" description="Generates javadoc to javadoc directory" depends="compile-main">
-	        <javadoc 
+	    <javadoc 
 	            sourcepathref="main.srcpath" 
 	            packagenames="*"
 	            windowtitle="${ant.project.name}" 
@@ -195,7 +197,7 @@
 	    </target>
     
     <target name="example" description="Creates example.zip for distribution" depends="init">
-          <zip zipfile="example-${version}.zip" basedir="SimpleExample"
+        <zip zipfile="example-${version}.zip" basedir="SimpleExample"
                 excludes="simpleDB.tmp .classpath .project"/>
     </target>
 </project>

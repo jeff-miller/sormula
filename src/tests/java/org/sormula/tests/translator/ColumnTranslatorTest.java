@@ -47,7 +47,7 @@ public class ColumnTranslatorTest extends DatabaseTest<SormulaTest1>
         openDatabase();
         createTable(SormulaTest1.class, 
             "CREATE TABLE " + getSchemaPrefix() + SormulaTest1.class.getSimpleName() + " (" +
-            " testBigDecimal DECIMAL(30,10)," +
+            " testBigDecimal DECIMAL(18,8)," + // firebird only allows max precesion of 18
             " testBoolean1 VARCHAR(5)," +
             " testBoolean2 VARCHAR(5)," +
             " testBooleanYN1 CHAR(1)," +
@@ -89,7 +89,7 @@ public class ColumnTranslatorTest extends DatabaseTest<SormulaTest1>
         inserted = new SormulaTest1();
         
         // primatives and object equivalents
-        inserted.setTestBigDecimal(new BigDecimal("12345678901234567890.0123456789"));
+        inserted.setTestBigDecimal(new BigDecimal("1234567890.01234567"));
         inserted.setTestBoolean1(true);
         inserted.setTestBoolean2(true);
         inserted.setTestBooleanYN1(true);

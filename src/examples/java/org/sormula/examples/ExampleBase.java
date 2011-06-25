@@ -102,10 +102,12 @@ public class ExampleBase
             if (user.length() == 0 && password.length() == 0)
             {
                 // no user and password
+                log.info("get connection url=" + url);
                 connection = DriverManager.getConnection(url);
             }
             else
             {
+                log.info("get connection url=" + url + " user=" + user + " password=" + password);
                 connection = DriverManager.getConnection(url, user, password); 
             }
             

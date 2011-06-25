@@ -63,6 +63,7 @@
         <echo>Run ${class}</echo>
         <java classname="${class}">
             <sysproperty key="dbdir" value="${db.dir}"/>
+        	<sysproperty key="java.library.path" value="jdbc/${db.dir}"/> <!-- for type 2 JDBC drivers -->
             <classpath refid="examples.libpath"/>
             <classpath>
                 <path path="${target}"/>
@@ -185,7 +186,7 @@
 	            windowtitle="${ant.project.name}" 
 	            doctitle="${ant.project.name}" 
 	            destdir="javadoc" 
-	        	public="true" 
+	        	protected="true" 
 	            use="true"
 	            source="${javac.version}"
 	            >

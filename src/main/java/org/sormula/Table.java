@@ -47,6 +47,40 @@ import org.sormula.translator.RowTranslator;
  * is created based upon fields within the row class of type R and from annoations for the
  * class. All common input/output methods use the primary key defined by {@linkplain Column#primaryKey()} 
  * annotation on class R.
+ * <p>
+ * Example 1 - Get table from database:
+ * <blockquote><pre>
+ * Connection connection = ... // jdbc connection
+ * Database database = new Database(connection);
+ * Table&lt;MyRow&gt; table = database.getTable(MyRow.class);
+ * table.selectAll();
+ * </pre></blockquote>
+ * <p>
+ * Example 2 - Instantiate table:
+ * <blockquote><pre>
+ * Connection connection = ... // jdbc connection
+ * Database database = new Database(connection);
+ * Table&lt;MyRow&gt; table = new Table&lt;MyRow&gt;(database, MyRow.class);
+ * table.selectAll();
+ * </pre></blockquote>
+ * <p>
+ * Example 3 - Instantiate a table subclass:
+ * <blockquote><pre>
+ * public class MyCustomTable extends Table&lt;MyRow&gt;
+ * {
+ *     public MyCustomTable(Connection connection)
+ *     {
+ *         super(connection, MyRow.class);
+ *     }
+ * 
+ *     ...
+ * }
+ * 
+ * Connection connection = ... // jdbc connection
+ * Database database = new Database(connection);
+ * MyCustomTable table = new MyCustomTable(database);
+ * table.selectAll();
+ * </pre></blockquote>
  * 
  * @since 1.0
  * @author Jeff Miller
@@ -190,7 +224,13 @@ public class Table<R>
     
     /**
      * Selects all rows in table.
-     * 
+     * <p>
+     * Example:
+     * <blockquote><pre>
+     * Database database = ...
+     * Table&lt;Order&gt; table = database.getTable(Order.class);
+     * List&ltOrder&gt; orders = table.selectAll();
+     * </pre></blockquote>
      * @return list of all rows
      * @throws SormulaException if error
      */
@@ -203,7 +243,14 @@ public class Table<R>
     /**
      * Selects one row in table using primary key. Primary key must be defined by one
      * or more {@linkplain Column#primaryKey()} annotations.
-     * 
+     * <p>
+     * Example:
+     * <blockquote><pre>
+     * Database database = ...
+     * Table&lt;Order&gt; table = database.getTable(Order.class);
+     * int orderNumber = 123456; // primary key
+     * Order order = table.select(orderNumber);
+     * </pre></blockquote>
      * @param parameters primary key values to use for select (must be in same order as
      * primary key columns appear with row class)
      * @return row or null if none found
@@ -217,7 +264,13 @@ public class Table<R>
     
     /**
      * Select list of rows using custom sql.
-     * 
+     * <p>
+     * Example:
+     * <blockquote><pre>
+     * Database database = ...
+     * Table&lt;Order&gt; table = database.getTable(Order.class);
+     * List&ltOrder&gt; orders = table.selectAllCustom("where orderdate >= '2011-01-01'");
+     * </pre></blockquote>
      * @param customSql custom sql to be appended to base sql (for example, "where somecolumn=?")
      * @param parameters parameter value to be set in customSql
      * @return list of rows selected
@@ -233,10 +286,16 @@ public class Table<R>
     
     /**
      * Selects one row using custom sql.
-     *  
+     * <p>
+     * Example:
+     * <blockquote><pre>
+     * Database database = ...
+     * Table&lt;Order&gt; table = database.getTable(Order.class);
+     * Order order = table.selectCustom("where orderdate >= '2011-01-01'");
+     * </pre></blockquote>
      * @param customSql custom sql to be appended to base sql (for example, "where somecolumn=?")
      * @param parameters parameter value to be set in customSql
-     * @return row or null if no rows selected
+     * @return first row found or null if no rows selected
      * @throws SormulaException if error
      */
     public R selectCustom(String customSql, Object... parameters) throws SormulaException
@@ -248,8 +307,29 @@ public class Table<R>
     
     
     /**
-     * Creates operation to select all rows in table.
+     * Creates operation to select all rows in table. This method is an alternate to:<br>
+     * <blockquote><pre>
+     * new ArrayListSelectOperation&lt;R&gt;(table)
+     * </pre></blockquote>
+     * <p>
+     * Example:
+     * <blockquote><pre>
+     * Database database = ...
+     * Table&lt;Student&gt; table = database.getTable(Student.class);
+     * ListSelectOperation&ltStudent&gt; operation = table.createSelectAllOperation();
      * 
+     * //read as a collection
+     * operation.execute();
+     * for (Student s: operation.readAll())
+     *     System.out.println(s);
+     *   
+     * // read one row at a time
+     * operation.execute();
+     * for (Student s = operation.readNext(); s != null; s = operation.readNext())
+     *       System.out.println(s);
+     * 
+     * operation.close();
+     * </pre></blockquote>
      * @return select operation
      * @throws SormulaException if error
      */
@@ -261,8 +341,23 @@ public class Table<R>
     
     /**
      * Creates operation to select by primary key. Primary key must be defined by one
-     * or more {@linkplain Column#primaryKey()} annotations.
-     *  
+     * or more {@linkplain Column#primaryKey()} annotations. This method is an alternate to:<br>
+     * <blockquote><pre>
+     * ScalarSelectOperation<R> selectOperation = new ScalarSelectOperation&lt;R&gt;(table);
+     * selectOperation.setWhere("primaryKey");
+     * </pre></blockquote>
+     * <p>
+     * Example:
+     * <blockquote><pre>
+     * Database database = ...
+     * Table&lt;Order&gt; table = database.getTable(Order.class);
+     * ScalarSelectOperation&lt;Order&gt; operation = table.createSelectOperation();
+     * int orderNumber = 123456; // primary key
+     * operation.setParameters(orderNumber);
+     * operation.execute();
+     * Order order = operation.readNext();
+     * operation.close();
+     * </pre></blockquote>
      * @return select operation
      * @throws SormulaException if error
      */
@@ -275,7 +370,28 @@ public class Table<R>
     
     
     /**
-     * Creates operation for select by a named where condition.
+     * Creates operation for select by a named where condition. This method is an alternate to:<br>
+     * <blockquote><pre>
+     * ArrayListSelectOperation<R> selectOperation = new ArrayListSelectOperation&lt;R&gt;(table);
+     * selectOperation.setWhere(whereConditionName);
+     * selectOperation.setOrderBy(orderByName);
+     * </pre></blockquote>
+     * <p>
+     * Example:
+     * <blockquote><pre>
+     * Database database = ...
+     * Table&lt;Student&gt; table = database.getTable(Student.class);
+     * 
+     * // graduated is name of Where annotation on Student to select by graduation date
+     * // byName is name of OrderBy annotation  on Student to order by last name, first name
+     * ListSelectOperation&ltStudent&gt; operation = table.createSelectOperation("graduated", "byName");
+     * 
+     * operation.execute();
+     * for (Student s: operation.readAll())
+     *     System.out.println(s);
+     *   
+     * operation.close();
+     * </pre></blockquote>
      * 
      * @param whereConditionName name of where condition to use or use empty string to select all rows in table
      * @param orderByName name of order phrase; see {@link ScalarSelectOperation#setOrderBy(String)}
@@ -294,8 +410,13 @@ public class Table<R>
     
     
     /**
-     * Creates operation for select by a named where condition.
-     * 
+     * Creates operation for select by a named where condition. This method is an alternate to:<br>
+     * <blockquote><pre>
+     * ArrayListSelectOperation<R> selectOperation = new ArrayListSelectOperation&lt;R&gt;(table);
+     * selectOperation.setWhere(whereConditionName);
+     * </pre></blockquote>
+     * <p>
+     * Example: See {@link #createSelectOperation(String, String)} omit order by.
      * @param whereConditionName name of where condition to use or use empty string to select all rows in table
      * @return select operation
      * @throws SormulaException if error
@@ -323,7 +444,15 @@ public class Table<R>
     
     /**
      * Selects count for a subset of rows.
-     * 
+     * <p>
+     * Example:
+     * <blockquote><pre>
+     * Database database = ...
+     * Table&lt;Order&gt; table = database.getTable(Order.class);
+     *  
+     * // quantityExceeds is the name of a Where annotation on Order that filters quantity >= ?
+     * int bigOrderCount = table.selectCount("quanityExceeds", 100);
+     * </pre></blockquote>
      * @param whereConditionName name of where condition to use empty string to count all rows in table
      * @param parameters parameters for where condition
      * @return count of all rows in table
@@ -346,8 +475,24 @@ public class Table<R>
     
     
     /**
-     * Creates operation to select count of rows for a named where condition.
-     * 
+     * Creates operation to select count of rows for a named where condition. This method is an alternate to:<br>
+     * <blockquote><pre>
+     * SelectCountOperation<R> selectOperation = new SelectCountOperation&lt;R&gt;(table);
+     * selectOperation.setWhere(whereConditionName);
+     * </pre></blockquote>
+     * <p>
+     * Example:
+     * <blockquote><pre>
+     * Database database = ...
+     * Table&lt;Order&gt; table = database.getTable(Order.class);
+     *  
+     * // quantityExceeds is the name of a Where annotation on Order that filters quantity >= ?
+     * SelectCountOperation<R> selectCountOperation = table.createSelectCountOperation("quanityExceeds");
+     * selectCountOperation.setParameters(100);
+     * selectCountOperation.execute();
+     * int bigOrderCount = selectCountOperation.readCount();
+     * selectCountOperation.close();
+     * </pre></blockquote> 
      * @param whereConditionName name of where condition to use empty string to count all rows in table
      * @return select operation
      * @throws SormulaException if error

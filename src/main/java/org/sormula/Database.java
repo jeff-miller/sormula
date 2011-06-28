@@ -28,7 +28,15 @@ import org.sormula.translator.NameTranslator;
 /**
  * Source of {@linkplain Table} objects for reading/writing from/to database. For single threaded use 
  * only. Construct new instances for each transaction and/or thread.
- *
+ * <p>
+ * Example - Construct database from jdbc connection:
+ * <blockquote><pre>
+ * Connection connection = ... // jdbc connection
+ * Database database = new Database(connection);
+ * Table&lt;MyRow&gt; table = database.getTable(MyRow.class);
+ * table.selectAll();
+ * <pre></blockquote>
+ * 
  * @since 1.0
  * @author Jeff Miller
  */
@@ -146,10 +154,11 @@ public class Database
     
     /**
      * Adds a table object to cache to be used for row objects of type
-     * {@linkplain Table#getClass()}. Use this method to save table in cache. This method is optional
-     * for tables created outside of this class. 
+     * {@linkplain Table#getClass()}. Use this method to save table in cache. This method provides
+     * a way to ensure that a custom subclass of {@link Table} is returned from {@link #getTable(Class)}
+     * for the table row class. 
      * 
-     * @param table table object to add to cache ({@linkplain Table#getClass()} cannonical name is key
+     * @param table table object to add to cache (table row class cannonical name is key)
      */
     public void addTable(Table<?> table)
     {

@@ -147,7 +147,8 @@ public abstract class SqlOperation<R>
     /**
      * Cleans up after operation is no longer needed. The connection is not closed but all other
      * objects created by this operations are closed. Prepared statement is closed and
-     * close method is invoked on all {@link CascadeOperation} objects.
+     * close method is invoked on all {@link CascadeOperation} objects. This method should
+     * be invoked when operation is no longer needed for proper JDBC clean up.
      * 
      * @throws OperationException if error
      */

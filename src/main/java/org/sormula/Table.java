@@ -508,7 +508,18 @@ public class Table<R>
     
     /**
      * Inserts one row into table.
-     * 
+     * <p>
+     * Example:
+     * <blockquote><pre>
+     * Database database = ...
+     * Table&lt;Student&gt; table = database.getTable(Student.class);
+     * Student student = new Student();
+     * student.setId(1234);
+     * student.setFirstName("Jeff");
+     * student.setLastName("Miller");
+     * student.setGraduationDate(new Date(System.currentTimeMillis()));
+     * table.insert(student);
+     * </pre></blockquote>
      * @param row row to insert
      * @return count of rows affected
      * @throws SormulaException if error
@@ -521,7 +532,17 @@ public class Table<R>
     
     /**
      * Inserts collection of rows.
-     * 
+     * <p>
+     * Example:
+     * <blockquote><pre>
+     * Database database = ...
+     * Table&lt;Student&gt; table = database.getTable(Student.class);
+     * ArrayList&lt;Student&gt; list = new ArrayList&lt;Student&gt;();
+     * list.add(student1);
+     * list.add(student2);
+     * list.add(student3);
+     * table.insertAll(list);
+     * </pre></blockquote>
      * @param rows rows to insert
      * @return count of rows affected
      * @throws SormulaException if error
@@ -534,7 +555,26 @@ public class Table<R>
     
     /**
      * Creates insert operation.
+     * <p>
+     * Example:
+     * <blockquote><pre>
+     * Database database = ...
+     * Table&lt;Student&gt; table = database.getTable(Student.class);
+     * InsertOperation&lt;Student&gt; insertOperation = table.createInsertOperation();
      * 
+     * while (some condition)
+     * {
+     *     Student student = new Student();
+     *     student.setId(...);
+     *     student.setFirstName(...);
+     *     student.setLastName(...);
+     *     student.setGraduationDate(...);
+     *     insertOperation.setRow(student);
+     *     insertOperation.execute();
+     * }
+     * 
+     * insertOperation.close();
+     * </pre></blockquote>
      * @return insert operation
      * @throws SormulaException if error
      */
@@ -547,7 +587,15 @@ public class Table<R>
     /**
      * Updates one row in table by primary key. Primary key must be defined by one
      * or more {@linkplain Column#primaryKey()} annotations.
-     * 
+     * <p>
+     * Example:
+     * <blockquote><pre>
+     * Database database = ...
+     * Table&lt;Student&gt; table = database.getTable(Student.class);
+     * Student student = table.select(id);
+     * student.setGraduationDate(...);
+     * table.update(student);
+     * </pre></blockquote>
      * @param row row to update
      * @return count of rows affected
      * @throws SormulaException if error
@@ -561,7 +609,17 @@ public class Table<R>
     /**
      * Updates collection of rows using primary key. Primary key must be defined by one
      * or more {@linkplain Column#primaryKey()} annotations.
-     * 
+     * <p>
+     * Example:
+     * <blockquote><pre>
+     * Database database = ...
+     * Table&lt;Student&gt; table = database.getTable(Student.class);
+     * List&lt;Student&gt; list = table.selectAll();
+     * for (Student s: list)
+     *     student.setGraduationDate(...);
+     *   
+     * table.updateAll(list);
+     * </pre></blockquote>
      * @param rows rows to update
      * @return count of rows affected
      * @throws SormulaException if error
@@ -575,7 +633,23 @@ public class Table<R>
     /**
      * Creates update by primary key operation. Primary key must be defined by one
      * or more {@linkplain Column#primaryKey()} annotations.
+     * <p>
+     * Example:
+     * <blockquote><pre>
+     * Database database = ...
+     * Table&lt;Student&gt; table = database.getTable(Student.class);
+     * UpdateOperation&lt;Student&gt; updateOperation = table.createUpdateOperation();
      * 
+     * while (some condition)
+     * {
+     *     Student student = getSomeStudent();
+     *     student.setGraduationDate(...);
+     *     updateOperation.setRow(student);
+     *     updateOperation.execute();
+     * }
+     * 
+     * updateOperation.close();
+     * </pre></blockquote>
      * @return update operation
      * @throws SormulaException if error
      */
@@ -587,7 +661,22 @@ public class Table<R>
     
     /**
      * Creates operation to update by named where condition.
-     * 
+     * <p>
+     * Example:
+     * <blockquote><pre>
+     * Database database = ...
+     * Table&lt;Student&gt; table = database.getTable(Student.class);
+     * // specialCondition is name of Where annotation on Student class
+     * UpdateOperation&lt;Student&gt; updateOperation = table.createUpdateOperation("specialCondition");
+     * Student student = new Student();
+     * student.setId(...);
+     * student.setFirstName(...);
+     * student.setLastName(...);
+     * student.setGraduationDate(...);
+     * updateOperation.setRow(student);
+     * updateOperation.execute(); // updates all rows with values from student for specialCondition
+     * updateOperation.close();
+     * </pre></blockquote>
      * @param whereConditionName name of where condition to use
      * @return update operation
      * @throws SormulaException if error
@@ -603,7 +692,13 @@ public class Table<R>
     /**
      * Deletes by primary key. Primary key must be defined by one
      * or more {@linkplain Column#primaryKey()} annotations.
-     * 
+     * <p>
+     * Example:
+     * <blockquote><pre>
+     * Database database = ...
+     * Table&lt;Student&gt; table = database.getTable(Student.class);
+     * table.delete(1234); // deletes student with id of 1234
+     * </pre></blockquote> 
      * @param parameters where condition values to use for delete (must be in same order as
      * primary key fields appear with row class)
      * @return count of rows affected
@@ -618,7 +713,15 @@ public class Table<R>
     /**
      * Deletes by primary key. Primary key must be defined by one
      * or more {@linkplain Column#primaryKey()} annotations.
-     * 
+     * <p>
+     * Example:
+     * <blockquote><pre>
+     * Database database = ...
+     * Table&lt;Student&gt; table = database.getTable(Student.class);
+     * // delete student with id of 1234
+     * Student student = table.select(1234);
+     * table.delete(student);
+     * </pre></blockquote> 
      * @param row get primary key values from this row
      * @return count of rows affected
      * @throws SormulaException if error
@@ -632,7 +735,14 @@ public class Table<R>
     /**
      * Deletes many rows by primary key. Primary key must be defined by one
      * or more {@linkplain Column#primaryKey()} annotations.
-     * 
+     * <p>
+     * Example:
+     * <blockquote><pre>
+     * Database database = ...
+     * Table&lt;Student&gt; table = database.getTable(Student.class);
+     * List&lt;Student&gt; list = getSomeStudents();
+     * table.deleteAll(list);
+     * </pre></blockquote> 
      * @param rows get primary key values from each row in this collection
      * @return count of rows affected
      * @throws SormulaException if error
@@ -645,7 +755,13 @@ public class Table<R>
     
     /**
      * Deletes all rows in table.
-     * 
+     * <p>
+     * Example:
+     * <blockquote><pre>
+     * Database database = ...
+     * Table&lt;Student&gt; table = database.getTable(Student.class);
+     * table.deleteAll();
+     * </pre></blockquote> 
      * @return count of rows affected
      * @throws SormulaException if error
      */
@@ -657,7 +773,15 @@ public class Table<R>
     
     /**
      * Creates operation to delete all rows in table (no where condition).
-     * 
+     * <p>
+     * Example:
+     * <blockquote><pre>
+     * Database database = ...
+     * Table&lt;Student&gt; table = database.getTable(Student.class);
+     * DeleteOperation&lt;Student&gt; deleteAllOperation = table.createDeleteAllOperation();
+     * deleteAllOperation.execute();
+     * deleteAllOperation.close();
+     * </pre></blockquote> 
      * @return delete operation
      * @throws SormulaException if error
      */
@@ -669,7 +793,22 @@ public class Table<R>
     
     /**
      * Creates operation to delete by primary key.
+     * <p>
+     * Example:
+     * <blockquote><pre>
+     * Database database = ...
+     * Table&lt;Student&gt; table = database.getTable(Student.class);
+     * DeleteOperation&lt;Student&gt; deleteOperation = table.createDeleteOperation();
      * 
+     * while (some condition)
+     * {
+     *     Student student = getSomeStudent();
+     *     deleteOperation.setRow(student);
+     *     deleteOperation.execute();
+     * }
+     * 
+     * deleteOperation.close();
+     * </pre></blockquote>
      * @return delete operation
      * @throws SormulaException if error
      */
@@ -681,7 +820,22 @@ public class Table<R>
     
     /**
      * Creates delete operation to delete by named where condition.
-     * 
+     * <p>
+     * Example:
+     * <blockquote><pre>
+     * Database database = ...
+     * Table&lt;Student&gt; table = database.getTable(Student.class);
+     * // specialCondition is name of Where annotation on Student class
+     * DeleteOperation&lt;Student&gt; deleteOperation = table.createDeleteOperation("specialCondition");
+     * Student student = new Student();
+     * student.setId(...);
+     * student.setFirstName(...);
+     * student.setLastName(...);
+     * student.setGraduationDate(...);
+     * deleteOperation.setRow(student);
+     * deleteOperation.execute(); // deletes rows with values from student for specialCondition
+     * deleteOperation.close();
+     * </pre></blockquote>
      * @param whereConditionName name of where condition to use
      * @return delete operation
      * @throws SormulaException if error

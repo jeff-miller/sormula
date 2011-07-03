@@ -44,7 +44,7 @@ public class FullListSelect<R> extends FullSelect<R, List<R>>
     
     
     /**
-     * Constructs for a {@link Table} to operation on all rows.
+     * Constructs for a {@link Table} to operate on all rows.
      * 
      * @param table select from this table
      */

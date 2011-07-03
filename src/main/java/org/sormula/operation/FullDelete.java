@@ -16,6 +16,9 @@
  */
 package org.sormula.operation;
 
+import org.sormula.SormulaException;
+import org.sormula.Table;
+
 
 /**
  * {@link DeleteOperation} performed as prepare, execute, and close in one method.
@@ -34,6 +37,29 @@ public class FullDelete<R> extends FullModify<R>
     public FullDelete(DeleteOperation<R> deleteOperation)
     {
         super(deleteOperation);
+    }
+    
+    
+    /**
+     * Constructs for a {@link Table} to delete by primary key.
+     * 
+     * @param table delete from this table
+     */
+    public FullDelete(Table<R> table) throws SormulaException
+    {
+        super(table.createDeleteOperation());
+    }
+    
+    
+    /**
+     * Constructs for a {@link Table}.
+     * 
+     * @param table delete from this table
+     * @param whereConditionName name of where condition to use; see {@link SqlOperation#setWhere(String)}
+     */
+    public FullDelete(Table<R> table, String whereConditionName) throws SormulaException
+    {
+        super(table.createDeleteOperation(whereConditionName));
     }
     
     

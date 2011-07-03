@@ -21,6 +21,7 @@ import java.util.List;
 import org.sormula.SormulaException;
 import org.sormula.annotation.Wheres;
 import org.sormula.operation.ArrayListSelectOperation;
+import org.sormula.operation.FullListSelect;
 import org.sormula.operation.ListSelectOperation;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
@@ -97,11 +98,7 @@ public class SelectTest extends OperationTest<SormulaTest4>
         assert expectedCount > 0 : "no rows meet expected condition to test";
         
         // select all type 3 rows
-        ListSelectOperation<SormulaTest4> operation = getTable().createSelectOperation("byType");
-        operation.setParameters(3);
-        operation.execute();
-        List<SormulaTest4> selectedList = operation.readAll();
-        operation.close();
+        List<SormulaTest4> selectedList = new FullListSelect<SormulaTest4>(getTable(), "byType").executeAll(3);
         
         assert expectedCount == selectedList.size() : "simple select returned wrong number of rows";
         

@@ -16,6 +16,9 @@
  */
 package org.sormula.operation;
 
+import org.sormula.SormulaException;
+import org.sormula.Table;
+
 
 /**
  * {@link UpdateOperation} performed as prepare, execute, and close in one method.
@@ -34,6 +37,29 @@ public class FullUpdate<R> extends FullModify<R>
     public FullUpdate(UpdateOperation<R> updateOperation)
     {
         super(updateOperation);
+    }
+    
+    
+    /**
+     * Constructs for a {@link Table} to update by primary key.
+     * 
+     * @param table update this table
+     */
+    public FullUpdate(Table<R> table) throws SormulaException
+    {
+        super(table.createUpdateOperation());
+    }
+    
+    
+    /**
+     * Constructs for a {@link Table}.
+     * 
+     * @param table update this table
+     * @param whereConditionName name of where condition to use; see {@link SqlOperation#setWhere(String)}
+     */
+    public FullUpdate(Table<R> table, String whereConditionName) throws SormulaException
+    {
+        super(table.createUpdateOperation(whereConditionName));
     }
     
     

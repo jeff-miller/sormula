@@ -16,6 +16,9 @@
  */
 package org.sormula.operation;
 
+import org.sormula.SormulaException;
+import org.sormula.Table;
+
 
 /**
  * {@link InsertOperation} performed as prepare, execute, and close in one method.
@@ -34,6 +37,17 @@ public class FullInsert<R> extends FullModify<R>
     public FullInsert(InsertOperation<R> insertOperation)
     {
         super(insertOperation);
+    }
+    
+    
+    /**
+     * Constructs for a {@link Table} to insert into table.
+     * 
+     * @param table insert into this table
+     */
+    public FullInsert(Table<R> table) throws SormulaException
+    {
+        super(table.createInsertOperation());
     }
     
     

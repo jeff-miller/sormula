@@ -138,11 +138,10 @@ public class SimpleExample
         List<Inventory> clearList = new ArrayList<Inventory>();
         
         // select operation for a specific manufacturer ("manf" is name of where annotation in Inventory.java)
-        FullListSelect<Inventory> operation = new FullListSelect<Inventory>(
-        		inventoryTable.createSelectOperation("manf"));
+        FullListSelect<Inventory> fs = new FullListSelect<Inventory>(inventoryTable, "manf");
         		
         // for all inventory of manufacturer
-        for (Inventory inventory: operation.executeAll(manufacturerId))
+        for (Inventory inventory: fs.executeAll(manufacturerId))
         {
             // remember for update
             inventory.setQuantity(0);

@@ -1,0 +1,22 @@
+To add a database, somedb, to test:
+
+1. Create jdbc/somedb directory
+
+2. Copy jdbc driver for somedb to jdbc/somedb
+
+3. Create jdbc/somedb/jdbc.properites (use jdbc/hsqldb/jdbc.properties as an example)
+
+4. Configure the following properties in jdbc/somedb/jdbc.properties:
+    jdbc.driver
+    jdbc.url
+    jdbc.user
+    jdbc.password
+    jdbc.schema
+
+5. Set the following in build.properties
+    db.dir=somedb
+    db.groups (optional, default is all)
+    db.class (optional, default is all)
+
+6. Run the following from the root of the project:
+    ant tests

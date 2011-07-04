@@ -23,3 +23,7 @@ To run tests:
 
 2. ant tests
 
+
+
+To add a database for testing, see src/tests/add new database.txt
+

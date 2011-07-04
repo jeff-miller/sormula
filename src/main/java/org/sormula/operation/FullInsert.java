@@ -30,8 +30,15 @@ import org.sormula.Table;
 public class FullInsert<R> extends FullModify<R>
 {
     /**
-     * Constructs for a insert operation.
-     * 
+     * Constructs for a insert operation. Use this constructor when insert operation 
+     * is already created.
+     * <p>
+     * Example: 
+     * <blockquote><pre>
+     * InsertOperation&lt;Student&gt; someInsertOperation = ...
+     * List&lt;Student&gt; studentList = ...
+     * new FullInsert&lt;Student&gt;(someInsertOperation).executeAll(studentList);
+     * </pre></blockquote>
      * @param insertOperation perform for this insert operation
      */
     public FullInsert(InsertOperation<R> insertOperation)
@@ -42,7 +49,15 @@ public class FullInsert<R> extends FullModify<R>
     
     /**
      * Constructs for a {@link Table} to insert into table.
-     * 
+     * <p>
+     * Example:
+     * <blockquote><pre>
+     * Database database = ...
+     * Table&lt;Student&gt; table = database.getTable(Student.class);
+     * Student student = ...
+     * new FullInsert&lt;Student&gt;(table).execute(student);
+     * </pre></blockquote>
+     * A simpler alternative is to use {@link Table#insert(Object)} or {@link Table#insertAll(java.util.Collection)}.
      * @param table insert into this table
      */
     public FullInsert(Table<R> table) throws SormulaException

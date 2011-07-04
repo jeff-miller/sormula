@@ -30,8 +30,15 @@ import org.sormula.Table;
 public class FullDelete<R> extends FullModify<R>
 {
     /**
-     * Constructs for a delete operation.
-     * 
+     * Constructs for a delete operation. Use this constructor when delete operation 
+     * is already created.
+     * <p>
+     * Example: 
+     * <blockquote><pre>
+     * DeleteOperation&lt;Student&gt; someDeleteOperation = ...
+     * List&lt;Student&gt; studentList = ...
+     * new FullDelete&lt;Student&gt;(someDeleteOperation).executeAll(studentList);
+     * </pre></blockquote>
      * @param deleteOperation perform for this delete operation
      */
     public FullDelete(DeleteOperation<R> deleteOperation)
@@ -42,7 +49,15 @@ public class FullDelete<R> extends FullModify<R>
     
     /**
      * Constructs for a {@link Table} to delete by primary key.
-     * 
+     * <p>
+     * Example:
+     * <blockquote><pre>
+     * Database database = ...
+     * Table&lt;Student&gt; table = database.getTable(Student.class);
+     * Student student = ...
+     * new FullDelete&lt;Student&gt;(table).execute(student);
+     * </pre></blockquote>
+     * A simpler alternative is to use {@link Table#delete(Object)} or {@link Table#deleteAll(java.util.Collection)}.
      * @param table delete from this table
      */
     public FullDelete(Table<R> table) throws SormulaException
@@ -52,7 +67,8 @@ public class FullDelete<R> extends FullModify<R>
     
     
     /**
-     * Constructs for a {@link Table}.
+     * Constructs for a {@link Table}. Deletes a table based upon a where condition
+     * and the values in a row object. This constructor is not typically used.
      * 
      * @param table delete from this table
      * @param whereConditionName name of where condition to use; see {@link SqlOperation#setWhere(String)}

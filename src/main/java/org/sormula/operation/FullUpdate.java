@@ -30,8 +30,15 @@ import org.sormula.Table;
 public class FullUpdate<R> extends FullModify<R>
 {
     /**
-     * Constructs for a update operation.
-     * 
+     * Constructs for a update operation. Use this constructor when update operation 
+     * is already created.
+     * <p>
+     * Example: 
+     * <blockquote><pre>
+     * UpdateOperation&lt;Student&gt; someUpdateOperation = ...
+     * List&lt;Student&gt; studentList = ...
+     * new FullListSelect&lt;Student&gt;(someUpdateOperation).executeAll(studentList);
+     * </pre></blockquote>
      * @param updateOperation perform for this update operation
      */
     public FullUpdate(UpdateOperation<R> updateOperation)
@@ -41,8 +48,17 @@ public class FullUpdate<R> extends FullModify<R>
     
     
     /**
-     * Constructs for a {@link Table} to update by primary key.
-     * 
+     * Constructs for a {@link Table} to update by primary key. 
+     * <p>
+     * Example:
+     * <blockquote><pre>
+     * Database database = ...
+     * Table&lt;Student&gt; table = database.getTable(Student.class);
+     * Student student = ...
+     * student.setGraduationDate(...);
+     * new FullUpdate&lt;Student&gt;(table).execute(student);
+     * </pre></blockquote>
+     * A simpler alternative is to use {@link Table#update(Object)} or {@link Table#updateAll(java.util.Collection)}.
      * @param table update this table
      */
     public FullUpdate(Table<R> table) throws SormulaException
@@ -52,7 +68,8 @@ public class FullUpdate<R> extends FullModify<R>
     
     
     /**
-     * Constructs for a {@link Table}.
+     * Constructs for a {@link Table}. Updates a table based upon a where condition
+     * and the values in a row object. This constructor is not typically used.
      * 
      * @param table update this table
      * @param whereConditionName name of where condition to use; see {@link SqlOperation#setWhere(String)}

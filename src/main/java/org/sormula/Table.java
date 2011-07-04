@@ -258,7 +258,7 @@ public class Table<R>
      */
     public R select(Object... parameters) throws SormulaException
     {
-        return new FullScalarSelect<R>(createSelectOperation()).execute(parameters);
+        return new FullScalarSelect<R>(this).execute(parameters);
     }
     
     

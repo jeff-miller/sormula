@@ -16,6 +16,9 @@
  */
 package org.sormula.operation;
 
+import org.sormula.SormulaException;
+import org.sormula.Table;
+
 
 /**
  * {@link ScalarSelectOperation} performed as prepare, execute, read, and close in one method.
@@ -30,13 +33,54 @@ public class FullScalarSelect<R>
     
 
     /**
-     * Constructs for a scalar select operation.
-     * 
+     * Constructs for a scalar select operation. Use this constructor if
+     * select operation is already created.
+     * <p>
+     * Example: Select a student 1234:
+     * <blockquote><pre>
+     * ScalarSelectOperation&lt;Student&gt; someScalarSelectOperation = ... // operation contains where condition for student id
+     * Student student = new FullScalarSelect&lt;Student&gt;(someScalarSelectOperation).execute(1234);
+     * </pre></blockquote>
      * @param scalarSelectOperation perform for this select operation
      */
     public FullScalarSelect(ScalarSelectOperation<R> scalarSelectOperation)
     {
         this.scalarSelectOperation = scalarSelectOperation;
+    }
+    
+    
+    /**
+     * Constructs for a {@link Table} to select by primary key.
+     * <p>
+     * Example: Select a student 1234 (primary key):
+     * <blockquote><pre>
+     * Database database = ...
+     * Table&lt;Student&gt; table = database.getTable(Student.class);
+     * Student student = new FullScalarSelect&lt;Student&gt;(table).execute(1234);
+     * </pre></blockquote>
+     * @param table select from this table
+     */
+    public FullScalarSelect(Table<R> table) throws SormulaException
+    {
+        this(table.createSelectOperation());
+    }
+    
+    
+    /**
+     * Constructs for a {@link Table} to select by a where condition.
+     * <p>
+     * Example: Select a student by last name ("byLastName" is name of Where annotation on Student):
+     * <blockquote><pre>
+     * Database database = ...
+     * Table&lt;Student&gt; table = database.getTable(Student.class);
+     * Student student = new FullScalarSelect&lt;Student&gt;(table, "byLastName").execute("miller");
+     * </pre></blockquote>
+     * @param table select from this table
+     * @param whereConditionName name of where condition to use; see {@link SqlOperation#setWhere(String)}
+     */
+    public FullScalarSelect(Table<R> table, String whereConditionName) throws SormulaException
+    {
+        this(table.createSelectOperation(whereConditionName));
     }
     
     

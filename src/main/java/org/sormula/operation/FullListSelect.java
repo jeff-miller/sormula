@@ -33,8 +33,14 @@ import org.sormula.annotation.OrderBy;
 public class FullListSelect<R> extends FullSelect<R, List<R>> 
 {
 	/**
-	 * Constructs for a {@link ListSelectOperation}.
-	 * 
+	 * Constructs for a {@link ListSelectOperation}. Use this constructor if
+	 * select operation is already created.
+     * <p>
+     * Example: Select some students:
+     * <blockquote><pre>
+     * ListSelectOperation&lt;Student&gt; someListSelectOperation = ...
+     * List&lt;Student&gt; selectedList = new FullListSelect&lt;Student&gt;(someListSelectOperation).executeAll();
+     * </pre></blockquote>
 	 * @param selectOperation select operation that returns {@link List}
 	 */
     public FullListSelect(ListSelectOperation<R> selectOperation)
@@ -44,32 +50,50 @@ public class FullListSelect<R> extends FullSelect<R, List<R>>
     
     
     /**
-     * Constructs for a {@link Table} to operate on all rows.
-     * 
+     * Constructs for a {@link Table} to select all rows in table.
+     * <p>
+     * Example: Select all students:
+     * <blockquote><pre>
+     * Database database = ...
+     * Table&lt;Student&gt; table = database.getTable(Student.class);
+     * List&lt;Student&gt; selectedList = new FullListSelect&lt;Student&gt;(table).executeAll();
+     * </pre></blockquote>
      * @param table select from this table
      */
     public FullListSelect(Table<R> table) throws SormulaException
     {
-        super(new ArrayListSelectOperation<R>(table));
+        super(table.createSelectAllOperation());
     }
     
     
     /**
-     * Constructs for a {@link Table} and where condition.
-     * 
+     * Constructs for a {@link Table} to select by a where condition.
+     * <p>
+     * Example: Select all students by type 3 ("byType" is name of Where annotation on Student):
+     * <blockquote><pre>
+     * Database database = ...
+     * Table&lt;Student&gt; table = database.getTable(Student.class);
+     * List&lt;Student&gt; selectedList = new FullListSelect&lt;Student&gt;(table, "byType").executeAll(3);
+     * </pre></blockquote>
      * @param table select from this table
      * @param whereConditionName name of where condition to use; see {@link SqlOperation#setWhere(String)}
      */
     public FullListSelect(Table<R> table, String whereConditionName) throws SormulaException
     {
-        super(new ArrayListSelectOperation<R>(table));
-        getSelectOperation().setWhere(whereConditionName);
+        super(table.createSelectOperation(whereConditionName));
     }
     
     
     /**
-     * Constructs for a {@link Table}, where condition, and order.
-     * 
+     * Constructs for a {@link Table} to select by a where condition, and order by order condition.
+     * <p>
+     * Example: Select all students by type 3 ("byType" is name of Where annotation on Student, "byName"
+     * is name of OrderBy annotation on Student):
+     * <blockquote><pre>
+     * Database database = ...
+     * Table&lt;Student&gt; table = database.getTable(Student.class);
+     * List&lt;Student&gt; selectedList = new FullListSelect&lt;Student&gt;(table, "byType", "byName").executeAll(3);
+     * </pre></blockquote>
      * @param table select from this table
      * @param whereConditionName name of where condition to use; see {@link SqlOperation#setWhere(String)}
      * @param orderByName name of order phrase to use as defined in {@linkplain OrderBy#name()}; see
@@ -77,8 +101,6 @@ public class FullListSelect<R> extends FullSelect<R, List<R>>
      */
     public FullListSelect(Table<R> table, String whereConditionName, String orderByName) throws SormulaException
     {
-        super(new ArrayListSelectOperation<R>(table));
-        getSelectOperation().setWhere(whereConditionName);
-        getSelectOperation().setOrderBy(orderByName);
+        super(table.createSelectOperation(whereConditionName, orderByName));
     }
 }

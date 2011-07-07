@@ -121,14 +121,15 @@ public abstract class SqlOperation<R>
 	            for (Object p: parameters)
 	            {
 	                if (log.isDebugEnabled()) log.debug("setParameters parameterIndex=" + parameterIndex + " value='" + p + "'");
-	                preparedStatement.setObject(parameterIndex++, p);
+	                preparedStatement.setObject(parameterIndex, p);
 	            }
 	            
-	            setNextParameter(parameterIndex);
+	            setNextParameter(++parameterIndex);
 	        }
 	        catch (Exception e)
 	        {
-	            throw new OperationException("setParameters(Object... parameters) error", e);
+	            throw new OperationException("setParameters(Object... parameters) error for parameter index=" +
+	                    parameterIndex, e);
 	        }
         }
     }
@@ -226,7 +227,7 @@ public abstract class SqlOperation<R>
         }
         catch (Exception e)
         {
-            throw new OperationException("prepare() error", e);
+            throw new OperationException("prepare() error: " + sql, e);
         }
         
         prepareCascades();
@@ -346,7 +347,7 @@ public abstract class SqlOperation<R>
         }
         catch (ReflectException e)
         {
-            throw new OperationException("error constructing SormulaField", e);
+            throw new OperationException("error constructing SormulaField for " + field, e);
         }
         
         return targetField;

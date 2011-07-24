@@ -333,7 +333,7 @@ public class Table<R>
      * // quantityExceeds is the name of a Where annotation on Order that filters quantity >= ?
      * int bigOrderCount = table.selectCount("quanityExceeds", 100);
      * </pre></blockquote>
-     * @param whereConditionName name of where condition to use empty string to count all rows in table
+     * @param whereConditionName name of where condition to use; empty string to count all rows in table
      * @param parameters parameters for where condition
      * @return count of all rows in table
      * @throws SormulaException if error
@@ -350,13 +350,33 @@ public class Table<R>
     }
     
 
+    /**
+     * Selects count of rows.
+     * 
+     * @param <T> aggregate result type
+     * @param expression expression to use as parameter to function; typically it is the name of a column
+     * @return count of rows for expression 
+     * @throws SormulaException if error
+     */
     public <T> T selectCount(String expression) throws SormulaException
     {
         return this.<T>selectCount(expression, "");
     }
+    
+    
+    /**
+     * Selects count of rows.
+     * 
+     * @param <T> aggregate result type
+     * @param expression expression to use as parameter to function; typically it is the name of a column
+     * @param whereConditionName name of where condition to use; empty string to count all rows in table
+     * @param parameters parameters for where condition
+     * @return count of rows for expression and where condition
+     * @throws SormulaException if error
+     */
     public <T> T selectCount(String expression, String whereConditionName, Object...parameters) throws SormulaException
     {
-        org.sormula.operation.aggregate.SelectAggregateOperation<R, T> selectOperation = 
+        org.sormula.operation.aggregate.SelectCountOperation<R, T> selectOperation = 
             new org.sormula.operation.aggregate.SelectCountOperation<R, T>(this, expression);
         selectOperation.setWhere(whereConditionName);
         selectOperation.setParameters(parameters);
@@ -367,11 +387,29 @@ public class Table<R>
     }
     
     
-    // TODO javadoc
+    /**
+     * Selects minimum value.
+     * 
+     * @param <T> aggregate result type
+     * @param expression expression to use as parameter to function; typically it is the name of a column
+     * @return minimum value for expression  
+     * @throws SormulaException if error
+     */
     public <T> T selectMin(String expression) throws SormulaException
     {
         return this.<T>selectMin(expression, "");
     }
+    
+    
+    /**
+     * Selects minimum value.
+     * 
+     * @param <T> aggregate result type
+     * @param expression expression to use as parameter to function; typically it is the name of a column
+     * @param parameters parameters for where condition
+     * @return minimum value for expression and where condition 
+     * @throws SormulaException if error
+     */
     public <T> T selectMin(String expression, String whereConditionName, Object...parameters) throws SormulaException
     {
         SelectAggregateOperation<R, T> selectOperation = new SelectMinOperation<R, T>(this, expression);
@@ -384,10 +422,29 @@ public class Table<R>
     }
     
     
+    /**
+     * Selects maximum value.
+     * 
+     * @param <T> aggregate result type
+     * @param expression expression to use as parameter to function; typically it is the name of a column
+     * @return maximum value for expression  
+     * @throws SormulaException if error
+     */
     public <T> T selectMax(String expression) throws SormulaException
     {
         return this.<T>selectMax(expression, "");
     }
+    
+    
+    /**
+     * Selects maximum value.
+     * 
+     * @param <T> aggregate result type
+     * @param expression expression to use as parameter to function; typically it is the name of a column
+     * @param parameters parameters for where condition
+     * @return maximum value for expression and where condition 
+     * @throws SormulaException if error
+     */
     public <T> T selectMax(String expression, String whereConditionName, Object...parameters) throws SormulaException
     {
         SelectAggregateOperation<R, T> selectOperation = new SelectMaxOperation<R, T>(this, expression);
@@ -400,10 +457,29 @@ public class Table<R>
     }
     
     
+    /**
+     * Selects average value.
+     * 
+     * @param <T> aggregate result type
+     * @param expression expression to use as parameter to function; typically it is the name of a column
+     * @return average value for expression  
+     * @throws SormulaException if error
+     */
     public <T> T selectAvg(String expression) throws SormulaException
     {
         return this.<T>selectAvg(expression, "");
     }
+    
+    
+    /**
+     * Selects average value.
+     * 
+     * @param <T> aggregate result type
+     * @param expression expression to use as parameter to function; typically it is the name of a column
+     * @param parameters parameters for where condition
+     * @return average value for expression and where condition 
+     * @throws SormulaException if error
+     */
     public <T> T selectAvg(String expression, String whereConditionName, Object...parameters) throws SormulaException
     {
         SelectAggregateOperation<R, T> selectOperation = new SelectAvgOperation<R, T>(this, expression);

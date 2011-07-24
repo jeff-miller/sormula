@@ -77,7 +77,6 @@ public class SelectTest extends DatabaseTest<SormulaTestParent>
             }
             
             
-            
             // verify 1 to many
             List<SormulaTestChildN> children = parent.getChildList();
             int countN = childNTable.selectCount("byParent", parent.getId());
@@ -116,6 +115,24 @@ public class SelectTest extends DatabaseTest<SormulaTestParent>
             {
                 // verify no child records
                 assert countM == 0 : "map: child rows were not read";
+            }
+            
+            
+            // verify 1 to many using aggregate package
+            countN = childNTable.<Integer>selectCount("parentId", "byParent", parent.getId());
+            if (children.size() > 0)
+            {
+                // verify all rows selected
+                for (SormulaTestChildN c: children)
+                { 
+                    assert c.getParentId() == parent.getId() : "1:n child parent id != parent id";
+                }
+                assert countN == children.size() : "1:n wrong number of children read from cascade";
+            }
+            else 
+            {
+                // verify no child records
+                assert countN == 0 : "1:n child rows were not read";
             }
         }
         

@@ -76,7 +76,7 @@ public class SelectAggregateOperation<R, T> extends ScalarSelectOperation<R>
      */
     public SelectAggregateOperation(Table<R> table, String function, String expression) throws OperationException
     {
-        super(table);
+        super(table, "");
         this.function = function;
         this.expression = expression;
         initBaseSql();

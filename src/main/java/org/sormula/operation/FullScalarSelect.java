@@ -62,7 +62,7 @@ public class FullScalarSelect<R>
      */
     public FullScalarSelect(Table<R> table) throws SormulaException
     {
-        this(table.createSelectOperation());
+        this(new ScalarSelectOperation<R>(table));
     }
     
     
@@ -80,7 +80,7 @@ public class FullScalarSelect<R>
      */
     public FullScalarSelect(Table<R> table, String whereConditionName) throws SormulaException
     {
-        this(table.createSelectOperation(whereConditionName));
+        this(new ScalarSelectOperation<R>(table, whereConditionName));
     }
     
     

@@ -62,7 +62,7 @@ public class FullDelete<R> extends FullModify<R>
      */
     public FullDelete(Table<R> table) throws SormulaException
     {
-        super(table.createDeleteOperation());
+        super(new DeleteOperation<R>(table));
     }
     
     
@@ -75,7 +75,7 @@ public class FullDelete<R> extends FullModify<R>
      */
     public FullDelete(Table<R> table, String whereConditionName) throws SormulaException
     {
-        super(table.createDeleteOperation(whereConditionName));
+        super(new DeleteOperation<R>(table, whereConditionName));
     }
     
     

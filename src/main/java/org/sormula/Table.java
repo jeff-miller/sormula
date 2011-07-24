@@ -20,7 +20,6 @@ import java.util.Collection;
 import java.util.List;
 
 import org.sormula.annotation.Column;
-import org.sormula.annotation.OrderBy;
 import org.sormula.annotation.Row;
 import org.sormula.annotation.Where;
 import org.sormula.log.ClassLogger;
@@ -237,7 +236,7 @@ public class Table<R>
      */
     public List<R> selectAll() throws SormulaException
     {
-        return new FullListSelect<R>(createSelectAllOperation()).executeAll();
+        return new FullListSelect<R>(new ArrayListSelectOperation<R>(this, "")).executeAll();
     }
     
     
@@ -279,7 +278,7 @@ public class Table<R>
      */
     public List<R> selectAllCustom(String customSql, Object... parameters) throws SormulaException
     {
-    	ArrayListSelectOperation<R> operation = new ArrayListSelectOperation<R>(this);
+    	ArrayListSelectOperation<R> operation = new ArrayListSelectOperation<R>(this, "");
     	operation.setCustomSql(customSql);
     	return new FullListSelect<R>(operation).executeAll(parameters);
     }
@@ -301,137 +300,9 @@ public class Table<R>
      */
     public R selectCustom(String customSql, Object... parameters) throws SormulaException
     {
-    	ScalarSelectOperation<R> operation = new ScalarSelectOperation<R>(this);
+    	ScalarSelectOperation<R> operation = new ScalarSelectOperation<R>(this, "");
     	operation.setCustomSql(customSql);
     	return new FullScalarSelect<R>(operation).execute(parameters);
-    }
-    
-    
-    /**
-     * Creates operation to select all rows in table. This method is an alternate to:<br>
-     * <blockquote><pre>
-     * new ArrayListSelectOperation&lt;R&gt;(table)
-     * </pre></blockquote>
-     * <p>
-     * Example:
-     * <blockquote><pre>
-     * Database database = ...
-     * Table&lt;Student&gt; table = database.getTable(Student.class);
-     * ListSelectOperation&ltStudent&gt; operation = table.createSelectAllOperation();
-     * 
-     * //read as a collection
-     * operation.execute();
-     * for (Student s: operation.readAll())
-     *     System.out.println(s);
-     *   
-     * // read one row at a time
-     * operation.execute();
-     * for (Student s = operation.readNext(); s != null; s = operation.readNext())
-     *       System.out.println(s);
-     * 
-     * operation.close();
-     * </pre></blockquote>
-     * @return select operation
-     * @throws SormulaException if error
-     */
-    public ListSelectOperation<R> createSelectAllOperation() throws SormulaException
-    {
-        return createSelectOperation("");
-    }
-    
-    
-    /**
-     * Creates operation to select by primary key. Primary key must be defined by one
-     * or more {@linkplain Column#primaryKey()} annotations. This method is an alternate to:<br>
-     * <blockquote><pre>
-     * ScalarSelectOperation<R> selectOperation = new ScalarSelectOperation&lt;R&gt;(table);
-     * selectOperation.setWhere("primaryKey");
-     * </pre></blockquote>
-     * <p>
-     * Example:
-     * <blockquote><pre>
-     * Database database = ...
-     * Table&lt;Order&gt; table = database.getTable(Order.class);
-     * ScalarSelectOperation&lt;Order&gt; operation = table.createSelectOperation();
-     * int orderNumber = 123456; // primary key
-     * operation.setParameters(orderNumber);
-     * operation.execute();
-     * Order order = operation.readNext();
-     * operation.close();
-     * </pre></blockquote>
-     * @return select operation
-     * @throws SormulaException if error
-     */
-    public ScalarSelectOperation<R> createSelectOperation() throws SormulaException
-    {
-        ScalarSelectOperation<R> selectOperation = new ScalarSelectOperation<R>(this);
-        selectOperation.setWhere("primaryKey");
-        return selectOperation;
-    }
-    
-    
-    /**
-     * Creates operation for select by a named where condition. This method is an alternate to:<br>
-     * <blockquote><pre>
-     * ArrayListSelectOperation<R> selectOperation = new ArrayListSelectOperation&lt;R&gt;(table);
-     * selectOperation.setWhere(whereConditionName);
-     * selectOperation.setOrderBy(orderByName);
-     * </pre></blockquote>
-     * <p>
-     * Example:
-     * <blockquote><pre>
-     * Database database = ...
-     * Table&lt;Student&gt; table = database.getTable(Student.class);
-     * 
-     * // graduated is name of Where annotation on Student to select by graduation date
-     * // byName is name of OrderBy annotation  on Student to order by last name, first name
-     * ListSelectOperation&ltStudent&gt; operation = table.createSelectOperation("graduated", "byName");
-     * 
-     * operation.execute();
-     * for (Student s: operation.readAll())
-     *     System.out.println(s);
-     *   
-     * operation.close();
-     * </pre></blockquote>
-     * 
-     * @param whereConditionName name of where condition to use or use empty string to select all rows in table
-     * @param orderByName name of order phrase; see {@link ScalarSelectOperation#setOrderBy(String)}
-     * @return select operation
-     * @throws SormulaException if error
-     * @see Where
-     * @see OrderBy
-     */
-    public ListSelectOperation<R> createSelectOperation(String whereConditionName, String orderByName) throws SormulaException
-    {
-        ListSelectOperation<R> selectOperation = new ArrayListSelectOperation<R>(this);
-        selectOperation.setWhere(whereConditionName);
-        selectOperation.setOrderBy(orderByName);
-        return selectOperation;
-    }
-    
-
-    /**
-     * Creates operation for select by a named where condition. This method is an alternate to:<br>
-     * <blockquote><pre>
-     * ArrayListSelectOperation<R> selectOperation = new ArrayListSelectOperation&lt;R&gt;(table);
-     * selectOperation.setWhere(whereConditionName);
-     * </pre></blockquote>
-     * <p>
-     * Example: See {@link #createSelectOperation(String, String)} omit order by.
-     * @param whereConditionName name of where condition to use or use empty string to select all rows in table
-     * @return select operation
-     * @throws SormulaException if error
-     * @see Where
-     */
-    // TODO replace createSelectOperation by adding whereConditionName to ArrayListSelectOperation constructor
-    // TODO likewise for other create methods thus reducing methods and size of Table class
-    // TODO make version 1.1 since it is major change and not backward compatible
-    // TODO move SelectCountOperation to aggregate package also?
-    public ListSelectOperation<R> createSelectOperation(String whereConditionName) throws SormulaException
-    {
-        ListSelectOperation<R> selectOperation = new ArrayListSelectOperation<R>(this);
-        selectOperation.setWhere(whereConditionName);
-        return selectOperation;
     }
     
     
@@ -506,7 +377,7 @@ public class Table<R>
      */
     public SelectCountOperation<R> createSelectCountOperation(String whereConditionName) throws SormulaException
     {
-        SelectCountOperation<R> selectCountOperation = new SelectCountOperation<R>(this);
+        SelectCountOperation<R> selectCountOperation = new SelectCountOperation<R>(this, "");
         selectCountOperation.setWhere(whereConditionName);
         return selectCountOperation;
     }
@@ -659,37 +530,6 @@ public class Table<R>
     
     
     /**
-     * Creates insert operation.
-     * <p>
-     * Example:
-     * <blockquote><pre>
-     * Database database = ...
-     * Table&lt;Student&gt; table = database.getTable(Student.class);
-     * InsertOperation&lt;Student&gt; insertOperation = table.createInsertOperation();
-     * 
-     * while (some condition)
-     * {
-     *     Student student = new Student();
-     *     student.setId(...);
-     *     student.setFirstName(...);
-     *     student.setLastName(...);
-     *     student.setGraduationDate(...);
-     *     insertOperation.setRow(student);
-     *     insertOperation.execute();
-     * }
-     * 
-     * insertOperation.close();
-     * </pre></blockquote>
-     * @return insert operation
-     * @throws SormulaException if error
-     */
-    public InsertOperation<R> createInsertOperation() throws SormulaException
-    {
-        return new InsertOperation<R>(this);
-    }
-    
-    
-    /**
      * Updates one row in table by primary key. Primary key must be defined by one
      * or more {@linkplain Column#primaryKey()} annotations.
      * <p>
@@ -732,65 +572,6 @@ public class Table<R>
     public int updateAll(Collection<R> rows) throws SormulaException
     {
         return new FullUpdate<R>(this).executeAll(rows);
-    }
-    
-    
-    /**
-     * Creates update by primary key operation. Primary key must be defined by one
-     * or more {@linkplain Column#primaryKey()} annotations.
-     * <p>
-     * Example:
-     * <blockquote><pre>
-     * Database database = ...
-     * Table&lt;Student&gt; table = database.getTable(Student.class);
-     * UpdateOperation&lt;Student&gt; updateOperation = table.createUpdateOperation();
-     * 
-     * while (some condition)
-     * {
-     *     Student student = getSomeStudent();
-     *     student.setGraduationDate(...);
-     *     updateOperation.setRow(student);
-     *     updateOperation.execute();
-     * }
-     * 
-     * updateOperation.close();
-     * </pre></blockquote>
-     * @return update operation
-     * @throws SormulaException if error
-     */
-    public UpdateOperation<R> createUpdateOperation() throws SormulaException
-    {
-        return createUpdateOperation("primaryKey");
-    }
-    
-    
-    /**
-     * Creates operation to update by named where condition.
-     * <p>
-     * Example:
-     * <blockquote><pre>
-     * Database database = ...
-     * Table&lt;Student&gt; table = database.getTable(Student.class);
-     * // specialCondition is name of Where annotation on Student class
-     * UpdateOperation&lt;Student&gt; updateOperation = table.createUpdateOperation("specialCondition");
-     * Student student = new Student();
-     * student.setId(...);
-     * student.setFirstName(...);
-     * student.setLastName(...);
-     * student.setGraduationDate(...);
-     * updateOperation.setRow(student);
-     * updateOperation.execute(); // updates all rows with values from student for specialCondition
-     * updateOperation.close();
-     * </pre></blockquote>
-     * @param whereConditionName name of where condition to use
-     * @return update operation
-     * @throws SormulaException if error
-     */
-    public UpdateOperation<R> createUpdateOperation(String whereConditionName) throws SormulaException
-    {
-        UpdateOperation<R> updateOperation = new UpdateOperation<R>(this);
-        updateOperation.setWhere(whereConditionName);
-        return updateOperation;
     }
     
     
@@ -872,84 +653,7 @@ public class Table<R>
      */
     public int deleteAll() throws SormulaException
     {
-        return new FullDelete<R>(createDeleteAllOperation()).executeObject();
-    }
-
-    
-    /**
-     * Creates operation to delete all rows in table (no where condition).
-     * <p>
-     * Example:
-     * <blockquote><pre>
-     * Database database = ...
-     * Table&lt;Student&gt; table = database.getTable(Student.class);
-     * DeleteOperation&lt;Student&gt; deleteAllOperation = table.createDeleteAllOperation();
-     * deleteAllOperation.execute();
-     * deleteAllOperation.close();
-     * </pre></blockquote> 
-     * @return delete operation
-     * @throws SormulaException if error
-     */
-    public DeleteOperation<R> createDeleteAllOperation() throws SormulaException
-    {
-        return createDeleteOperation("");
-    }
-    
-    
-    /**
-     * Creates operation to delete by primary key.
-     * <p>
-     * Example:
-     * <blockquote><pre>
-     * Database database = ...
-     * Table&lt;Student&gt; table = database.getTable(Student.class);
-     * DeleteOperation&lt;Student&gt; deleteOperation = table.createDeleteOperation();
-     * 
-     * while (some condition)
-     * {
-     *     Student student = getSomeStudent();
-     *     deleteOperation.setRow(student);
-     *     deleteOperation.execute();
-     * }
-     * 
-     * deleteOperation.close();
-     * </pre></blockquote>
-     * @return delete operation
-     * @throws SormulaException if error
-     */
-    public DeleteOperation<R> createDeleteOperation() throws SormulaException
-    {
-        return createDeleteOperation("primaryKey");
-    }
-    
-    
-    /**
-     * Creates delete operation to delete by named where condition.
-     * <p>
-     * Example:
-     * <blockquote><pre>
-     * Database database = ...
-     * Table&lt;Student&gt; table = database.getTable(Student.class);
-     * // specialCondition is name of Where annotation on Student class
-     * DeleteOperation&lt;Student&gt; deleteOperation = table.createDeleteOperation("specialCondition");
-     * Student student = new Student();
-     * student.setId(...);
-     * student.setFirstName(...);
-     * student.setLastName(...);
-     * student.setGraduationDate(...);
-     * deleteOperation.setRow(student);
-     * deleteOperation.execute(); // deletes rows with values from student for specialCondition
-     * deleteOperation.close();
-     * </pre></blockquote>
-     * @param whereConditionName name of where condition to use
-     * @return delete operation
-     * @throws SormulaException if error
-     */
-    public DeleteOperation<R> createDeleteOperation(String whereConditionName) throws SormulaException
-    {
-        DeleteOperation<R> deleteOperation = new DeleteOperation<R>(this);
-        deleteOperation.setWhere(whereConditionName);
-        return deleteOperation;
+        return new FullDelete<R>(new DeleteOperation<R>(this)).executeObject();
     }
     
     
@@ -961,5 +665,92 @@ public class Table<R>
     public int saveAll(Collection<R> rows) throws SormulaException
     {
         return 0;
+    }
+    
+    
+/* ------------------------------------- deprecated --------------------------------- */
+    
+    
+    /**
+     * Use {@link ArrayListSelectOperation} with empty string as where condition name.
+     */
+    @Deprecated
+    public ListSelectOperation<R> createSelectAllOperation() throws SormulaException
+    {
+        return new ArrayListSelectOperation<R>(this, "");
+    }
+    /**
+     * Use {@link ArrayListSelectOperation}.
+     */
+    @Deprecated
+    public ScalarSelectOperation<R> createSelectOperation() throws SormulaException
+    {
+        return new ScalarSelectOperation<R>(this, "primaryKey");
+    }
+    /**
+     * Use {@link ArrayListSelectOperation} with where condition name.
+     */
+    @Deprecated
+    public ListSelectOperation<R> createSelectOperation(String whereConditionName) throws SormulaException
+    {
+        return new ArrayListSelectOperation<R>(this, whereConditionName);
+    }
+    /**
+     * Use {@link ArrayListSelectOperation}.
+     */
+    @Deprecated
+    public ListSelectOperation<R> createSelectOperation(String whereConditionName, String orderByName) throws SormulaException
+    {
+        ListSelectOperation<R> operation = new ArrayListSelectOperation<R>(this, whereConditionName);
+        operation.setOrderBy(orderByName);
+        return operation;
+    }
+    /**
+     * Use {@link InsertOperation}.
+     */
+    @Deprecated
+    public InsertOperation<R> createInsertOperation() throws SormulaException
+    {
+        return new InsertOperation<R>(this);
+    }
+    /**
+     * Use {@link UpdateOperation}.
+     */
+    @Deprecated
+    public UpdateOperation<R> createUpdateOperation() throws SormulaException
+    {
+        return new UpdateOperation<R>(this, "primaryKey");
+    }
+    /**
+     * Use {@link UpdateOperation}.
+     */
+    @Deprecated
+    public UpdateOperation<R> createUpdateOperation(String whereConditionName) throws SormulaException
+    {
+        return new UpdateOperation<R>(this, whereConditionName);
+    }
+    /**
+     * Use {@link DeleteOperation} with empty string as where condition name.
+     */
+    @Deprecated
+    public DeleteOperation<R> createDeleteAllOperation() throws SormulaException
+    {
+        return new DeleteOperation<R>(this, "");
+    }
+    /**
+     * Use {@link DeleteOperation}.
+     */
+    @Deprecated
+    public DeleteOperation<R> createDeleteOperation() throws SormulaException
+    {
+        return new DeleteOperation<R>(this, "primaryKey");
+    }
+    /**
+     * Use {@link DeleteOperation}.
+     */
+    @Deprecated
+    public DeleteOperation<R> createDeleteOperation(String whereConditionName) throws SormulaException
+    {
+        return new DeleteOperation<R>(this, whereConditionName);
     }
 }

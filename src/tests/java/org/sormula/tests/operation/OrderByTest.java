@@ -18,6 +18,7 @@ package org.sormula.tests.operation;
 
 import org.sormula.SormulaException;
 import org.sormula.annotation.OrderBys;
+import org.sormula.operation.ArrayListSelectOperation;
 import org.sormula.operation.ListSelectOperation;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
@@ -51,7 +52,7 @@ public class OrderByTest extends OperationTest<SormulaTest4>
     public void simpleOrder() throws SormulaException
     {
     	begin();
-        ListSelectOperation<SormulaTest4> operation = getTable().createSelectAllOperation();
+        ListSelectOperation<SormulaTest4> operation = new ArrayListSelectOperation<SormulaTest4>(getTable(), "");
         operation.setOrderBy("ob1");
         operation.execute();
         
@@ -76,7 +77,7 @@ public class OrderByTest extends OperationTest<SormulaTest4>
     public void complexOrder() throws SormulaException
     {
     	begin();
-        ListSelectOperation<SormulaTest4> operation = getTable().createSelectAllOperation();
+        ListSelectOperation<SormulaTest4> operation = new ArrayListSelectOperation<SormulaTest4>(getTable(), "");
         operation.setOrderBy("ob2");
         operation.execute();
         

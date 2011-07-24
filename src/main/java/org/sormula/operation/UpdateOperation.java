@@ -43,13 +43,28 @@ import org.sormula.translator.RowTranslator;
 public class UpdateOperation<R> extends ModifyOperation<R>
 {
     /**
-     * Constructs for standard sql update statement as:<br>
-     * UPDATE table SET c1=?, c2=?, c3...
+     * Constructs standard sql update for primary key as:<br>
+     * UPDATE table SET c1=?, c2=?, c3... WHERE primary key clause
      * 
      * @param table update this table
      * @throws OperationException if error
      */
     public UpdateOperation(Table<R> table) throws OperationException
+    {
+        this(table, "primaryKey");
+    }
+    
+    
+    /**
+     * Constructs for standard sql update statement as:<br>
+     * UPDATE table SET c1=?, c2=?, c3... WHERE ...
+     * 
+     * @param table update this table
+     * @param whereConditionName name of where condition to use ("primaryKey" to update
+     * by primary key; empty string to update all rows in table)
+     * @throws OperationException if error
+     */
+    public UpdateOperation(Table<R> table, String whereConditionName) throws OperationException
     {
         super(table);
         
@@ -60,6 +75,7 @@ public class UpdateOperation<R> extends ModifyOperation<R>
         }
         
         initBaseSql();
+        setWhere(whereConditionName);
     }
 
 

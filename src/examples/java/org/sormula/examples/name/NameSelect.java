@@ -22,6 +22,7 @@ import org.sormula.Database;
 import org.sormula.SormulaException;
 import org.sormula.Table;
 import org.sormula.examples.ExampleBase;
+import org.sormula.operation.ArrayListSelectOperation;
 import org.sormula.operation.ListSelectOperation;
 import org.sormula.translator.StandardNameTranslator;
 
@@ -77,7 +78,7 @@ public class NameSelect extends ExampleBase
     {
         String whereParameter = "John";
         System.out.println("select where first name = " + whereParameter);
-        ListSelectOperation<Student2> operation = table.createSelectOperation("fn");
+        ListSelectOperation<Student2> operation = new ArrayListSelectOperation<Student2>(table, "fn");
         operation.setParameters(whereParameter);
         
         System.out.println("read as a collection");

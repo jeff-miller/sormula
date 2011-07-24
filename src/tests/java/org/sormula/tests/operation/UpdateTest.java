@@ -108,7 +108,7 @@ public class UpdateTest extends OperationTest<SormulaTest4>
     {
     	begin();
     	selectTestRows();
-        UpdateOperation<SormulaTest4> operation = getTable().createUpdateOperation();
+        UpdateOperation<SormulaTest4> operation = new UpdateOperation<SormulaTest4>(getTable());
         
         for (int i = 0; i < 10; ++i)
         {

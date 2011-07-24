@@ -35,16 +35,32 @@ import org.sormula.operation.ScalarSelectOperation;
 public class SelectCountOperation<R> extends ScalarSelectOperation<R>
 {
     /**
-     * Constructs for standard sql select statement as:<br>
-     * SELECT COUNT(*), ... FROM table
+     * Constructs standard sql select by primary key as:<br>
+     * SELECT COUNT(*), ... FROM table WHERE primary key clause
      * 
      * @param table insert into this table
      * @throws OperationException if error
      */
     public SelectCountOperation(Table<R> table) throws OperationException
     {
-        super(table);
+        this(table, "");
+    }
+    
+    
+    /**
+     * Constructs standard sql select as:<br>
+     * SELECT COUNT(*), ... FROM table WHERE ...
+     * 
+     * @param table insert into this table
+     * @param whereConditionName name of where condition to use ("primaryKey" to select
+     * by primary key; empty string to select all rows in table)
+     * @throws OperationException if error
+     */
+    public SelectCountOperation(Table<R> table, String whereConditionName) throws OperationException
+    {
+        super(table, "");
         initBaseSql();
+        setWhere(whereConditionName);
     }
 
 

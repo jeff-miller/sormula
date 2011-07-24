@@ -137,7 +137,7 @@ public class InsertTest extends DatabaseTest<SormulaTestParent>
         
         // verify that all children were inserted
         Table<SormulaTestChildN> childTable = getDatabase().getTable(SormulaTestChildN.class);
-        ScalarSelectOperation<SormulaTestChildN> operation = childTable.createSelectOperation();
+        ScalarSelectOperation<SormulaTestChildN> operation = new ScalarSelectOperation<SormulaTestChildN>(childTable);
         for (SormulaTestChildN c: parent.getChildList())
         {
             operation.setParameters(c.getId());
@@ -174,7 +174,7 @@ public class InsertTest extends DatabaseTest<SormulaTestParent>
         
         // verify that all children were inserted
         Table<SormulaTestChildM> childTable = getDatabase().getTable(SormulaTestChildM.class);
-        ScalarSelectOperation<SormulaTestChildM> operation = childTable.createSelectOperation();
+        ScalarSelectOperation<SormulaTestChildM> operation = new ScalarSelectOperation<SormulaTestChildM>(childTable);
         for (SormulaTestChildM c: parent.getChildMap().values())
         {
             operation.setParameters(c.getId());

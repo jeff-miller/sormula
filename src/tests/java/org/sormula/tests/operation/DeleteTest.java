@@ -97,7 +97,7 @@ public class DeleteTest extends OperationTest<SormulaTest4>
     	begin();
         selectTestRows();
         
-        DeleteOperation<SormulaTest4> operation = getTable().createDeleteOperation();
+        DeleteOperation<SormulaTest4> operation = new DeleteOperation<SormulaTest4>(getTable());
         
         for (int i = 0; i < 10; ++i)
         {

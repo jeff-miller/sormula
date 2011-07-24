@@ -63,7 +63,7 @@ public class FullUpdate<R> extends FullModify<R>
      */
     public FullUpdate(Table<R> table) throws SormulaException
     {
-        super(table.createUpdateOperation());
+        super(new UpdateOperation<R>(table, "primaryKey"));
     }
     
     
@@ -76,7 +76,7 @@ public class FullUpdate<R> extends FullModify<R>
      */
     public FullUpdate(Table<R> table, String whereConditionName) throws SormulaException
     {
-        super(table.createUpdateOperation(whereConditionName));
+        super(new UpdateOperation<R>(table, whereConditionName));
     }
     
     

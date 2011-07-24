@@ -20,6 +20,7 @@ import java.util.List;
 
 import org.sormula.SormulaException;
 import org.sormula.log.ClassLogger;
+import org.sormula.operation.ArrayListSelectOperation;
 import org.sormula.operation.ListSelectOperation;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
@@ -91,7 +92,7 @@ public class SelectTestMC extends OperationTest<SormulaTest4MC>
     	}
         
         // select all for condition w1
-        ListSelectOperation<SormulaTest4MC> operation = getTable().createSelectOperation("w1");
+        ListSelectOperation<SormulaTest4MC> operation = new ArrayListSelectOperation<SormulaTest4MC>(getTable(), "w1");
         operation.setParameters(2, 199);
         operation.execute();
         List<SormulaTest4MC> selectedList = operation.readAll();
@@ -128,7 +129,7 @@ public class SelectTestMC extends OperationTest<SormulaTest4MC>
         assert expectedCount > 0 : "no rows meet expected condition to test";
         
         // select all rows with condition
-        ListSelectOperation<SormulaTest4MC> operation = getTable().createSelectOperation("w2");
+        ListSelectOperation<SormulaTest4MC> operation = new ArrayListSelectOperation<SormulaTest4MC>(getTable(), "w2");
         operation.setParameters(2, "%operation%");
         operation.execute();
         List<SormulaTest4MC> selectedList = operation.readAll();

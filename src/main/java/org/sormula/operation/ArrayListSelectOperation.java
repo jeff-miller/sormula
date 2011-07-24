@@ -40,6 +40,20 @@ public class ArrayListSelectOperation<R> extends ListSelectOperation<R>
     {
         super(table);
     }
+    
+    
+    /**
+     * Constructs for a table and where condition.
+     * 
+     * @param table select from this table
+     * @param whereConditionName name of where condition to use ("primaryKey" to select
+     * by primary key; empty string to select all rows in table)
+     * @throws OperationException if error
+     */
+    public ArrayListSelectOperation(Table<R> table, String whereConditionName) throws OperationException
+    {
+        super(table, whereConditionName);
+    }
 
     
     @Override

@@ -31,7 +31,7 @@ import org.sormula.Table;
 public abstract class ListSelectOperation<R> extends SelectOperation<R, List<R>>
 {
 	/**
-	 * Constructs for a table.
+	 * Constructs for a table to select by primary key.
 	 * 
 	 * @param table select from this table
 	 * @throws OperationException if error
@@ -39,6 +39,20 @@ public abstract class ListSelectOperation<R> extends SelectOperation<R, List<R>>
     public ListSelectOperation(Table<R> table) throws OperationException
     {
         super(table);
+    }
+    
+    
+    /**
+     * Constructs for a table and where condition.
+     * 
+     * @param table select from this table
+     * @param whereConditionName name of where condition to use ("primaryKey" to select
+     * by primary key; empty string to select all rows in table)
+     * @throws OperationException if error
+     */
+    public ListSelectOperation(Table<R> table, String whereConditionName) throws OperationException
+    {
+        super(table, whereConditionName);
     }
 
 

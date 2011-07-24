@@ -41,16 +41,32 @@ import org.sormula.reflect.SormulaField;
 public class DeleteOperation<R> extends ModifyOperation<R>
 {
     /**
-     * Constructs for standard sql delete statement as:<br>
-     * DELETE FROM table 
+     * Constructs standard sql delete for primary key as:<br>
+     * DELETE FROM table WHERE primary key clause
      * 
      * @param table delete from this table
      * @throws OperationException if error
      */
     public DeleteOperation(Table<R> table) throws OperationException
     {
+        this(table, "primaryKey");
+    }
+    
+    
+    /**
+     * Constructs for standard sql delete statement as:<br>
+     * DELETE FROM table WHERE ...
+     * 
+     * @param table delete from this table
+     * @param whereConditionName name of where condition to use ("primaryKey" to delete
+     * by primary key; empty string to delete all rows in table)
+     * @throws OperationException if error
+     */
+    public DeleteOperation(Table<R> table, String whereConditionName) throws OperationException
+    {
         super(table);
         initBaseSql();
+        setWhere(whereConditionName);
     }
 
 

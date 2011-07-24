@@ -35,7 +35,7 @@ public class SelectCountOperation<R> extends ScalarSelectOperation<R>
 {
     public SelectCountOperation(Table<R> table) throws OperationException
     {
-        super(table);
+        super(table, "");
         initBaseSql();
     }
 

@@ -62,7 +62,7 @@ public class FullInsert<R> extends FullModify<R>
      */
     public FullInsert(Table<R> table) throws SormulaException
     {
-        super(table.createInsertOperation());
+        super(new InsertOperation<R>(table));
     }
     
     

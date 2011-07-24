@@ -22,6 +22,7 @@ import org.sormula.Database;
 import org.sormula.SormulaException;
 import org.sormula.Table;
 import org.sormula.examples.ExampleBase;
+import org.sormula.operation.ArrayListSelectOperation;
 import org.sormula.operation.ListSelectOperation;
 
 
@@ -72,7 +73,7 @@ public class BasicSelect extends ExampleBase
     {
         String whereParameter = "John";
         System.out.println("select where first name = " + whereParameter);
-        ListSelectOperation<Student> operation = table.createSelectOperation("fn");
+        ListSelectOperation<Student> operation = new ArrayListSelectOperation<Student>(table, "fn");
         operation.setParameters(whereParameter);
         
         System.out.println("read as a collection");

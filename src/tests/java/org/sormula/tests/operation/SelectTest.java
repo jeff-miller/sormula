@@ -182,7 +182,7 @@ public class SelectTest extends OperationTest<SormulaTest4>
         assert expectedCount > 0 : "no rows meet expected condition to test";
         
         // select all rows with "operation" in description
-        ListSelectOperation<SormulaTest4> operation = getTable().createSelectOperation("descriptionLike");
+        ListSelectOperation<SormulaTest4> operation = new ArrayListSelectOperation<SormulaTest4>(getTable(), "descriptionLike");
         operation.setParameters("%operation%");
         operation.execute();
         List<SormulaTest4> selectedList = operation.readAll();
@@ -219,7 +219,7 @@ public class SelectTest extends OperationTest<SormulaTest4>
         assert expectedCount > 0 : "customSql no rows meet expected condition to test";
 
         // select with custom sql
-        ArrayListSelectOperation<SormulaTest4> operation = new ArrayListSelectOperation<SormulaTest4>(getTable())
+        ArrayListSelectOperation<SormulaTest4> operation = new ArrayListSelectOperation<SormulaTest4>(getTable(), "")
         {
             @Override
             protected String getSql()

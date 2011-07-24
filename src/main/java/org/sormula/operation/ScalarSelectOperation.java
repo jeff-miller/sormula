@@ -58,16 +58,32 @@ public class ScalarSelectOperation<R> extends SqlOperation<R>
     
     
     /**
-     * Constructs for standard sql select statement as:<br>
-     * SELECT c1, c2, c3, ... FROM table
+     * Constructs standard sql select by primary key as:<br>
+     * SELECT c1, c2, c3, ... FROM table WHERE primary key clause
      * 
      * @param table select from this table
      * @throws OperationException if error
      */
     public ScalarSelectOperation(Table<R> table) throws OperationException
     {
+        this(table, "primaryKey");
+    }
+    
+    
+    /**
+     * Constructs standard sql select by primary key as:<br>
+     * SELECT c1, c2, c3, ... FROM table WHERE ...
+     * 
+     * @param table select from this table
+     * @param whereConditionName name of where condition to use ("primaryKey" to select
+     * by primary key; empty string to select all rows in table)
+     * @throws OperationException if error
+     */
+    public ScalarSelectOperation(Table<R> table, String whereConditionName) throws OperationException
+    {
         super(table);
         initBaseSql();
+        setWhere(whereConditionName);
     }
     
     

@@ -62,7 +62,7 @@ public class FullListSelect<R> extends FullSelect<R, List<R>>
      */
     public FullListSelect(Table<R> table) throws SormulaException
     {
-        super(table.createSelectAllOperation());
+        super(new ArrayListSelectOperation<R>(table, ""));
     }
     
     
@@ -80,7 +80,7 @@ public class FullListSelect<R> extends FullSelect<R, List<R>>
      */
     public FullListSelect(Table<R> table, String whereConditionName) throws SormulaException
     {
-        super(table.createSelectOperation(whereConditionName));
+        super(new ArrayListSelectOperation<R>(table, whereConditionName));
     }
     
     
@@ -101,6 +101,7 @@ public class FullListSelect<R> extends FullSelect<R, List<R>>
      */
     public FullListSelect(Table<R> table, String whereConditionName, String orderByName) throws SormulaException
     {
-        super(table.createSelectOperation(whereConditionName, orderByName));
+        super(new ArrayListSelectOperation<R>(table, whereConditionName));
+        getSelectOperation().setOrderBy(orderByName);
     }
 }

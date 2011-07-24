@@ -39,8 +39,9 @@ import org.sormula.translator.ColumnTranslator;
  * to provide a customized read for expression. By default where expression is not a column name, then
  * {@link ResultSet#getObject(int)} is used. 
  * 
- * @since 1.07
+ * @since 1.1
  * @author Jeff Miller
+ * @param <R> class type which contains members for columns of a row in a table
  * @param <T> class type of aggregate result
  */
 public class SelectAggregateOperation<R, T> extends ScalarSelectOperation<R>

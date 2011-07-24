@@ -34,8 +34,9 @@ import org.sormula.operation.FullUpdate;
 import org.sormula.operation.InsertOperation;
 import org.sormula.operation.ListSelectOperation;
 import org.sormula.operation.ScalarSelectOperation;
-import org.sormula.operation.SelectCountOperation;
 import org.sormula.operation.UpdateOperation;
+import org.sormula.operation.aggregate.SelectAggregateOperation;
+import org.sormula.operation.aggregate.SelectCountOperation;
 import org.sormula.translator.NameTranslator;
 import org.sormula.translator.NoNameTranslator;
 import org.sormula.translator.RowTranslator;
@@ -408,7 +409,7 @@ public class Table<R>
         return selectOperation;
     }
     
-    
+
     /**
      * Creates operation for select by a named where condition. This method is an alternate to:<br>
      * <blockquote><pre>
@@ -422,6 +423,10 @@ public class Table<R>
      * @throws SormulaException if error
      * @see Where
      */
+    // TODO replace createSelectOperation by adding whereConditionName to ArrayListSelectOperation constructor
+    // TODO likewise for other create methods thus reducing methods and size of Table class
+    // TODO make version 1.1 since it is major change and not backward compatible
+    // TODO move SelectCountOperation to aggregate package also?
     public ListSelectOperation<R> createSelectOperation(String whereConditionName) throws SormulaException
     {
         ListSelectOperation<R> selectOperation = new ArrayListSelectOperation<R>(this);
@@ -431,19 +436,21 @@ public class Table<R>
     
     
     /**
-     * Gets count of all rows in table.
+     * Gets count of all rows in table. This method is from older versions and is kept for 
+     * backward compatiblity. It is equivalent to <Integer>selectCount("*", "").
      * 
      * @return count of all rows in table
      * @throws SormulaException if error
      */
     public int selectCount() throws SormulaException
     {
-        return selectCount("");
+        return selectCount("", new Object[0]); // new Object[0] parameter disambiguates the method to use
     }
     
     
     /**
-     * Selects count for a subset of rows.
+     * Selects count for a subset of rows. This method is from older versions and is kept for 
+     * backward compatiblity. It is equivalent to <Integer>selectCount("*", whereConditionName, parameters).
      * <p>
      * Example:
      * <blockquote><pre>
@@ -461,12 +468,7 @@ public class Table<R>
     public int selectCount(String whereConditionName, Object...parameters) throws SormulaException
     {
         SelectCountOperation<R> selectCountOperation = createSelectCountOperation(whereConditionName);
-        
-        if (parameters != null)
-        {
-            selectCountOperation.setParameters(parameters);
-        }
-        
+        selectCountOperation.setParameters(parameters);
         selectCountOperation.execute();
         int count = selectCountOperation.readCount();
         selectCountOperation.close();
@@ -475,7 +477,11 @@ public class Table<R>
     
     
     /**
-     * Creates operation to select count of rows for a named where condition. This method is an alternate to:<br>
+     * Creates operation to select count of rows for a named where condition. This method is from older 
+     * versions and is kept for backward compatiblity. It is equivalent to 
+     * <Integer>createSelectCountOperation("*", whereConditionName). 
+     * <p>
+     * This method is an alternate to:<br>
      * <blockquote><pre>
      * SelectCountOperation<R> selectOperation = new SelectCountOperation&lt;R&gt;(table);
      * selectOperation.setWhere(whereConditionName);
@@ -505,6 +511,105 @@ public class Table<R>
         return selectCountOperation;
     }
     
+
+    public <T> T selectCount(String expression) throws SormulaException
+    {
+        return this.<T>selectCount(expression, "");
+    }
+    public <T> T selectCount(String expression, String whereConditionName, Object...parameters) throws SormulaException
+    {
+        SelectAggregateOperation<R, T> selectOperation = this.<T>createSelectCountOperation(expression, whereConditionName);
+        selectOperation.setParameters(parameters);
+        selectOperation.execute();
+        T result = selectOperation.readAggregate();
+        selectOperation.close();
+        return result;
+    }
+    public <T> SelectAggregateOperation<R, T> createSelectCountOperation(String expression, String whereConditionName) throws SormulaException
+    {
+        return this.<T>createSelectAggregateOperation("COUNT", expression, whereConditionName);
+    }
+    
+    
+    // TODO javadoc
+    public <T> T selectMin(String expression) throws SormulaException
+    {
+        return this.<T>selectMin(expression, "");
+    }
+    public <T> T selectMin(String expression, String whereConditionName, Object...parameters) throws SormulaException
+    {
+        SelectAggregateOperation<R, T> selectOperation = this.<T>createSelectMinOperation(expression, whereConditionName);
+        selectOperation.setParameters(parameters);
+        selectOperation.execute();
+        T result = selectOperation.readAggregate();
+        selectOperation.close();
+        return result;
+    }
+    public <T> SelectAggregateOperation<R, T> createSelectMinOperation(String expression, String whereConditionName) throws SormulaException
+    {
+        return this.<T>createSelectAggregateOperation("MIN", expression, whereConditionName);
+    }
+    
+    
+    public <T> T selectMax(String expression) throws SormulaException
+    {
+        return this.<T>selectMax(expression, "");
+    }
+    public <T> T selectMax(String expression, String whereConditionName, Object...parameters) throws SormulaException
+    {
+        SelectAggregateOperation<R, T> selectOperation = this.<T>createSelectMaxOperation(expression, whereConditionName);
+        selectOperation.setParameters(parameters);
+        selectOperation.execute();
+        T result = selectOperation.readAggregate();
+        selectOperation.close();
+        return result;
+    }
+    public <T> SelectAggregateOperation<R, T> createSelectMaxOperation(String expression, String whereConditionName) throws SormulaException
+    {
+        return this.<T>createSelectAggregateOperation("MAX", expression, whereConditionName);
+    }
+    
+    
+    public <T> T selectAvg(String expression) throws SormulaException
+    {
+        return this.<T>selectAvg(expression, "");
+    }
+    public <T> T selectAvg(String expression, String whereConditionName, Object...parameters) throws SormulaException
+    {
+        SelectAggregateOperation<R, T> selectOperation = this.<T>createSelectAvgOperation(expression, whereConditionName);
+        selectOperation.setParameters(parameters);
+        selectOperation.execute();
+        T result = selectOperation.readAggregate();
+        selectOperation.close();
+        return result;
+    }
+    public <T> SelectAggregateOperation<R, T> createSelectAvgOperation(String expression, String whereConditionName) throws SormulaException
+    {
+        return this.<T>createSelectAggregateOperation("AVG", expression, whereConditionName);
+    }
+    
+    
+    /**
+     * Creates an instance of {@link SelectAggregateOperation}. Use this as alternative to using
+     * new operator to construct and then set where condition.
+     * 
+     * @param <T> result type of aggregate expression
+     * @param function aggregate SQL function like MIN, MAX, SUM, etc.
+     * @param expression expression to use as parameter to function; typically it is the
+     * name of a column to that aggregate function operates upon (example: SUM(amount) SUM is function and
+     * amount is expression)  
+     * @param whereConditionName name of where condition annotation on R that limits the rows used in aggregate
+     * @return aggregate operation
+     * @throws SormulaException if error
+     */
+    public <T> SelectAggregateOperation<R, T> createSelectAggregateOperation(String function, String expression, String whereConditionName) throws SormulaException
+    {
+        SelectAggregateOperation<R, T> selectOperation = 
+            new SelectAggregateOperation<R, T>(this, function, expression);
+        selectOperation.setWhere(whereConditionName);
+        return selectOperation;
+    }
+
     
     /**
      * Inserts one row into table.
@@ -845,5 +950,16 @@ public class Table<R>
         DeleteOperation<R> deleteOperation = new DeleteOperation<R>(this);
         deleteOperation.setWhere(whereConditionName);
         return deleteOperation;
+    }
+    
+    
+    // TODO implement as SaveOperation?
+    public int save(R row) throws SormulaException
+    {
+        return 0;
+    }
+    public int saveAll(Collection<R> rows) throws SormulaException
+    {
+        return 0;
     }
 }

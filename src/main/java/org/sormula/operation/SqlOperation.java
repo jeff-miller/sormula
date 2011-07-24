@@ -122,9 +122,10 @@ public abstract class SqlOperation<R>
 	            {
 	                if (log.isDebugEnabled()) log.debug("setParameters parameterIndex=" + parameterIndex + " value='" + p + "'");
 	                preparedStatement.setObject(parameterIndex, p);
+	                ++parameterIndex;
 	            }
 	            
-	            setNextParameter(++parameterIndex);
+	            setNextParameter(parameterIndex);
 	        }
 	        catch (Exception e)
 	        {

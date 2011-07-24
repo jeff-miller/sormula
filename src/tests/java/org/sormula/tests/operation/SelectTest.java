@@ -20,9 +20,11 @@ import java.util.List;
 
 import org.sormula.SormulaException;
 import org.sormula.annotation.Wheres;
+import org.sormula.log.ClassLogger;
 import org.sormula.operation.ArrayListSelectOperation;
 import org.sormula.operation.FullListSelect;
 import org.sormula.operation.ListSelectOperation;
+import org.sormula.operation.aggregate.SelectAggregateOperation;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
@@ -36,6 +38,8 @@ import org.testng.annotations.Test;
 @Test(groups="operation.select", dependsOnGroups="operation.insert")
 public class SelectTest extends OperationTest<SormulaTest4>
 {
+    private static final ClassLogger log = new ClassLogger();
+    
     @BeforeClass
     public void setUp() throws Exception
     {
@@ -57,6 +61,53 @@ public class SelectTest extends OperationTest<SormulaTest4>
     	begin();
     	selectTestRows();
         assert all.size() == getTable().selectCount() : "select count failed";
+        commit();
+    }
+
+    
+    @Test
+    public void selectAggregate() throws SormulaException
+    {
+        begin();
+        selectTestRows();
+        
+        // sum with Java
+        final int type = 3;
+        int sum = 0;
+        int min = Integer.MAX_VALUE;
+        int max = Integer.MIN_VALUE;
+        int count = 0;
+        for (SormulaTest4 s: all)
+        {
+            // limit to one type to test where condition
+            if (s.getType() == type)
+            {
+                ++count;
+                sum += s.getId();
+                min = Math.min(min, s.getId());
+                max = Math.max(max, s.getId());
+            }
+        }
+        
+        // sum with SQL using explict operation
+        SelectAggregateOperation<SormulaTest4, Integer> selectSum = 
+            new SelectAggregateOperation<SormulaTest4, Integer>(getTable(), "SUM", "id");
+        selectSum.setWhere("byType");
+        selectSum.setParameters(type);
+        selectSum.execute();
+        
+        // sums should be same
+        assert sum == selectSum.readAggregate() : "select aggregate sum failed";
+        selectSum.close();
+
+        // test with table methods
+        assert min == getTable().<Integer>selectMin("id", "byType", type) : "select aggregate min failed";
+        assert max == getTable().<Integer>selectMax("id", "byType", type) : "select aggregate max failed";
+        
+        log.info("J avg="+((float)sum/count));
+        log.info("T avg="+getTable().<Integer>selectAvg("id", "byType", type));
+        assert (Integer)sum/count == getTable().<Integer>selectAvg("id", "byType", type) : "select aggregate avg failed";
+        
         commit();
     }
 

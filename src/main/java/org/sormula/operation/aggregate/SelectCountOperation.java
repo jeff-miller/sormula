@@ -14,25 +14,33 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.sormula.operation;
+package org.sormula.operation.aggregate;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import org.sormula.Table;
+import org.sormula.operation.OperationException;
+import org.sormula.operation.ScalarSelectOperation;
 
 
 /**
- * This class remains in this package for backward compatibility. org.sormula.operation.aggregate
- * contains a replacement for this class and it contains other aggregate operations.
+ * SQL select count of records operation. By default selects count of all rows
+ * in table. Set where condition with {@link #setWhere(String)} to count subset of all rows.
  * 
  * @since 1.0
  * @author Jeff Miller
- * @see org.sormula.operation.aggregate.SelectCountOperation
+ * @param <R> class type which contains members for columns of a row in a table
  */
-@Deprecated
 public class SelectCountOperation<R> extends ScalarSelectOperation<R>
 {
+    /**
+     * Constructs for standard sql select statement as:<br>
+     * SELECT COUNT(*), ... FROM table
+     * 
+     * @param table insert into this table
+     * @throws OperationException if error
+     */
     public SelectCountOperation(Table<R> table) throws OperationException
     {
         super(table);
@@ -40,6 +48,9 @@ public class SelectCountOperation<R> extends ScalarSelectOperation<R>
     }
 
 
+    /**
+     * Sets base sql with {@link #setBaseSql(String)}.
+     */
     protected void initBaseSql()
     {
         String tableName = getTable().getQualifiedTableName();
@@ -53,6 +64,10 @@ public class SelectCountOperation<R> extends ScalarSelectOperation<R>
     }
 
 
+    /**
+     * Use {@link #readCount()} instead. R class rows are not returned from select count(*).
+     * @throws OperationException for all invocations
+     */
     @Override
     public R readNext() throws OperationException
     {
@@ -60,6 +75,12 @@ public class SelectCountOperation<R> extends ScalarSelectOperation<R>
     }
     
     
+    /**
+     * Reads the count of rows. Invoke {@link #execute()} prior to using this method.
+     * 
+     * @return value of count or -1 if count can't be read
+     * @throws OperationException if error
+     */
     public Integer readCount() throws OperationException
     {
         int count = -1;

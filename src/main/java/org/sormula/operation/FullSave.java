@@ -21,71 +21,72 @@ import org.sormula.Table;
 
 
 /**
- * {@link DeleteOperation} performed as prepare, execute, and close in one method.
+ * {@link SaveOperation} performed as prepare, execute, and close in one method.
  * 
  * @since 1.0
  * @author Jeff Miller
  * @param <R> class type which contains members for columns of a row in a table
  */
-public class FullDelete<R> extends FullModify<R>
+public class FullSave<R> extends FullModify<R>
 {
     /**
-     * Constructs for a delete operation. Use this constructor when delete operation 
+     * Constructs for a save operation. Use this constructor when save operation 
      * is already created.
      * <p>
      * Example: 
      * <blockquote><pre>
-     * DeleteOperation&lt;Student&gt; someDeleteOperation = ...
+     * SaveOperation&lt;Student&gt; someSaveOperation = ...
      * List&lt;Student&gt; studentList = ...
-     * new FullDelete&lt;Student&gt;(someDeleteOperation).executeAll(studentList);
+     * new FullSave&lt;Student&gt;(someSaveOperation).executeAll(studentList);
      * </pre></blockquote>
-     * @param deleteOperation perform for this delete operation
+     * @param saveOperation perform for this operation
      */
-    public FullDelete(DeleteOperation<R> deleteOperation)
+    public FullSave(SaveOperation<R> saveOperation)
     {
-        super(deleteOperation);
+        super(saveOperation);
     }
     
     
     /**
-     * Constructs for a {@link Table} to delete by primary key.
+     * Constructs for a {@link Table} to insert new rows and update exitsting rows by primary key. 
      * <p>
      * Example:
      * <blockquote><pre>
      * Database database = ...
      * Table&lt;Student&gt; table = database.getTable(Student.class);
      * Student student = ...
-     * new FullDelete&lt;Student&gt;(table).execute(student);
+     * student.setGraduationDate(...);
+     * new FullSave&lt;Student&gt;(table).execute(student);
      * </pre></blockquote>
-     * A simpler alternative is to use {@link Table#delete(Object)} or {@link Table#deleteAll(java.util.Collection)}.
-     * @param table delete from this table
+     * A simpler alternative is to use {@link Table#save(Object)} or {@link Table#saveAll(java.util.Collection)}.
+     * @param table save to this table
      */
-    public FullDelete(Table<R> table) throws SormulaException
+    public FullSave(Table<R> table) throws SormulaException
     {
-        this(new DeleteOperation<R>(table));
+        super(new SaveOperation<R>(table));
     }
     
     
     /**
-     * Constructs for a {@link Table}. Deletes a table based upon a where condition
-     * and the values in a row object. This constructor is not typically used.
+     * Constructs for a {@link Table} to insert new rows and update exitsting rows by 
+     * using where condition. This constructor is not typically used.
      * 
-     * @param table delete from this table
+     * @param table save to this table
      * @param whereConditionName name of where condition to use; see {@link SqlOperation#setWhere(String)}
      */
-    public FullDelete(Table<R> table, String whereConditionName) throws SormulaException
+    public FullSave(Table<R> table, String whereConditionName) throws SormulaException
     {
-        super(new DeleteOperation<R>(table, whereConditionName));
+        super(new SaveOperation<R>(table, whereConditionName));
     }
     
     
     /**
-     * Gets delect operation supplied in constructor.
+     * Gets the save operation supplied in constructor.
      * 
-     * @return operation to delete rows
+     * @return operation that will save rows 
      */
-    public DeleteOperation<R> getDeleteOperation()
+    public SaveOperation<R> getSaveOperation()
     {
-        return (DeleteOperation<R>)getModifyOperation();
+        return (SaveOperation<R>)getModifyOperation();
     }
 }

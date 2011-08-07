@@ -7,6 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.sormula.Database;
 import org.sormula.Table;
+import org.sormula.operation.ArrayListSelectOperation;
 import org.sormula.operation.FullListSelect;
 import org.sormula.operation.ListSelectOperation;
 
@@ -101,7 +102,8 @@ public class SimpleExample
         List<Inventory> clearList = new ArrayList<Inventory>();
         
         // select for a specific manufacturer ("manf" is name of where annotation in Inventory.java)
-        ListSelectOperation<Inventory> operation = inventoryTable.createSelectOperation("manf");
+        ListSelectOperation<Inventory> operation = new ArrayListSelectOperation<Inventory>(
+                inventoryTable, "manf");
         operation.setParameters(manufacturerId);
         operation.execute();
         

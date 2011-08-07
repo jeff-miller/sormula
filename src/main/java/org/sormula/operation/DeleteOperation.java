@@ -31,8 +31,7 @@ import org.sormula.reflect.SormulaField;
 
 
 /**
- * Sql delete operation for row of type R. By default all rows will be affected unless
- * {@link #setWhere(String)} is used.
+ * Sql delete operation for row of type R. 
  *
  * @since 1.0
  * @author Jeff Miller

@@ -22,7 +22,7 @@ public class QuantityRangeSelect extends ArrayListSelectOperation<Inventory>
 	
 	public QuantityRangeSelect(Table<Inventory> table) throws OperationException 
 	{
-		super(table);
+		super(table, "");
 		// custom sql appended to "select partnumber, quantity... from inventory" during prepare
 		setCustomSql("where quantity between ? and ?");
 	}

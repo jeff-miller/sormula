@@ -63,7 +63,7 @@ public class FullUpdate<R> extends FullModify<R>
      */
     public FullUpdate(Table<R> table) throws SormulaException
     {
-        super(new UpdateOperation<R>(table, "primaryKey"));
+        super(new UpdateOperation<R>(table));
     }
     
     

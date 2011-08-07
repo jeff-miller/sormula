@@ -27,10 +27,12 @@ import org.sormula.operation.DeleteOperation;
 import org.sormula.operation.FullDelete;
 import org.sormula.operation.FullInsert;
 import org.sormula.operation.FullListSelect;
+import org.sormula.operation.FullSave;
 import org.sormula.operation.FullScalarSelect;
 import org.sormula.operation.FullUpdate;
 import org.sormula.operation.InsertOperation;
 import org.sormula.operation.ListSelectOperation;
+import org.sormula.operation.SaveOperation;
 import org.sormula.operation.ScalarSelectOperation;
 import org.sormula.operation.SelectCountOperation;
 import org.sormula.operation.UpdateOperation;
@@ -666,15 +668,32 @@ public class Table<R>
         return new FullDelete<R>(new DeleteOperation<R>(this)).executeObject();
     }
     
-    
-    // TODO implement as SaveOperation?
+
+    /**
+     * Uses {@link SaveOperation} to update an existing row or insert row if it
+     * is not already in database.
+     * 
+     * @param row row to save
+     * @return count of rows affected
+     * @throws SormulaException if error
+     */
     public int save(R row) throws SormulaException
     {
-        return 0;
+        return new FullSave<R>(this).execute(row);
     }
+    
+    
+    /**
+     * Uses {@link SaveOperation} to update an existing rows or insert rows if they
+     * are not already in database.
+     * 
+     * @param rows collection of new and/or existing rows to save (may be mixture of new and existing)
+     * @return count of rows affected
+     * @throws SormulaException if error
+     */
     public int saveAll(Collection<R> rows) throws SormulaException
     {
-        return 0;
+        return new FullSave<R>(this).executeAll(rows);
     }
     
     

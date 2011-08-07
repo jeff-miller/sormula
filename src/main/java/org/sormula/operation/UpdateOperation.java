@@ -32,8 +32,7 @@ import org.sormula.translator.RowTranslator;
 
 
 /**
- * SQL update operation for row of type R. By default all rows will be affected unless
- * {@link #setWhere(String)} is used.
+ * SQL update operation for row of type R. 
  *
  * @param <R> class type which contains members for columns of a row in a table
  * 

@@ -50,8 +50,8 @@ public abstract class SelectOperation<R, C> extends ScalarSelectOperation<R>
     
     
     /**
-     * Constructs standard sql to select by primary key as:
-     * SELECT c1, c2, c3, ... FROM table WHERE primary key clause
+     * Constructs standard sql to by a where condition:
+     * SELECT c1, c2, c3, ... FROM table WHERE...
      * 
      * @param table select from this table
      * @param whereConditionName name of where condition to use ("primaryKey" to select

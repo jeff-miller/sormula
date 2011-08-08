@@ -665,7 +665,7 @@ public class Table<R>
      */
     public int deleteAll() throws SormulaException
     {
-        return new FullDelete<R>(new DeleteOperation<R>(this)).executeObject();
+        return new FullDelete<R>(new DeleteOperation<R>(this, "")).executeObject();
     }
     
 

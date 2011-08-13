@@ -5,7 +5,7 @@ import org.sormula.operation.OperationException;
 
 
 /**
- * SQL MAX aggregate operation.
+ * SQL MAX aggregate operation. See base class for details about use.
  * 
  * @since 1.1
  * @author Jeff Miller

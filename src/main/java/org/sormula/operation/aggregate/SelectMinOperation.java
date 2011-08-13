@@ -5,7 +5,7 @@ import org.sormula.operation.OperationException;
 
 
 /**
- * SQL MIN aggregate operation.
+ * SQL MIN aggregate operation. See base class for details about use.
  * 
  * @since 1.1
  * @author Jeff Miller

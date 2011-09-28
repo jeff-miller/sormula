@@ -78,7 +78,7 @@ public class SelectTestMC extends OperationTest<SormulaTest4MC>
     	
         // count expected rows
         int expectedCount = 0;
-        for (SormulaTest4MC r : all)
+        for (SormulaTest4MC r : getAll())
         {
             if (r.getType() == 2 && r.getId() == 199)
             {
@@ -118,7 +118,7 @@ public class SelectTestMC extends OperationTest<SormulaTest4MC>
     	
         // count rows that contain expected condition
         int expectedCount = 0;
-        for (SormulaTest4MC r : all)
+        for (SormulaTest4MC r : getAll())
         {
             if (r.getType() != 2 || r.getDescription().indexOf("operation") >= 0)
             {

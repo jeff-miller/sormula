@@ -60,7 +60,7 @@ public class SelectTest extends OperationTest<SormulaTest4>
     {
     	begin();
     	selectTestRows();
-        assert all.size() == getTable().selectCount() : "select count failed";
+        assert getAll().size() == getTable().selectCount() : "select count failed";
         commit();
     }
 
@@ -77,7 +77,7 @@ public class SelectTest extends OperationTest<SormulaTest4>
         int min = Integer.MAX_VALUE;
         int max = Integer.MIN_VALUE;
         int count = 0;
-        for (SormulaTest4 s: all)
+        for (SormulaTest4 s: getAll())
         {
             // limit to one type to test where condition
             if (s.getType() == type)
@@ -138,7 +138,7 @@ public class SelectTest extends OperationTest<SormulaTest4>
 
     	// count type 3 rows
         int expectedCount = 0;
-        for (SormulaTest4 r : all)
+        for (SormulaTest4 r : getAll())
         {
             if (r.getType() == 3)
             {
@@ -171,7 +171,7 @@ public class SelectTest extends OperationTest<SormulaTest4>
 
         // count rows that contain "operation"
         int expectedCount = 0;
-        for (SormulaTest4 r : all)
+        for (SormulaTest4 r : getAll())
         {
             if (r.getDescription().indexOf("operation") >= 0)
             {
@@ -208,7 +208,7 @@ public class SelectTest extends OperationTest<SormulaTest4>
 
         // expected count 
         int expectedCount = 0;
-        for (SormulaTest4 r : all)
+        for (SormulaTest4 r : getAll())
         {
             if (r.getType() == 2 || r.getType() == 4 || r.getType() == 999)
             {

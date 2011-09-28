@@ -32,7 +32,9 @@ import org.sormula.annotation.Column;
 public class PrimaryKeyWhereTranslator<R> extends AbstractWhereTranslator<R>
 {
     /**
-     * Constructs based upon a row translator.
+     * Constructs based upon a row translator. If no {@link Column} annoation exists for
+     * row to indicate a primary key column, then the first declared field will be assumed
+     * to be primary key.
      * 
      * @param rowTranslator obtain primary key information from this translator
      * @throws TranslatorException if error
@@ -49,17 +51,33 @@ public class PrimaryKeyWhereTranslator<R> extends AbstractWhereTranslator<R>
 
             if (columnAnnotation != null && (columnAnnotation.primaryKey() || columnAnnotation.identity()))
             {
-                ColumnTranslator<R> columnTranslator = rowTranslator.getColumnTranslator(f.getName());
-                
-                if (columnTranslator != null)
-                {
-                    addColumnTranslator(columnTranslator);
-                }
-                else
-                {
-                    throw new NoColumnTranslatorException(rowTranslator.getRowClass(), f.getName(), "primary key");
-                }
+                addColumnTranslator(f, "primary key");
             }
+        }
+        
+        if (getColumnTranslatorList().size() == 0)
+        {
+            // no primary key specificed, assume first declared field
+            Field[] fields = rowTranslator.getRowClass().getDeclaredFields();
+            if (fields.length > 0)
+            {
+                addColumnTranslator(fields[0], "default");
+            }
+        }
+    }
+    
+    
+    protected void addColumnTranslator(Field f, String annotationName) throws TranslatorException
+    {
+        ColumnTranslator<R> columnTranslator = rowTranslator.getColumnTranslator(f.getName());
+        
+        if (columnTranslator != null)
+        {
+            addColumnTranslator(columnTranslator);
+        }
+        else
+        {
+            throw new NoColumnTranslatorException(rowTranslator.getRowClass(), f.getName(), annotationName);
         }
     }
 }

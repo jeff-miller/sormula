@@ -22,8 +22,11 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Properties;
 import java.util.Random;
+import java.util.Set;
 
 import org.sormula.Database;
 import org.sormula.SormulaException;
@@ -64,6 +67,7 @@ public class DatabaseTest<R>
     boolean useTransacation;
     String sqlShutdown;
     String driverShutdown;
+    List<R> all;
     
     
     public void openDatabase() throws Exception
@@ -226,5 +230,38 @@ public class DatabaseTest<R>
         {
             return database.getSchema() + ".";
         }
+    }
+    
+    
+    public void selectTestRows() throws SormulaException
+    {
+        all = getTable().selectAll();
+    }
+    
+    
+    public List<R> getAll()
+    {
+        return all;
+    }
+    
+    
+    public R getRandom()
+    {
+        return all.get(randomInt(all.size()));
+    }
+    
+    
+    public Set<R> getRandomSet()
+    {
+        int size = 10;
+        Set<R> set = new HashSet<R>(size * 2);
+        
+        // choose random set
+        for (int i = 0; i < size; ++i)
+        {
+            set.add(getRandom());
+        }
+        
+        return set;
     }
 }

@@ -16,11 +16,6 @@
  */
 package org.sormula.tests.operation;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
-import org.sormula.SormulaException;
 import org.sormula.tests.DatabaseTest;
 
 
@@ -31,32 +26,5 @@ import org.sormula.tests.DatabaseTest;
  */
 public class OperationTest<R> extends DatabaseTest<R>
 {
-    List<R> all;
-    
-    
-    public void selectTestRows() throws SormulaException
-    {
-        all = getTable().selectAll();
-    }
-    
-    
-    public R getRandom()
-    {
-        return all.get(randomInt(all.size()));
-    }
-    
-    
-    public Set<R> getRandomSet()
-    {
-        int size = 10;
-        Set<R> set = new HashSet<R>(size * 2);
-        
-        // choose random set
-        for (int i = 0; i < size; ++i)
-        {
-            set.add(getRandom());
-        }
-        
-        return set;
-    }
+    // TODO remove this class
 }

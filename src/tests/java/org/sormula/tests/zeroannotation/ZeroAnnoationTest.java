@@ -27,7 +27,7 @@ package org.sormula.tests.zeroannotation;
  * <ul>
  * <li>Table name and class name are the same</li>
  * <li>Column names and class field names are the same</li>
- * <li>First class field corresponds to primary column</li>
+ * <li>First field corresponds to primary column</li>
  * <li>All fields in class are columns in table</li>
  * </ul>
  * 

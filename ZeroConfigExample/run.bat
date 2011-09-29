@@ -1,0 +1,1 @@
+java -cp .;sormula-1.2.jar;hsqldb.jar;slf4j-api-1.6.1.jar;slf4j-simple-1.6.1.jar ZeroConfigExample

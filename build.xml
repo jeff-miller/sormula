@@ -200,4 +200,9 @@
         <zip zipfile="example-${version}.zip" basedir="SimpleExample"
                 excludes="simpleDB.tmp .classpath .project"/>
     </target>
+    
+    <target name="zero-config-example" description="Creates zero-config-example.zip for distribution" depends="init">
+        <zip zipfile="zero-config-example-${version}.zip" basedir="ZeroConfigExample"
+                excludes="exampleDB.tmp .classpath .project"/>
+    </target>
 </project>

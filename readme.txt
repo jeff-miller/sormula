@@ -1,6 +1,9 @@
 sormula
 
-See SimpleExample directory for stand-alone example
+- See SimpleExample directory for stand-alone example
+- See ZeroConfigExample directory for stand-alone example using sormula with nothing
+  but sormula.jar in path
+- See src/examples directory for more complex examples
 
 
 To view all ant tasks:

@@ -19,6 +19,4 @@ exampleDB.properties          Example database
 exampleeDB.script             Example database 
 ZeroConfigExample.class       Example compiled class
 ZeroConfigExample.java        Example source class
-slf4j-api-1.6.1.jar           SLF4J Logging api
-slf4j-simple-1.6.1.jar        SLF4J Logging api
 sormula-1.2.jar               Sormumla api

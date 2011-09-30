@@ -163,10 +163,14 @@
     </target>
 	
 	<target name="lib" description="Creates sormula.jar" depends="compile-main">
-	    <jar jarfile="sormula-${version}.jar" basedir="${target}"
+		<property name="lib.jar" value="sormula-${version}.jar"/>
+	    <jar jarfile="${lib.jar}" basedir="${target}"
 	            excludes="org/sormula/examples/**/* 
 	      	              org/sormula/tests/**/*"
 	        />
+		<!-- keep examples up-to-date -->
+		<copy preservelastmodified="true" file="${lib.jar}" todir="SimpleExample" />
+		<copy preservelastmodified="true" file="${lib.jar}" todir="ZeroConfigExample" />
 	</target>
 	
     <target name="dist" description="Creates sormula.zip for distribution" depends="lib, javadoc">

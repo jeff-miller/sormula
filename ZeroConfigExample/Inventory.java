@@ -1,5 +1,3 @@
-
-
 /**
  * Class that corresponds to a row in the INVENTORY table. No sormula annoations are needed
  * since Inventory class name and fields correspond directly with table name and columns.

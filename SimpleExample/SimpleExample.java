@@ -3,8 +3,6 @@ import java.sql.DriverManager;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.sormula.Database;
 import org.sormula.Table;
 import org.sormula.operation.ArrayListSelectOperation;
@@ -24,13 +22,12 @@ import org.sormula.operation.ListSelectOperation;
  */
 public class SimpleExample
 {
-	private static final Logger log = LoggerFactory.getLogger(SimpleExample.class);
     Connection connection;
     
     
     public static void main(String[] args) throws Exception
     {
-    	log.info("begin");
+        System.out.println("begin");
         SimpleExample simpleExample = new SimpleExample();
         simpleExample.removeInventory(1234, 1);
         simpleExample.clearInventory("xyz");
@@ -38,7 +35,7 @@ public class SimpleExample
         simpleExample.selectByRange(1, 10);
         simpleExample.selectByRange2(1, 10);
         simpleExample.close();
-        log.info("end");
+        System.out.println("end");
     }
     
     
@@ -69,7 +66,7 @@ public class SimpleExample
      */
     public void removeInventory(int partNumber, int delta) throws Exception
     {
-    	log.info("removeInventory");
+        System.out.println("removeInventory");
     	
         // set up
         Database database = new Database(getConnection());
@@ -94,7 +91,7 @@ public class SimpleExample
      */
     public void clearInventory(String manufacturerId) throws Exception
     {
-    	log.info("clearInventory");
+        System.out.println("clearInventory");
     	
         // set up
         Database database = new Database(getConnection());
@@ -132,7 +129,7 @@ public class SimpleExample
      */
     public void clearInventory2(String manufacturerId) throws Exception
     {
-    	log.info("clearInventory2");
+        System.out.println("clearInventory2");
     	
         // set up
         Database database = new Database(getConnection());
@@ -168,7 +165,7 @@ public class SimpleExample
      */
     public void selectByRange(int minimumQuanity, int maximumQuantity) throws Exception
     {
-    	log.info("selectByRange");
+        System.out.println("selectByRange");
     	
         // set up
         Database database = new Database(getConnection());
@@ -181,7 +178,7 @@ public class SimpleExample
         // show results
         for (Inventory inventory: results)
         {
-        	log.info(inventory.getPartNumber() + " quantity=" + inventory.getQuantity());
+            System.out.println(inventory.getPartNumber() + " quantity=" + inventory.getQuantity());
         }
         
         // clean up
@@ -199,7 +196,7 @@ public class SimpleExample
      */
     public void selectByRange2(int minimumQuanity, int maximumQuantity) throws Exception
     {
-    	log.info("selectByRange2");
+        System.out.println("selectByRange2");
     	
         // set up
         Database database = new Database(getConnection());
@@ -213,7 +210,7 @@ public class SimpleExample
         // show results
         for (Inventory inventory: operation.readAll())
         {
-        	log.info(inventory.getPartNumber() + " quantity=" + inventory.getQuantity());
+            System.out.println(inventory.getPartNumber() + " quantity=" + inventory.getQuantity());
         }
         
         // clean up

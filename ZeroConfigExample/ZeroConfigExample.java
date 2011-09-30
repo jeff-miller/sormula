@@ -1,8 +1,6 @@
 import java.sql.Connection;
 import java.sql.DriverManager;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.sormula.Database;
 import org.sormula.Table;
 
@@ -33,13 +31,13 @@ import org.sormula.Table;
  */
 public class ZeroConfigExample
 {
-	static final Logger log = LoggerFactory.getLogger(ZeroConfigExample.class);
     Connection connection;
+    Table<Inventory> inventoryTable;
     
     
     public static void main(String[] args) throws Exception
     {
-    	log.info("begin");
+    	System.out.println("begin");
     	ZeroConfigExample example = new ZeroConfigExample();
     	example.deleteAll(); // start with empty database
     	example.insert(1234);
@@ -48,7 +46,7 @@ public class ZeroConfigExample
     	example.update(5555);
     	example.delete(1111);
     	example.close();
-        log.info("end");
+    	System.out.println("end");
     }
     
     
@@ -56,15 +54,11 @@ public class ZeroConfigExample
     {
         Class.forName("org.hsqldb.jdbc.JDBCDriver");
         connection = DriverManager.getConnection("jdbc:hsqldb:file:exampleDB;shutdown=true");
+        Database database = new Database(connection);
+        inventoryTable = database.getTable(Inventory.class);
     }
     
     
-    public Connection getConnection()
-    {
-        return connection;
-    }
-
-
     public void close() throws Exception
     {
         connection.close();
@@ -73,69 +67,35 @@ public class ZeroConfigExample
     
     public void insert(int partNumber) throws Exception
     {
-    	log.info("insert");
-    	
-        // set up
-        Database database = new Database(getConnection());
-        Table<Inventory> inventoryTable = database.getTable(Inventory.class);
-        
-        // create row
+        System.out.println("insert");
         Inventory inventory = new Inventory();
         inventory.setPartNumber(partNumber);
         inventory.setManufacturerId("Acme");
         inventory.setQuantity(99);
-        
-        // insert into db
         inventoryTable.insert(inventory);
-        
-        // clean up
-        database.close();
     }    
     
     
     public void update(int partNumber) throws Exception
     {
-        log.info("update");
-        
-        // set up
-        Database database = new Database(getConnection());
-        Table<Inventory> inventoryTable = database.getTable(Inventory.class);
-        
-        // select row
+        System.out.println("update");
         Inventory inventory = inventoryTable.select(partNumber);
-        
-        // update
         inventory.setQuantity(1000);
         inventoryTable.update(inventory);
-        
-        // clean up
-        database.close();
     }    
     
     
     public void delete(int partNumber) throws Exception
     {
-        log.info("delete");
-        
-        // set up
-        Database database = new Database(getConnection());
-        Table<Inventory> inventoryTable = database.getTable(Inventory.class);
-        
-        // select row
+        System.out.println("delete");
         Inventory inventory = inventoryTable.select(partNumber);
-        
-        // delete
         inventoryTable.delete(inventory);
-        
-        // clean up
-        database.close();
     }    
     
     
     public void deleteAll() throws Exception
     {
-        Database database = new Database(getConnection());
-        Table<Inventory> inventoryTable = database.getTable(Inventory.class);
+        System.out.println("clear database");
         inventoryTable.deleteAll();
     }
 }

@@ -8,7 +8,7 @@
  */
 public class Inventory // table name defaults to "inventory", use @Row(tableName="...") to specify different name 
 {
-    int partNumber;         // first field is primary key, use @Column(primaryKey=true) to specify different key
+    int partNumber;         // first field is primary key, use @Column(primaryKey=true) to specify different key(s)
     int quantity;           // corresponds to column quantity, use @Column(name="...") to specify different name
     String manufacturerId;  // corresponds to column manfId, use @Column(name="...") to specify different name
     

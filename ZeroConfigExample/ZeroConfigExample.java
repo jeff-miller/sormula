@@ -8,11 +8,13 @@ import org.sormula.Table;
 
 
 /**
- * An example to show how to use sormula with no annotations. Annotations may
- * be used to override default configuration. Sormula never needs a configuration file. 
+ * An example to show how to use sormula with nothing but a POJO {@link Inventory}
+ * and the sormula.jar. There is no SQL, no configuration files, and no annotations. 
+ * Annotations may be used to override default configuration. Sormula never needs 
+ * a configuration file. 
  * <p>
- * No annotations are needed for insert, update, delete, and select by primary key if 
- * row class conforms to the following:
+ * No annotations are required for insert, update, delete, and select by primary key 
+ * if the POJO (row class) conforms to the following:
  * <ul>
  * <li>Table name and class name are the same</li>
  * <li>Column names and class field names are the same</li>

@@ -51,7 +51,6 @@ public class BasicSelect extends ExampleBase
         selectWhere();
         
         // clean up
-        database.close();
         closeDatabase();
     }
     

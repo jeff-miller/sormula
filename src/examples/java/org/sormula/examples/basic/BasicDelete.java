@@ -50,7 +50,6 @@ public class BasicDelete extends ExampleBase
         deleteRows();
         
         // clean up
-        database.close();
         closeDatabase();
     }
     

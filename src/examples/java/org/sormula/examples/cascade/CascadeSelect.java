@@ -47,7 +47,6 @@ public class CascadeSelect extends ExampleBase
         selectAllRows();
         
         // clean up
-        database.close();
         closeDatabase();
     }
     

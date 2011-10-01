@@ -70,7 +70,6 @@ public class CascadeInsert extends ExampleBase
         insertRows();
         
         // clean up
-        database.close();
         closeDatabase();
     }
     

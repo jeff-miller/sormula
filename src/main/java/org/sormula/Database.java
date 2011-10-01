@@ -90,7 +90,8 @@ public class Database
 
 
 	/**
-     * Dereferences all objects used. Does not close connection.
+     * Dereferences all objects used. Does not close connection. This method is not required. Use
+     * to accelerate memory clean up.
      */
     public void close()
     {

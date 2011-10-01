@@ -51,7 +51,6 @@ public class BasicUpdate extends ExampleBase
         printAll(table.selectAll());
         
         // clean up
-        database.close();
         closeDatabase();
     }
     

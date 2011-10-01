@@ -49,7 +49,6 @@ public class CascadeUpdate extends ExampleBase
         updateRows();
         
         // clean up
-        database.close();
         closeDatabase();
     }
     

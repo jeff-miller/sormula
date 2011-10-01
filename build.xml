@@ -3,6 +3,25 @@
 	
 	
     <!-- ******* examples ******* -->
+	<target name="AllExamples" description="Runs all examples">
+		<antcall target="BasicDelete"/>
+		<antcall target="BasicInsert"/>
+		<antcall target="BasicSelect"/>
+		<antcall target="BasicUpdate"/>
+		<antcall target="BlobExample"/>
+		<antcall target="CascadeDelete"/>
+		<antcall target="CascadeInsert"/>
+		<antcall target="CascadeSelect"/>
+		<antcall target="CascadeUpdate"/>
+		<antcall target="ComplexDelete"/>
+		<antcall target="ComplexInsert"/>
+		<antcall target="ComplexSelect"/>
+		<antcall target="ComplexUpdate"/>
+		<antcall target="NameDelete"/>
+		<antcall target="NameInsert"/>
+		<antcall target="NameSelect"/>
+		<antcall target="NameUpdate"/>	
+	</target>
     <target name="BasicInsert" description="Runs example">
         <antcall target="run-example"><param name="class" value="org.sormula.examples.basic.BasicInsert"/></antcall>
     </target>

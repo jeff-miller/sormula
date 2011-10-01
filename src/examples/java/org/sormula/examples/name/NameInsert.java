@@ -66,7 +66,6 @@ public class NameInsert extends ExampleBase
         insertRows();
         
         // clean up
-        database.close();
         closeDatabase();
     }
     

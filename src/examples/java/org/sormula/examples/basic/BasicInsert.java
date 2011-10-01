@@ -61,7 +61,6 @@ public class BasicInsert extends ExampleBase
         insertRows();
         
         // clean up
-        database.close();
         closeDatabase();
     }
     

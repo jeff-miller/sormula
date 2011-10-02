@@ -267,7 +267,7 @@ public class ScalarSelectOperation<R> extends SqlOperation<R>
     /**
      * Gets the result set of the most recent select.
      * 
-     * @return jdbc result set
+     * @return JDBC result set
      */
     protected ResultSet getResultSet()
     {
@@ -296,7 +296,7 @@ public class ScalarSelectOperation<R> extends SqlOperation<R>
 
     
     /**
-     * Invoked prior to reading columns into row. Override to modify the row prior to jdbc reads.
+     * Invoked prior to reading columns into row. Override to modify the row prior to JDBC reads.
      * Default implementaion does nothing.
      * 
      * @param row row that will get column values from table
@@ -307,7 +307,7 @@ public class ScalarSelectOperation<R> extends SqlOperation<R>
     
     
     /**
-     * Invoked after reading columns into row. Override to modify the row after to jdbc reads.
+     * Invoked after reading columns into row. Override to modify the row after to JDBC reads.
      * Default implementaion does nothing.
      * 
      * @param row row that got column values from table

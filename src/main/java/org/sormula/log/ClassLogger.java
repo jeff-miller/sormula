@@ -46,7 +46,7 @@ import org.slf4j.Marker;
  * Log messages from MyClass will be logged with logical log name of
  * com.mycompany.something.MyClass
  * <p>
- * If no slf4j jars are on the classpath, then no exceptions are thrown
+ * If no SLF4J jars are on the classpath, then no exceptions are thrown
  * and no logging will occur.
  * 
  * @since 1.0

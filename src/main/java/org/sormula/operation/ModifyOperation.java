@@ -188,11 +188,11 @@ public abstract class ModifyOperation<R> extends SqlOperation<R>
 
     
     /**
-     * Invoked prior to jdbc execute. Override to modify the row prior to jdbc execute.
+     * Invoked prior to JDBC execute. Override to modify the row prior to JDBC execute.
      * Default implementaion does nothing. This method is not invoked when 
      * {@linkplain ModifyOperation#setParameters(Object...)} is used since no row is available.
      * 
-     * @param row row for jdbc execute
+     * @param row row for JDBC execute
      * @throws OperationException if error
      */
     protected void preExecute(R row) throws OperationException
@@ -201,11 +201,11 @@ public abstract class ModifyOperation<R> extends SqlOperation<R>
     
     
     /**
-     * Invoked after jdbc execute. Override to modify the row after jdbc execute has occured.
+     * Invoked after JDBC execute. Override to modify the row after JDBC execute has occured.
      * Default implementaion does nothing. This method is not invoked when 
      * {@linkplain ModifyOperation#setParameters(Object...)} is used since no row is available. 
      * 
-     * @param row row for jdbc execute
+     * @param row row for JDBC execute
      * @throws OperationException if error
      */
     protected void postExecute(R row) throws OperationException
@@ -214,13 +214,13 @@ public abstract class ModifyOperation<R> extends SqlOperation<R>
 
     
     /**
-     * Invoked prior to jdbc execute. Performs all modify cascade operations 
+     * Invoked prior to JDBC execute. Performs all modify cascade operations 
      * where post flag is false. 
      * @see InsertCascade#post()
      * @see UpdateCascade#post()
      * @see DeleteCascade#post()
      * 
-     * @param row row for jdbc execute 
+     * @param row row for JDBC execute 
      */
     protected void preExecuteCascade(R row) throws OperationException
     {
@@ -229,13 +229,13 @@ public abstract class ModifyOperation<R> extends SqlOperation<R>
 
 
     /**
-     * Invoked after jdbc execute. Performs all modify cascade operations 
+     * Invoked after JDBC execute. Performs all modify cascade operations 
      * where post flag is true. 
      * @see InsertCascade#post()
      * @see UpdateCascade#post()
      * @see DeleteCascade#post()
      * 
-     * @param row row for jdbc execute 
+     * @param row row for JDBC execute 
      */
     protected void postExecuteCascade(R row) throws OperationException
     {

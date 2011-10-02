@@ -23,7 +23,7 @@ import java.sql.ResultSet;
 
 /**
  * Translates using {@link PreparedStatement#setObject(int, Object)} and {@link ResultSet#getObject(int)}.
- * This translator will use jdbc driver to perform all conversions.
+ * This translator will use JDBC driver to perform all conversions.
  * 
  * @since 1.0
  * @author Jeff Miller

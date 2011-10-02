@@ -34,7 +34,7 @@ import org.sormula.translator.RowTranslator;
 
 
 /**
- * Sql insert operation for row of type R. 
+ * SQL insert operation for row of type R. 
  *
  * @since 1.0
  * @author Jeff Miller

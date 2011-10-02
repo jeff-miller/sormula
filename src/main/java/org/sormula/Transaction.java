@@ -41,7 +41,7 @@ public class Transaction
 	/**
 	 * Constructs for a connection.
 	 * 
-	 * @param connection jdbc connection
+	 * @param connection JDBC connection
 	 */
 	public Transaction(Connection connection)
 	{

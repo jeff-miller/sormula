@@ -28,7 +28,7 @@ import org.sormula.log.ClassLogger;
 
 /**
  * Base class for translators that are made of a list of column translators. Translates row object columns 
- * to/from jdbc objects for a row class.
+ * to/from JDBC objects for a row class.
  *
  * @since 1.0
  * @author Jeff Miller
@@ -91,7 +91,7 @@ public class ColumnsTranslator<R>
     /**
      * Reads a record from a result set.
      * 
-     * @param resultSet jdbc result set
+     * @param resultSet JDBC result set
      * @param parameterIndex starting parameter index
      * @param row write values into this object
      * @return last parameter index + 1

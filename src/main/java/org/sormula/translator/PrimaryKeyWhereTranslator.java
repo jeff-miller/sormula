@@ -22,7 +22,7 @@ import org.sormula.annotation.Column;
 
 
 /**
- * Translates values from row object to jdbc parameters for a where condition as defined
+ * Translates values from row object to JDBC parameters for a where condition as defined
  * by {@link Column#primaryKey()} or {@link Column#identity()} annotations.
  * 
  * @since 1.0

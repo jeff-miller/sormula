@@ -78,7 +78,7 @@ public abstract class CascadeOperation<S, T>
 
     
     /**
-     * Prepares operation by initializing jdbc statements.
+     * Prepares operation by initializing JDBC statements.
      * 
      * @throws OperationException if error
      */
@@ -86,7 +86,7 @@ public abstract class CascadeOperation<S, T>
     
     
     /**
-     * Cleans up by closing any jdbc resources.
+     * Cleans up by closing any JDBC resources.
      * 
      * @throws OperationException if error
      */

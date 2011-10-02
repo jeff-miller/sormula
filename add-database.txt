@@ -1,4 +1,4 @@
-To add a database, somedb, to test:
+To add a database, somedb, to test or for use by the examples:
 
 1. Create jdbc/somedb directory
 
@@ -20,3 +20,5 @@ To add a database, somedb, to test:
 
 6. Run the following from the root of the project:
     ant tests
+    or
+    ant <example-name>

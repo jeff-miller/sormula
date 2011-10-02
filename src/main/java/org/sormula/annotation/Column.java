@@ -74,13 +74,13 @@ public @interface Column
      * Only one identity column is allowed per row class.
      * <p>
      * If true, {@link Connection#prepareStatement(String, int)} will be used to prepare insert
-     * statements to return auto generated keys. Some jdbc drivers do not support auto generated
+     * statements to return auto generated keys. Some JDBC drivers do not support auto generated
      * keys even though the database may allow "GENERATED ... AS IDENTITY ..." in column declaration.
      * Your driver will report operation not supported or function not supported exceptions if it does
      * not support auto generated keys.
      * <p>
      * If false, {@link Connection#prepareStatement(String)} will be used to prepare insert statements.
-     * {@link Connection#prepareStatement(String)} is supported by most jdbc drivers.
+     * {@link Connection#prepareStatement(String)} is supported by most JDBC drivers.
      *   
      * @return true to set field with value from {@link Statement#getGeneratedKeys()}
      */

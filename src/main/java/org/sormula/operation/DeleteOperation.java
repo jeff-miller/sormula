@@ -31,7 +31,7 @@ import org.sormula.reflect.SormulaField;
 
 
 /**
- * Sql delete operation for row of type R. 
+ * SQL delete operation for row of type R. 
  *
  * @since 1.0
  * @author Jeff Miller

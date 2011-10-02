@@ -1,8 +1,8 @@
 sormula
 
 - See SimpleExample directory for stand-alone example
-- See ZeroConfigExample directory for stand-alone example using sormula with nothing
-  but sormula.jar in path
+- See ZeroConfigExample directory for a stand-alone example using sormula with 
+  nothing but sormula.jar in path and no configuration
 - See src/examples directory for more complex examples
 
 
@@ -28,5 +28,5 @@ To run tests:
 
 
 
-To add a database for testing, see src/tests/add new database.txt
+To add a database for testing, see add-database.txt
 

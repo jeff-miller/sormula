@@ -414,7 +414,7 @@ public abstract class SqlOperation<R>
 
 
     /**
-     * Gets the jdbc connection used in this operation.
+     * Gets the JDBC connection used in this operation.
      *  
      * @return {@link Connection}
      */
@@ -603,7 +603,7 @@ public abstract class SqlOperation<R>
 
 
     /**
-     * Gets the next jdbc parameter number used by {@link PreparedStatement} to set parameters.
+     * Gets the next JDBC parameter number used by {@link PreparedStatement} to set parameters.
      * Parameter number changes as column and where conditions are prepared.
      *  
      * @return the next {@link PreparedStatement} parameter to use 

@@ -69,7 +69,7 @@ public abstract class AbstractBlobColumnTranslator<R, T> extends AbstractColumnT
      * Implement this method in a subclass to write type T that to database as a BLOB column type.
      *  
      * @param field domain object that is stored in database as SQL BLOB type
-     * @return jdbc blob
+     * @return JDBC blob
      * @throws Exception if error
      */
     protected abstract Blob fieldToBlob(T field) throws Exception;
@@ -79,7 +79,7 @@ public abstract class AbstractBlobColumnTranslator<R, T> extends AbstractColumnT
      * Converts a {@link Blob} object to a domain object for use by {@link #read(ResultSet, int, Object)}.
      * Implement this method in a subclass to read type T from database as a BLOB column type. 
      * 
-     * @param blob jdbc blob
+     * @param blob JDBC blob
      * @return domain object that is stored in database as SQL BLOB type
      * @throws Exception
      */

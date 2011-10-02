@@ -29,7 +29,7 @@ import org.sormula.translator.NameTranslator;
  * Source of {@linkplain Table} objects for reading/writing from/to database. For single threaded use 
  * only. Construct new instances for each transaction and/or thread.
  * <p>
- * Example - Construct database from jdbc connection:
+ * Example - Construct database from JDBC connection:
  * <blockquote><pre>
  * Connection connection = ... // jdbc connection
  * Database database = new Database(connection);
@@ -52,7 +52,7 @@ public class Database
     /**
      * Constructs for no schema. All sql table names will not include a schema prefix.
      * 
-     * @param connection jdbc connection
+     * @param connection JDBC connection
      */
     public Database(Connection connection)
     {
@@ -64,7 +64,7 @@ public class Database
      * Constructs for schema. All sql table names will be prefixed with schema name
      * in form of "schema.table".
      * 
-     * @param connection jdbc connection
+     * @param connection JDBC connection
      * @param schema name of schema to be prefixed to table name in all table names in sql statements
      */
     public Database(Connection connection, String schema)
@@ -78,7 +78,7 @@ public class Database
     
     /**
      * Gets transaction for connection. A {@link Transaction} is not required. {@link Transaction}
-     * is provided for basic jdbc transaction support if desired. Since {@link Database} is
+     * is provided for basic JDBC transaction support if desired. Since {@link Database} is
      * single threaded, only one {@link Transaction} object exists per instance of {@link Database}.
      * 
      * @return transaction for this database
@@ -105,7 +105,7 @@ public class Database
      * Gets connection to use for sql operations. Used by {@linkplain SqlOperation} subclasses
      * to obtain the connection to use for the operation methods.
      * 
-     * @return jdbc connection
+     * @return JDBC connection
      */
     public Connection getConnection()
     {

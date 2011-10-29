@@ -192,6 +192,19 @@ public class Table<R>
 
 
     /**
+     * Sets the table name to use in sql statements. The default is
+     * set in the constructor and based upon the row class name and 
+     * {@link NameTranslator} if specified. Use this to override the default.
+     * 
+     * @param tableName table name (without schema prefix)
+     */
+    public void setTableName(String tableName)
+    {
+        this.tableName = tableName;
+    }
+
+
+    /**
      * Gets table name used in sql statements with optional schema prefix if necessary.
      *  
      * @return schema.tablename if schema is not empty string; otherwise tablename
@@ -199,8 +212,8 @@ public class Table<R>
     public String getQualifiedTableName()
     {
         String schema = database.getSchema();
-        if (schema.length() > 0) return schema + "." + tableName;
-        else return tableName;
+        if (schema.length() > 0) return schema + "." + getTableName();
+        else return getTableName();
     }
 
     

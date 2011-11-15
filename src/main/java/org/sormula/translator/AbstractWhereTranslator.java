@@ -91,7 +91,6 @@ public abstract class AbstractWhereTranslator<R> extends ColumnsTranslator<R>
      * Creates SQL for where phrase. parameters are supplied because
      * some where phrases need to know the number and type of the parameters. 
      * 
-     * @param parameters parameters for where phrase; null if none
      * @return complete WHERE phrase
      */
     public String createSql()

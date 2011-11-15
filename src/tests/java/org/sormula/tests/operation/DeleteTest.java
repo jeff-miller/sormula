@@ -21,6 +21,7 @@ import java.util.Set;
 import org.sormula.SormulaException;
 import org.sormula.Table;
 import org.sormula.operation.DeleteOperation;
+import org.sormula.tests.DatabaseTest;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
@@ -32,7 +33,7 @@ import org.testng.annotations.Test;
  * @author Jeff Miller
  */
 @Test(groups="operation.delete", dependsOnGroups="operation.insert")
-public class DeleteTest extends OperationTest<SormulaTest4>
+public class DeleteTest extends DatabaseTest<SormulaTest4>
 {
     @BeforeClass
     public void setUp() throws Exception

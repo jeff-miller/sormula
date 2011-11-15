@@ -18,7 +18,7 @@ package org.sormula.tests.identity;
 
 import org.sormula.SormulaException;
 import org.sormula.annotation.Column;
-import org.sormula.tests.operation.OperationTest;
+import org.sormula.tests.DatabaseTest;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
@@ -32,7 +32,7 @@ import org.testng.annotations.Test;
  * @author Jeff Miller
  */
 @Test(groups="identity.update", dependsOnGroups="identity.insert")
-public class UpdateTest extends OperationTest<IdentityTest>
+public class UpdateTest extends DatabaseTest<IdentityTest>
 {
     @BeforeClass
     public void setUp() throws Exception

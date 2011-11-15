@@ -20,6 +20,7 @@ import org.sormula.SormulaException;
 import org.sormula.annotation.OrderBys;
 import org.sormula.operation.ArrayListSelectOperation;
 import org.sormula.operation.ListSelectOperation;
+import org.sormula.tests.DatabaseTest;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
@@ -31,7 +32,7 @@ import org.testng.annotations.Test;
  * @author Jeff Miller
  */
 @Test(groups="operation.order", dependsOnGroups="operation.insert")
-public class OrderByTest extends OperationTest<SormulaTest4>
+public class OrderByTest extends DatabaseTest<SormulaTest4>
 {
     @BeforeClass
     public void setUp() throws Exception

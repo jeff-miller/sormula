@@ -22,6 +22,7 @@ import org.sormula.SormulaException;
 import org.sormula.log.ClassLogger;
 import org.sormula.operation.ArrayListSelectOperation;
 import org.sormula.operation.ListSelectOperation;
+import org.sormula.tests.DatabaseTest;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
@@ -33,7 +34,7 @@ import org.testng.annotations.Test;
  * @author Jeff Miller
  */
 @Test(groups={"operation.select"}, dependsOnGroups="operation.insert")
-public class SelectTestMC extends OperationTest<SormulaTest4MC>
+public class SelectTestMC extends DatabaseTest<SormulaTest4MC>
 {
 	private static final ClassLogger log = new ClassLogger();
 	

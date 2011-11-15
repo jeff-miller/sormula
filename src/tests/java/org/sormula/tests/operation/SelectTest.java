@@ -27,6 +27,7 @@ import org.sormula.operation.ArrayListSelectOperation;
 import org.sormula.operation.FullListSelect;
 import org.sormula.operation.ListSelectOperation;
 import org.sormula.operation.aggregate.SelectAggregateOperation;
+import org.sormula.tests.DatabaseTest;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
@@ -38,7 +39,7 @@ import org.testng.annotations.Test;
  * @author Jeff Miller
  */
 @Test(groups="operation.select", dependsOnGroups="operation.insert")
-public class SelectTest extends OperationTest<SormulaTest4>
+public class SelectTest extends DatabaseTest<SormulaTest4>
 {
     private static final ClassLogger log = new ClassLogger();
     

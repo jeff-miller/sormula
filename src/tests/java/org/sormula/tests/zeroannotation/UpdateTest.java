@@ -20,7 +20,7 @@ import java.util.Set;
 
 import org.sormula.SormulaException;
 import org.sormula.Table;
-import org.sormula.tests.operation.OperationTest;
+import org.sormula.tests.DatabaseTest;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
@@ -32,7 +32,7 @@ import org.testng.annotations.Test;
  * @author Jeff Miller
  */
 @Test(groups="zeroannotation.update", dependsOnGroups="zeroannotation.insert")
-public class UpdateTest extends OperationTest<ZeroAnnoationTest>
+public class UpdateTest extends DatabaseTest<ZeroAnnoationTest>
 {
     @BeforeClass
     public void setUp() throws Exception

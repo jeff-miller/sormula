@@ -119,10 +119,11 @@ public class SelectAggregateOperation<R, T> extends ScalarSelectOperation<R>
 
 
     /**
-     * TODO
+     * Reads the aggregate value from the current result set.
+     * 
+     * @return aggregate value
      * @throws OperationException if error
      */
-    // TODO name?
     public T readAggregate() throws OperationException
     {
         T result = null;

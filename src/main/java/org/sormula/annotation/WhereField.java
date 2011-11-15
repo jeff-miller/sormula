@@ -20,6 +20,9 @@ import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
+import java.util.Collection;
+
+import org.sormula.operation.SqlOperation;
 
 
 /**
@@ -51,7 +54,17 @@ public @interface WhereField
     
     /**
      * SQL comparison operator to use in condition "column-name comparisonOperator ?".
-     * 
+     * <p>
+     * When comparison operator is "IN" then the condition used is 
+     * "column-name IN (?, ?, ...)" and the corresponding parameter supplied by
+     * {@link SqlOperation#setParameters(Object...)} may be a {@link Collection}. The 
+     * number of ? parameter placeholders within the parentheses will be equal
+     * to the size of the collection.  
+     * <p>
+     * Any {@link SqlOperation} that uses a {@link WhereField} with a comparison operator of "IN"
+     * will be prepared each time it is executed, {@link SqlOperation#execute()} since the
+     * number of parameters within the IN phrase may be different from previous execution.
+     *   
      * @return sql comparison operator to use between column name and parameter
      */
     String comparisonOperator() default "=";

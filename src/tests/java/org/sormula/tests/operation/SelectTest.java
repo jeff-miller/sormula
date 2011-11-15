@@ -16,7 +16,9 @@
  */
 package org.sormula.tests.operation;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.sormula.SormulaException;
 import org.sormula.annotation.Wheres;
@@ -59,7 +61,7 @@ public class SelectTest extends OperationTest<SormulaTest4>
     public void selectCount() throws SormulaException
     {
     	begin();
-    	selectTestRows();
+    	selectTestRows(); // must perform each time since other tests are destructive
         assert getAll().size() == getTable().selectCount() : "select count failed";
         commit();
     }
@@ -69,7 +71,7 @@ public class SelectTest extends OperationTest<SormulaTest4>
     public void selectAggregate() throws SormulaException
     {
         begin();
-        selectTestRows();
+        selectTestRows(); // must perform each time since other tests are destructive
         
         // sum with Java
         final int type = 3;
@@ -104,8 +106,11 @@ public class SelectTest extends OperationTest<SormulaTest4>
         assert min == getTable().<Integer>selectMin("id", "byType", type) : "select aggregate min failed";
         assert max == getTable().<Integer>selectMax("id", "byType", type) : "select aggregate max failed";
         
-        log.info("J avg="+((float)sum/count));
-        log.info("T avg="+getTable().<Integer>selectAvg("id", "byType", type));
+        if (log.isDebugEnabled())
+        {
+            log.debug("J avg="+((float)sum/count));
+            log.debug("T avg="+getTable().<Integer>selectAvg("id", "byType", type));
+        }
         assert (Integer)sum/count == getTable().<Integer>selectAvg("id", "byType", type) : "select aggregate avg failed";
         
         commit();
@@ -116,7 +121,7 @@ public class SelectTest extends OperationTest<SormulaTest4>
     public void selectByPrimaryKey() throws SormulaException
     {
     	begin();
-    	selectTestRows();
+    	selectTestRows(); // must perform each time since other tests are destructive
 
     	// choose random row
         SormulaTest4 row = getRandom();
@@ -134,7 +139,7 @@ public class SelectTest extends OperationTest<SormulaTest4>
     public void simpleSelect() throws SormulaException
     {
     	begin();
-    	selectTestRows();
+    	selectTestRows(); // must perform each time since other tests are destructive
 
     	// count type 3 rows
         int expectedCount = 0;
@@ -167,7 +172,7 @@ public class SelectTest extends OperationTest<SormulaTest4>
     public void selectByOperation() throws SormulaException
     {
     	begin();
-    	selectTestRows();
+    	selectTestRows(); // must perform each time since other tests are destructive
 
         // count rows that contain "operation"
         int expectedCount = 0;
@@ -204,7 +209,7 @@ public class SelectTest extends OperationTest<SormulaTest4>
     public void customSql() throws SormulaException
     {
     	begin();
-    	selectTestRows();
+    	selectTestRows(); // must perform each time since other tests are destructive
 
         // expected count 
         int expectedCount = 0;
@@ -241,5 +246,49 @@ public class SelectTest extends OperationTest<SormulaTest4>
         }
         
         commit();
+    }
+    
+    
+    @Test
+    public void selectIn() throws SormulaException
+    {
+        begin();
+        
+        // perform with different test sizes but same operation to test that correctly prepare 
+        ListSelectOperation<SormulaTest4> operation = new ArrayListSelectOperation<SormulaTest4>(getTable(), "idIn");
+        selectIn(operation, 5);
+        selectIn(operation, 7);
+        operation.close();
+        commit();
+    }
+    
+    
+    protected void selectIn(ListSelectOperation<SormulaTest4> operation, int testFactor) throws SormulaException
+    {
+        // choose id's divisible by testFactor for in clause
+        Set<Integer> idSet = new HashSet<Integer>(getAll().size());
+        for (SormulaTest4 r : getAll())
+        {
+            if (r.getId() % testFactor == 0)
+            {
+                idSet.add(r.getId());
+            }
+        }
+
+        assert idSet.size() > 0 : "no rows meet expected condition to test";
+        
+        // select all rows where id in idSet
+        if (log.isDebugEnabled()) log.debug("select in " + idSet);
+        operation.setParameters(idSet);
+        operation.execute();
+        List<SormulaTest4> selectedList = operation.readAll();
+        
+        assert idSet.size() == selectedList.size() : "select 'in' operator results in wrong number of rows";
+        
+        // all rows in selectedList should have id in idSet
+        for (SormulaTest4 r : selectedList)
+        {
+            assert idSet.contains(r.getId()) : r.getId() + " row is incorrect for where condition";
+        }
     }
 }

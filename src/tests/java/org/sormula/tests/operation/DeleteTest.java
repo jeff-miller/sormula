@@ -53,7 +53,7 @@ public class DeleteTest extends OperationTest<SormulaTest4>
     public void deleteOne() throws SormulaException
     {
     	begin();
-        selectTestRows();
+        selectTestRows(); // must perform each time since other tests are destructive
         
         // choose random row
         SormulaTest4 row = getRandom();
@@ -71,7 +71,7 @@ public class DeleteTest extends OperationTest<SormulaTest4>
     public void deleteCollection() throws SormulaException
     {
     	begin();
-        selectTestRows();
+        selectTestRows(); // must perform each time since other tests are destructive
         
         // choose random set
         Set<SormulaTest4> set = getRandomSet();
@@ -95,7 +95,7 @@ public class DeleteTest extends OperationTest<SormulaTest4>
     public void deleteByOperation() throws SormulaException
     {
     	begin();
-        selectTestRows();
+        selectTestRows(); // must perform each time since other tests are destructive
         
         DeleteOperation<SormulaTest4> operation = new DeleteOperation<SormulaTest4>(getTable());
         

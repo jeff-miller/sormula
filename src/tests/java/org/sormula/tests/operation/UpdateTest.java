@@ -53,7 +53,7 @@ public class UpdateTest extends OperationTest<SormulaTest4>
     public void updateOne() throws SormulaException
     {
     	begin();
-    	selectTestRows();
+    	selectTestRows(); // must perform each time since other tests are destructive
     	
         // choose random row
         SormulaTest4 row = getRandom();
@@ -77,7 +77,7 @@ public class UpdateTest extends OperationTest<SormulaTest4>
     public void updateCollection() throws SormulaException
     {
     	begin();
-    	selectTestRows();
+    	selectTestRows(); // must perform each time since other tests are destructive
     	
     	// choose random set
         Set<SormulaTest4> set = getRandomSet();
@@ -107,7 +107,7 @@ public class UpdateTest extends OperationTest<SormulaTest4>
     public void updateByOperation() throws SormulaException
     {
     	begin();
-    	selectTestRows();
+    	selectTestRows(); // must perform each time since other tests are destructive
         UpdateOperation<SormulaTest4> operation = new UpdateOperation<SormulaTest4>(getTable());
         
         for (int i = 0; i < 10; ++i)

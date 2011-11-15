@@ -17,9 +17,11 @@
 package org.sormula.translator;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import org.sormula.annotation.WhereField;
+import org.sormula.operation.SqlOperation;
 
 
 /**
@@ -34,6 +36,8 @@ public abstract class AbstractWhereTranslator<R> extends ColumnsTranslator<R>
     RowTranslator<R> rowTranslator;
     List<String> operatorList;
     List<String> booleanOperatorList;
+    boolean inOperator; 
+    Object[] parameters;
     
     
     /**
@@ -62,8 +66,32 @@ public abstract class AbstractWhereTranslator<R> extends ColumnsTranslator<R>
 
 
     /**
-     * Creates SQL for where phrase.
+     * @return parameters set by {@link #setParameters(Object[])}
+     */
+    public Object[] getParameters()
+    {
+        return parameters;
+    }
+
+
+    /**
+     * Sets parameters that are used in where phrase. Some where phrases need 
+     * to know the number and type of the parameters. Parameters typically
+     * are obtained from {@link SqlOperation#getParameters()}.
      * 
+     * @param parameters parameters for where phrase; null if none
+     */
+    public void setParameters(Object[] parameters)
+    {
+        this.parameters = parameters;
+    }
+
+
+    /**
+     * Creates SQL for where phrase. parameters are supplied because
+     * some where phrases need to know the number and type of the parameters. 
+     * 
+     * @param parameters parameters for where phrase; null if none
      * @return complete WHERE phrase
      */
     public String createSql()
@@ -107,11 +135,23 @@ public abstract class AbstractWhereTranslator<R> extends ColumnsTranslator<R>
         super.addColumnTranslator(c);
         operatorList.add(operator);
         booleanOperatorList.add(booleanOperator);
+        
+        // remember if IN operator was used
+        if (operator.equalsIgnoreCase("in")) inOperator = true;
     }
 
 
     /**
-     * Creates column phrase with parameters and comparison operators. 
+     * @return true if one or more column uses the "IN" operator
+     */
+    public boolean isInOperator()
+    {
+        return inOperator;
+    }
+
+
+    /**
+     * Creates column phrase with parameter placeholders and comparison operators. 
      * 
      * @return "c1 op1 ? bo2 c2 operator2 ? bo3 c3 operator3 ?..." where
      * cn is column name, opn is {@link WhereField#comparisonOperator()}, and bon is 
@@ -135,9 +175,53 @@ public abstract class AbstractWhereTranslator<R> extends ColumnsTranslator<R>
             
             phrase.append(c.getColumnName());
             phrase.append(" "); // space around operators
-            phrase.append(operatorList.get(i++));
+            String operator = operatorList.get(i);
+            phrase.append(operator);
             phrase.append(" "); // space around operators
-            phrase.append("?");
+            
+            if (inOperator && operator.equalsIgnoreCase("in"))
+            {
+                // add parameter placeholders for IN phrase
+                phrase.append("(");
+                Object parameter = parameters[i];
+                
+                if (parameter instanceof Collection<?>)
+                {
+                    // one parameter placeholder for each item
+                    int inParameterCount = ((Collection<?>)parameter).size();
+                    
+                    if (inParameterCount > 0)
+                    {
+                        for (int p = 0; p < inParameterCount; ++p)
+                        {
+                            phrase.append("?, ");
+                        }
+                        
+                        // remove last comma
+                        phrase.setLength(phrase.length() - 2);
+                    }
+                    else
+                    {
+                        // empty collection, use "in (null)" to avoid sql error
+                        phrase.append("null");
+                    }
+                }
+                else
+                {
+                    // one parameter within IN phrase
+                    phrase.append("?");
+                }
+                
+                phrase.append(")");
+            }
+            else
+            {
+                // standard operator followed by one parameter placeholder
+                phrase.append("?");
+            }
+            
+            // next
+            ++i;
         }
 
         return phrase.toString();

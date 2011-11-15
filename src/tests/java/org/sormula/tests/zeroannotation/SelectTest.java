@@ -50,7 +50,7 @@ public class SelectTest extends DatabaseTest<ZeroAnnoationTest>
     public void selectCount() throws SormulaException
     {
     	begin();
-    	selectTestRows();
+    	selectTestRows(); // must perform each time since other tests are destructive
         assert getAll().size() == getTable().selectCount() : "select count failed";
         commit();
     }
@@ -60,7 +60,7 @@ public class SelectTest extends DatabaseTest<ZeroAnnoationTest>
     public void selectByPrimaryKey() throws SormulaException
     {
     	begin();
-    	selectTestRows();
+    	selectTestRows(); // must perform each time since other tests are destructive
 
     	// choose random row
     	ZeroAnnoationTest row = getRandom();

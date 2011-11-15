@@ -53,7 +53,7 @@ public class UpdateTest extends OperationTest<ZeroAnnoationTest>
     public void updateOne() throws SormulaException
     {
     	begin();
-    	selectTestRows();
+    	selectTestRows(); // must perform each time since other tests are destructive
     	
         // choose random row
     	ZeroAnnoationTest row = getRandom();
@@ -77,7 +77,7 @@ public class UpdateTest extends OperationTest<ZeroAnnoationTest>
     public void updateCollection() throws SormulaException
     {
     	begin();
-    	selectTestRows();
+    	selectTestRows(); // must perform each time since other tests are destructive
     	
     	// choose random set
         Set<ZeroAnnoationTest> set = getRandomSet();

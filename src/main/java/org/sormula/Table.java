@@ -268,14 +268,14 @@ public class Table<R>
      * int orderNumber = 123456; // primary key
      * Order order = table.select(orderNumber);
      * </pre></blockquote>
-     * @param parameters primary key values to use for select (must be in same order as
+     * @param primaryKeys primary key values to use for select (must be in same order as
      * primary key columns appear with row class)
      * @return row or null if none found
      * @throws SormulaException if error
      */
-    public R select(Object... parameters) throws SormulaException
+    public R select(Object... primaryKeys) throws SormulaException
     {
-        return new FullScalarSelect<R>(this).execute(parameters);
+        return new FullScalarSelect<R>(this).execute(primaryKeys);
     }
     
     

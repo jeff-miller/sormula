@@ -33,7 +33,8 @@ import org.sormula.annotation.Wheres;
  */
 @Wheres(whereConditions={
         @Where(name="byType", fieldNames="type"),
-        @Where(name="descriptionLike", whereFields=@WhereField(name="description", comparisonOperator="like"))
+        @Where(name="descriptionLike", whereFields=@WhereField(name="description", comparisonOperator="like")),
+        @Where(name="idIn", whereFields=@WhereField(name="id", comparisonOperator="in"))
 })
 @OrderBys(orderByConditions={
     @OrderBy(name="ob1", ascending="type"),

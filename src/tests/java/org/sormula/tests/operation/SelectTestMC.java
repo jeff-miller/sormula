@@ -57,7 +57,7 @@ public class SelectTestMC extends OperationTest<SormulaTest4MC>
     public void selectByPrimaryKey() throws SormulaException
     {
     	begin();
-    	selectTestRows();
+    	selectTestRows(); // must perform each time since other tests are destructive
     	
         // choose random row
         SormulaTest4MC row = getRandom();
@@ -74,7 +74,7 @@ public class SelectTestMC extends OperationTest<SormulaTest4MC>
     public void simpleSelect() throws SormulaException
     {
     	begin();
-    	selectTestRows();
+    	selectTestRows(); // must perform each time since other tests are destructive
     	
         // count expected rows
         int expectedCount = 0;
@@ -114,7 +114,7 @@ public class SelectTestMC extends OperationTest<SormulaTest4MC>
     public void selectWithOperator() throws SormulaException
     {
     	begin();
-    	selectTestRows();
+    	selectTestRows(); // must perform each time since other tests are destructive
     	
         // count rows that contain expected condition
         int expectedCount = 0;

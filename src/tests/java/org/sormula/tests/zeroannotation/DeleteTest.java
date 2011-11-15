@@ -53,7 +53,7 @@ public class DeleteTest extends DatabaseTest<ZeroAnnoationTest>
     public void deleteOne() throws SormulaException
     {
     	begin();
-        selectTestRows();
+        selectTestRows(); // must perform each time since other tests are destructive
         
         // choose random row
         ZeroAnnoationTest row = getRandom();
@@ -71,7 +71,7 @@ public class DeleteTest extends DatabaseTest<ZeroAnnoationTest>
     public void deleteCollection() throws SormulaException
     {
     	begin();
-        selectTestRows();
+        selectTestRows(); // must perform each time since other tests are destructive
         
         // choose random set
         Set<ZeroAnnoationTest> set = getRandomSet();

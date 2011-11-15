@@ -52,7 +52,7 @@ public class SelectTest extends OperationTest<IdentityTest>
     public void selectByPrimaryKey() throws SormulaException
     {
     	begin();
-    	selectTestRows();
+    	selectTestRows(); // must perform each time since other tests are destructive
 
     	// choose random row
     	IdentityTest row = getRandom();

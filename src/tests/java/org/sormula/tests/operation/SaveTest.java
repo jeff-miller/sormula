@@ -52,7 +52,7 @@ public class SaveTest extends OperationTest<SormulaTest4>
     public void saveExisting1() throws SormulaException
     {
     	begin();
-    	selectTestRows();
+    	selectTestRows(); // must perform each time since other tests are destructive
     	
         // choose random row
         SormulaTest4 row = getRandom();
@@ -98,7 +98,7 @@ public class SaveTest extends OperationTest<SormulaTest4>
     public void saveCollection() throws SormulaException
     {
     	begin();
-    	selectTestRows();
+    	selectTestRows(); // must perform each time since other tests are destructive
     	
     	// choose random set
         Set<SormulaTest4> set = getRandomSet();

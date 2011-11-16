@@ -17,6 +17,7 @@
 package org.sormula.examples.basic;
 
 import java.sql.Connection;
+import java.util.ArrayList;
 
 import org.sormula.Database;
 import org.sormula.SormulaException;
@@ -49,6 +50,7 @@ public class BasicSelect extends ExampleBase
         selectRow();
         selectAllRows();
         selectWhere();
+        selectIn();
         
         // clean up
         closeDatabase();
@@ -83,6 +85,24 @@ public class BasicSelect extends ExampleBase
         System.out.println("read one row at a time");
         operation.execute();
         for (Student s = operation.readNext(); s != null; s = operation.readNext())
+            System.out.println(s);
+        
+        operation.close();
+    }
+    
+    
+    void selectIn() throws SormulaException
+    {
+        ArrayList<Integer> idList = new ArrayList<Integer>();
+        idList.add(1234);
+        idList.add(8888);
+        
+        System.out.println("select where id in = " + idList);
+        ListSelectOperation<Student> operation = new ArrayListSelectOperation<Student>(table, "idin");
+        operation.setParameters(idList);
+        
+        operation.execute();
+        for (Student s: operation.readAll())
             System.out.println(s);
         
         operation.close();

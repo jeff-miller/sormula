@@ -53,7 +53,8 @@ public @interface WhereField
 
     
     /**
-     * SQL comparison operator to use in condition "column-name comparisonOperator ?".
+     * SQL comparison operator to use in condition "column-name comparisonOperator ?". Example
+     * operators are: "=", "<", "<=", ">", ">=", "LIKE", "<>", "IN", "NOT IN".
      * <p>
      * When comparison operator is "IN" then the condition used is 
      * "column-name IN (?, ?, ...)" and the corresponding parameter supplied by
@@ -64,7 +65,10 @@ public @interface WhereField
      * Any {@link SqlOperation} that uses a {@link WhereField} with a comparison operator of "IN"
      * will be prepared each time it is executed, {@link SqlOperation#execute()} since the
      * number of parameters within the IN phrase may be different from previous execution.
-     *   
+     * <p>
+     * "IN" operator may be used with with other operators within the same {@link Where} 
+     * annoation. Multiple "IN" operators may be used within same {@link Where} annoation.
+     *  
      * @return sql comparison operator to use between column name and parameter
      */
     String comparisonOperator() default "=";

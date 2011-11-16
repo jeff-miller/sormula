@@ -136,7 +136,7 @@ public abstract class AbstractWhereTranslator<R> extends ColumnsTranslator<R>
         booleanOperatorList.add(booleanOperator);
         
         // remember if IN operator was used
-        if (operator.equalsIgnoreCase("in")) inOperator = true;
+        if (isInOperator(operator)) inOperator = true;
     }
 
 
@@ -146,6 +146,13 @@ public abstract class AbstractWhereTranslator<R> extends ColumnsTranslator<R>
     public boolean isInOperator()
     {
         return inOperator;
+    }
+    
+    
+    
+    protected boolean isInOperator(String operator)
+    {
+        return operator.equalsIgnoreCase("in") || operator.equalsIgnoreCase("not in");
     }
 
 
@@ -178,7 +185,7 @@ public abstract class AbstractWhereTranslator<R> extends ColumnsTranslator<R>
             phrase.append(operator);
             phrase.append(" "); // space around operators
             
-            if (inOperator && operator.equalsIgnoreCase("in"))
+            if (inOperator && isInOperator(operator))
             {
                 // add parameter placeholders for IN phrase
                 phrase.append("(");

@@ -30,12 +30,9 @@ import org.sormula.operation.FullListSelect;
 import org.sormula.operation.FullSave;
 import org.sormula.operation.FullScalarSelect;
 import org.sormula.operation.FullUpdate;
-import org.sormula.operation.InsertOperation;
-import org.sormula.operation.ListSelectOperation;
 import org.sormula.operation.SaveOperation;
 import org.sormula.operation.ScalarSelectOperation;
 import org.sormula.operation.SelectCountOperation;
-import org.sormula.operation.UpdateOperation;
 import org.sormula.operation.aggregate.SelectAggregateOperation;
 import org.sormula.operation.aggregate.SelectAvgOperation;
 import org.sormula.operation.aggregate.SelectMaxOperation;
@@ -707,102 +704,5 @@ public class Table<R>
     public int saveAll(Collection<R> rows) throws SormulaException
     {
         return new FullSave<R>(this).executeAll(rows);
-    }
-    
-    
-/* ------------------------------------- deprecated --------------------------------- */
-    
-    
-    /**
-     * Use {@link ArrayListSelectOperation} with empty string as where condition name.
-     */
-    @Deprecated
-    public ListSelectOperation<R> createSelectAllOperation() throws SormulaException
-    {
-        return new ArrayListSelectOperation<R>(this, "");
-    }
-    /**
-     * Use {@link ArrayListSelectOperation}.
-     */
-    @Deprecated
-    public ScalarSelectOperation<R> createSelectOperation() throws SormulaException
-    {
-        return new ScalarSelectOperation<R>(this, "primaryKey");
-    }
-    /**
-     * Use {@link ArrayListSelectOperation} with where condition name.
-     */
-    @Deprecated
-    public ListSelectOperation<R> createSelectOperation(String whereConditionName) throws SormulaException
-    {
-        return new ArrayListSelectOperation<R>(this, whereConditionName);
-    }
-    /**
-     * Use {@link ArrayListSelectOperation}.
-     */
-    @Deprecated
-    public ListSelectOperation<R> createSelectOperation(String whereConditionName, String orderByName) throws SormulaException
-    {
-        ListSelectOperation<R> operation = new ArrayListSelectOperation<R>(this, whereConditionName);
-        operation.setOrderBy(orderByName);
-        return operation;
-    }
-    /**
-     * Use org.sormula.operation.SelectCountOperation.
-     */
-    @Deprecated
-    public org.sormula.operation.SelectCountOperation<R> createSelectCountOperation(String whereConditionName) throws SormulaException
-    {
-        org.sormula.operation.SelectCountOperation<R> selectCountOperation = new org.sormula.operation.SelectCountOperation<R>(this, "");
-        selectCountOperation.setWhere(whereConditionName);
-        return selectCountOperation;
-    }
-    /**
-     * Use {@link InsertOperation}.
-     */
-    @Deprecated
-    public InsertOperation<R> createInsertOperation() throws SormulaException
-    {
-        return new InsertOperation<R>(this);
-    }
-    /**
-     * Use {@link UpdateOperation}.
-     */
-    @Deprecated
-    public UpdateOperation<R> createUpdateOperation() throws SormulaException
-    {
-        return new UpdateOperation<R>(this, "primaryKey");
-    }
-    /**
-     * Use {@link UpdateOperation}.
-     */
-    @Deprecated
-    public UpdateOperation<R> createUpdateOperation(String whereConditionName) throws SormulaException
-    {
-        return new UpdateOperation<R>(this, whereConditionName);
-    }
-    /**
-     * Use {@link DeleteOperation} with empty string as where condition name.
-     */
-    @Deprecated
-    public DeleteOperation<R> createDeleteAllOperation() throws SormulaException
-    {
-        return new DeleteOperation<R>(this, "");
-    }
-    /**
-     * Use {@link DeleteOperation}.
-     */
-    @Deprecated
-    public DeleteOperation<R> createDeleteOperation() throws SormulaException
-    {
-        return new DeleteOperation<R>(this, "primaryKey");
-    }
-    /**
-     * Use {@link DeleteOperation}.
-     */
-    @Deprecated
-    public DeleteOperation<R> createDeleteOperation(String whereConditionName) throws SormulaException
-    {
-        return new DeleteOperation<R>(this, whereConditionName);
     }
 }

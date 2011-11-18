@@ -37,10 +37,10 @@ public class InsertCascadeOperation<S, T> extends ModifyCascadeOperation<S, T>
      *  
      * @param targetField cascade insert operation uses row(s) from this field
      * @param targetTable cascade insert operation is performed on this table 
-     * @param insertCascadeAnnoation cascade operation
+     * @param insertCascadeAnnotation cascade operation
      */
-    public InsertCascadeOperation(SormulaField<S, ?> targetField, Table<T> targetTable, InsertCascade insertCascadeAnnoation)
+    public InsertCascadeOperation(SormulaField<S, ?> targetField, Table<T> targetTable, InsertCascade insertCascadeAnnotation)
     {
-        super(targetField, targetTable, insertCascadeAnnoation.operation(), insertCascadeAnnoation.post());
+        super(targetField, targetTable, insertCascadeAnnotation.operation(), insertCascadeAnnotation.post());
     }
 }

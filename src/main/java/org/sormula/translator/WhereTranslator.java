@@ -17,8 +17,8 @@
 package org.sormula.translator;
 
 import org.sormula.annotation.Where;
+import org.sormula.annotation.WhereAnnotationReader;
 import org.sormula.annotation.WhereField;
-import org.sormula.annotation.Wheres;
 
 
 /**
@@ -40,82 +40,79 @@ public class WhereTranslator<R> extends AbstractWhereTranslator<R>
     public WhereTranslator(RowTranslator<R> rowTranslator, String whereConditionName) throws TranslatorException
     {
         super(rowTranslator);
-        Where whereAnnotation = null;        
-        Wheres wheresAnnoation = rowTranslator.getRowClass().getAnnotation(Wheres.class);
-        
-        if (wheresAnnoation != null)
-        {
-            // look for name
-            for (Where w: wheresAnnoation.whereConditions())
-            {
-                if (w.name().equals(whereConditionName))
-                {
-                    // found
-                    whereAnnotation = w;
-                    break;
-                }
-            }
-        }
-        else
-        {
-            // look for single where annotation
-            Where w = rowTranslator.getRowClass().getAnnotation(Where.class);
-            
-            if (w != null && w.name().equals(whereConditionName))
-            {
-                // name matches
-                whereAnnotation = w;
-            }
-        }
+        Where whereAnnotation = new WhereAnnotationReader(
+                rowTranslator.getRowClass()).getAnnotation(whereConditionName);        
         
         if (whereAnnotation != null)
         {
-            // add translators for each column in where condition
-            String [] fieldNames = whereAnnotation.fieldNames(); 
-            
-            if (fieldNames.length > 0)
+            init(rowTranslator, whereAnnotation);
+        }
+        else
+        {
+            throw new TranslatorException("no Where annotation named " + whereConditionName + " for " + 
+                    rowTranslator.getRowClass().getCanonicalName());
+        }
+    }
+    
+    
+    /**
+     * Constructs for where annotation. 
+     * 
+     * @param rowTranslator row translator for where condition
+     * @param whereAnnotation annotation with where information
+     * @throws TranslatorException if error
+     */
+    public WhereTranslator(RowTranslator<R> rowTranslator, Where whereAnnotation) throws TranslatorException
+    {
+        super(rowTranslator);
+        init(rowTranslator, whereAnnotation);
+    }
+    
+    
+    protected void init(RowTranslator<R> rowTranslator, Where whereAnnotation) throws TranslatorException
+    {
+        // add translators for each column in where condition
+        String [] fieldNames = whereAnnotation.fieldNames(); 
+        
+        if (fieldNames.length > 0)
+        {
+            // simple where condition, operator is "=" for each column
+            initColumnTranslatorList(fieldNames.length);
+            for (String fn: fieldNames)
             {
-                // simple where condition, operator is "=" for each column
-                initColumnTranslatorList(fieldNames.length);
-                for (String fn: fieldNames)
+                ColumnTranslator<R> columnTranslator = rowTranslator.getColumnTranslator(fn);
+                
+                if (columnTranslator != null)
                 {
-                    ColumnTranslator<R> columnTranslator = rowTranslator.getColumnTranslator(fn);
-                    
-                    if (columnTranslator != null)
-                    {
-                        addColumnTranslator(columnTranslator);
-                    }
-                    else
-                    {
-                        throw new NoColumnTranslatorException(rowTranslator.getRowClass(), fn, "where condition named, " + whereConditionName);
-                    }
+                    addColumnTranslator(columnTranslator);
                 }
-            }
-            else
-            {
-                // complex where condition, custom operator for each column
-                WhereField[] whereFields = whereAnnotation.whereFields();
-                initColumnTranslatorList(whereFields.length);
-
-                for (WhereField wf: whereFields)
+                else
                 {
-                    ColumnTranslator<R> columnTranslator = rowTranslator.getColumnTranslator(wf.name());
-                    
-                    if (columnTranslator != null)
-                    {
-                        addColumnTranslator(columnTranslator, wf.comparisonOperator(), wf.booleanOperator());
-                    }
-                    else
-                    {
-                        throw new NoColumnTranslatorException(rowTranslator.getRowClass(), wf.name(), "where condition named, " + whereConditionName);
-                    }
+                    throw new NoColumnTranslatorException(rowTranslator.getRowClass(), fn, 
+                            "where condition named, " + whereAnnotation.name());
                 }
             }
         }
         else
         {
-            throw new TranslatorException("no Where named " + whereConditionName + " for " + 
-                    rowTranslator.getRowClass().getCanonicalName());
+            // complex where condition, custom operator for each column
+            WhereField[] whereFields = whereAnnotation.whereFields();
+            initColumnTranslatorList(whereFields.length);
+
+            for (WhereField wf: whereFields)
+            {
+                ColumnTranslator<R> columnTranslator = rowTranslator.getColumnTranslator(wf.name());
+                
+                if (columnTranslator != null)
+                {
+                    addColumnTranslator(columnTranslator, wf.comparisonOperator(), wf.booleanOperator());
+                }
+                else
+                {
+                    throw new NoColumnTranslatorException(rowTranslator.getRowClass(), wf.name(), 
+                            "where condition named, " + whereAnnotation.name());
+                }
+            }
         }
     }
 }

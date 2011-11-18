@@ -26,13 +26,13 @@ import org.testng.annotations.Test;
 
 
 /**
- * Tests some insert operations for row with no annoations. This test must run first so that
+ * Tests some insert operations for row with no annotations. This test must run first so that
  * test data is inserted for select, update, and delete tests.
  * 
  * @author Jeff Miller
  */
 @Test(groups="zeroannotation.insert")
-public class InsertTest extends DatabaseTest<ZeroAnnoationTest>
+public class InsertTest extends DatabaseTest<ZeroAnnotationTest>
 {
     boolean preMethod;
     boolean postMethod;
@@ -42,8 +42,8 @@ public class InsertTest extends DatabaseTest<ZeroAnnoationTest>
     public void setUp() throws Exception
     {
         openDatabase();
-        createTable(ZeroAnnoationTest.class, 
-            "CREATE TABLE " + getSchemaPrefix() + ZeroAnnoationTest.class.getSimpleName() + " (" +
+        createTable(ZeroAnnotationTest.class, 
+            "CREATE TABLE " + getSchemaPrefix() + ZeroAnnotationTest.class.getSimpleName() + " (" +
             " id INTEGER NOT NULL PRIMARY KEY," +
             " type SMALLINT," +
             " description VARCHAR(30)" +
@@ -62,18 +62,18 @@ public class InsertTest extends DatabaseTest<ZeroAnnoationTest>
     @Test
     public void insertOne() throws SormulaException
     {
-        assert getTable().insert(new ZeroAnnoationTest(13, 1, "Insert one")) == 1 : "insert one failed";
+        assert getTable().insert(new ZeroAnnotationTest(13, 1, "Insert one")) == 1 : "insert one failed";
     }
     
     
     @Test
     public void insertCollection() throws SormulaException
     {
-        ArrayList<ZeroAnnoationTest> list = new ArrayList<ZeroAnnoationTest>();
+        ArrayList<ZeroAnnotationTest> list = new ArrayList<ZeroAnnotationTest>();
         
         for (int i = 101; i < 200; ++i)
         {
-            list.add(new ZeroAnnoationTest(i, 2, "Insert collection " + i));
+            list.add(new ZeroAnnotationTest(i, 2, "Insert collection " + i));
         }
         
         assert getTable().insertAll(list) == list.size() : "insert collection failed";

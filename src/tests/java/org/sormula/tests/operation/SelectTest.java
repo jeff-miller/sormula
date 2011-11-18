@@ -21,11 +21,15 @@ import java.util.List;
 import java.util.Set;
 
 import org.sormula.SormulaException;
+import org.sormula.Table;
+import org.sormula.annotation.Where;
+import org.sormula.annotation.WhereField;
 import org.sormula.annotation.Wheres;
 import org.sormula.log.ClassLogger;
 import org.sormula.operation.ArrayListSelectOperation;
 import org.sormula.operation.FullListSelect;
 import org.sormula.operation.ListSelectOperation;
+import org.sormula.operation.OperationException;
 import org.sormula.operation.aggregate.SelectAggregateOperation;
 import org.sormula.tests.DatabaseTest;
 import org.testng.annotations.AfterClass;
@@ -188,9 +192,7 @@ public class SelectTest extends DatabaseTest<SormulaTest4>
         assert expectedCount > 0 : "no rows meet expected condition to test";
         
         // select all rows with "operation" in description
-        ListSelectOperation<SormulaTest4> operation = new ArrayListSelectOperation<SormulaTest4>(getTable(), "descriptionLike");
-        operation.setParameters("%operation%");
-        operation.execute();
+        DescriptionSelect operation = new DescriptionSelect(getTable());
         List<SormulaTest4> selectedList = operation.readAll();
         operation.close();
         
@@ -291,5 +293,21 @@ public class SelectTest extends DatabaseTest<SormulaTest4>
         {
             assert idSet.contains(r.getId()) : r.getId() + " row is incorrect for where condition";
         }
+    }
+}
+
+
+/**
+ * {@link Where} and {@link Wheres} annotations may be used on the operations instead of on 
+ * the row class.
+ */
+@Where(name="desclike", whereFields=@WhereField(name="description", comparisonOperator="like"))
+class DescriptionSelect extends ArrayListSelectOperation<SormulaTest4>
+{
+    public DescriptionSelect(Table<SormulaTest4> table) throws OperationException
+    {
+        super(table, "desclike");
+        setParameters("%operation%"); // where description like '%operation%'
+        execute();
     }
 }

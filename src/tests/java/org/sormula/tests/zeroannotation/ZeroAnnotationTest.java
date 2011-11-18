@@ -33,19 +33,19 @@ package org.sormula.tests.zeroannotation;
  * 
  * @author Jeff Miller
  */
-public class ZeroAnnoationTest
+public class ZeroAnnotationTest
 {
     int id;
     int type;
     String description;
     
     
-    public ZeroAnnoationTest()
+    public ZeroAnnotationTest()
     {
     }
 
     
-    public ZeroAnnoationTest(int id, int type, String description)
+    public ZeroAnnotationTest(int id, int type, String description)
     {
         this.id = id;
         this.type = type;
@@ -93,9 +93,9 @@ public class ZeroAnnoationTest
     @Override
     public boolean equals(Object obj)
     {
-        if (obj instanceof ZeroAnnoationTest)
+        if (obj instanceof ZeroAnnotationTest)
         {
-            ZeroAnnoationTest other = (ZeroAnnoationTest) obj;
+            ZeroAnnotationTest other = (ZeroAnnotationTest) obj;
             return id == other.id;
         }
         

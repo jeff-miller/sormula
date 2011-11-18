@@ -67,7 +67,7 @@ public @interface WhereField
      * number of parameters within the IN phrase may be different from previous execution.
      * <p>
      * "IN" operator may be used with with other operators within the same {@link Where} 
-     * annoation. Multiple "IN" operators may be used within same {@link Where} annoation.
+     * annotation. Multiple "IN" operators may be used within same {@link Where} annotation.
      *  
      * @return sql comparison operator to use between column name and parameter
      */

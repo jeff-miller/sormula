@@ -48,7 +48,7 @@ import org.sormula.translator.standard.StandardColumnTranslator;
 
 /**
  * Translates a row to prepared statement and from result set. {@linkplain ColumnTranslator} objects
- * are created for each column based upon annoations on row class. If no annotation exists for a member then
+ * are created for each column based upon annotations on row class. If no annotation exists for a member then
  * column name is same as member name and {@linkplain StandardColumnTranslator} is used.
  * 
  * @since 1.0

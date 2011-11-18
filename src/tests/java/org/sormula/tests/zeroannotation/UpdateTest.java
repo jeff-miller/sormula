@@ -32,13 +32,13 @@ import org.testng.annotations.Test;
  * @author Jeff Miller
  */
 @Test(groups="zeroannotation.update", dependsOnGroups="zeroannotation.insert")
-public class UpdateTest extends DatabaseTest<ZeroAnnoationTest>
+public class UpdateTest extends DatabaseTest<ZeroAnnotationTest>
 {
     @BeforeClass
     public void setUp() throws Exception
     {
         openDatabase();
-        createTable(ZeroAnnoationTest.class, null);
+        createTable(ZeroAnnotationTest.class, null);
     }
     
     
@@ -56,7 +56,7 @@ public class UpdateTest extends DatabaseTest<ZeroAnnoationTest>
     	selectTestRows(); // must perform each time since other tests are destructive
     	
         // choose random row
-    	ZeroAnnoationTest row = getRandom();
+    	ZeroAnnotationTest row = getRandom();
 
         // new values
         row.setType(99);
@@ -65,7 +65,7 @@ public class UpdateTest extends DatabaseTest<ZeroAnnoationTest>
         assert getTable().update(row) == 1 : "update one row failed";
         
         // read row to confirm that updates applied
-        ZeroAnnoationTest row2 = getTable().select(row.getId());
+        ZeroAnnotationTest row2 = getTable().select(row.getId());
         assert row2 != null && row2.getType() == row.getType() && row2.getDescription().equals(row.getDescription()) :
             " updated row not same";
         
@@ -80,22 +80,22 @@ public class UpdateTest extends DatabaseTest<ZeroAnnoationTest>
     	selectTestRows(); // must perform each time since other tests are destructive
     	
     	// choose random set
-        Set<ZeroAnnoationTest> set = getRandomSet();
+        Set<ZeroAnnotationTest> set = getRandomSet();
         
         // modify to update
-        for (ZeroAnnoationTest row: set)
+        for (ZeroAnnotationTest row: set)
         {
             row.setType(999);
         }
 
         // update
-        Table<ZeroAnnoationTest> table = getTable();
+        Table<ZeroAnnotationTest> table = getTable();
         assert table.updateAll(set) == set.size() : "update count not same as collection size";
         
         // confirm each row was updated
-        for (ZeroAnnoationTest r: set)
+        for (ZeroAnnotationTest r: set)
         {
-            ZeroAnnoationTest r2 = table.select(r.getId());
+            ZeroAnnotationTest r2 = table.select(r.getId());
             assert r2 != null && r2.getType() == r.getType() : "update collection failed";
         }
         

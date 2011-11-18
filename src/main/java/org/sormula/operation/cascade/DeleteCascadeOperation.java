@@ -39,11 +39,11 @@ public class DeleteCascadeOperation<S, T> extends ModifyCascadeOperation<S, T>
      *  
      * @param targetField cascade delete operation uses row(s) from this field
      * @param targetTable cascade delete operation is performed on this table 
-     * @param deleteCascadeAnnoation cascade operation
+     * @param deleteCascadeAnnotation cascade operation
      */
-    public DeleteCascadeOperation(SormulaField<S, ?> targetField, Table<T> targetTable, DeleteCascade deleteCascadeAnnoation)
+    public DeleteCascadeOperation(SormulaField<S, ?> targetField, Table<T> targetTable, DeleteCascade deleteCascadeAnnotation)
     {
-        super(targetField, targetTable, deleteCascadeAnnoation.operation(), deleteCascadeAnnoation.post());
+        super(targetField, targetTable, deleteCascadeAnnotation.operation(), deleteCascadeAnnotation.post());
     }
 
     

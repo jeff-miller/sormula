@@ -24,18 +24,18 @@ import org.testng.annotations.Test;
 
 
 /**
- * Tests some select operations for row class with no annoations.
+ * Tests some select operations for row class with no annotations.
  * 
  * @author Jeff Miller
  */
 @Test(groups="zeroannotation.select", dependsOnGroups="zeroannotation.insert")
-public class SelectTest extends DatabaseTest<ZeroAnnoationTest>
+public class SelectTest extends DatabaseTest<ZeroAnnotationTest>
 {
     @BeforeClass
     public void setUp() throws Exception
     {
         openDatabase();
-        createTable(ZeroAnnoationTest.class, null);
+        createTable(ZeroAnnotationTest.class, null);
     }
     
     
@@ -63,10 +63,10 @@ public class SelectTest extends DatabaseTest<ZeroAnnoationTest>
     	selectTestRows(); // must perform each time since other tests are destructive
 
     	// choose random row
-    	ZeroAnnoationTest row = getRandom();
+    	ZeroAnnotationTest row = getRandom();
         
         // select by primary key
-    	ZeroAnnoationTest selected = getTable().select(row.getId());
+    	ZeroAnnotationTest selected = getTable().select(row.getId());
         
         assert selected != null && row.getId() == selected.getId() : "select by primary key failed";
         

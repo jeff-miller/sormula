@@ -32,13 +32,13 @@ import org.testng.annotations.Test;
  * @author Jeff Miller
  */
 @Test(groups="zeroannotation.delete", dependsOnGroups="zeroannotation.insert")
-public class DeleteTest extends DatabaseTest<ZeroAnnoationTest>
+public class DeleteTest extends DatabaseTest<ZeroAnnotationTest>
 {
     @BeforeClass
     public void setUp() throws Exception
     {
         openDatabase();
-        createTable(ZeroAnnoationTest.class, null);
+        createTable(ZeroAnnotationTest.class, null);
     }
     
     
@@ -56,7 +56,7 @@ public class DeleteTest extends DatabaseTest<ZeroAnnoationTest>
         selectTestRows(); // must perform each time since other tests are destructive
         
         // choose random row
-        ZeroAnnoationTest row = getRandom();
+        ZeroAnnotationTest row = getRandom();
 
         assert getTable().delete(row) == 1 : "delete one row failed";
         
@@ -74,16 +74,16 @@ public class DeleteTest extends DatabaseTest<ZeroAnnoationTest>
         selectTestRows(); // must perform each time since other tests are destructive
         
         // choose random set
-        Set<ZeroAnnoationTest> set = getRandomSet();
+        Set<ZeroAnnotationTest> set = getRandomSet();
         
         // delete
-        Table<ZeroAnnoationTest> table = getTable();
+        Table<ZeroAnnotationTest> table = getTable();
         assert table.deleteAll(set) == set.size() : "delete count not same as collection size";
         
         // confirm each row was deleted
-        for (ZeroAnnoationTest r: set)
+        for (ZeroAnnotationTest r: set)
         {
-            ZeroAnnoationTest r2 = table.select(r.getId());
+            ZeroAnnotationTest r2 = table.select(r.getId());
             assert r2 == null : r.getId() + " was not deleted";
         }
         

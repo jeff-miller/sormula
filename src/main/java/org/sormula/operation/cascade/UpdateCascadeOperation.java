@@ -39,11 +39,11 @@ public class UpdateCascadeOperation<S, T> extends ModifyCascadeOperation<S, T>
      *  
      * @param targetField cascade update operation uses row(s) from this field
      * @param targetTable cascade update operation is performed on this table 
-     * @param updateCascadeAnnoation cascade operation
+     * @param updateCascadeAnnotation cascade operation
      */
-    public UpdateCascadeOperation(SormulaField<S, ?> targetField, Table<T> targetTable, UpdateCascade updateCascadeAnnoation)
+    public UpdateCascadeOperation(SormulaField<S, ?> targetField, Table<T> targetTable, UpdateCascade updateCascadeAnnotation)
     {
-        super(targetField, targetTable, updateCascadeAnnoation.operation(), updateCascadeAnnoation.post());
+        super(targetField, targetTable, updateCascadeAnnotation.operation(), updateCascadeAnnotation.post());
     }
 
     

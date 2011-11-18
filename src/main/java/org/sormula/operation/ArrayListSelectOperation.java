@@ -54,7 +54,7 @@ public class ArrayListSelectOperation<R> extends ListSelectOperation<R>
     {
         super(table, whereConditionName);
     }
-
+    
     
     @Override
     protected ArrayList<R> createReadAllCollection()

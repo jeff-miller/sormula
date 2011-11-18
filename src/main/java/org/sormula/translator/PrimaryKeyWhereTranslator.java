@@ -32,7 +32,7 @@ import org.sormula.annotation.Column;
 public class PrimaryKeyWhereTranslator<R> extends AbstractWhereTranslator<R>
 {
     /**
-     * Constructs based upon a row translator. If no {@link Column} annoation exists for
+     * Constructs based upon a row translator. If no {@link Column} annotation exists for
      * row to indicate a primary key column, then the first declared field will be assumed
      * to be primary key.
      * 

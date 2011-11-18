@@ -45,7 +45,7 @@ import org.sormula.translator.RowTranslator;
 /**
  * A table within a sql database. Contains a {@linkplain RowTranslator} for reading/writing
  * data form/to database and contains methods for common input/output operations. The RowTranslator
- * is created based upon fields within the row class of type R and from annoations for the
+ * is created based upon fields within the row class of type R and from annotations for the
  * class. All common input/output methods use the primary key defined by {@linkplain Column#primaryKey()} 
  * annotation on class R.
  * <p>
@@ -109,7 +109,7 @@ public class Table<R>
     {
         this.database = database;
 
-        // process row annoation
+        // process row annotation
         Row rowAnnotation = rowClass.getAnnotation(Row.class);
         Class<? extends NameTranslator> nameTranslatorClass = null;
         

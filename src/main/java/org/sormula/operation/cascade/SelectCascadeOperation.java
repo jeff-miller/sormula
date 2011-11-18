@@ -41,7 +41,7 @@ import org.sormula.reflect.SormulaField;
  */
 public class SelectCascadeOperation<S, T> extends CascadeOperation<S, T>
 {
-	SelectCascade selectCascadeAnnoation;
+	SelectCascade selectCascadeAnnotation;
 	ScalarSelectOperation<T> selectOperation;
 	List<SormulaField<S, ?>> parameterFields;
 	
@@ -51,12 +51,12 @@ public class SelectCascadeOperation<S, T> extends CascadeOperation<S, T>
      *  
      * @param targetField cascade select operation modifies this field
      * @param targetTable cascade select operation is performed on this table 
-     * @param selectCascadeAnnoation cascade operation
+     * @param selectCascadeAnnotation cascade operation
      */
-    public SelectCascadeOperation(SormulaField<S, ?> targetField, Table<T> targetTable, SelectCascade selectCascadeAnnoation)
+    public SelectCascadeOperation(SormulaField<S, ?> targetField, Table<T> targetTable, SelectCascade selectCascadeAnnotation)
     {
-        super(targetField, targetTable, selectCascadeAnnoation.operation(), selectCascadeAnnoation.post());
-        this.selectCascadeAnnoation = selectCascadeAnnoation;
+        super(targetField, targetTable, selectCascadeAnnotation.operation(), selectCascadeAnnotation.post());
+        this.selectCascadeAnnotation = selectCascadeAnnotation;
     }
 
     
@@ -109,10 +109,10 @@ public class SelectCascadeOperation<S, T> extends CascadeOperation<S, T>
         prepareParameterFields();
         
         // where
-        selectOperation.setWhere(selectCascadeAnnoation.targetWhereName());
+        selectOperation.setWhere(selectCascadeAnnotation.targetWhereName());
         
         // order by
-        selectOperation.setOrderBy(selectCascadeAnnoation.targetOrderByName());
+        selectOperation.setOrderBy(selectCascadeAnnotation.targetOrderByName());
         
         if (selectOperation instanceof MapSelectOperation)
         {
@@ -120,13 +120,13 @@ public class SelectCascadeOperation<S, T> extends CascadeOperation<S, T>
         	try
         	{
 	        	Method keyMethod = getTargetTable().getRowTranslator().getRowClass().getMethod(
-	        			selectCascadeAnnoation.targetKeyMethodName());
+	        			selectCascadeAnnotation.targetKeyMethodName());
 	        	((MapSelectOperation)selectOperation).setGetKeyMethod(keyMethod);
         	}
         	catch (NoSuchMethodException e)
         	{
         		throw new OperationException("error getting key method in SelectCascade.keyMethodName()=" +
-        		        selectCascadeAnnoation.targetKeyMethodName(), e);
+        		        selectCascadeAnnotation.targetKeyMethodName(), e);
         	}
         }
         
@@ -154,7 +154,7 @@ public class SelectCascadeOperation<S, T> extends CascadeOperation<S, T>
         
         try
         {
-            String[] parameterFieldNames = selectCascadeAnnoation.sourceParameterFieldNames();
+            String[] parameterFieldNames = selectCascadeAnnotation.sourceParameterFieldNames();
             parameterFields = new ArrayList<SormulaField<S,?>>(parameterFieldNames.length);
             
             for (int i = 0; i < parameterFieldNames.length; ++i)

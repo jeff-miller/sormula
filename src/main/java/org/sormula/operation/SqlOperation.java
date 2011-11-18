@@ -28,6 +28,7 @@ import org.sormula.SormulaException;
 import org.sormula.Table;
 import org.sormula.annotation.Column;
 import org.sormula.annotation.Where;
+import org.sormula.annotation.WhereAnnotationReader;
 import org.sormula.annotation.cascade.Cascade;
 import org.sormula.annotation.cascade.OneToManyCascade;
 import org.sormula.annotation.cascade.OneToOneCascade;
@@ -470,7 +471,7 @@ public abstract class SqlOperation<R>
 
 
     /**
-     * Sets where condition from annoation name as defined in {@linkplain Where#name()} for row.
+     * Sets where condition from annotation name as defined in {@linkplain Where#name()} for row.
      * 
      * @param whereConditionName name of where condition to use; 
      * "primaryKey" for key defined by {@linkplain Column#primaryKey()}; 
@@ -488,12 +489,39 @@ public abstract class SqlOperation<R>
         {
             try
             {
-                setWhereTranslator(new WhereTranslator<R>(table.getRowTranslator(), whereConditionName));
+                // look in operation class first
+                Where whereAnnotation = new WhereAnnotationReader(this.getClass()).getAnnotation(whereConditionName);
+                if (whereAnnotation != null)
+                {
+                    if (log.isDebugEnabled()) log.debug(whereConditionName + 
+                            " Where annotation from operation class, " + this.getClass()); 
+                    setWhereTranslator(new WhereTranslator<R>(table.getRowTranslator(), whereAnnotation));
+                }
+                else
+                {
+                    // look in row class if not found in operation class
+                    if (log.isDebugEnabled()) log.debug(whereConditionName + 
+                            " where annotation from row class," + table.getRowTranslator().getRowClass());
+                    whereAnnotation = new WhereAnnotationReader(table.getRowTranslator().getRowClass()).getAnnotation(whereConditionName);
+                    if (whereAnnotation != null)
+                    {
+                        setWhereTranslator(new WhereTranslator<R>(table.getRowTranslator(), whereAnnotation));
+                    }
+                    else
+                    {
+                        throw new OperationException("no Where annotation named, " + whereConditionName);
+                    }
+                }
             }
             catch (TranslatorException e)
             {
                 throw new OperationException("can't create WhereTranslator for " + whereConditionName, e);
             }
+        }
+        else
+        {
+            // no where
+            setWhereTranslator(null);
         }
     }
     

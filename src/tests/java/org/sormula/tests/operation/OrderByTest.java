@@ -17,9 +17,13 @@
 package org.sormula.tests.operation;
 
 import org.sormula.SormulaException;
+import org.sormula.Table;
+import org.sormula.annotation.OrderBy;
+import org.sormula.annotation.OrderByField;
 import org.sormula.annotation.OrderBys;
 import org.sormula.operation.ArrayListSelectOperation;
 import org.sormula.operation.ListSelectOperation;
+import org.sormula.operation.OperationException;
 import org.sormula.tests.DatabaseTest;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
@@ -27,7 +31,7 @@ import org.testng.annotations.Test;
 
 
 /**
- * Tests {@linkplain OrderBys} annoation.
+ * Tests {@linkplain OrderBys} annotation.
  * 
  * @author Jeff Miller
  */
@@ -78,9 +82,7 @@ public class OrderByTest extends DatabaseTest<SormulaTest4>
     public void complexOrder() throws SormulaException
     {
     	begin();
-        ListSelectOperation<SormulaTest4> operation = new ArrayListSelectOperation<SormulaTest4>(getTable(), "");
-        operation.setOrderBy("ob2");
-        operation.execute();
+    	ComplexOrderQuery operation = new ComplexOrderQuery(getTable());
         
         // test if results in proper order
         SormulaTest4 previousRow = null;
@@ -105,4 +107,23 @@ public class OrderByTest extends DatabaseTest<SormulaTest4>
         operation.close();
         commit();
     }
+}
+
+
+/**
+ * {@link @OrderBy} and {@link @OrderBys} annotations may be used on the operations instead of on 
+ * the row class.
+ */
+@OrderBy(name="ob2", orderByFields={
+        @OrderByField(name="type", descending=true),
+        @OrderByField(name="id")})
+class ComplexOrderQuery extends ArrayListSelectOperation<SormulaTest4>
+{
+    public ComplexOrderQuery(Table<SormulaTest4> table) throws OperationException
+    {
+        super(table, ""/*no where*/);
+        setOrderBy("ob2");
+        execute();
+    }
+    
 }

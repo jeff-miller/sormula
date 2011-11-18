@@ -25,6 +25,7 @@ import java.util.List;
 import org.sormula.Table;
 import org.sormula.annotation.Column;
 import org.sormula.annotation.OrderBy;
+import org.sormula.annotation.OrderByAnnotationReader;
 import org.sormula.annotation.Where;
 import org.sormula.annotation.cascade.Cascade;
 import org.sormula.annotation.cascade.OneToManyCascade;
@@ -220,16 +221,39 @@ public class ScalarSelectOperation<R> extends SqlOperation<R>
         {
             try
             {
-                orderByTranslator = new OrderByTranslator<R>(table.getRowTranslator(), orderByName);
+                // look in operation class first
+                OrderBy orderByAnnotation = new OrderByAnnotationReader(this.getClass()).getAnnotation(orderByName);
+                if (orderByAnnotation != null)
+                {
+                    if (log.isDebugEnabled()) log.debug(orderByName + 
+                            " OrderBy annotation from operation class, " + this.getClass()); 
+                    setOrderByTranslator(new OrderByTranslator<R>(table.getRowTranslator(), orderByAnnotation));
+                }
+                else
+                {
+                    // look in row class if not found in operation class
+                    if (log.isDebugEnabled()) log.debug(orderByName + 
+                            " OrderBy annotation from row class," + table.getRowTranslator().getRowClass());
+                    orderByAnnotation = new OrderByAnnotationReader(table.getRowTranslator().getRowClass()).getAnnotation(orderByName);
+                    if (orderByAnnotation != null)
+                    {
+                        setOrderByTranslator(new OrderByTranslator<R>(table.getRowTranslator(), orderByAnnotation));
+                    }
+                    else
+                    {
+                        throw new OperationException("no OrderBy annotation named, " + orderByName);
+                    }
+                }
             }
             catch (TranslatorException e)
             {
-                throw new OperationException("can't create OrderTranslator for " + orderByName, e);
+                throw new OperationException("can't create OrderByTranslator for " + orderByName, e);
             }
         }
         else
         {
-            orderByTranslator = null;
+            // no order by
+            setOrderByTranslator(null);
         }
     }
     
@@ -245,6 +269,16 @@ public class ScalarSelectOperation<R> extends SqlOperation<R>
     }
     
     
+    protected OrderByTranslator<R> getOrderByTranslator()
+    {
+        return orderByTranslator;
+    }
+    protected void setOrderByTranslator(OrderByTranslator<R> orderByTranslator)
+    {
+        this.orderByTranslator = orderByTranslator;
+    }
+
+
     /**
      * {@inheritDoc}
      * Order by clause is appended to super{@link #getSql()}.

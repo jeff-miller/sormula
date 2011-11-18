@@ -20,8 +20,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.sormula.annotation.OrderBy;
+import org.sormula.annotation.OrderByAnnotationReader;
 import org.sormula.annotation.OrderByField;
-import org.sormula.annotation.OrderBys;
 
 
 /**
@@ -49,80 +49,75 @@ public class OrderByTranslator<R> extends ColumnsTranslator<R>
         super(rowTranslator.getRowClass());
         this.orderByName = orderByName;
         
-        OrderBy orderByAnnotation = null;        
-        OrderBys orderBysAnnoation = rowTranslator.getRowClass().getAnnotation(OrderBys.class);
-        
-        if (orderBysAnnoation != null)
-        {
-            // look for name
-            for (OrderBy o: orderBysAnnoation.orderByConditions())
-            {
-                if (o.name().equals(orderByName))
-                {
-                    // found
-                    orderByAnnotation = o;
-                    break;
-                }
-            }
-        }
-        else
-        {
-            // look for single order by annotation
-            OrderBy o = rowTranslator.getRowClass().getAnnotation(OrderBy.class);
-            {
-                if (o != null && o.name().equals(orderByName))
-                {
-                    // found
-                    orderByAnnotation = o;
-                }
-            }
-        }
-        
+        OrderBy orderByAnnotation = new OrderByAnnotationReader(
+                rowTranslator.getRowClass()).getAnnotation(orderByName);        
+
         if (orderByAnnotation != null)
         {
-            // add translators for each column in order by condition
-            String [] ascending  = orderByAnnotation.ascending();
-            String [] descending = orderByAnnotation.descending();
-            
-            if (ascending.length > 0)
-            {
-                // all columns ascending  
-                initSimpleOrderByColumns(rowTranslator, ascending, "");
-            }
-            else if (descending.length > 0)
-            {
-                // all columns descending  
-                initSimpleOrderByColumns(rowTranslator, descending, "DESC");
-            }
-            else
-            {
-                // mix of ascending and descending
-                OrderByField[] orderByColumns = orderByAnnotation.orderByFields();
-                initColumnTranslatorList(orderByColumns.length);
-                
-                for (OrderByField o: orderByColumns)
-                {
-                    String qualifier;
-                    if (o.descending()) qualifier = "DESC";
-                    else qualifier = "ASC";
-
-                    ColumnTranslator<R> columnTranslator = rowTranslator.getColumnTranslator(o.name());
-                    
-                    if (columnTranslator != null)
-                    {
-                        addColumnTranslator(columnTranslator, qualifier);
-                    }
-                    else
-                    {
-                        throw new NoColumnTranslatorException(rowTranslator.getRowClass(), o.name(), "order by named, " + orderByName);
-                    }
-                }
-            }
+            init(rowTranslator, orderByAnnotation);
         }
         else
         {
             throw new TranslatorException("no OrderBy named " + orderByName + " for " + 
                     rowTranslator.getRowClass().getCanonicalName());
+        }
+    }
+    
+    
+    /**
+     * Constructs for an order by annotation. 
+     * 
+     * @param rowTranslator row translator from which to get column information
+     * @param orderByAnnotation annotation with order information
+     * @throws TranslatorException if error
+     */
+    public OrderByTranslator(RowTranslator<R> rowTranslator, OrderBy orderByAnnotation) throws TranslatorException
+    {
+        super(rowTranslator.getRowClass());
+        this.orderByName = orderByAnnotation.name();
+        init(rowTranslator, orderByAnnotation);
+    }
+    
+    
+    void init(RowTranslator<R> rowTranslator, OrderBy orderByAnnotation) throws TranslatorException
+    {
+        // add translators for each column in order by condition
+        String [] ascending  = orderByAnnotation.ascending();
+        String [] descending = orderByAnnotation.descending();
+        
+        if (ascending.length > 0)
+        {
+            // all columns ascending  
+            initSimpleOrderByColumns(rowTranslator, ascending, "");
+        }
+        else if (descending.length > 0)
+        {
+            // all columns descending  
+            initSimpleOrderByColumns(rowTranslator, descending, "DESC");
+        }
+        else
+        {
+            // mix of ascending and descending
+            OrderByField[] orderByColumns = orderByAnnotation.orderByFields();
+            initColumnTranslatorList(orderByColumns.length);
+            
+            for (OrderByField o: orderByColumns)
+            {
+                String qualifier;
+                if (o.descending()) qualifier = "DESC";
+                else qualifier = "ASC";
+
+                ColumnTranslator<R> columnTranslator = rowTranslator.getColumnTranslator(o.name());
+                
+                if (columnTranslator != null)
+                {
+                    addColumnTranslator(columnTranslator, qualifier);
+                }
+                else
+                {
+                    throw new NoColumnTranslatorException(rowTranslator.getRowClass(), o.name(), "order by named, " + orderByName);
+                }
+            }
         }
     }
     

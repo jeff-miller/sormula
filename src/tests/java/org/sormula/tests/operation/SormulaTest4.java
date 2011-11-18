@@ -18,7 +18,6 @@ package org.sormula.tests.operation;
 
 import org.sormula.annotation.Column;
 import org.sormula.annotation.OrderBy;
-import org.sormula.annotation.OrderByField;
 import org.sormula.annotation.OrderBys;
 import org.sormula.annotation.Where;
 import org.sormula.annotation.WhereField;
@@ -33,16 +32,13 @@ import org.sormula.annotation.Wheres;
  */
 @Wheres(whereConditions={
         @Where(name="byType", fieldNames="type"),
-        @Where(name="descriptionLike", whereFields=@WhereField(name="description", comparisonOperator="like")),
         @Where(name="idIn", whereFields=@WhereField(name="id", comparisonOperator="in"))
 })
+
+// note: OrderBys is not needed since only 1 OrderBy, keep Orderbys to test annotation processing
 @OrderBys(orderByConditions={
-    @OrderBy(name="ob1", ascending="type"),
-    @OrderBy(name="ob2", orderByFields={
-            @OrderByField(name="type", descending=true),
-            @OrderByField(name="id")
+    @OrderBy(name="ob1", ascending="type")
     })
-})
 public class SormulaTest4
 {
     @Column(primaryKey=true)

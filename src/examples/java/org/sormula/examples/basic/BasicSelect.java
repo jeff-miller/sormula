@@ -22,9 +22,11 @@ import java.util.ArrayList;
 import org.sormula.Database;
 import org.sormula.SormulaException;
 import org.sormula.Table;
+import org.sormula.annotation.Where;
 import org.sormula.examples.ExampleBase;
 import org.sormula.operation.ArrayListSelectOperation;
 import org.sormula.operation.ListSelectOperation;
+import org.sormula.operation.OperationException;
 
 
 public class BasicSelect extends ExampleBase
@@ -51,6 +53,7 @@ public class BasicSelect extends ExampleBase
         selectAllRows();
         selectWhere();
         selectIn();
+        selectWhere2();
         
         // clean up
         closeDatabase();
@@ -106,5 +109,30 @@ public class BasicSelect extends ExampleBase
             System.out.println(s);
         
         operation.close();
+    }
+    
+    
+    void selectWhere2() throws SormulaException
+    {
+        System.out.println("select using SelectJohns class");
+        SelectJohns operation = new SelectJohns(table);
+        operation.execute();
+
+        for (Student s: operation.readAll())
+            System.out.println(s);
+        
+        operation.close();
+    }
+}
+
+
+// where annotations may be used on operation class
+@Where(name="fn2", fieldNames="firstName")
+class SelectJohns extends ArrayListSelectOperation<Student>
+{
+    public SelectJohns(Table<Student> table) throws OperationException
+    {
+        super(table, "fn2");
+        setParameters("John");
     }
 }

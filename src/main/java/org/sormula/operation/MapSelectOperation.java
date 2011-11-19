@@ -74,7 +74,9 @@ public abstract class MapSelectOperation<K, R> extends SelectOperation<R, Map<K,
 
 
     /**
-     * Sets the get key method. See {@link #getGetKeyMethod()} for details.
+     * Sets the get key method. See {@link #getGetKeyMethod()} for details. The default
+     * is {@link #hashCode()}. Use this method to define the get key method other than {@link #hashCode()}
+     * or override {@link #getKey(Object)}.
      * 
      * @param getKeyMethod method that supplies map key value for a row
      */

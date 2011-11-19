@@ -35,9 +35,9 @@ import org.sormula.annotation.Wheres;
         @Where(name="idIn", whereFields=@WhereField(name="id", comparisonOperator="in"))
 })
 
-// note: OrderBys is not needed since only 1 OrderBy, keep Orderbys to test annotation processing
 @OrderBys(orderByConditions={
-    @OrderBy(name="ob1", ascending="type")
+    @OrderBy(name="ob1", ascending="type"),
+    @OrderBy(name="ob2", ascending="description")
     })
 public class SormulaTest4
 {

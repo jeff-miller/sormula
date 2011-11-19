@@ -18,6 +18,7 @@ package org.sormula.tests.operation;
 
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import org.sormula.SormulaException;
@@ -28,6 +29,7 @@ import org.sormula.annotation.Wheres;
 import org.sormula.log.ClassLogger;
 import org.sormula.operation.ArrayListSelectOperation;
 import org.sormula.operation.FullListSelect;
+import org.sormula.operation.LinkedHashMapSelectOperation;
 import org.sormula.operation.ListSelectOperation;
 import org.sormula.operation.OperationException;
 import org.sormula.operation.aggregate.SelectAggregateOperation;
@@ -246,6 +248,38 @@ public class SelectTest extends DatabaseTest<SormulaTest4>
         {
             assert r.getType() == 2 || r.getType() == 4 || r.getType() == 999 : 
                 r.getId() + " row is incorrect for where condition";
+        }
+        
+        commit();
+    }
+    
+    
+    @Test
+    public void selectLinkedHashMap() throws SormulaException
+    {
+        begin();
+        
+        LinkedHashMapSelectOperation<Integer, SormulaTest4> operation = 
+            new LinkedHashMapSelectOperation<Integer, SormulaTest4>(getTable(), "" /*select all*/)
+        {
+            @Override
+            protected Integer getKey(SormulaTest4 row) throws OperationException
+            {
+                return row.getId();
+            }
+        };
+        
+        // select into map
+        operation.setOrderBy("ob2"); // by description
+        operation.execute();
+        Map<Integer, SormulaTest4> result = operation.readAll();
+        operation.close();
+        
+        String previousDescription = "";
+        for (SormulaTest4 r: result.values())
+        {
+            assert r.getDescription().compareTo(previousDescription) >= 0 : 
+                r.getId() + " row is not in ascending order by description";
         }
         
         commit();

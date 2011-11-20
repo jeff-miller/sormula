@@ -269,11 +269,15 @@ public class SelectTest extends DatabaseTest<SormulaTest4>
         Map<Integer, SormulaTest4> result = operation.readAll();
         operation.close();
         
+        assert result.size() > 0 : "no rows selected";
+        
         String previousDescription = "";
         for (SormulaTest4 r: result.values())
         {
             assert r.getDescription().compareTo(previousDescription) >= 0 : 
                 r.getId() + " row is not in ascending order by description";
+            
+            assert result.get(r.getId()) != null : r.getId() + " is not in map";
         }
         
         commit();

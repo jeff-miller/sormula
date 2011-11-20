@@ -75,35 +75,68 @@ public abstract class MapSelectOperation<K, R> extends SelectOperation<R, Map<K,
 
     /**
      * Sets the get key method. See {@link #getGetKeyMethod()} for details. The default
-     * is {@link #hashCode()}. Use this method to define the get key method other than {@link #hashCode()}
-     * or override {@link #getKey(Object)}.
+     * is {@link #hashCode()}. Use this method or {@link #setGetKeyMethodName(String)} to define 
+     * the get key method  or override {@link #getKey(Object)}.
      * 
-     * @param getKeyMethod method that supplies map key value for a row
+     * @param getKeyMethod row method that gets map key 
      */
 	public void setGetKeyMethod(Method getKeyMethod) 
 	{
 		this.getKeyMethod = getKeyMethod;
 	}
 
+	
+	/**
+	 * Sets the get key method. See {@link #getGetKeyMethod()} for details. The default
+     * is {@link #hashCode()}. Use this method or {@link #setGetKeyMethod(Method)}to define the 
+     * get key method or override {@link #getKey(Object)}.
+     * 
+	 * @param getKeyMethodName name of row method to get map key 
+	 * @throws OperationException if error
+	 */
+	public void setGetKeyMethodName(String getKeyMethodName) throws OperationException
+	{
+        try
+        {
+            setGetKeyMethod(getTable().getRowTranslator().getRowClass().getMethod(getKeyMethodName));
+        }
+        catch (NoSuchMethodException e)
+        {
+            throw new OperationException("error getting key method " + getKeyMethodName, e);
+        }
+	}
+	
+	
+	/**
+	 * Return the name of the get key method.
+	 * 
+	 * @return name of row method that gets map key
+	 */
+	public String getGetKeyMethodName()
+	{
+	    if (getKeyMethod != null)
+	    {
+	        return getKeyMethod.getName();
+	    }
+	    else
+	    {
+	        return null;
+	    }
+	}
+	
 
 	/**
 	 * {@inheritDoc}
 	 */
 	@Override
-	protected void prepare() throws OperationException {
+	protected void prepare() throws OperationException 
+	{
 		super.prepare();
 		
 		if (getKeyMethod == null)
 		{
 			// default get key method is hashCode()
-			try
-			{
-				setGetKeyMethod(getTable().getRowTranslator().getRowClass().getMethod("hashCode"));
-			}
-			catch (NoSuchMethodException e)
-			{
-				throw new OperationException("error getting default key method", e);
-			}
+		    setGetKeyMethodName("hashCode");
 		}
 	}
 

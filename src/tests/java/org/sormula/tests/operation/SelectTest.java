@@ -260,14 +260,8 @@ public class SelectTest extends DatabaseTest<SormulaTest4>
         begin();
         
         LinkedHashMapSelectOperation<Integer, SormulaTest4> operation = 
-            new LinkedHashMapSelectOperation<Integer, SormulaTest4>(getTable(), "" /*select all*/)
-        {
-            @Override
-            protected Integer getKey(SormulaTest4 row) throws OperationException
-            {
-                return row.getId();
-            }
-        };
+            new LinkedHashMapSelectOperation<Integer, SormulaTest4>(getTable(), "" /*select all*/);
+        operation.setGetKeyMethodName("getId");
         
         // select into map
         operation.setOrderBy("ob2"); // by description

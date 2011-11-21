@@ -31,7 +31,7 @@ public class Enrolled
     int enrolledId;
     int studentId;
     int courseId;
-    int year;
+    int yr;
     int semester;
     
     
@@ -65,13 +65,13 @@ public class Enrolled
     }
 
 
-    public int getYear()
+    public int getYr()
     {
-        return year;
+        return yr;
     }
-    public void setYear(int year)
+    public void setYr(int year)
     {
-        this.year = year;
+        this.yr = year;
     }
 
 
@@ -88,6 +88,6 @@ public class Enrolled
     @Override
     public String toString()
     {
-        return courseId + " " + year + " " + semester;
+        return courseId + " " + yr + " " + semester;
     }
 }

@@ -51,8 +51,8 @@ public class ComplexInsert extends ExampleBase
         dropTable(tableName);
         createTable("CREATE TABLE " + tableName + 
                 "(student_id INTEGER NOT NULL PRIMARY KEY," +
-                " first VARCHAR(30)," +
-                " last VARCHAR(30)," +
+                " fname VARCHAR(30)," +
+                " lname VARCHAR(30)," +
                 " graduationdate TIMESTAMP," +
                 " ssn INTEGER NOT NULL)"
         );

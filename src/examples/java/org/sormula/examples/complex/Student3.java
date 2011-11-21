@@ -39,10 +39,10 @@ public class Student3
     @Column(name="student_id", primaryKey=true)
     int id;
     
-    @Column(name="first")
+    @Column(name="fname")
     String firstName;
     
-    @Column(name="last")
+    @Column(name="lname")
     String lastName;
     
     Date graduationDate;

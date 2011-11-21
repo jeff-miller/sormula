@@ -59,7 +59,7 @@ public class CascadeInsert extends ExampleBase
                 " studentid INTEGER NOT NULL," +
                 " courseid INTEGER NOT NULL," +
                 " semester INTEGER NOT NULL," +
-                " year INTEGER NOT NULL)"
+                " yr INTEGER NOT NULL)"
         );
         
         // init
@@ -121,7 +121,7 @@ public class CascadeInsert extends ExampleBase
         enrolled.setEnrolledId(enrolledId++);
         enrolled.setStudentId(student.getId());
         enrolled.setCourseId(202);
-        enrolled.setYear(2011);
+        enrolled.setYr(2011);
         enrolled.setSemester(1);
         return enrolled;
     }
@@ -133,7 +133,7 @@ public class CascadeInsert extends ExampleBase
         enrolled.setEnrolledId(enrolledId++);
         enrolled.setStudentId(student.getId());
         enrolled.setCourseId(601);
-        enrolled.setYear(2012);
+        enrolled.setYr(2012);
         enrolled.setSemester(2);
         return enrolled;
     }

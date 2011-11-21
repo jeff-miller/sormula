@@ -1,5 +1,7 @@
 import org.sormula.annotation.Column;
 import org.sormula.annotation.Where;
+import org.sormula.annotation.WhereField;
+import org.sormula.annotation.Wheres;
 
 
 /**
@@ -7,7 +9,10 @@ import org.sormula.annotation.Where;
  * 
  * @author Jeff Miller
  */
-@Where(name="manf", fieldNames="manufacturerId")
+@Wheres(whereConditions={
+    @Where(name="manf", fieldNames="manufacturerId"),
+    @Where(name="partNumberIn", whereFields=@WhereField(name="partNumber", comparisonOperator="IN"))}
+)
 public class Inventory // table name defaults to "inventory", use @Row(tableName="...") to override 
 {
     @Column(primaryKey=true) // table column name defaults to "partnumber", column is primary key 

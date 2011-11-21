@@ -34,6 +34,7 @@ public class SimpleExample
         simpleExample.clearInventory2("xyz");
         simpleExample.selectByRange(1, 10);
         simpleExample.selectByRange2(1, 10);
+        simpleExample.selectIn();
         simpleExample.close();
         System.out.println("end");
     }
@@ -158,7 +159,7 @@ public class SimpleExample
      */
     public void selectByRange(int minimumQuanity, int maximumQuantity) throws Exception
     {
-        System.out.println("selectByRange");
+        System.out.println("selectByRange " + minimumQuanity + " " + maximumQuantity);
     	
         // set up
         Database database = new Database(getConnection());
@@ -186,7 +187,7 @@ public class SimpleExample
      */
     public void selectByRange2(int minimumQuanity, int maximumQuantity) throws Exception
     {
-        System.out.println("selectByRange2");
+        System.out.println("selectByRange2 " + minimumQuanity + " " + maximumQuantity);
     	
         // set up
         Database database = new Database(getConnection());
@@ -202,5 +203,41 @@ public class SimpleExample
         {
             System.out.println(inventory.getPartNumber() + " quantity=" + inventory.getQuantity());
         }
+        
+        // clean up
+        operation.close();
+    }
+    
+    
+    /**
+     * Select inventory where part numbers are in a list.
+     */
+    public void selectIn() throws Exception
+    {
+        ArrayList<Integer> partNumbers = new ArrayList<Integer>();
+        partNumbers.add(999);
+        partNumbers.add(777);
+        partNumbers.add(1234);
+        System.out.println("selectIn partNumbers=" + partNumbers);
+        
+        // set up
+        Database database = new Database(getConnection());
+        Table<Inventory> inventoryTable = database.getTable(Inventory.class);
+        
+        // select operation for list
+        ArrayListSelectOperation<Inventory> operation =
+            new ArrayListSelectOperation<Inventory>(inventoryTable, "partNumberIn");
+        operation.setParameters(partNumbers);
+        // SELECT PARTNUMBER, QUANTITY, MANFID FROM INVENTORY WHERE PARTNUMBER IN (?, ?, ?)
+        operation.execute();
+        
+        // show results
+        for (Inventory inventory: operation.readAll())
+        {
+            System.out.println(inventory.getPartNumber());
+        }
+        
+        // clean up
+        operation.close();
     }
 }

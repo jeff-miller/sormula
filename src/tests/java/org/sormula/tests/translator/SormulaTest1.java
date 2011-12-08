@@ -65,6 +65,9 @@ public class SormulaTest1
     @Transient
     String testTransient;
     
+    // test that static members are not mapped
+    static int staticMember;
+    
     
     public BigDecimal getTestBigDecimal()
     {

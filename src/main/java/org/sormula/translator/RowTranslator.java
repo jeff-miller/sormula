@@ -33,6 +33,7 @@
 package org.sormula.translator;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
 
 import org.sormula.annotation.Column;
 import org.sormula.annotation.Row;
@@ -122,57 +123,61 @@ public class RowTranslator<R> extends ColumnsTranslator<R>
         // for all fields
         for (Field f: fields)
         {
-            if (f.isAnnotationPresent(Transient.class))
+            if (!Modifier.isStatic(f.getModifiers()))
             {
-                // transient column, don't translate
-            	if (log.isDebugEnabled()) log.debug("transient " + rowClass.getCanonicalName() + "#" + f.getName());
-            }
-            else if (f.isAnnotationPresent(Cascade.class) ||
-                     f.isAnnotationPresent(OneToManyCascade.class) ||
-                     f.isAnnotationPresent(OneToOneCascade.class))
-            {
-                if (log.isDebugEnabled()) log.debug("cascade " + rowClass.getCanonicalName() + "#" + f.getName());
-            }
-            else 
-            {
-                // determine column translator to use
-                String columnName = "";
-                Class<? extends ColumnTranslator> columnTranslatorClass;
-                Column columnAnnotation = f.getAnnotation(Column.class);
-    
-                if (columnAnnotation != null)
+                // only non static members are mapped
+                if (f.isAnnotationPresent(Transient.class))
                 {
-                    // use Column annotation
-                    columnTranslatorClass = (Class<? extends ColumnTranslator>)columnAnnotation.translator();
-                    columnName = columnAnnotation.name();
+                    // transient column, don't translate
+                	if (log.isDebugEnabled()) log.debug("transient " + rowClass.getCanonicalName() + "#" + f.getName());
                 }
-                else
+                else if (f.isAnnotationPresent(Cascade.class) ||
+                         f.isAnnotationPresent(OneToManyCascade.class) ||
+                         f.isAnnotationPresent(OneToOneCascade.class))
                 {
-                    // no Column annotation for field
-                    columnTranslatorClass = (Class<? extends ColumnTranslator>)StandardColumnTranslator.class;
+                    if (log.isDebugEnabled()) log.debug("cascade " + rowClass.getCanonicalName() + "#" + f.getName());
                 }
-                
-                if (columnName.equals(""))
+                else 
                 {
-                    // column name not supplied or no annotation, default is field name
-                    columnName = nameTranslator.translate(f.getName(), rowClass);
-                }
-                
-                ColumnTranslator<R> translator = (ColumnTranslator<R>)
-                    AbstractColumnTranslator.newInstance(columnTranslatorClass, f, columnName);
-                addColumnTranslator(translator);
-                
-                if (translator.isIdentity())
-                {
-                    if (identityColumnTranslator == null)
+                    // determine column translator to use
+                    String columnName = "";
+                    Class<? extends ColumnTranslator> columnTranslatorClass;
+                    Column columnAnnotation = f.getAnnotation(Column.class);
+        
+                    if (columnAnnotation != null)
                     {
-                        // first identity column encountered
-                        identityColumnTranslator = translator;
+                        // use Column annotation
+                        columnTranslatorClass = (Class<? extends ColumnTranslator>)columnAnnotation.translator();
+                        columnName = columnAnnotation.name();
                     }
                     else
                     {
-                        throw new TranslatorException("more than one identity column declared at " + 
-                                rowClass.getCanonicalName()+ "#" + f.getName());
+                        // no Column annotation for field
+                        columnTranslatorClass = (Class<? extends ColumnTranslator>)StandardColumnTranslator.class;
+                    }
+                    
+                    if (columnName.equals(""))
+                    {
+                        // column name not supplied or no annotation, default is field name
+                        columnName = nameTranslator.translate(f.getName(), rowClass);
+                    }
+                    
+                    ColumnTranslator<R> translator = (ColumnTranslator<R>)
+                        AbstractColumnTranslator.newInstance(columnTranslatorClass, f, columnName);
+                    addColumnTranslator(translator);
+                    
+                    if (translator.isIdentity())
+                    {
+                        if (identityColumnTranslator == null)
+                        {
+                            // first identity column encountered
+                            identityColumnTranslator = translator;
+                        }
+                        else
+                        {
+                            throw new TranslatorException("more than one identity column declared at " + 
+                                    rowClass.getCanonicalName()+ "#" + f.getName());
+                        }
                     }
                 }
             }
@@ -249,6 +254,9 @@ public class RowTranslator<R> extends ColumnsTranslator<R>
      */
     public R newInstance() throws IllegalAccessException, InstantiationException
     {
+        // TODO change signature to throws TranslatorException
+        // TODO catch IllegalAccessException, InstantiationException 
+        // and throw new TranslatorException("no public zero-arg constructor for " + getRowClass().getname , e) 
         return getRowClass().newInstance();
     }
 

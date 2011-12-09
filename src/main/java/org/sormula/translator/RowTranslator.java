@@ -251,13 +251,23 @@ public class RowTranslator<R> extends ColumnsTranslator<R>
      * result set.
      * 
      * @return object to hold one row 
+     * @throws TranslatorException if new row instance cannot be created
      */
-    public R newInstance() throws IllegalAccessException, InstantiationException
+    public R newInstance() throws TranslatorException
     {
-        // TODO change signature to throws TranslatorException
-        // TODO catch IllegalAccessException, InstantiationException 
-        // and throw new TranslatorException("no public zero-arg constructor for " + getRowClass().getname , e) 
-        return getRowClass().newInstance();
+        R row;
+        
+        try
+        {
+            row = getRowClass().newInstance();
+        }
+        catch (Exception e)
+        {
+            throw new TranslatorException("error creating row instance for " + getRowClass().getName() +
+                    "; make sure row has public zero-arg constructor", e);
+        }
+        
+        return row;
     }
 
 

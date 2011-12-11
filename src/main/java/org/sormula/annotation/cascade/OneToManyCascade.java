@@ -43,6 +43,15 @@ import org.sormula.Database;
 public @interface OneToManyCascade
 {
     /**
+     * Indicates if cascade should never modify the database. An equivalent to using readOnly=true would
+     * be to set inserts={}, updates={}, and deletes={}.
+     * 
+     * @return true to use only the select operations (never modify); false to cascade all operations
+     */
+    boolean readOnly() default false;
+
+    
+    /**
      * Class type of target field to affect. Used as parameter to {@linkplain Database#getTable(Class)} to
      * get table for cascade operation. {@link #targetClass()} is optional for scalar fields since
      * target class can be obtained from target field at runtime. For nonscalar target field types, 

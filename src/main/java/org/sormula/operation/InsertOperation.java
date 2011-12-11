@@ -19,6 +19,7 @@ package org.sormula.operation;
 import java.lang.reflect.Field;
 import java.sql.ResultSet;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import org.sormula.Table;
@@ -111,14 +112,22 @@ public class InsertOperation<R> extends ModifyOperation<R>
         if (field.isAnnotationPresent(OneToManyCascade.class))
         {
             OneToManyCascade cascadesAnnotation = field.getAnnotation(OneToManyCascade.class);
-            targetTable = getTargetTable(cascadesAnnotation.targetClass(), field);
-            insertCascades = cascadesAnnotation.inserts();            
+            
+            if (!cascadesAnnotation.readOnly())
+            {
+                targetTable = getTargetTable(cascadesAnnotation.targetClass(), field);
+                insertCascades = cascadesAnnotation.inserts();
+            }
         }
         else if (field.isAnnotationPresent(OneToOneCascade.class))
         {
             OneToOneCascade cascadesAnnotation = field.getAnnotation(OneToOneCascade.class);
-            targetTable = getTargetTable(field.getType(), field);
-            insertCascades = cascadesAnnotation.inserts();            
+            
+            if (!cascadesAnnotation.readOnly())
+            {
+                targetTable = getTargetTable(field.getType(), field);
+                insertCascades = cascadesAnnotation.inserts();
+            }
         }
         else if (field.isAnnotationPresent(Cascade.class))
         {
@@ -140,6 +149,11 @@ public class InsertOperation<R> extends ModifyOperation<R>
                 operation.prepare();
                 co.add(operation);
             }
+        }
+        else
+        {
+            // no cascades
+            co = Collections.emptyList();
         }
         
         return co;

@@ -44,7 +44,7 @@ public class InsertTest extends DatabaseTest<SormulaTestParent>
             "CREATE TABLE " + getSchemaPrefix() + SormulaTestParent.class.getSimpleName() + " (" +
             " id INTEGER NOT NULL PRIMARY KEY," +
             " child1id INTEGER," +
-            " description VARCHAR(40)" +
+            " description VARCHAR(60)" +
             ")"
         );
         
@@ -54,7 +54,7 @@ public class InsertTest extends DatabaseTest<SormulaTestParent>
         child1.createTable(SormulaTestChild1.class, 
                 "CREATE TABLE " + getSchemaPrefix() + SormulaTestChild1.class.getSimpleName() + " (" +
                 " id INTEGER NOT NULL PRIMARY KEY," +
-                " description VARCHAR(40)" +
+                " description VARCHAR(60)" +
                 ")"
             );
         child1.closeDatabase();
@@ -66,7 +66,7 @@ public class InsertTest extends DatabaseTest<SormulaTestParent>
                 "CREATE TABLE " + getSchemaPrefix() + SormulaTestChildN.class.getSimpleName() + " (" +
                 " id INTEGER NOT NULL PRIMARY KEY," +
                 " parentid INTEGER NOT NULL," +
-                " description VARCHAR(40)" +
+                " description VARCHAR(60)" +
                 ")"
             );
         childN.closeDatabase();
@@ -78,7 +78,7 @@ public class InsertTest extends DatabaseTest<SormulaTestParent>
                 "CREATE TABLE " + getSchemaPrefix() + SormulaTestChildM.class.getSimpleName() + " (" +
                 " id INTEGER NOT NULL PRIMARY KEY," +
                 " parentid INTEGER NOT NULL," +
-                " description VARCHAR(40)" +
+                " description VARCHAR(60)" +
                 ")"
             );
         childM.closeDatabase();

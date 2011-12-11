@@ -40,6 +40,15 @@ import java.lang.annotation.Target;
 public @interface OneToOneCascade
 {
     /**
+     * Indicates if cascade should never modify the database. An equivalent to using readOnly=true would
+     * be to set inserts={}, updates={}, and deletes={}.
+     * 
+     * @return true to use only the select operations (never modify); false to cascade all operations
+     */
+    boolean readOnly() default false;
+
+    
+    /**
      * Select cascade operations that will select target rows. Typical values would be:
      * <ul>
      * <li>@SelectCascade(operation=ScalarSelectOperation.class, sourceParameterFieldNames="...")</li>

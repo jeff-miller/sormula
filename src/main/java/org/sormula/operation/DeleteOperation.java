@@ -18,6 +18,7 @@ package org.sormula.operation;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import org.sormula.Table;
@@ -104,14 +105,22 @@ public class DeleteOperation<R> extends ModifyOperation<R>
         if (field.isAnnotationPresent(OneToManyCascade.class))
         {
             OneToManyCascade cascadesAnnotation = field.getAnnotation(OneToManyCascade.class);
-            targetTable = getTargetTable(cascadesAnnotation.targetClass(), field);
-            deleteCascades = cascadesAnnotation.deletes();            
+            
+            if (!cascadesAnnotation.readOnly())
+            {
+                targetTable = getTargetTable(cascadesAnnotation.targetClass(), field);
+                deleteCascades = cascadesAnnotation.deletes();
+            }
         }
         else if (field.isAnnotationPresent(OneToOneCascade.class))
         {
             OneToOneCascade cascadesAnnotation = field.getAnnotation(OneToOneCascade.class);
-            targetTable = getTargetTable(field.getType(), field);
-            deleteCascades = cascadesAnnotation.deletes();            
+            
+            if (!cascadesAnnotation.readOnly())
+            {
+                targetTable = getTargetTable(field.getType(), field);
+                deleteCascades = cascadesAnnotation.deletes();
+            }
         }
         else if (field.isAnnotationPresent(Cascade.class))
         {
@@ -133,6 +142,11 @@ public class DeleteOperation<R> extends ModifyOperation<R>
                 operation.prepare();
                 co.add(operation);
             }
+        }
+        else
+        {
+            // no cascades
+            co = Collections.emptyList();
         }
         
         return co;

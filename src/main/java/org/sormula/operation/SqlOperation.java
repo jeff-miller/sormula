@@ -313,6 +313,7 @@ public abstract class SqlOperation<R>
      * Creates and prepares cascade operations based upon cascade annotations for a field.
      * 
      * @param field annotation is for this field of row class R
+     * @return list of cascade operations; empty list for none
      * @throws OperationException if error
      */
     protected abstract List<CascadeOperation<R, ?>> prepareCascades(Field field) throws OperationException;

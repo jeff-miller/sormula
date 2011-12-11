@@ -20,6 +20,7 @@ import java.lang.reflect.Field;
 import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 import org.sormula.Table;
@@ -417,6 +418,11 @@ public class ScalarSelectOperation<R> extends SqlOperation<R>
                 operation.prepare();
                 co.add(operation);
             }
+        }
+        else
+        {
+            // no cascades
+            co = Collections.emptyList();
         }
         
         return co;

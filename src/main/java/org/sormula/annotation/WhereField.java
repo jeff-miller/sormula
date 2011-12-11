@@ -50,7 +50,7 @@ public @interface WhereField
      * @return Boolean opearator to be used after "column-name booleanOperator ?"  
      */
     String booleanOperator() default "AND";
-
+    
     
     /**
      * SQL comparison operator to use in condition "column-name comparisonOperator ?". Example
@@ -72,4 +72,19 @@ public @interface WhereField
      * @return sql comparison operator to use between column name and parameter
      */
     String comparisonOperator() default "=";
+
+    
+    /**
+     * SQL to use as operand following operator. If operand is nonempty string, then operand
+     * will be appended to SQL following operator instead of obtaining the operation from
+     * row object or parameters. Operand will be used as is and must be valid SQL.
+     * <p>
+     * For example:
+     * TODO
+     * 
+     * @return SQL operand to use instead of dynamic parameter from where row/parameters or 
+     * empty string to use value from row/parameters
+     */
+    // TODO
+    String operand() default "";
 }

@@ -74,6 +74,19 @@ public class SelectTest extends DatabaseTest<SormulaTest4>
 
     
     @Test
+    public void selectLimit() throws SormulaException
+    {
+        begin();
+        int maxRows = getTable().selectCount() / 2;
+        assert maxRows > 0 : "no rows to test";
+        ArrayListSelectOperation<SormulaTest4> s = new ArrayListSelectOperation<SormulaTest4>(getTable(), "");
+        s.setMaximumRowsRead(maxRows);
+        assert maxRows == s.fullExecuteAll().size() : "setMaximumRowsRead failed";
+        commit();
+    }
+
+    
+    @Test
     public void selectAggregate() throws SormulaException
     {
         begin();

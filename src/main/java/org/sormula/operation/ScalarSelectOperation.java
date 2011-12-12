@@ -57,6 +57,9 @@ public class ScalarSelectOperation<R> extends SqlOperation<R>
     R rowParameters;
     String orderByName;
     OrderByTranslator<R> orderByTranslator;
+    RowTranslator<R> rowTranslator;
+    int maximumRowsRead = Integer.MAX_VALUE;
+    int rowsReadCount;
     
     
     /**
@@ -84,11 +87,54 @@ public class ScalarSelectOperation<R> extends SqlOperation<R>
     public ScalarSelectOperation(Table<R> table, String whereConditionName) throws OperationException
     {
         super(table);
+        rowTranslator = table.getRowTranslator();
         initBaseSql();
         setWhere(whereConditionName);
     }
+
+    
+    /**
+     * Gets the maximum number of rows to read from result set. The default
+     * is {@linkplain Integer#MAX_VALUE}.
+     * 
+     * @return 0..{@linkplain Integer#MAX_VALUE}
+     */
+    public int getMaximumRowsRead()
+    {
+        return maximumRowsRead;
+    }
+
+
+    /**
+     * Gets the maximum number of rows to read from result set. This method 
+     * does NOT alter SQL to contain anything to limit query but only 
+     * limits the number of rows read by {@link #readNext()} and 
+     * {@link #readAll()}. Limiting rows read is usefull to avoid
+     * reading too many rows and thus creating memory or display problems.
+     * <P>
+     * In the future, when more databases support a standard way to limit rows,
+     * I will add support for SQL level limits through a method like 
+     * "setMaximumRows(int)". 
+     * 
+     * @return 0..{@linkplain Integer#MAX_VALUE}
+     */
+    public void setMaximumRowsRead(int maximumRowsRead)
+    {
+        this.maximumRowsRead = maximumRowsRead;
+    }
     
     
+    /**
+     * Gets the count of rows that were read since the most recent {@link #execute()}.
+     * 
+     * @return number of rows read
+     */
+    public int getRowsReadCount()
+    {
+        return rowsReadCount;
+    }
+
+
     /**
      * Set parameters using values from a row object. Use this instead of {@link #setParameters(Object...)}.
      * 
@@ -127,6 +173,7 @@ public class ScalarSelectOperation<R> extends SqlOperation<R>
     {
         prepareCheck();
         setNextParameter(1);
+        rowsReadCount = 0;
         
         if (rowParameters != null)
         {
@@ -186,12 +233,13 @@ public class ScalarSelectOperation<R> extends SqlOperation<R>
         
         try
         {
-            if (resultSet.next())
+            if (resultSet.next() && rowsReadCount < maximumRowsRead)
             {
-                row = table.getRowTranslator().newInstance();
+                row = rowTranslator.newInstance();
                 preReadCascade(row);
                 preRead(row);
-                table.getRowTranslator().read(resultSet, 1, row);
+                rowTranslator.read(resultSet, 1, row);
+                ++rowsReadCount;
                 postRead(row);
                 postReadCascade(row);
             }

@@ -19,7 +19,6 @@ package org.sormula.operation;
 import java.util.Collection;
 
 import org.sormula.Table;
-import org.sormula.translator.RowTranslator;
 
 
 /**
@@ -86,7 +85,7 @@ public abstract class SelectOperation<R, C> extends ScalarSelectOperation<R>
         this.defaultReadAllSize = defaultReadAllSize;
     }
 
-    
+
     /**
      * Reads all rows from current result set. For large result sets, invoking {@link #setDefaultReadAllSize(int)}
      * may improve performance.
@@ -98,24 +97,11 @@ public abstract class SelectOperation<R, C> extends ScalarSelectOperation<R>
     {
         selectedRows = createReadAllCollection();
         
-        try
+        while (true)
         {
-            RowTranslator<R> rowTranslator = table.getRowTranslator();
-            
-            while (resultSet.next())
-            {
-                R row = rowTranslator.newInstance();
-                preReadCascade(row);
-                preRead(row);
-                rowTranslator.read(resultSet, 1, row);
-                postRead(row);
-                postReadCascade(row);
-                add(row);
-            }
-        }
-        catch (Exception e)
-        {
-            throw new OperationException("readAll() error", e);
+            R row = readNext();
+            if (row == null) break;
+            else add(row);
         }
         
         return selectedRows;

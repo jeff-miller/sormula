@@ -98,6 +98,7 @@ public class ScalarSelectOperation<R> extends SqlOperation<R>
      * is {@linkplain Integer#MAX_VALUE}.
      * 
      * @return 0..{@linkplain Integer#MAX_VALUE}
+     * @since 1.4
      */
     public int getMaximumRowsRead()
     {
@@ -109,14 +110,15 @@ public class ScalarSelectOperation<R> extends SqlOperation<R>
      * Gets the maximum number of rows to read from result set. This method 
      * does NOT alter SQL to contain anything to limit query but only 
      * limits the number of rows read by {@link #readNext()} and 
-     * {@link #readAll()}. Limiting rows read is usefull to avoid
+     * {@link SelectOperation#readAll()}. Limiting rows read is usefull to avoid
      * reading too many rows and thus creating memory or display problems.
      * <P>
      * In the future, when more databases support a standard way to limit rows,
      * I will add support for SQL level limits through a method like 
      * "setMaximumRows(int)". 
      * 
-     * @return 0..{@linkplain Integer#MAX_VALUE}
+     * @param maximumRowsRead 0..{@linkplain Integer#MAX_VALUE}
+     * @since 1.4
      */
     public void setMaximumRowsRead(int maximumRowsRead)
     {
@@ -128,6 +130,7 @@ public class ScalarSelectOperation<R> extends SqlOperation<R>
      * Gets the count of rows that were read since the most recent {@link #execute()}.
      * 
      * @return number of rows read
+     * @since 1.4
      */
     public int getRowsReadCount()
     {

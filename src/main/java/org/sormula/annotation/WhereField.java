@@ -83,7 +83,7 @@ public @interface WhereField
      * <p>
      * For example:
      * <blockquote><pre>
-     * @Where(name="hasInventory", whereFields=@WhereField(name="quantity", comparisonOperator=">", operand="0"))
+     * &%40;Where(name="hasInventory", whereFields=&%40;WhereField(name="quantity", comparisonOperator=">", operand="0"))
      * </pre></blockquote>
      * <p>
      * If operand is an empty string, then the parameter for the field will be obtained 

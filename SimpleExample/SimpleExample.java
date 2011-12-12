@@ -6,7 +6,6 @@ import java.util.List;
 import org.sormula.Database;
 import org.sormula.Table;
 import org.sormula.operation.ArrayListSelectOperation;
-import org.sormula.operation.FullListSelect;
 import org.sormula.operation.ListSelectOperation;
 
 
@@ -119,8 +118,8 @@ public class SimpleExample
     
     
     /**
-     * Clears inventory for a manufacturer. Uses {@link FullListSelect} operation 
-     * for less Java.
+     * Clears inventory for a manufacturer. Uses {@link ArrayListSelectOperation#fullExecuteAll(Object...)}
+     * method for less Java.
      *  
      * @param manufacturerId affect all rows with this manufacturer id
      */
@@ -134,10 +133,10 @@ public class SimpleExample
         List<Inventory> clearList = new ArrayList<Inventory>();
         
         // select operation for a specific manufacturer ("manf" is name of where annotation in Inventory.java)
-        FullListSelect<Inventory> fs = new FullListSelect<Inventory>(inventoryTable, "manf");
+        ArrayListSelectOperation<Inventory> fs = new ArrayListSelectOperation<Inventory>(inventoryTable, "manf");
         		
         // for all inventory of manufacturer
-        for (Inventory inventory: fs.executeAll(manufacturerId))
+        for (Inventory inventory: fs.fullExecuteAll(manufacturerId))
         {
             // remember for update
             inventory.setQuantity(0);

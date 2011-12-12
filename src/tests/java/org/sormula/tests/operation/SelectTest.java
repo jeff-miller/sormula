@@ -28,7 +28,6 @@ import org.sormula.annotation.WhereField;
 import org.sormula.annotation.Wheres;
 import org.sormula.log.ClassLogger;
 import org.sormula.operation.ArrayListSelectOperation;
-import org.sormula.operation.FullListSelect;
 import org.sormula.operation.LinkedHashMapSelectOperation;
 import org.sormula.operation.ListSelectOperation;
 import org.sormula.operation.OperationException;
@@ -161,8 +160,8 @@ public class SelectTest extends DatabaseTest<SormulaTest4>
         assert expectedCount > 0 : "no rows meet expected condition to test";
         
         // select all type 3 rows
-        List<SormulaTest4> selectedList = new FullListSelect<SormulaTest4>(getTable(), "byType").executeAll(3);
-        
+        List<SormulaTest4> selectedList = new ArrayListSelectOperation<SormulaTest4>(getTable(), "byType").fullExecuteAll(3);
+
         assert expectedCount == selectedList.size() : "simple select returned wrong number of rows";
         
         // all rows in selectedList should have type == 3

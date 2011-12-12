@@ -21,12 +21,16 @@ import org.sormula.Table;
 
 
 /**
+ * Use {@link ScalarSelectOperation#fullExecute(Object)} or
+ * {@link ScalarSelectOperation#fullExecute(Object...)} instead of this class.
+ * 
  * {@link ScalarSelectOperation} performed as prepare, execute, read, and close in one method.
  * 
  * @since 1.0
  * @author Jeff Miller
  * @param <R> class type which contains members for columns of a row in a table
  */
+@Deprecated
 public class FullScalarSelect<R> 
 {
     ScalarSelectOperation<R> scalarSelectOperation;

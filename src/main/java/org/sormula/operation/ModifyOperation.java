@@ -186,6 +186,57 @@ public abstract class ModifyOperation<R> extends SqlOperation<R>
         return rowsAffected;
     }
 
+
+    /**
+     * Modifies one row. Set parameters, executes, closes.
+     * 
+     * @param row row to use for parameters
+     * @return {@linkplain #getRowsAffected()}
+     * @throws OperationException if error
+     * @since 1.4
+     */
+    public int fullExecute(R row) throws OperationException
+    {
+        setRow(row);
+        execute();
+        close();
+        return getRowsAffected();
+    }
+    
+    
+    /**
+     * Modifies a collection of rows. Set parameters, executes, closes.
+     * 
+     * @param rows collection of rows to use as parameters 
+     * @return {@linkplain #getRowsAffected()}
+     * @throws OperationException if error
+     * @since 1.4
+     */
+    public int fullExecuteAll(Collection<R> rows) throws OperationException
+    {
+        setRows(rows);
+        execute();
+        close();
+        return getRowsAffected();
+    }
+
+
+    /**
+     * Modifies row(s) with sql parametes as Objects
+     * 
+     * @param parameters operation parameters as objects (see {@linkplain #setParameters(Object...)})
+     * @return count of rows affected
+     * @throws OperationException if error
+     * @since 1.4
+     */
+    public int fullExecuteObject(Object... parameters) throws OperationException
+    {
+        setParameters(parameters);
+        execute();
+        close();
+        return getRowsAffected();
+    }
+
     
     /**
      * Invoked prior to JDBC execute. Override to modify the row prior to JDBC execute.

@@ -24,12 +24,16 @@ import org.sormula.annotation.OrderBy;
 
 
 /**
+ * Use {@link SelectOperation#fullExecuteAll(Object)} or
+ * {@link SelectOperation#fullExecute(Object...) instead of this class.
+ * 
  * {@link FullSelect} with {@link List} as result type.
  * 
  * @since 1.0
  * @author Jeff Miller
  * @param <R> class type which contains members for columns of a row in a table
  */
+@Deprecated
 public class FullListSelect<R> extends FullSelect<R, List<R>> 
 {
 	/**

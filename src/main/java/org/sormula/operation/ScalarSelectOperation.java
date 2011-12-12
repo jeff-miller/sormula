@@ -268,6 +268,43 @@ public class ScalarSelectOperation<R> extends SqlOperation<R>
     {
         return orderByName;
     }
+
+
+    /**
+     * Set parameters, executes, reads one row, closes.
+     * 
+     * @param parameters query parameters as objects (see {@linkplain #setParameters(Object...)})
+     * @return {@linkplain #readNext()}
+     * @throws OperationException if error
+     * @since 1.4
+     */
+    public R fullExecute(Object... parameters) throws OperationException
+    {
+        setParameters(parameters);
+        execute();
+        R row = readNext();
+        close();
+        return row;
+    }
+    
+    
+    /**
+     * Set parameters, executes, reads one row, closes.
+     * 
+     * @param whereParameters query parameters are read from an existing row object 
+     * (see {@linkplain #setRowParameters(Object)})
+     * @return {@linkplain #readNext()}
+     * @throws OperationException if error
+     * @since 1.4
+     */
+    public R fullExecute(R whereParameters) throws OperationException
+    {
+        setRowParameters(whereParameters);
+        execute();
+        R row = readNext();
+        close();
+        return row;
+    }
     
     
     protected OrderByTranslator<R> getOrderByTranslator()

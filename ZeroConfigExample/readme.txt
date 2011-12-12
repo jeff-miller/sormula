@@ -19,4 +19,4 @@ exampleDB.properties          Example database
 exampleeDB.script             Example database 
 ZeroConfigExample.class       Example compiled class
 ZeroConfigExample.java        Example source class
-sormula-1.2.jar               Sormumla api
+sormula-1.4.jar               Sormumla api

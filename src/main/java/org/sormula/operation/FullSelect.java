@@ -18,6 +18,11 @@ package org.sormula.operation;
 
 
 /**
+ * Use {@link SelectOperation#fullExecuteAll(Object)} or
+ * {@link SelectOperation#fullExecute(Object...)} or
+ * {@link ScalarSelectOperation#fullExecute(Object)} or
+ * {@link ScalarSelectOperation#fullExecute(Object...)} instead of this class.
+ * 
  * {@link SelectOperation} performed as prepare, execute, read, and close in one method.
  * 
  * @since 1.0
@@ -25,6 +30,7 @@ package org.sormula.operation;
  * @param <R> class type which contains members for columns of a row in a table
  * @param <C> collection type returned
  */
+@Deprecated
 public class FullSelect<R, C> 
 {
     SelectOperation<R, C> selectOperation;

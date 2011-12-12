@@ -16,17 +16,24 @@
  */
 package org.sormula.operation;
 
+import java.util.Collection;
+
 import org.sormula.SormulaException;
 import org.sormula.Table;
 
 
 /**
+ * Use {@link ModifyOperation#fullExecute(Object)} or
+ * {@link ModifyOperation#fullExecuteAll(Collection)} or
+ * {@link ModifyOperation#fullExecuteObject(Object...)} instead of this class.
+ * 
  * {@link DeleteOperation} performed as prepare, execute, and close in one method.
  * 
  * @since 1.0
  * @author Jeff Miller
  * @param <R> class type which contains members for columns of a row in a table
  */
+@Deprecated
 public class FullDelete<R> extends FullModify<R>
 {
     /**

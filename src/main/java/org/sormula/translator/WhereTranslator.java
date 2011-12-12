@@ -105,7 +105,7 @@ public class WhereTranslator<R> extends AbstractWhereTranslator<R>
                 
                 if (columnTranslator != null)
                 {
-                    addColumnTranslator(columnTranslator, wf.comparisonOperator(), wf.booleanOperator());
+                    addColumnTranslator(columnTranslator, wf.booleanOperator(), wf.comparisonOperator(), wf.operand());
                 }
                 else
                 {

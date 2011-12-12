@@ -131,7 +131,7 @@ public class SelectTestMC extends DatabaseTest<SormulaTest4MC>
         
         // select all rows with condition
         ListSelectOperation<SormulaTest4MC> operation = new ArrayListSelectOperation<SormulaTest4MC>(getTable(), "w2");
-        operation.setParameters(2, "%operation%");
+        operation.setParameters(2);
         operation.execute();
         List<SormulaTest4MC> selectedList = operation.readAll();
         operation.close();

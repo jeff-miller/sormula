@@ -345,13 +345,12 @@ public class SelectTest extends DatabaseTest<SormulaTest4>
  * {@link Where} and {@link Wheres} annotations may be used on the operations instead of on 
  * the row class.
  */
-@Where(name="desclike", whereFields=@WhereField(name="description", comparisonOperator="like"))
+@Where(name="desclike", whereFields=@WhereField(name="description", comparisonOperator="like", operand="'%operation%'"))
 class DescriptionSelect extends ArrayListSelectOperation<SormulaTest4>
 {
     public DescriptionSelect(Table<SormulaTest4> table) throws OperationException
     {
         super(table, "desclike");
-        setParameters("%operation%"); // where description like '%operation%'
         execute();
     }
 }

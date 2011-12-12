@@ -33,7 +33,7 @@ import org.sormula.annotation.Wheres;
         @Where(name="w1", fieldNames={"type", "id"}),
         @Where(name="w2", whereFields={
                 @WhereField(name="type", comparisonOperator="<>"),
-                @WhereField(name="description", comparisonOperator="LIKE", booleanOperator="OR")
+                @WhereField(booleanOperator="OR", name="description", comparisonOperator="LIKE", operand="'%operation%'")
         })
 })
 public class SormulaTest4MC

@@ -22,6 +22,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 import java.util.Collection;
 
+import org.sormula.operation.ScalarSelectOperation;
 import org.sormula.operation.SqlOperation;
 
 
@@ -54,7 +55,8 @@ public @interface WhereField
     
     /**
      * SQL comparison operator to use in condition "column-name comparisonOperator ?". Example
-     * operators are: "=", "<", "<=", ">", ">=", "LIKE", "<>", "IN", "NOT IN".
+     * operators are: "=", "<", "<=", ">", ">=", "LIKE", "<>", "IN", "NOT IN". For "IS NULL" use
+     * operator="IS" and operand="NULL".
      * <p>
      * When comparison operator is "IN" then the condition used is 
      * "column-name IN (?, ?, ...)" and the corresponding parameter supplied by
@@ -75,16 +77,22 @@ public @interface WhereField
 
     
     /**
-     * SQL to use as operand following operator. If operand is nonempty string, then operand
-     * will be appended to SQL following operator instead of obtaining the operation from
-     * row object or parameters. Operand will be used as is and must be valid SQL.
+     * SQL to use as operand following comparison operator. If operand is non-empty string, then 
+     * operand will be appended to SQL following the comparison operator. Operand will be used
+     * "as is" and must be valid SQL.
      * <p>
      * For example:
-     * TODO
+     * <blockquote><pre>
+     * @Where(name="hasInventory", whereFields=@WhereField(name="quantity", comparisonOperator=">", operand="0"))
+     * </pre></blockquote>
+     * <p>
+     * If operand is an empty string, then the parameter for the field will be obtained 
+     * from row object as set with {@link ScalarSelectOperation#setRowParameters(Object)} or
+     * parameter set with {@link SqlOperation#setParameters(Object...)}.
      * 
-     * @return SQL operand to use instead of dynamic parameter from where row/parameters or 
-     * empty string to use value from row/parameters
+     * @return SQL operand to use as where parameter; empty string to use value from 
+     * row/parameters
+     * @since 1.4
      */
-    // TODO
     String operand() default "";
 }

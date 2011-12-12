@@ -34,8 +34,12 @@ import org.sormula.operation.SqlOperation;
 public abstract class AbstractWhereTranslator<R> extends ColumnsTranslator<R>
 {
     RowTranslator<R> rowTranslator;
-    List<String> operatorList;
+    
+    // parallel arrays for the following, TODO use class?
     List<String> booleanOperatorList;
+    List<String> comparisonOperatorList;
+    List<String> operandList;
+    
     boolean inOperator; 
     Object[] parameters;
     
@@ -60,8 +64,9 @@ public abstract class AbstractWhereTranslator<R> extends ColumnsTranslator<R>
     protected void initColumnTranslatorList(int columns)
     {
         super.initColumnTranslatorList(columns);
-        operatorList = new ArrayList<String>(columns);
         booleanOperatorList = new ArrayList<String>(columns);
+        comparisonOperatorList = new ArrayList<String>(columns);
+        operandList = new ArrayList<String>(columns);
     }
 
 
@@ -123,20 +128,40 @@ public abstract class AbstractWhereTranslator<R> extends ColumnsTranslator<R>
     
     
     /**
-     * Adds translator with a specific sql comparison operator and boolean operator.
+     * Adds translator with a specific sql comparison operator and boolean operator. This
+     * method is kept for backward compatibility to versions prior to 1.4.
      * 
      * @param c column translator to add
-     * @param operator sql comparison operator to use in where condition (examples: ">", "=<", "<>", etc.)
+     * @param comparisonOperator sql comparison operator to use in where condition (examples: ">", "=<", "<>", etc.)
      * @param booleanOperator logical operator to precede this column (examples: "AND", "OR", "AND NOT", etc.)
      */
-    public void addColumnTranslator(ColumnTranslator<R> c, String operator, String booleanOperator)
+    public void addColumnTranslator(ColumnTranslator<R> c, String comparisonOperator, String booleanOperator)
+    {
+        // note parameter order is different
+        addColumnTranslator(c, booleanOperator, comparisonOperator, "");
+    }
+    
+    
+    /**
+     * Adds translator with a specific sql comparison operator and boolean operator. Note that
+     * parameter order has changed so that booleanOperator, operator, operand appear in same order
+     * as in SQL. 
+     * 
+     * @param c column translator to add
+     * @param booleanOperator logical operator to precede this column (examples: "AND", "OR", "AND NOT", etc.)
+     * @param comparisonOperator sql comparison operator to use in where condition (examples: ">", "=<", "<>", etc.)
+     * @param operand operand to follow operator; empty string to ignore
+     * @since 1.4
+     */
+    public void addColumnTranslator(ColumnTranslator<R> c, String booleanOperator, String comparisonOperator, String operand)
     {
         super.addColumnTranslator(c);
-        operatorList.add(operator);
         booleanOperatorList.add(booleanOperator);
+        comparisonOperatorList.add(comparisonOperator);
+        operandList.add(operand);
         
         // remember if IN operator was used
-        if (isInOperator(operator)) inOperator = true;
+        if (isInOperator(comparisonOperator)) inOperator = true;
     }
 
 
@@ -157,11 +182,15 @@ public abstract class AbstractWhereTranslator<R> extends ColumnsTranslator<R>
 
 
     /**
-     * Creates column phrase with parameter placeholders and comparison operators. 
-     * 
-     * @return "c1 op1 ? bo2 c2 operator2 ? bo3 c3 operator3 ?..." where
-     * cn is column name, opn is {@link WhereField#comparisonOperator()}, and bon is 
+     * Creates column phrase with parameter placeholders and comparison operators like:<br> 
+     * "c1 op1 ? bo2 c2 operator2 ? bo3 c3 operator3 ?..." where cN is column name,
+     * opN is {@link WhereField#comparisonOperator()}, and boN is
      * {@linkplain WhereField#booleanOperator()}
+     * <p>
+     * If {@linkplain WhereField#operand()} is non-empty string, then operand will
+     * be used in place of "?".
+     * 
+     * @return "c1 op1 ? bo2 c2 operator2 ? bo3 c3 operator3 ?..."
      */
     @Override
     public String createColumnParameterPhrase()
@@ -181,7 +210,7 @@ public abstract class AbstractWhereTranslator<R> extends ColumnsTranslator<R>
             
             phrase.append(c.getColumnName());
             phrase.append(" "); // space around operators
-            String operator = operatorList.get(i);
+            String operator = comparisonOperatorList.get(i);
             phrase.append(operator);
             phrase.append(" "); // space around operators
             
@@ -222,8 +251,19 @@ public abstract class AbstractWhereTranslator<R> extends ColumnsTranslator<R>
             }
             else
             {
-                // standard operator followed by one parameter placeholder
-                phrase.append("?");
+                // not IN operator
+                String operand = operandList.get(i);
+                
+                if (operand.length() == 0)
+                {
+                    // no operand, use parameter
+                    phrase.append("?");
+                }
+                else
+                {
+                    // use operand instaed of parameter
+                    phrase.append(operand);
+                }
             }
             
             // next

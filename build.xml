@@ -220,12 +220,14 @@
 	    </target>
     
     <target name="example" description="Creates example.zip for distribution" depends="init">
-        <zip zipfile="example-${version}.zip" basedir="SimpleExample"
-                excludes="simpleDB.tmp .classpath .project"/>
+        <zip zipfile="example-${version}.zip" basedir="."
+        	    includes="SimpleExample/**/*"
+                excludes="SimpleExample/simpleDB.tmp SimpleExample/.classpath SimpleExample/.project"/>
     </target>
     
     <target name="zero-config-example" description="Creates zero-config-example.zip for distribution" depends="init">
-        <zip zipfile="zero-config-example-${version}.zip" basedir="ZeroConfigExample"
-                excludes="exampleDB.tmp .classpath .project"/>
+        <zip zipfile="zero-config-example-${version}.zip" basedir="."
+    	        includes="ZeroConfigExample/**/*"
+                excludes="ZeroConfigExample/exampleDB.tmp ZeroConfigExample/.classpath ZeroConfigExample/.project"/>
     </target>
 </project>

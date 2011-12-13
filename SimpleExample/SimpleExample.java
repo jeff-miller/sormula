@@ -227,7 +227,7 @@ public class SimpleExample
         ArrayListSelectOperation<Inventory> operation =
             new ArrayListSelectOperation<Inventory>(inventoryTable, "partNumberIn");
         operation.setParameters(partNumbers);
-        // SELECT PARTNUMBER, QUANTITY, MANFID FROM INVENTORY WHERE PARTNUMBER IN (?, ?, ?)
+        // executes SELECT PARTNUMBER, QUANTITY, MANFID FROM INVENTORY WHERE PARTNUMBER IN (?, ?, ?)
         operation.execute();
         
         // show results

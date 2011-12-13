@@ -37,10 +37,10 @@ import org.sormula.operation.SqlOperation;
 public @interface WhereField
 {
     /**
-     * SQL boolean operator to use following this field. Possible operators are "AND", "OR", 
-     * "AND NOT", "OR NOT", "NOT", etc. Operator has no affect for last field in where condition.
+     * SQL boolean operator to use preceding this field. Possible operators are "AND", "OR", 
+     * "AND NOT", "OR NOT", "NOT", etc. Operator has no affect for first field in where condition.
      *  
-     * @return Boolean opearator to be used after "column-name booleanOperator ?"  
+     * @return Boolean opearator to be used before "column-name booleanOperator ?"  
      */
     String booleanOperator() default "AND";
 
@@ -81,10 +81,8 @@ public @interface WhereField
      * following the comparison operator. Operand will be used "as is" and must be valid SQL. An
      * operand of "?" is used to indicate that the parameter will be supplied at runtime.
      * <p>
-     * Operand can be a constant, for example:
-     * <blockquote><pre>
-     * &%40;Where(name="hasInventory", whereFields=&%40;WhereField(name="quantity", comparisonOperator=">", operand="0"))
-     * </pre></blockquote>
+     * Operand can be a constant, for example:<br>
+     * {@code @Where(name="hasInventory", whereFields=@WhereField(name="quantity", comparisonOperator=">", operand="0")) }
      * <p>
      * If operand is "?", then the parameter for the field will be obtained 
      * from row object as set with {@link ScalarSelectOperation#setRowParameters(Object)} or

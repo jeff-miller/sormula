@@ -131,7 +131,8 @@ public abstract class AbstractWhereTranslator<R> extends ColumnsTranslator<R>
     
     /**
      * Adds translator with a specific sql comparison operator and boolean operator. This
-     * method is kept for backward compatibility to versions prior to 1.4.
+     * method is kept for backward compatibility to versions prior to 1.4. Note that parameter 
+     * order is different from {@link #addColumnTranslator(ColumnTranslator, String, String, String)}.
      * 
      * @param c column translator to add
      * @param comparisonOperator sql comparison operator to use in where condition (examples: ">", "=<", "<>", etc.)

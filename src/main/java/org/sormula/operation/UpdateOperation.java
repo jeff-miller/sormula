@@ -18,6 +18,7 @@ package org.sormula.operation;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
@@ -76,6 +77,51 @@ public class UpdateOperation<R> extends ModifyOperation<R>
         
         initBaseSql();
         setWhere(whereConditionName);
+    }
+
+
+    /**
+     * Updates a row. Set parameters, executes, closes. 
+     * Alias for {@link #modify(Object)}.
+     * 
+     * @param row row to use for parameters
+     * @return {@linkplain #getRowsAffected()}
+     * @throws OperationException if error
+     * @since 1.4
+     */
+    public int update(R row) throws OperationException
+    {
+        return super.modify(row);
+    }
+
+
+    /**
+     * Updates all rows in collection. Set parameters, executes, closes. 
+     * Alias for {@link #modifyAll(Collection)}.
+     * 
+     * @param rows collection of rows to use as parameters 
+     * @return {@linkplain #getRowsAffected()}
+     * @throws OperationException if error
+     * @since 1.4
+     */
+    public int updateAll(Collection<R> rows) throws OperationException
+    {
+        return super.modifyAll(rows);
+    }
+
+
+    /**
+     * Updates rows based upon parameters. Set parameters, executes, closes. 
+     * Alias for {@link #modify(Object...)}.
+     * 
+     * @param parameters operation parameters as objects (see {@linkplain #setParameters(Object...)})
+     * @return count of rows affected
+     * @throws OperationException if error
+     * @since 1.4
+     */
+    public int update(Object... parameters) throws OperationException
+    {
+        return super.modify(parameters);
     }
 
 

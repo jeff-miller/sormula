@@ -21,8 +21,8 @@ import org.sormula.Table;
 
 
 /**
- * Use {@link ScalarSelectOperation#fullExecute(Object)} or
- * {@link ScalarSelectOperation#fullExecute(Object...)} instead of this class.
+ * Use {@link ScalarSelectOperation#select(Object)} or
+ * {@link ScalarSelectOperation#select(Object...)} instead of this class.
  * 
  * {@link ScalarSelectOperation} performed as prepare, execute, read, and close in one method.
  * 

@@ -118,7 +118,7 @@ public class SimpleExample
     
     
     /**
-     * Clears inventory for a manufacturer. Uses {@link ArrayListSelectOperation#fullExecuteAll(Object...)}
+     * Clears inventory for a manufacturer. Uses {@link ArrayListSelectOperation#selectAll(Object...)}
      * method for less Java.
      *  
      * @param manufacturerId affect all rows with this manufacturer id
@@ -133,10 +133,10 @@ public class SimpleExample
         List<Inventory> clearList = new ArrayList<Inventory>();
         
         // select operation for a specific manufacturer ("manf" is name of where annotation in Inventory.java)
-        ArrayListSelectOperation<Inventory> fs = new ArrayListSelectOperation<Inventory>(inventoryTable, "manf");
+        ArrayListSelectOperation<Inventory> s = new ArrayListSelectOperation<Inventory>(inventoryTable, "manf");
         		
         // for all inventory of manufacturer
-        for (Inventory inventory: fs.fullExecuteAll(manufacturerId))
+        for (Inventory inventory: s.selectAll(manufacturerId))
         {
             // remember for update
             inventory.setQuantity(0);

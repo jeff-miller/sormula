@@ -20,9 +20,9 @@ import java.util.Collection;
 
 
 /**
- * Use {@link ModifyOperation#fullExecute(Object)} or
- * {@link ModifyOperation#fullExecuteAll(Collection)} or
- * {@link ModifyOperation#fullExecuteObject(Object...)} instead of this class.
+ * Use {@link ModifyOperation#modify(Object)} or
+ * {@link ModifyOperation#modifyAll(Collection)} or
+ * {@link ModifyOperation#modify(Object...)} instead of this class.
  * 
  * {@link ModifyOperation} performed as prepare, execute, and close in one method. Base
  * class for {@link FullInsert}, {@link FullUpdate}, and {@link FullDelete}.

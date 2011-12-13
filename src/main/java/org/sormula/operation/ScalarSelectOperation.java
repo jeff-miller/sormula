@@ -329,7 +329,7 @@ public class ScalarSelectOperation<R> extends SqlOperation<R>
      * @throws OperationException if error
      * @since 1.4
      */
-    public R fullExecute(Object... parameters) throws OperationException
+    public R select(Object... parameters) throws OperationException
     {
         setParameters(parameters);
         execute();
@@ -348,7 +348,7 @@ public class ScalarSelectOperation<R> extends SqlOperation<R>
      * @throws OperationException if error
      * @since 1.4
      */
-    public R fullExecute(R whereParameters) throws OperationException
+    public R select(R whereParameters) throws OperationException
     {
         setRowParameters(whereParameters);
         execute();

@@ -19,6 +19,7 @@ package org.sormula.operation;
 import java.lang.reflect.Field;
 import java.sql.ResultSet;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
@@ -66,6 +67,51 @@ public class InsertOperation<R> extends ModifyOperation<R>
         }
         
         initBaseSql();
+    }
+    
+    
+    /**
+     * Inserts a row. Set parameters, executes, closes. 
+     * Alias for {@link #modify(Object)}.
+     * 
+     * @param row row to use for parameters
+     * @return {@linkplain #getRowsAffected()}
+     * @throws OperationException if error
+     * @since 1.4
+     */
+    public int insert(R row) throws OperationException
+    {
+        return super.modify(row);
+    }
+
+
+    /**
+     * Inserts all rows in collection. Set parameters, executes, closes. 
+     * Alias for {@link #modifyAll(Collection)}.
+     * 
+     * @param rows collection of rows to use as parameters 
+     * @return {@linkplain #getRowsAffected()}
+     * @throws OperationException if error
+     * @since 1.4
+     */
+    public int insertAll(Collection<R> rows) throws OperationException
+    {
+        return super.modifyAll(rows);
+    }
+
+
+    /**
+     * Inserts rows based upon parameters. Set parameters, executes, closes. 
+     * Alias for {@link #modify(Object...)}.
+     * 
+     * @param parameters operation parameters as objects (see {@linkplain #setParameters(Object...)})
+     * @return count of rows affected
+     * @throws OperationException if error
+     * @since 1.4
+     */
+    public int insert(Object... parameters) throws OperationException
+    {
+        return super.modify(parameters);
     }
 
     

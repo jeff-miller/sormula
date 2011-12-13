@@ -195,7 +195,7 @@ public abstract class ModifyOperation<R> extends SqlOperation<R>
      * @throws OperationException if error
      * @since 1.4
      */
-    public int fullExecute(R row) throws OperationException
+    public int modify(R row) throws OperationException
     {
         setRow(row);
         execute();
@@ -212,7 +212,7 @@ public abstract class ModifyOperation<R> extends SqlOperation<R>
      * @throws OperationException if error
      * @since 1.4
      */
-    public int fullExecuteAll(Collection<R> rows) throws OperationException
+    public int modifyAll(Collection<R> rows) throws OperationException
     {
         setRows(rows);
         execute();
@@ -229,7 +229,7 @@ public abstract class ModifyOperation<R> extends SqlOperation<R>
      * @throws OperationException if error
      * @since 1.4
      */
-    public int fullExecuteObject(Object... parameters) throws OperationException
+    public int modify(Object... parameters) throws OperationException
     {
         setParameters(parameters);
         execute();

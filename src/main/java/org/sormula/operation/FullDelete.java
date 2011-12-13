@@ -23,9 +23,9 @@ import org.sormula.Table;
 
 
 /**
- * Use {@link ModifyOperation#fullExecute(Object)} or
- * {@link ModifyOperation#fullExecuteAll(Collection)} or
- * {@link ModifyOperation#fullExecuteObject(Object...)} instead of this class.
+ * Use {@link DeleteOperation#delete(Object)} or
+ * {@link DeleteOperation#deleteAll(Collection)} or
+ * {@link DeleteOperation#delete(Object...)} instead of this class.
  * 
  * {@link DeleteOperation} performed as prepare, execute, and close in one method.
  * 

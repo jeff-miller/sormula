@@ -24,8 +24,8 @@ import org.sormula.annotation.OrderBy;
 
 
 /**
- * Use {@link SelectOperation#fullExecuteAll(Object)} or
- * {@link SelectOperation#fullExecute(Object...)} instead of this class.
+ * Use {@link SelectOperation#selectAll(Object)} or
+ * {@link SelectOperation#select(Object...)} instead of this class.
  * 
  * {@link FullSelect} with {@link List} as result type.
  * 

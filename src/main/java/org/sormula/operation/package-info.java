@@ -7,8 +7,7 @@
  * operations are derived from {@link org.sormula.operation.ModifyOperation}. 
  * <p>
  * Classes with names begining with "Full" are deprecated. There are methods in
- * the other operations that are preferred alternatives to "Full" operations. The 
- * alternative method names begin with "full".
+ * the other operations that are preferred alternatives to "Full" operations. 
  * 
  * For example:
  * <p>
@@ -16,7 +15,7 @@
  * <blockquote><pre>
  * Database database = ...
  * Table&lt;Student&gt; table = database.getTable(Student.class);
- * List&lt;Student&gt; selectedList = new ArrayListSelect&lt;Student&gt;(table, "byType").fullExecuteAll(3);
+ * List&lt;Student&gt; selectedList = new ArrayListSelect&lt;Student&gt;(table, "byType").selectAll(3);
  * </pre></blockquote>
  */
 package org.sormula.operation;

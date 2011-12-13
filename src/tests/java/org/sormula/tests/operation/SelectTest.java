@@ -84,7 +84,7 @@ public class SelectTest extends DatabaseTest<SormulaTest4>
         assert table.insert(new SormulaTest4(6002, 0, "6002")) == 1 : "test row was not inserted";
         
         // test IN with constant operand
-        assert new ArrayListSelectOperation<SormulaTest4>(table, "idIn2").fullExecuteAll().size() == 2 :
+        assert new ArrayListSelectOperation<SormulaTest4>(table, "idIn2").selectAll().size() == 2 :
             "IN (6001, 6002) operator did not work";
         
         commit();
@@ -99,7 +99,7 @@ public class SelectTest extends DatabaseTest<SormulaTest4>
         assert maxRows > 0 : "no rows to test";
         ArrayListSelectOperation<SormulaTest4> s = new ArrayListSelectOperation<SormulaTest4>(getTable(), "");
         s.setMaximumRowsRead(maxRows);
-        assert maxRows == s.fullExecuteAll().size() : "setMaximumRowsRead failed";
+        assert maxRows == s.selectAll().size() : "setMaximumRowsRead failed";
         commit();
     }
 
@@ -191,7 +191,7 @@ public class SelectTest extends DatabaseTest<SormulaTest4>
         assert expectedCount > 0 : "no rows meet expected condition to test";
         
         // select all type 3 rows
-        List<SormulaTest4> selectedList = new ArrayListSelectOperation<SormulaTest4>(getTable(), "byType").fullExecuteAll(3);
+        List<SormulaTest4> selectedList = new ArrayListSelectOperation<SormulaTest4>(getTable(), "byType").selectAll(3);
 
         assert expectedCount == selectedList.size() : "simple select returned wrong number of rows";
         

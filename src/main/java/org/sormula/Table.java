@@ -246,7 +246,7 @@ public class Table<R>
      */
     public List<R> selectAll() throws SormulaException
     {
-        return new ArrayListSelectOperation<R>(this, "").fullExecuteAll();
+        return new ArrayListSelectOperation<R>(this, "").selectAll();
     }
     
     
@@ -268,7 +268,7 @@ public class Table<R>
      */
     public R select(Object... primaryKeys) throws SormulaException
     {
-        return new ScalarSelectOperation<R>(this).fullExecute(primaryKeys);
+        return new ScalarSelectOperation<R>(this).select(primaryKeys);
     }
     
     
@@ -290,7 +290,7 @@ public class Table<R>
     {
     	ArrayListSelectOperation<R> operation = new ArrayListSelectOperation<R>(this, "");
     	operation.setCustomSql(customSql);
-    	return operation.fullExecuteAll(parameters);
+    	return operation.selectAll(parameters);
     }
     
     
@@ -312,7 +312,7 @@ public class Table<R>
     {
     	ScalarSelectOperation<R> operation = new ScalarSelectOperation<R>(this, "");
     	operation.setCustomSql(customSql);
-    	return operation.fullExecute(parameters);
+    	return operation.select(parameters);
     }
     
     
@@ -520,7 +520,7 @@ public class Table<R>
      */
     public int insert(R row) throws SormulaException
     {
-        return new InsertOperation<R>(this).fullExecute(row);
+        return new InsertOperation<R>(this).insert(row);
     }
     
     
@@ -543,7 +543,7 @@ public class Table<R>
      */
     public int insertAll(Collection<R> rows) throws SormulaException
     {
-        return new InsertOperation<R>(this).fullExecuteAll(rows);
+        return new InsertOperation<R>(this).insertAll(rows);
     }
     
     
@@ -565,7 +565,7 @@ public class Table<R>
      */
     public int update(R row) throws SormulaException
     {
-        return new UpdateOperation<R>(this).fullExecute(row);
+        return new UpdateOperation<R>(this).update(row);
     }
     
     
@@ -589,7 +589,7 @@ public class Table<R>
      */
     public int updateAll(Collection<R> rows) throws SormulaException
     {
-        return new UpdateOperation<R>(this).fullExecuteAll(rows);
+        return new UpdateOperation<R>(this).updateAll(rows);
     }
     
     
@@ -610,7 +610,7 @@ public class Table<R>
      */
     public int delete(Object... parameters) throws SormulaException
     {
-        return new DeleteOperation<R>(this).fullExecuteObject(parameters);
+        return new DeleteOperation<R>(this).delete(parameters);
     }
     
     
@@ -632,7 +632,7 @@ public class Table<R>
      */
     public int delete(R row) throws SormulaException
     {
-        return new DeleteOperation<R>(this).fullExecute(row);
+        return new DeleteOperation<R>(this).delete(row);
     }
     
     
@@ -653,7 +653,7 @@ public class Table<R>
      */
     public int deleteAll(Collection<R> rows) throws SormulaException
     {
-        return new DeleteOperation<R>(this).fullExecuteAll(rows);
+        return new DeleteOperation<R>(this).deleteAll(rows);
     }
     
     
@@ -671,7 +671,7 @@ public class Table<R>
      */
     public int deleteAll() throws SormulaException
     {
-        return new DeleteOperation<R>(this, "").fullExecuteObject();
+        return new DeleteOperation<R>(this, "").delete();
     }
     
 
@@ -685,7 +685,7 @@ public class Table<R>
      */
     public int save(R row) throws SormulaException
     {
-        return new SaveOperation<R>(this).fullExecute(row);
+        return new SaveOperation<R>(this).modify(row);
     }
     
     
@@ -699,6 +699,6 @@ public class Table<R>
      */
     public int saveAll(Collection<R> rows) throws SormulaException
     {
-        return new SaveOperation<R>(this).fullExecuteAll(rows);
+        return new SaveOperation<R>(this).modifyAll(rows);
     }
 }

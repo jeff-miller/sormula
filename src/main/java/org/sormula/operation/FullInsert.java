@@ -23,9 +23,9 @@ import org.sormula.Table;
 
 
 /**
- * Use {@link ModifyOperation#fullExecute(Object)} or
- * {@link ModifyOperation#fullExecuteAll(Collection)} or
- * {@link ModifyOperation#fullExecuteObject(Object...)} instead of this class.
+ * Use {@link InsertOperation#insert(Object)} or
+ * {@link InsertOperation#insertAll(Collection)} or
+ * {@link InsertOperation#insert(Object...)} instead of this class.
  * 
  * {@link InsertOperation} performed as prepare, execute, and close in one method.
  * 

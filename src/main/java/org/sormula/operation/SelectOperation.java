@@ -127,7 +127,7 @@ public abstract class SelectOperation<R, C> extends ScalarSelectOperation<R>
      * @throws OperationException if error
      * @since 1.4
      */
-    public C fullExecuteAll(Object... parameters) throws OperationException
+    public C selectAll(Object... parameters) throws OperationException
     {
         setParameters(parameters);
         execute();
@@ -146,7 +146,7 @@ public abstract class SelectOperation<R, C> extends ScalarSelectOperation<R>
      * @throws OperationException if error
      * @since 1.4
      */
-    public C fullExecuteAll(R whereParameters) throws OperationException
+    public C selectAll(R whereParameters) throws OperationException
     {
         setRowParameters(whereParameters);
         execute();

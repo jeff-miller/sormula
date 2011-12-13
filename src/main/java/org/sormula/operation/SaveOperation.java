@@ -17,6 +17,7 @@
 package org.sormula.operation;
 
 import java.lang.reflect.Field;
+import java.util.Collection;
 import java.util.List;
 
 import org.sormula.Table;
@@ -72,6 +73,51 @@ public class SaveOperation<R> extends ModifyOperation<R>
     {
         insertOperation.close();
         updateOperation.close();
+    }
+
+
+    /**
+     * Saves a row. Set parameters, executes, closes. 
+     * Alias for {@link #modify(Object)}.
+     * 
+     * @param row row to use for parameters
+     * @return {@linkplain #getRowsAffected()}
+     * @throws OperationException if error
+     * @since 1.4
+     */
+    public int save(R row) throws OperationException
+    {
+        return super.modify(row);
+    }
+
+
+    /**
+     * Saves all rows in collection. Set parameters, executes, closes. 
+     * Alias for {@link #modifyAll(Collection)}.
+     * 
+     * @param rows collection of rows to use as parameters 
+     * @return {@linkplain #getRowsAffected()}
+     * @throws OperationException if error
+     * @since 1.4
+     */
+    public int saveAll(Collection<R> rows) throws OperationException
+    {
+        return super.modifyAll(rows);
+    }
+
+
+    /**
+     * Saves rows based upon parameters. Set parameters, executes, closes. 
+     * Alias for {@link #modify(Object...)}.
+     * 
+     * @param parameters operation parameters as objects (see {@linkplain #setParameters(Object...)})
+     * @return count of rows affected
+     * @throws OperationException if error
+     * @since 1.4
+     */
+    public int save(Object... parameters) throws OperationException
+    {
+        return super.modify(parameters);
     }
 
 

@@ -18,10 +18,10 @@ package org.sormula.operation;
 
 
 /**
- * Use {@link SelectOperation#fullExecuteAll(Object)} or
- * {@link SelectOperation#fullExecute(Object...)} or
- * {@link ScalarSelectOperation#fullExecute(Object)} or
- * {@link ScalarSelectOperation#fullExecute(Object...)} instead of this class.
+ * Use {@link SelectOperation#selectAll(Object)} or
+ * {@link SelectOperation#select(Object...)} or
+ * {@link ScalarSelectOperation#select(Object)} or
+ * {@link ScalarSelectOperation#select(Object...)} instead of this class.
  * 
  * {@link SelectOperation} performed as prepare, execute, read, and close in one method.
  * 

@@ -18,6 +18,7 @@ package org.sormula.operation;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
@@ -67,6 +68,51 @@ public class DeleteOperation<R> extends ModifyOperation<R>
         super(table);
         initBaseSql();
         setWhere(whereConditionName);
+    }
+
+
+    /**
+     * Deletes a row. Set parameters, executes, closes. 
+     * Alias for {@link #modify(Object)}.
+     * 
+     * @param row row to use for parameters
+     * @return {@linkplain #getRowsAffected()}
+     * @throws OperationException if error
+     * @since 1.4
+     */
+    public int delete(R row) throws OperationException
+    {
+        return super.modify(row);
+    }
+
+
+    /**
+     * Deletes all rows in collection. Set parameters, executes, closes. 
+     * Alias for {@link #modifyAll(Collection)}.
+     * 
+     * @param rows collection of rows to use as parameters 
+     * @return {@linkplain #getRowsAffected()}
+     * @throws OperationException if error
+     * @since 1.4
+     */
+    public int deleteAll(Collection<R> rows) throws OperationException
+    {
+        return super.modifyAll(rows);
+    }
+
+
+    /**
+     * Deletes rows based upon parameters. Set parameters, executes, closes. 
+     * Alias for {@link #modify(Object...)}.
+     * 
+     * @param parameters operation parameters as objects (see {@linkplain #setParameters(Object...)})
+     * @return count of rows affected
+     * @throws OperationException if error
+     * @since 1.4
+     */
+    public int delete(Object... parameters) throws OperationException
+    {
+        return super.modify(parameters);
     }
 
 

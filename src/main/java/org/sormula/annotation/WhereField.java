@@ -37,20 +37,20 @@ import org.sormula.operation.SqlOperation;
 public @interface WhereField
 {
     /**
-     * Name of row member involved in where condition.
-     * 
-     * @return field name to use
-     */
-    String name();
-    
-    
-    /**
      * SQL boolean operator to use following this field. Possible operators are "AND", "OR", 
      * "AND NOT", "OR NOT", "NOT", etc. Operator has no affect for last field in where condition.
      *  
      * @return Boolean opearator to be used after "column-name booleanOperator ?"  
      */
     String booleanOperator() default "AND";
+
+    
+    /**
+     * Name of row member involved in where condition.
+     * 
+     * @return field name to use
+     */
+    String name();
     
     
     /**
@@ -77,22 +77,21 @@ public @interface WhereField
 
     
     /**
-     * SQL to use as operand following comparison operator. If operand is non-empty string, then 
-     * operand will be appended to SQL following the comparison operator. Operand will be used
-     * "as is" and must be valid SQL.
+     * SQL to use as operand following comparison operator. Operand will be appended to SQL 
+     * following the comparison operator. Operand will be used "as is" and must be valid SQL. An
+     * operand of "?" is used to indicate that the parameter will be supplied at runtime.
      * <p>
-     * For example:
+     * Operand can be a constant, for example:
      * <blockquote><pre>
      * &%40;Where(name="hasInventory", whereFields=&%40;WhereField(name="quantity", comparisonOperator=">", operand="0"))
      * </pre></blockquote>
      * <p>
-     * If operand is an empty string, then the parameter for the field will be obtained 
+     * If operand is "?", then the parameter for the field will be obtained 
      * from row object as set with {@link ScalarSelectOperation#setRowParameters(Object)} or
      * parameter set with {@link SqlOperation#setParameters(Object...)}.
      * 
-     * @return SQL operand to use as where parameter; empty string to use value from 
-     * row/parameters
+     * @return SQL operand to use as where parameter 
      * @since 1.4
      */
-    String operand() default "";
+    String operand() default "?";
 }

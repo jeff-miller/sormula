@@ -74,6 +74,24 @@ public class SelectTest extends DatabaseTest<SormulaTest4>
 
     
     @Test
+    public void selectInConstant() throws SormulaException
+    {
+        begin();
+        Table<SormulaTest4> table = getTable();
+        
+        // insert test rows
+        assert table.insert(new SormulaTest4(6001, 0, "6001")) == 1 : "test row was not inserted";
+        assert table.insert(new SormulaTest4(6002, 0, "6002")) == 1 : "test row was not inserted";
+        
+        // test IN with constant operand
+        assert new ArrayListSelectOperation<SormulaTest4>(table, "idIn2").fullExecuteAll().size() == 2 :
+            "IN (6001, 6002) operator did not work";
+        
+        commit();
+    }
+
+    
+    @Test
     public void selectLimit() throws SormulaException
     {
         begin();

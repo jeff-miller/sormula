@@ -32,7 +32,8 @@ import org.sormula.annotation.Wheres;
  */
 @Wheres(whereConditions={
         @Where(name="byType", fieldNames="type"),
-        @Where(name="idIn", whereFields=@WhereField(name="id", comparisonOperator="in"))
+        @Where(name="idIn",  whereFields=@WhereField(name="id", comparisonOperator="in")),
+        @Where(name="idIn2", whereFields=@WhereField(name="id", comparisonOperator="in", operand="(6001, 6002)")),
 })
 
 @OrderBys(orderByConditions={

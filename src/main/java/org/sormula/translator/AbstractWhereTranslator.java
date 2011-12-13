@@ -39,8 +39,10 @@ public abstract class AbstractWhereTranslator<R> extends ColumnsTranslator<R>
     List<String> booleanOperatorList;
     List<String> comparisonOperatorList;
     List<String> operandList;
-    
+
+    @Deprecated
     boolean inOperator; 
+    boolean inOperatorCollection;
     Object[] parameters;
     
     
@@ -123,7 +125,7 @@ public abstract class AbstractWhereTranslator<R> extends ColumnsTranslator<R>
     @Override
     public void addColumnTranslator(ColumnTranslator<R> c)
     {
-        addColumnTranslator(c, "=", "AND");
+        addColumnTranslator(c, "AND", "=", "?");
     }
     
     
@@ -135,6 +137,7 @@ public abstract class AbstractWhereTranslator<R> extends ColumnsTranslator<R>
      * @param comparisonOperator sql comparison operator to use in where condition (examples: ">", "=<", "<>", etc.)
      * @param booleanOperator logical operator to precede this column (examples: "AND", "OR", "AND NOT", etc.)
      */
+    @Deprecated
     public void addColumnTranslator(ColumnTranslator<R> c, String comparisonOperator, String booleanOperator)
     {
         // note parameter order is different
@@ -150,7 +153,7 @@ public abstract class AbstractWhereTranslator<R> extends ColumnsTranslator<R>
      * @param c column translator to add
      * @param booleanOperator logical operator to precede this column (examples: "AND", "OR", "AND NOT", etc.)
      * @param comparisonOperator sql comparison operator to use in where condition (examples: ">", "=<", "<>", etc.)
-     * @param operand operand to follow operator; empty string to ignore
+     * @param operand operand to follow operator; typically "?" indicates operand is SQL parameter
      * @since 1.4
      */
     public void addColumnTranslator(ColumnTranslator<R> c, String booleanOperator, String comparisonOperator, String operand)
@@ -160,37 +163,60 @@ public abstract class AbstractWhereTranslator<R> extends ColumnsTranslator<R>
         comparisonOperatorList.add(comparisonOperator);
         operandList.add(operand);
         
-        // remember if IN operator was used
+        // remember if IN operator was used (keep for backward compatibility)
         if (isInOperator(comparisonOperator)) inOperator = true;
+        
+        if (isInOperatorCollection(comparisonOperator, operand)) inOperatorCollection = true;
     }
 
 
     /**
+     * Use {@link #isInOperatorCollection()} instead.
+     * 
      * @return true if one or more column uses the "IN" operator
      */
+    @Deprecated
     public boolean isInOperator()
     {
         return inOperator;
     }
     
     
-    
+    @Deprecated
     protected boolean isInOperator(String operator)
     {
-        return operator.equalsIgnoreCase("in") || operator.equalsIgnoreCase("not in");
+        return operator.equalsIgnoreCase("IN") || operator.equalsIgnoreCase("NOT IN");
+    }
+    
+    
+    /**
+     * Reports if any column uses IN operator where "?" parameters are dynamically generated
+     * based upon the size of the collection parameter.
+     * 
+     * @return true if at least one column uses "IN" or "NOT IN" operator and operand is 
+     * the default "?"
+     * @since 1.4 
+     */
+    public boolean isInOperatorCollection()
+    {
+        return inOperatorCollection;
+    }
+    
+    
+    protected boolean isInOperatorCollection(String operator, String operand)
+    {
+        // return true if IN operator is used and operand should be built from collection parameter
+        return (operator.equalsIgnoreCase("IN") || operator.equalsIgnoreCase("NOT IN")) && operand.equals("?");
     }
 
 
     /**
      * Creates column phrase with parameter placeholders and comparison operators like:<br> 
-     * "c1 op1 ? bo2 c2 operator2 ? bo3 c3 operator3 ?..." where cN is column name,
-     * opN is {@link WhereField#comparisonOperator()}, and boN is
-     * {@linkplain WhereField#booleanOperator()}
-     * <p>
-     * If {@linkplain WhereField#operand()} is non-empty string, then operand will
-     * be used in place of "?".
+     * "c1 cop1 a1 bo2 c2 cop2 a2 bo3 c3 cop3 a3..." where cN is column name,
+     * copN is {@link WhereField#comparisonOperator()}, aN is operand (typically "?"), and 
+     * boN is {@linkplain WhereField#booleanOperator()}
      * 
-     * @return "c1 op1 ? bo2 c2 operator2 ? bo3 c3 operator3 ?..."
+     * @return "c1 cop1 a1 bo2 c2 cop2 a2 bo3 c3 cop3 a3..."
      */
     @Override
     public String createColumnParameterPhrase()
@@ -214,7 +240,10 @@ public abstract class AbstractWhereTranslator<R> extends ColumnsTranslator<R>
             phrase.append(operator);
             phrase.append(" "); // space around operators
             
-            if (inOperator && isInOperator(operator))
+            // add operand based upon type of operator
+            String operand = operandList.get(i);
+            
+            if (inOperatorCollection && isInOperatorCollection(operator, operand))
             {
                 // add parameter placeholders for IN phrase
                 phrase.append("(");
@@ -227,10 +256,7 @@ public abstract class AbstractWhereTranslator<R> extends ColumnsTranslator<R>
                     
                     if (inParameterCount > 0)
                     {
-                        for (int p = 0; p < inParameterCount; ++p)
-                        {
-                            phrase.append("?, ");
-                        }
+                        for (int p = 0; p < inParameterCount; ++p) phrase.append("?, ");
                         
                         // remove last comma
                         phrase.setLength(phrase.length() - 2);
@@ -252,21 +278,10 @@ public abstract class AbstractWhereTranslator<R> extends ColumnsTranslator<R>
             else
             {
                 // not IN operator
-                String operand = operandList.get(i);
-                
-                if (operand.length() == 0)
-                {
-                    // no operand, use parameter
-                    phrase.append("?");
-                }
-                else
-                {
-                    // use operand instaed of parameter
-                    phrase.append(operand);
-                }
+                phrase.append(operand);
             }
             
-            // next
+            // next column
             ++i;
         }
 

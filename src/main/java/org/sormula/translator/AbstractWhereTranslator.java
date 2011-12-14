@@ -34,15 +34,8 @@ import org.sormula.operation.SqlOperation;
 public abstract class AbstractWhereTranslator<R> extends ColumnsTranslator<R>
 {
     RowTranslator<R> rowTranslator;
-    
-    // parallel arrays for the following, TODO use class?
-    List<String> booleanOperatorList;
-    List<String> comparisonOperatorList;
-    List<String> operandList;
-
-    @Deprecated
-    boolean inOperator; 
-    boolean inOperatorCollection;
+    List<WhereFieldExpression> whereFieldExpressionList;
+    @Deprecated boolean inOperator; 
     Object[] parameters;
     
     
@@ -66,9 +59,7 @@ public abstract class AbstractWhereTranslator<R> extends ColumnsTranslator<R>
     protected void initColumnTranslatorList(int columns)
     {
         super.initColumnTranslatorList(columns);
-        booleanOperatorList = new ArrayList<String>(columns);
-        comparisonOperatorList = new ArrayList<String>(columns);
-        operandList = new ArrayList<String>(columns);
+        whereFieldExpressionList  = new ArrayList<WhereFieldExpression>(columns);
     }
 
 
@@ -160,19 +151,15 @@ public abstract class AbstractWhereTranslator<R> extends ColumnsTranslator<R>
     public void addColumnTranslator(ColumnTranslator<R> c, String booleanOperator, String comparisonOperator, String operand)
     {
         super.addColumnTranslator(c);
-        booleanOperatorList.add(booleanOperator);
-        comparisonOperatorList.add(comparisonOperator);
-        operandList.add(operand);
+        whereFieldExpressionList.add(new WhereFieldExpression(booleanOperator, comparisonOperator, operand));
         
-        // remember if IN operator was used (keep for backward compatibility)
+        // remember if IN operator was used (keep for backward compatibility but is not needed)
         if (isInOperator(comparisonOperator)) inOperator = true;
-        
-        if (isInOperatorCollection(comparisonOperator, operand)) inOperatorCollection = true;
     }
 
 
     /**
-     * Use {@link #isInOperatorCollection()} instead.
+     * Kept for backward compatibility but is not needed.
      * 
      * @return true if one or more column uses the "IN" operator
      */
@@ -191,27 +178,6 @@ public abstract class AbstractWhereTranslator<R> extends ColumnsTranslator<R>
     
     
     /**
-     * Reports if any column uses IN operator where "?" parameters are dynamically generated
-     * based upon the size of the collection parameter.
-     * 
-     * @return true if at least one column uses "IN" or "NOT IN" operator and operand is 
-     * the default "?"
-     * @since 1.4 
-     */
-    public boolean isInOperatorCollection()
-    {
-        return inOperatorCollection;
-    }
-    
-    
-    protected boolean isInOperatorCollection(String operator, String operand)
-    {
-        // return true if IN operator is used and operand should be built from collection parameter
-        return (operator.equalsIgnoreCase("IN") || operator.equalsIgnoreCase("NOT IN")) && operand.equals("?");
-    }
-
-
-    /**
      * Creates column phrase with parameter placeholders and comparison operators like:<br> 
      * "c1 cop1 a1 bo2 c2 cop2 a2 bo3 c3 cop3 a3..." where cN is column name,
      * copN is {@link WhereField#comparisonOperator()}, aN is operand (typically "?"), and 
@@ -227,59 +193,55 @@ public abstract class AbstractWhereTranslator<R> extends ColumnsTranslator<R>
         
         for (ColumnTranslator<R> c: columnTranslatorList)
         {
+            WhereFieldExpression wfe = whereFieldExpressionList.get(i);
+            
             if (i > 0)
             {
                 // for 2nd column and beyond, combine with previous column using boolean operator
                 phrase.append(" "); // space around operators
-                phrase.append(booleanOperatorList.get(i));
+                phrase.append(wfe.getBooleanOperator());
                 phrase.append(" "); // space around operators
             }
             
             phrase.append(c.getColumnName());
             phrase.append(" "); // space around operators
-            String operator = comparisonOperatorList.get(i);
-            phrase.append(operator);
+            phrase.append(wfe.getComparisonOperator());
             phrase.append(" "); // space around operators
             
             // add operand based upon type of operator
-            String operand = operandList.get(i);
-            
-            if (inOperatorCollection && isInOperatorCollection(operator, operand))
+            if (wfe.isCollectionOperand())
             {
-                // add parameter placeholders for IN phrase
-                phrase.append("(");
+                // add parameter placeholders for collection operand for example "IN (?, ?, ...)"
                 Object parameter = parameters[i];
                 
                 if (parameter instanceof Collection<?>)
                 {
                     // one parameter placeholder for each item
-                    int inParameterCount = ((Collection<?>)parameter).size();
+                    int operandSize = ((Collection<?>)parameter).size();
                     
-                    if (inParameterCount > 0)
+                    if (operandSize > 0)
                     {
-                        for (int p = 0; p < inParameterCount; ++p) phrase.append("?, ");
-                        
-                        // remove last comma
-                        phrase.setLength(phrase.length() - 2);
+                        phrase.append("(");
+                        for (int p = 0; p < operandSize; ++p) phrase.append("?, ");
+                        phrase.setLength(phrase.length() - 2); // remove last comma and space
+                        phrase.append(")");
                     }
                     else
                     {
-                        // empty collection, use "in (null)" to avoid sql error
-                        phrase.append("null");
+                        // empty collection, use "(null)" to avoid sql error
+                        phrase.append("(null)");
                     }
                 }
                 else
                 {
-                    // one parameter within IN phrase
-                    phrase.append("?");
+                    // non Collection operand
+                    phrase.append("(?)");
                 }
-                
-                phrase.append(")");
             }
             else
             {
-                // not IN operator
-                phrase.append(operand);
+                // not collection operand, use operand supplied by annotation
+                phrase.append(wfe.getOperand());
             }
             
             // next column
@@ -287,5 +249,51 @@ public abstract class AbstractWhereTranslator<R> extends ColumnsTranslator<R>
         }
 
         return phrase.toString();
+    }
+}
+
+
+
+class WhereFieldExpression
+{
+    String booleanOperator;
+    String comparisonOperator;
+    String operand;
+    boolean collectionOperand;
+    
+    
+    public WhereFieldExpression(String booleanOperator, String comparisonOperator, String operand)
+    {
+        this.booleanOperator = booleanOperator;
+        this.comparisonOperator = comparisonOperator;
+        this.operand = operand;
+        
+        // true if operand should be built from collection parameter
+        collectionOperand = (comparisonOperator.equalsIgnoreCase("IN") || 
+                comparisonOperator.equalsIgnoreCase("NOT IN")) && operand.equals("?");
+    }
+
+
+    public String getBooleanOperator()
+    {
+        return booleanOperator;
+    }
+
+
+    public String getComparisonOperator()
+    {
+        return comparisonOperator;
+    }
+
+
+    public String getOperand()
+    {
+        return operand;
+    }
+
+
+    public boolean isCollectionOperand()
+    {
+        return collectionOperand;
     }
 }

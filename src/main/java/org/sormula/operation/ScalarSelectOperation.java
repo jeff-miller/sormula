@@ -115,7 +115,7 @@ public class ScalarSelectOperation<R> extends SqlOperation<R>
      * <P>
      * In the future, when more databases support a standard way to limit rows,
      * I will add support for SQL level limits through a method like 
-     * "setMaximumRows(int)". 
+     * "setMaximumRows(int)" and SQL "FETCH FIRST n ROWS ONLY".
      * 
      * @param maximumRowsRead 0..{@linkplain Integer#MAX_VALUE}
      * @since 1.4

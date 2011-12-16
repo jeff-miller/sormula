@@ -223,20 +223,15 @@ public class SimpleExample
         Database database = new Database(getConnection());
         Table<Inventory> inventoryTable = database.getTable(Inventory.class);
         
-        // select operation for list
+        // select operation for list 
+        // SELECT PARTNUMBER, QUANTITY, MANFID FROM INVENTORY WHERE PARTNUMBER IN (?, ?, ?)
         ArrayListSelectOperation<Inventory> operation =
             new ArrayListSelectOperation<Inventory>(inventoryTable, "partNumberIn");
-        operation.setParameters(partNumbers);
-        // executes SELECT PARTNUMBER, QUANTITY, MANFID FROM INVENTORY WHERE PARTNUMBER IN (?, ?, ?)
-        operation.execute();
-        
+
         // show results
-        for (Inventory inventory: operation.readAll())
+        for (Inventory inventory: operation.selectAll(partNumbers))
         {
             System.out.println(inventory.getPartNumber());
         }
-        
-        // clean up
-        operation.close();
     }
 }

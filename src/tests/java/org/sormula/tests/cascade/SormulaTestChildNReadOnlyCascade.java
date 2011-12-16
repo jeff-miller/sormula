@@ -17,6 +17,7 @@
 package org.sormula.tests.cascade;
 
 import org.sormula.annotation.Column;
+import org.sormula.annotation.Row;
 import org.sormula.annotation.Where;
 
 
@@ -25,6 +26,7 @@ import org.sormula.annotation.Where;
  * 
  * @author Jeff Miller
  */
+@Row(tableName="SormulaTestChildNROC")
 @Where(name="byParent", fieldNames="parentId")
 public class SormulaTestChildNReadOnlyCascade
 {

@@ -17,6 +17,7 @@
 package org.sormula.tests.cascade;
 
 import org.sormula.annotation.Column;
+import org.sormula.annotation.Row;
 
 
 /**
@@ -24,6 +25,7 @@ import org.sormula.annotation.Column;
  * 
  * @author Jeff Miller
  */
+@Row(tableName="SormulaTestChild1ROC")
 public class SormulaTestChild1ReadOnlyCascade
 {
     @Column(primaryKey=true)

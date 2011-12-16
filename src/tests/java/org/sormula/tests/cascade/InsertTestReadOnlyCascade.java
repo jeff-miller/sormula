@@ -18,6 +18,7 @@ package org.sormula.tests.cascade;
 
 import org.sormula.SormulaException;
 import org.sormula.Table;
+import org.sormula.annotation.Row;
 import org.sormula.operation.ScalarSelectOperation;
 import org.sormula.tests.DatabaseTest;
 import org.testng.annotations.AfterClass;
@@ -39,7 +40,8 @@ public class InsertTestReadOnlyCascade extends DatabaseTest<SormulaTestParentRea
     {
         openDatabase();
         createTable(SormulaTestParentReadOnlyCascade.class, 
-                "CREATE TABLE " + getSchemaPrefix() + SormulaTestParentReadOnlyCascade.class.getSimpleName() + " (" +
+                "CREATE TABLE " + getSchemaPrefix() + 
+                SormulaTestParentReadOnlyCascade.class.getAnnotation(Row.class).tableName() + " (" +
                 " id INTEGER NOT NULL PRIMARY KEY," +
                 " child1id INTEGER," +
                 " description VARCHAR(60)" +
@@ -50,7 +52,8 @@ public class InsertTestReadOnlyCascade extends DatabaseTest<SormulaTestParentRea
             DatabaseTest<SormulaTestChild1ReadOnlyCascade> child1 = new DatabaseTest<SormulaTestChild1ReadOnlyCascade>();
             child1.openDatabase();
             child1.createTable(SormulaTestChild1ReadOnlyCascade.class, 
-                    "CREATE TABLE " + getSchemaPrefix() + SormulaTestChild1ReadOnlyCascade.class.getSimpleName() + " (" +
+                    "CREATE TABLE " + getSchemaPrefix() + 
+                    SormulaTestChild1ReadOnlyCascade.class.getAnnotation(Row.class).tableName() + " (" +
                     " id INTEGER NOT NULL PRIMARY KEY," +
                     " description VARCHAR(60)" +
                     ")"
@@ -61,7 +64,8 @@ public class InsertTestReadOnlyCascade extends DatabaseTest<SormulaTestParentRea
             DatabaseTest<SormulaTestChildNReadOnlyCascade> childN = new DatabaseTest<SormulaTestChildNReadOnlyCascade>();
             childN.openDatabase();
             childN.createTable(SormulaTestChildNReadOnlyCascade.class, 
-                    "CREATE TABLE " + getSchemaPrefix() + SormulaTestChildNReadOnlyCascade.class.getSimpleName() + " (" +
+                    "CREATE TABLE " + getSchemaPrefix() + 
+                    SormulaTestChildNReadOnlyCascade.class.getAnnotation(Row.class).tableName() + " (" +
                     " id INTEGER NOT NULL PRIMARY KEY," +
                     " parentid INTEGER NOT NULL," +
                     " description VARCHAR(60)" +

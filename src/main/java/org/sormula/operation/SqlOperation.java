@@ -121,7 +121,7 @@ public abstract class SqlOperation<R>
         {
 	        if (log.isDebugEnabled()) log.debug("prepare parameters from objects");
 	        AbstractWhereTranslator<R> wt = getWhereTranslator();
-	        boolean inOperator = wt != null && wt.isInOperator();
+	        boolean inOperator = wt != null && wt.isCollectionOperand();
 	        
 	        try
 	        {
@@ -225,7 +225,7 @@ public abstract class SqlOperation<R>
     protected void prepareCheck() throws OperationException
     {
         AbstractWhereTranslator<R> wt = getWhereTranslator();
-        if (wt != null && wt.isInOperator())
+        if (wt != null && wt.isCollectionOperand())
         {
             // IN used, force prepare again since number of parameters may be different
             closeStatement();

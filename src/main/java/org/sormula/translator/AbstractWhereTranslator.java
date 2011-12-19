@@ -36,6 +36,7 @@ public abstract class AbstractWhereTranslator<R> extends ColumnsTranslator<R>
     RowTranslator<R> rowTranslator;
     List<WhereFieldExpression> whereFieldExpressionList;
     @Deprecated boolean inOperator; 
+    boolean collectionOperand;
     Object[] parameters;
     
     
@@ -151,7 +152,11 @@ public abstract class AbstractWhereTranslator<R> extends ColumnsTranslator<R>
     public void addColumnTranslator(ColumnTranslator<R> c, String booleanOperator, String comparisonOperator, String operand)
     {
         super.addColumnTranslator(c);
-        whereFieldExpressionList.add(new WhereFieldExpression(booleanOperator, comparisonOperator, operand));
+        WhereFieldExpression wfe = new WhereFieldExpression(booleanOperator, comparisonOperator, operand);
+        whereFieldExpressionList.add(wfe);
+
+        // remember if collection operand was used (for faster prepares)
+        if (wfe.isCollectionOperand()) collectionOperand = true;
         
         // remember if IN operator was used (keep for backward compatibility but is not needed)
         if (isInOperator(comparisonOperator)) inOperator = true;
@@ -177,6 +182,18 @@ public abstract class AbstractWhereTranslator<R> extends ColumnsTranslator<R>
     }
     
     
+    /**
+     * Tests if where condition contains at least one column with an operand that use
+     * a collection as a parameter.
+     * 
+     * @return true if at least one column uses a collection operand
+     */
+    public boolean isCollectionOperand()
+    {
+        return collectionOperand;
+    }
+
+
     /**
      * Creates column phrase with parameter placeholders and comparison operators like:<br> 
      * "c1 cop1 a1 bo2 c2 cop2 a2 bo3 c3 cop3 a3..." where cN is column name,

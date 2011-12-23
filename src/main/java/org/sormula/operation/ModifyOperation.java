@@ -26,6 +26,7 @@ import org.sormula.annotation.cascade.DeleteCascade;
 import org.sormula.annotation.cascade.InsertCascade;
 import org.sormula.annotation.cascade.UpdateCascade;
 import org.sormula.log.ClassLogger;
+import org.sormula.operation.monitor.OperationTime;
 
 
 /**
@@ -124,8 +125,10 @@ public abstract class ModifyOperation<R> extends SqlOperation<R>
     @Override
     public void execute() throws OperationException
     {
+        zzz();
         prepareCheck();
         int allRowsAffected = 0; 
+        OperationTime operationTime = getOperationTime();
         
         try
         {
@@ -134,14 +137,21 @@ public abstract class ModifyOperation<R> extends SqlOperation<R>
                 // operation parameters from rows
                 for (R row: rows)
                 {
-                    if (log.isDebugEnabled()) log.debug("prepare parameters from row=" + row);
+                    if (log.isDebugEnabled()) log.debug("write parameters from row=" + row);
+                    
                     setNextParameter(1);
                     preExecuteCascade(row);
                     preExecute(row);
-                    prepareColumns(row);
-                    prepareWhere(row);
+                    operationTime.startWriteTime();
+                    writeColumns(row);
+                    writeWhere(row);
+                    operationTime.stop();
+                    
                     if (log.isDebugEnabled()) log.debug("execute update row=" + row);
+                    operationTime.startExecuteTime();
                     allRowsAffected += getPreparedStatement().executeUpdate();
+                    operationTime.stop();
+                    
                     postExecute(row);
                     postExecuteCascade(row);
                 }
@@ -149,11 +159,16 @@ public abstract class ModifyOperation<R> extends SqlOperation<R>
             else if (getParameters() != null)
             {
                 // operation parameters from objects
-                if (log.isDebugEnabled()) log.debug("prepare parameters from objects");
+                if (log.isDebugEnabled()) log.debug("write parameters from objects");
                 setNextParameter(1);
-                prepareParameters();
+                operationTime.startWriteTime();
+                writeParameters();
+                operationTime.stop();
+                
                 if (log.isDebugEnabled()) log.debug("execute update");
+                operationTime.startExecuteTime();
                 allRowsAffected = getPreparedStatement().executeUpdate();
+                operationTime.stop();
             }
         }
         catch (Exception e)

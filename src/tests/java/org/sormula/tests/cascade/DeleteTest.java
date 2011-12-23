@@ -30,7 +30,7 @@ import org.testng.annotations.Test;
  * 
  * @author Jeff Miller
  */
-@Test(groups="cascade.delete", dependsOnGroups="cascade.insert")
+@Test(singleThreaded=true, groups="cascade.delete", dependsOnGroups="cascade.insert")
 public class DeleteTest extends DatabaseTest<SormulaTestParent>
 {
     @BeforeClass

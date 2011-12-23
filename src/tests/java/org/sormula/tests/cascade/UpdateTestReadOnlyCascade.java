@@ -29,7 +29,7 @@ import org.testng.annotations.Test;
  * 
  * @author Jeff Miller
  */
-@Test(groups="cascade.roc.update", dependsOnGroups="cascade.roc.insert")
+@Test(singleThreaded=true, groups="cascade.roc.update", dependsOnGroups="cascade.roc.insert")
 public class UpdateTestReadOnlyCascade extends DatabaseTest<SormulaTestParentReadOnlyCascade>
 {
     @BeforeClass

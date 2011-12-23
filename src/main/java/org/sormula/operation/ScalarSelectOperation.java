@@ -35,6 +35,7 @@ import org.sormula.annotation.cascade.SelectCascade;
 import org.sormula.log.ClassLogger;
 import org.sormula.operation.cascade.CascadeOperation;
 import org.sormula.operation.cascade.SelectCascadeOperation;
+import org.sormula.operation.monitor.OperationTime;
 import org.sormula.reflect.SormulaField;
 import org.sormula.translator.OrderByTranslator;
 import org.sormula.translator.RowTranslator;
@@ -91,7 +92,7 @@ public class ScalarSelectOperation<R> extends SqlOperation<R>
         initBaseSql();
         setWhere(whereConditionName);
     }
-
+    
     
     /**
      * Gets the maximum number of rows to read from result set. The default
@@ -174,25 +175,43 @@ public class ScalarSelectOperation<R> extends SqlOperation<R>
     @Override
     public void execute() throws OperationException
     {
+        zzz();
         prepareCheck();
         setNextParameter(1);
         rowsReadCount = 0;
+        OperationTime operationTime = getOperationTime();
         
+        operationTime.startWriteTime();
         if (rowParameters != null)
         {
             // where values from row object
-            prepareWhere(rowParameters);
+            writeWhere(rowParameters);
         }
         else 
         {
             // where values from objects
-            prepareParameters();
+            writeParameters();
         }
+        operationTime.stop();
         
         try
         {
             log.debug("execute query");
+            operationTime.startExecuteTime();
+
+            // TODO remove
+            /*
+            // random delay to generate larger times
+            int loop = new Random(System.currentTimeMillis()).nextInt(10);
+            while (loop-- > 0)
+            {
+                log.info("sleep " + loop);
+                Thread.sleep(1000);
+            }
+            */
+            
             resultSet = preparedStatement.executeQuery();
+            operationTime.stop();
         }
         catch (Exception e)
         {
@@ -236,22 +255,35 @@ public class ScalarSelectOperation<R> extends SqlOperation<R>
         
         try
         {
+            // include resultSet.next() in read time but don't include cascade 
+            // times since that would cause cascade timings summed twice into total
+            operationTime.startReadTime();
+            
             if (resultSet.next() && rowsReadCount < maximumRowsRead)
             {
                 row = rowTranslator.newInstance();
+                operationTime.pause();
                 preReadCascade(row);
                 preRead(row);
+                operationTime.resume();
+                
                 rowTranslator.read(resultSet, 1, row);
                 ++rowsReadCount;
+                operationTime.stop();
+                
                 postRead(row);
                 postReadCascade(row);
+            }
+            else
+            {
+                operationTime.stop();
             }
         }
         catch (Exception e)
         {
             throw new OperationException("readNext() error", e);
         }
-        
+
         return row;
     }
     

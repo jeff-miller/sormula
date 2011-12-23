@@ -29,7 +29,7 @@ import org.testng.annotations.Test;
  * 
  * @author Jeff Miller
  */
-@Test(groups="translator")
+@Test(singleThreaded=true, groups="translator")
 public class UnusedColumnTest extends DatabaseTest<SormulaTest3>
 {
     private static final int primaryKey = 9999;

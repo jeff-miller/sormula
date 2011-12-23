@@ -32,7 +32,7 @@ import org.testng.annotations.Test;
  * 
  * @author Jeff Miller
  */
-@Test(groups="cascade.roc.insert")
+@Test(singleThreaded=true, groups="cascade.roc.insert")
 public class InsertTestReadOnlyCascade extends DatabaseTest<SormulaTestParentReadOnlyCascade>
 {
     @BeforeClass

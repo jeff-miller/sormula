@@ -35,7 +35,7 @@ import org.sormula.log.ClassLogger;
 
 
 /** 
- * Base class for all sormula tests.
+ * Base class for all sormula tests. TODO update db's and jdbc jars
  * 
  * @author Jeff Miller
  */
@@ -44,8 +44,19 @@ public class DatabaseTest<R>
     private static final ClassLogger log = new ClassLogger();
     
     static long testSeed;
+    
     static
     {
+        // always log JDBC driver properties
+        try
+        {
+            new JdbcProperties(true);
+        }
+        catch (Exception e)
+        {
+            log.error("error reading JDBC properties", e);
+        }
+        
     	// allow seed to be supplied for repeatable tests
     	String seed = System.getProperty("seed", "");
     	if (seed.length() == 0)
@@ -72,21 +83,7 @@ public class DatabaseTest<R>
     
     public void openDatabase() throws Exception
     {
-        String dbdir = System.getProperty("dbdir");
-        assert dbdir != null : "No dbdir property set";
-        
-        // read db properties
-        String jdbcPropertiesName = "jdbc/" + dbdir + "/jdbc.properties";
-        InputStream is = new FileInputStream(jdbcPropertiesName);
-        Properties properties = new Properties();
-        properties.load(is);
-        is.close();
-        
-        if (log.isDebugEnabled())
-        {
-            log.debug("propertes from " + jdbcPropertiesName);
-            properties.list(System.out);
-        }
+        Properties properties = new JdbcProperties(log.isDebugEnabled());
         
         // get connection
         Connection connection;
@@ -114,6 +111,7 @@ public class DatabaseTest<R>
         // create sormula database
         assert connection != null : "db connection is null";
         database = new Database(connection, properties.getProperty("jdbc.schema", ""));
+        database.setTimings(true);//TODO from build.properties
         
         // statement for ddl and other
         statement = connection.createStatement();
@@ -124,7 +122,7 @@ public class DatabaseTest<R>
     {
         table = getDatabase().getTable(rowClass);
         assert table != null : "table creation error";
-
+        
         if (ddl != null)
         {
             // drop table if already exists from previous test
@@ -156,6 +154,8 @@ public class DatabaseTest<R>
     
     public void closeDatabase()
     {
+        getDatabase().logTimings();
+        
         try
         {
             if (sqlShutdown.length() > 0)
@@ -263,5 +263,33 @@ public class DatabaseTest<R>
         }
         
         return set;
+    }
+}
+
+
+
+
+class JdbcProperties extends Properties
+{
+    private static final long serialVersionUID = 1L;
+    private static final ClassLogger log = new ClassLogger();
+    
+
+    public JdbcProperties(boolean logProperties) throws Exception
+    {
+        String dbdir = System.getProperty("dbdir");
+        assert dbdir != null : "No dbdir property set";
+        
+        // read db properties
+        String jdbcPropertiesName = "jdbc/" + dbdir + "/jdbc.properties";
+        InputStream is = new FileInputStream(jdbcPropertiesName);
+        load(is);
+        is.close();
+        
+        if (logProperties)
+        {
+            log.info("propertes from " + jdbcPropertiesName);
+            list(System.out);
+        }
     }
 }

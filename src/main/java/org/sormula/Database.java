@@ -17,11 +17,15 @@
 package org.sormula;
 
 import java.sql.Connection;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
 import org.sormula.annotation.Column;
+import org.sormula.log.ClassLogger;
 import org.sormula.operation.SqlOperation;
+import org.sormula.operation.monitor.OperationTime;
 import org.sormula.translator.NameTranslator;
 
 
@@ -42,11 +46,15 @@ import org.sormula.translator.NameTranslator;
  */
 public class Database
 {
+    private static final ClassLogger log = new ClassLogger();
     Connection connection;
     String schema;
     Map<String, Table<?>> tableMap; // key is row class canonical name
     Transaction transaction;
     Class<? extends NameTranslator> nameTranslatorClass;
+    Map<String, OperationTime> operationTimeMap;
+    OperationTime totalOperationTime;
+    boolean timings;
     
     
     /**
@@ -73,6 +81,9 @@ public class Database
         this.schema = schema;
         tableMap = new HashMap<String, Table<?>>();
         transaction = new Transaction(connection);
+        operationTimeMap = new HashMap<String, OperationTime>();
+        totalOperationTime = new OperationTime("total");
+        totalOperationTime.setDescription("Database totals");
     }
 
     
@@ -187,5 +198,61 @@ public class Database
 	public void setNameTranslatorClass(Class<? extends NameTranslator> nameTranslatorClass) 
 	{
 		this.nameTranslatorClass = nameTranslatorClass;
+	}
+	
+	
+	public boolean isTimings()
+    {
+        return timings;
+    }
+
+
+    public void setTimings(boolean timings)
+    {
+        this.timings = timings;
+    }
+
+
+    // TODO javadoc
+	// TODO params?
+	public OperationTime getOperationTime(String timingId)
+	{
+	    return operationTimeMap.get(timingId);
+	}
+	
+	
+	public OperationTime createOperationTime(String timingId, String description)
+	{
+	    OperationTime operationTime = new OperationTime(timingId, totalOperationTime);
+	    operationTime.setDescription(description);
+	    operationTimeMap.put(timingId, operationTime);
+	    return operationTime;
+	}
+	
+	
+	// TODO, name?
+	public Map<String, OperationTime> getOperationTimeMap()
+    {
+        return operationTimeMap;
+    }
+
+
+    // TODO
+	public void logTimings()
+	{
+	    if (operationTimeMap.size() > 0)
+	    {
+    	    log.info("logTimings:");
+    	    ArrayList<String> timingIdList = new ArrayList<String>(operationTimeMap.keySet());
+    	    Collections.sort(timingIdList);
+    	    
+    	    for (String timingId: timingIdList)
+    	    {
+    	        OperationTime ot = operationTimeMap.get(timingId);
+    	        ot.logTimings(); 
+    	    }
+    	    
+    	    totalOperationTime.logTimings();
+	    }
 	}
 }

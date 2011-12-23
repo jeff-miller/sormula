@@ -32,7 +32,7 @@ import org.testng.annotations.Test;
  * 
  * @author Jeff Miller
  */
-@Test(groups="cascade.select", dependsOnGroups="cascade.insert")
+@Test(singleThreaded=true, groups="cascade.select", dependsOnGroups="cascade.insert")
 public class SelectTest extends DatabaseTest<SormulaTestParent>
 {
     @BeforeClass

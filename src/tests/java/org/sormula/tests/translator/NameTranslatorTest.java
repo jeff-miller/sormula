@@ -33,7 +33,7 @@ import org.testng.annotations.Test;
  * 
  * @author Jeff Miller
  */
-@Test(groups="translator")
+@Test(singleThreaded=true, groups="translator")
 public class NameTranslatorTest extends DatabaseTest<SormulaTest2>
 {
     SormulaTest2 inserted;

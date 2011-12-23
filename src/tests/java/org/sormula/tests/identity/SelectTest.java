@@ -30,7 +30,7 @@ import org.testng.annotations.Test;
  * 
  * @author Jeff Miller
  */
-@Test(groups="identity.select", dependsOnGroups="identity.insert")
+@Test(singleThreaded=true, groups="identity.select", dependsOnGroups="identity.insert")
 public class SelectTest extends DatabaseTest<IdentityTest>
 {
     @BeforeClass

@@ -31,7 +31,7 @@ import org.testng.annotations.Test;
  * 
  * @author Jeff Miller
  */
-@Test(groups="zeroannotation.insert")
+@Test(singleThreaded=true, groups="zeroannotation.insert")
 public class InsertTest extends DatabaseTest<ZeroAnnotationTest>
 {
     boolean preMethod;

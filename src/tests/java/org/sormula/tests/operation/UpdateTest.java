@@ -32,7 +32,7 @@ import org.testng.annotations.Test;
  * 
  * @author Jeff Miller
  */
-@Test(groups="operation.update", dependsOnGroups="operation.insert")
+@Test(singleThreaded=true, groups="operation.update", dependsOnGroups="operation.insert")
 public class UpdateTest extends DatabaseTest<SormulaTest4>
 {
     @BeforeClass

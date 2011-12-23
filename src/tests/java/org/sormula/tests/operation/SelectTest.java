@@ -43,7 +43,7 @@ import org.testng.annotations.Test;
  * 
  * @author Jeff Miller
  */
-@Test(groups="operation.select", dependsOnGroups="operation.insert")
+@Test(singleThreaded=true, groups="operation.select", dependsOnGroups="operation.insert")
 public class SelectTest extends DatabaseTest<SormulaTest4>
 {
     private static final ClassLogger log = new ClassLogger();

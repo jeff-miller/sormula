@@ -31,7 +31,7 @@ import org.testng.annotations.Test;
  * 
  * @author Jeff Miller
  */
-@Test(groups="identity.update", dependsOnGroups="identity.insert")
+@Test(singleThreaded=true, groups="identity.update", dependsOnGroups="identity.insert")
 public class UpdateTest extends DatabaseTest<IdentityTest>
 {
     @BeforeClass

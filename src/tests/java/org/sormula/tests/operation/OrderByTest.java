@@ -35,7 +35,7 @@ import org.testng.annotations.Test;
  * 
  * @author Jeff Miller
  */
-@Test(groups="operation.order", dependsOnGroups="operation.insert")
+@Test(singleThreaded=true, groups="operation.order", dependsOnGroups="operation.insert")
 public class OrderByTest extends DatabaseTest<SormulaTest4>
 {
     @BeforeClass

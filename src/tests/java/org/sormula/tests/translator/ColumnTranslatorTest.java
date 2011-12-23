@@ -34,7 +34,7 @@ import org.testng.annotations.Test;
  * 
  * @author Jeff Miller
  */
-@Test(groups="translator")
+@Test(singleThreaded=true, groups="translator")
 public class ColumnTranslatorTest extends DatabaseTest<SormulaTest1>
 {
 	private static final ClassLogger log = new ClassLogger();

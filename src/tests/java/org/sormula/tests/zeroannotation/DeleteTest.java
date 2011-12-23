@@ -31,7 +31,7 @@ import org.testng.annotations.Test;
  * 
  * @author Jeff Miller
  */
-@Test(groups="zeroannotation.delete", dependsOnGroups="zeroannotation.insert")
+@Test(singleThreaded=true, groups="zeroannotation.delete", dependsOnGroups="zeroannotation.insert")
 public class DeleteTest extends DatabaseTest<ZeroAnnotationTest>
 {
     @BeforeClass

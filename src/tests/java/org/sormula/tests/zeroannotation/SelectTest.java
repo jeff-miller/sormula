@@ -28,7 +28,7 @@ import org.testng.annotations.Test;
  * 
  * @author Jeff Miller
  */
-@Test(groups="zeroannotation.select", dependsOnGroups="zeroannotation.insert")
+@Test(singleThreaded=true, groups="zeroannotation.select", dependsOnGroups="zeroannotation.insert")
 public class SelectTest extends DatabaseTest<ZeroAnnotationTest>
 {
     @BeforeClass

@@ -31,7 +31,7 @@ import org.testng.annotations.Test;
  * 
  * @author Jeff Miller
  */
-@Test(groups="zeroannotation.update", dependsOnGroups="zeroannotation.insert")
+@Test(singleThreaded=true, groups="zeroannotation.update", dependsOnGroups="zeroannotation.insert")
 public class UpdateTest extends DatabaseTest<ZeroAnnotationTest>
 {
     @BeforeClass

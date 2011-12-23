@@ -98,8 +98,7 @@
 
 	<!-- ******* tests ******* -->
 	<target name="tests" description="Runs tests for groups in ${groups} for database ${db.dir} defined in build.properties" depends="compile-tests">
-		<!-- testng task seems to ignore parallel and threadcount so tests are run in multiple threads -->
-        <testng verbose="2" groups="${groups}" parallel="false" threadcount="1">
+        <testng verbose="2" groups="${groups}" parallel="false">
         	<sysproperty key="dbdir" value="${db.dir}"/>
         	<sysproperty key="seed" value="${seed}"/>
         	<classpath refid="tests.libpath"/>

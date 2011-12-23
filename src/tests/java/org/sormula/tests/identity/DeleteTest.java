@@ -30,7 +30,7 @@ import org.testng.annotations.Test;
  * 
  * @author Jeff Miller
  */
-@Test(groups="identity.delete", dependsOnGroups="identity.insert")
+@Test(singleThreaded=true, groups="identity.delete", dependsOnGroups="identity.insert")
 public class DeleteTest extends DatabaseTest<IdentityTest>
 {
     @BeforeClass

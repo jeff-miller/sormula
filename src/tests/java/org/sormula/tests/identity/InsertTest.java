@@ -32,7 +32,7 @@ import org.testng.annotations.Test;
  * 
  * @author Jeff Miller
  */
-@Test(groups="identity.insert")
+@Test(singleThreaded=true, groups="identity.insert")
 public class InsertTest extends DatabaseTest<IdentityTest>
 {
     @BeforeClass

@@ -33,7 +33,7 @@ import org.testng.annotations.Test;
  * 
  * @author Jeff Miller
  */
-@Test(groups="cascade.insert")
+@Test(singleThreaded=true, groups="cascade.insert")
 public class InsertTest extends DatabaseTest<SormulaTestParent>
 {
     @BeforeClass
@@ -138,12 +138,14 @@ public class InsertTest extends DatabaseTest<SormulaTestParent>
         // verify that all children were inserted
         Table<SormulaTestChildN> childTable = getDatabase().getTable(SormulaTestChildN.class);
         ScalarSelectOperation<SormulaTestChildN> operation = new ScalarSelectOperation<SormulaTestChildN>(childTable);
+        
         for (SormulaTestChildN c: parent.getChildList())
         {
             operation.setParameters(c.getId());
             operation.execute();
             assert operation.readNext() != null : "child " + c.getId() + " was not inserted"; 
         }
+        
         operation.close();
     }
     

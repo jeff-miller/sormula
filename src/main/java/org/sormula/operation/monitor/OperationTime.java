@@ -158,7 +158,7 @@ public class OperationTime
             if (pauseStartTime == 0)
             {
                 // not paused
-                pauseStartTime = System.currentTimeMillis();
+                pauseStartTime = System.nanoTime();
             }
         }
         else
@@ -173,7 +173,7 @@ public class OperationTime
         if (pauseStartTime > 0)
         {
             // paused (sum to allow multiple pause/resume)
-            pauseDuration += System.currentTimeMillis() - pauseStartTime;
+            pauseDuration += System.nanoTime() - pauseStartTime;
             pauseStartTime = 0;
         }
         else
@@ -215,24 +215,23 @@ public class OperationTime
     
     public void logTimings()
     {
-        log.info("timings for id=" + id);
         log.info(description);
-        log.info(format("prepare ", getPrepareTime()));
-        log.info(format("write   ", getWriteTime()));
-        log.info(format("execute ", getExecuteTime()));
-        log.info(format("read    ", getReadTime()));
+        log.info("id=" + id);
+        log.info(format("prepare", getPrepareTime()));
+        log.info(format("write  ", getWriteTime()));
+        log.info(format("execute", getExecuteTime()));
+        log.info(format("read   ", getReadTime()));
         
-        // don't show count, avg, or percent for total since counts vary amount prepare, write, execute, read
-        log.info("total    time=" + getTotalTime().getFormattedTime()); 
+        // don't show count, avg, or percent for total since counts may vary for prepare, write, execute, read
+        log.info("total   100% " + getTotalTime().getFormattedTime()); 
     }
     
     
     protected String format(String description, ElapsedTime et)
     {
-        return description + String.format(" time=%s count=%3d avg=%s %3d%%", 
-            et.getFormattedTime(), 
-            et.getCount(),
-            et.getFormattedAverageTime(),
-            Math.round(100d * et.getTime() / totalTime.getTime()));
+        int percent = (int)Math.round(100d * et.getTime() / totalTime.getTime());
+        
+        return description + String.format(" %3d%% %s n=%3d avg=%s",
+            percent, et.getFormattedTime(), et.getCount(), et.getFormattedAverageTime());
     }
 }

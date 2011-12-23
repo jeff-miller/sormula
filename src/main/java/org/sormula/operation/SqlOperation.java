@@ -261,7 +261,7 @@ public abstract class SqlOperation<R>
             if (databaseTime == null)
             {
                 // no sum yet, create one
-                databaseTime = database.createOperationTime(id, "totals for all uses of " + sql);
+                databaseTime = database.createOperationTime(id, "for all uses of " + sql);
             }
 
             // create timing for this operation

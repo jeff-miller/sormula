@@ -111,7 +111,7 @@ public class DatabaseTest<R>
         // create sormula database
         assert connection != null : "db connection is null";
         database = new Database(connection, properties.getProperty("jdbc.schema", ""));
-        database.setTimings(true);//TODO from build.properties
+        database.setTimings(Boolean.parseBoolean(System.getProperty("timings")));
         
         // statement for ddl and other
         statement = connection.createStatement();

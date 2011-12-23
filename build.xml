@@ -101,6 +101,7 @@
         <testng verbose="2" groups="${groups}" parallel="false">
         	<sysproperty key="dbdir" value="${db.dir}"/>
         	<sysproperty key="seed" value="${seed}"/>
+        	<sysproperty key="timings" value="${timings}"/>
         	<classpath refid="tests.libpath"/>
         	<classpath>
         		<path path="${target}"/>

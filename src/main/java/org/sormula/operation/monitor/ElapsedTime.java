@@ -5,9 +5,9 @@ package org.sormula.operation.monitor;
 // TODO name?
 public class ElapsedTime
 {
-    private static int msPerSecond = 1000;
-    private static int msPerMintue = 60 * msPerSecond;
-    private static int msPerHour   = 60 * msPerMintue;
+    private static long nsPerSecond = 1000000000L;
+    private static long nsPerMintue = 60 * nsPerSecond;
+    private static long nsPerHour   = 60 * nsPerMintue;
     
     String name;
     ElapsedTime total;
@@ -45,13 +45,13 @@ public class ElapsedTime
 
     public void start()
     {
-        startTime = System.currentTimeMillis();
+        startTime = System.nanoTime();
     }
     
     
     public void stop()
     {
-        add(System.currentTimeMillis() - startTime);
+        add(System.nanoTime() - startTime);
     }
     
     
@@ -108,15 +108,15 @@ public class ElapsedTime
     {
         long remaining = t;
         
-        int hours   = (int)(remaining / msPerHour);
-        remaining = remaining % msPerHour;
+        long hours   = remaining / nsPerHour;
+        remaining = remaining % nsPerHour;
         
-        int minutes = (int)(remaining / msPerMintue);
-        remaining = remaining % msPerMintue;
+        long minutes = remaining / nsPerMintue;
+        remaining = remaining % nsPerMintue;
         
-        int seconds = (int)(remaining / msPerSecond);
-        remaining = remaining % msPerSecond;
+        long seconds = remaining / nsPerSecond;
+        remaining = remaining % nsPerSecond;
         
-        return String.format("%02d:%02d:%02d.%03d", hours, minutes, seconds, remaining);
+        return String.format("%02d:%02d:%02d.%09d", hours, minutes, seconds, remaining);
     }
 }

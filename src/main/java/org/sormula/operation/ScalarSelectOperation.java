@@ -198,18 +198,6 @@ public class ScalarSelectOperation<R> extends SqlOperation<R>
         {
             log.debug("execute query");
             operationTime.startExecuteTime();
-
-            // TODO remove
-            /*
-            // random delay to generate larger times
-            int loop = new Random(System.currentTimeMillis()).nextInt(10);
-            while (loop-- > 0)
-            {
-                log.info("sleep " + loop);
-                Thread.sleep(1000);
-            }
-            */
-            
             resultSet = preparedStatement.executeQuery();
             operationTime.stop();
         }

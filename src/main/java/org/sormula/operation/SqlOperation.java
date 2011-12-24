@@ -55,7 +55,7 @@ import org.sormula.translator.WhereTranslator;
 public abstract class SqlOperation<R>
 {
     private static final ClassLogger log = new ClassLogger();
-    static NoOperationTime noOperationTime = new NoOperationTime(); // TODO?
+    private static NoOperationTime noOperationTime = new NoOperationTime();
     
     Table<R> table;
     Connection connection;
@@ -77,7 +77,11 @@ public abstract class SqlOperation<R>
     
 
     /**
-     * Constructs for a table.
+     * Constructs for a table. 
+     * <p>
+     * The operation timings default to the current state of the database 
+     * {@link Table#getDatabase()#isTimings()}. If timings are enabled for database then
+     * all operations will be timed unless explicitly disabled.
      * 
      * @param table operations are performed on this table
      * @throws OperationException if error
@@ -200,44 +204,79 @@ public abstract class SqlOperation<R>
     }
 
     
+    /**
+     * Gets the timing id for this operation. If none is set then the default is the
+     * hexadecimal string of the hash code of {@link #getSql()}.
+     * 
+     * @return timing id for this operation
+     */
     public String getTimingId()
     {
-        return operationTime.getId();
+        return operationTime.getTimingId();
     }
 
     
+    /**
+     * Sets the id for the operation times {@link #getOperationTime()}. Typically the default id is
+     * sufficient. The id is a key into {@link Database#getOperationTimeMap()} which is used 
+     * to aggregate multiple instances of timings for this operation. Use a custom id to force
+     * all operations that use the custom id to be summed into one instance of {@link OperationTime}
+     * in {@link Database#getOperationTimeMap()}.
+     * 
+     * @param timingId unique id associated with an operation(s)
+     */
     public void setTimingId(String timingId)
     {
         this.timingId = timingId;
     }
 
 
-    // TODO
+    /**
+     * Enables timings for this operation. When timings are enabled, prepare, write, execute,
+     * and read times are recorded. See {@link #getOperationTime()}. Use {@link #logTimings()} to 
+     * write timings to log for this operation. Use {@link Database#logTimings()} to write all operation
+     * timings to log.
+     * 
+     * @param on true to recording execution times for this operation
+     */
     public void setTimings(boolean on)
     {
         this.timings = on;
     }
     
     
-    public boolean getTimings()
+    /**
+     * @return true if timings are enabled; false if not
+     */
+    public boolean isTimings()
     {
         return timings;
     }
 
     
+    /**
+     * Logs current timings for this operation to log. Alias for {@link #getOperationTime()#logTimings()}.
+     */
     public void logTimings()
     {
         operationTime.logTimings();
     }
     
     
+    /**
+     * Gets the timings for this operation that have accumulated since {@link #setTimings(boolean)}
+     * have been enabled.
+     * 
+     * @return operation time object containing execution times or {@link NoOperationTime} if 
+     * timings are not enabled
+     */
     public OperationTime getOperationTime()
     {
         return operationTime;
     }
 
     
-    protected void zzz()
+    protected void createOperationTime()
     {
         if (timings)
         {

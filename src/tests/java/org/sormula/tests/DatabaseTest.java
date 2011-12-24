@@ -35,7 +35,7 @@ import org.sormula.log.ClassLogger;
 
 
 /** 
- * Base class for all sormula tests. TODO update db's and jdbc jars
+ * Base class for all sormula tests. 
  * 
  * @author Jeff Miller
  */

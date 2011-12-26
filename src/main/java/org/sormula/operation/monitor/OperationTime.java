@@ -47,8 +47,6 @@ public class OperationTime
     ElapsedTime readTime;
     ElapsedTime totalTime;
     ElapsedTime active;
-    long pauseStartTime;
-    long pauseDuration;
     
     
     /**
@@ -178,8 +176,6 @@ public class OperationTime
         }
 
         // start recording 
-        pauseDuration = 0;
-        pauseStartTime = 0;
         active = et;
         active.start();
     }
@@ -195,9 +191,6 @@ public class OperationTime
         {
             // currently started
             active.stop();
-            active.adjust(pauseDuration);
-            pauseDuration = 0;
-            pauseStartTime = 0;
             active = null;
         }
     }
@@ -212,11 +205,7 @@ public class OperationTime
         if (active != null)
         {
             // currently started
-            if (pauseStartTime == 0)
-            {
-                // not paused
-                pauseStartTime = System.nanoTime();
-            }
+            active.pause();
         }
         else
         {
@@ -230,15 +219,14 @@ public class OperationTime
      */
     public void resume()
     {
-        if (pauseStartTime > 0)
+        if (active != null)
         {
-            // paused (sum to allow multiple pause/resume)
-            pauseDuration += System.nanoTime() - pauseStartTime;
-            pauseStartTime = 0;
+            // currently started
+            active.resume();
         }
         else
         {
-            log.warn("attempt to resume without pause");
+            log.warn("attempt to resume without start");
         }
     }
 

@@ -16,6 +16,8 @@
  */
 package org.sormula.operation.monitor;
 
+import org.sormula.log.ClassLogger;
+
 
 /**
  * Records elapsed time in nano seconds. A count, {@link #getCount()}, is incremented
@@ -26,6 +28,7 @@ package org.sormula.operation.monitor;
  */
 public class ElapsedTime
 {
+    private static final ClassLogger log = new ClassLogger();
     private static long nsPerSecond = 1000000000L;
     private static long nsPerMintue = 60 * nsPerSecond;
     private static long nsPerHour   = 60 * nsPerMintue;
@@ -36,7 +39,11 @@ public class ElapsedTime
     long time;
     long startTime;
     int count;
+    long pauseStartTime;
+    long pauseDuration;
     String timeFormat;
+    boolean ignoreFirst;
+    boolean firstIgnored;
     
     
     /**
@@ -98,6 +105,8 @@ public class ElapsedTime
      */
     public void start()
     {
+        pauseDuration = 0;
+        pauseStartTime = 0;
         startTime = System.nanoTime();
     }
     
@@ -107,7 +116,55 @@ public class ElapsedTime
      */
     public void stop()
     {
-        add(System.nanoTime() - startTime);
+        if (ignoreFirst && !firstIgnored)
+        {
+            // don't record first sample, set indicator start recording 
+            firstIgnored = true;
+        }
+        else
+        {
+            add(System.nanoTime() - startTime - pauseDuration);
+        }
+    }
+    
+    
+    /**
+     * Stops recording time until {@link #resume()} is invoked. Zero
+     * or more pause/resume pairs may be invoked.
+     */
+    public void pause()
+    {
+        if (startTime != 0)
+        {
+            // currently started
+            if (pauseStartTime == 0)
+            {
+                // not paused
+                pauseStartTime = System.nanoTime();
+            }
+        }
+        else
+        {
+            log.warn("attempt to pause without start");
+        }
+    }
+    
+    
+    /**
+     * Starts recording the after pause.
+     */
+    public void resume()
+    {
+        if (pauseStartTime != 0)
+        {
+            // paused (sum to allow multiple pause/resume)
+            pauseDuration += System.nanoTime() - pauseStartTime;
+            pauseStartTime = 0;
+        }
+        else
+        {
+            log.warn("attempt to resume without pause");
+        }
     }
     
     
@@ -117,26 +174,12 @@ public class ElapsedTime
      * 
      * @param elpasedNanos nanoseconds to add; positive to add or negative to subtract
      */
-    public void add(long elpasedNanos)
+    protected void add(long elpasedNanos)
     {
         time += elpasedNanos;
         ++count;
         if (total != null)  total.add(elpasedNanos);
         if (parent != null) parent.add(elpasedNanos);
-    }
-    
-    
-    /**
-     * Adds nanoseconds to this time and adds to total and parent if they are not
-     * null. Count is not incremented.
-     * 
-     * @param elpasedNanos nanoseconds to add; positive to add or negative to subtract
-     */
-    public void adjust(long elpasedNanos)
-    {
-        time += elpasedNanos;
-        if (total != null)  total.adjust(elpasedNanos);
-        if (parent != null) parent.adjust(elpasedNanos);
     }
     
     
@@ -165,6 +208,37 @@ public class ElapsedTime
     public int getCount()
     {
         return count;
+    }
+
+
+    /**
+     * @return true if first time is ignored; false if all times are recorded
+     */
+    public boolean isIgnoreFirst()
+    {
+        return ignoreFirst;
+    }
+
+
+    /**
+     * Sets what to do with the first time recorded. Ignoring first time value (the
+     * first time that {@link #stop()} is used) is a rough way to exclude class loading
+     * times which may skew the average time for all occurances.
+     * 
+     * @param ignoreFirst true to ignore the first time; false to record all times
+     */
+    public void setIgnoreFirst(boolean ignoreFirst)
+    {
+        this.ignoreFirst = ignoreFirst;
+    }
+
+
+    /**
+     * @return if the first time has occurred and was ignored
+     */
+    public boolean isFirstIgnored()
+    {
+        return firstIgnored;
     }
 
 

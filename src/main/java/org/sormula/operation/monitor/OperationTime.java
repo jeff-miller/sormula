@@ -281,15 +281,14 @@ public class OperationTime
      */
     public void logTimings()
     {
-        log.info("timingId=" + timingId);
-        log.info(description);
+        log.info("timingId=" + timingId + " description=" + description);
         log.info(format(getPrepareTime()));
         log.info(format(getWriteTime()));
         log.info(format(getExecuteTime()));
         log.info(format(getReadTime()));
         
         // don't show count, avg, or percent for total since counts may vary for prepare, write, execute, read
-        log.info("total   100% " + getTotalTime().getFormattedTime()); 
+        log.info("total        " + getTotalTime().getFormattedTime()); 
     }
     
     

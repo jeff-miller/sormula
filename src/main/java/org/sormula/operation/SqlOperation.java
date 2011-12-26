@@ -80,7 +80,7 @@ public abstract class SqlOperation<R>
      * Constructs for a table. 
      * <p>
      * The operation timings default to the current state of the database 
-     * {@link Table#getDatabase()#isTimings()}. If timings are enabled for database then
+     * {@link Database#isTimings()}. If timings are enabled for database then
      * all operations will be timed unless explicitly disabled.
      * 
      * @param table operations are performed on this table
@@ -263,7 +263,7 @@ public abstract class SqlOperation<R>
 
     
     /**
-     * Logs current timings for this operation to log. Alias for {@link #getOperationTime()#logTimings()}.
+     * Logs current timings for this operation to log. Alias for {@link OperationTime#logTimings()}.
      * @since 1.5
      */
     public void logTimings()

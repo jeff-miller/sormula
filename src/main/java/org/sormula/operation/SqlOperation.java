@@ -209,6 +209,7 @@ public abstract class SqlOperation<R>
      * hexadecimal string of the hash code of {@link #getSql()}.
      * 
      * @return timing id for this operation
+     * @since 1.5
      */
     public String getTimingId()
     {
@@ -224,6 +225,7 @@ public abstract class SqlOperation<R>
      * in {@link Database#getOperationTimeMap()}.
      * 
      * @param timingId unique id associated with an operation(s)
+     * @since 1.5
      */
     public void setTimingId(String timingId)
     {
@@ -236,17 +238,23 @@ public abstract class SqlOperation<R>
      * and read times are recorded. See {@link #getOperationTime()}. Use {@link #logTimings()} to 
      * write timings to log for this operation. Use {@link Database#logTimings()} to write all operation
      * timings to log.
+     * <p>
+     * When on parameter is true, then instance of {@link OperationTime} is created 
+     * at the start of execution for use by this operation. Use {@link #getOperationTime()} to 
+     * change default values.
      * 
      * @param on true to recording execution times for this operation
+     * @since 1.5
      */
     public void setTimings(boolean on)
     {
-        this.timings = on;
+        timings = on;
     }
     
     
     /**
      * @return true if timings are enabled; false if not
+     * @since 1.5
      */
     public boolean isTimings()
     {
@@ -256,6 +264,7 @@ public abstract class SqlOperation<R>
     
     /**
      * Logs current timings for this operation to log. Alias for {@link #getOperationTime()#logTimings()}.
+     * @since 1.5
      */
     public void logTimings()
     {
@@ -269,6 +278,7 @@ public abstract class SqlOperation<R>
      * 
      * @return operation time object containing execution times or {@link NoOperationTime} if 
      * timings are not enabled
+     * @since 1.5
      */
     public OperationTime getOperationTime()
     {
@@ -276,36 +286,43 @@ public abstract class SqlOperation<R>
     }
 
     
-    protected void createOperationTime()
+    protected void initOperationTime()
     {
+        // NOTE: initOperationTime() can't occur until timing id and/or sql is known
+        // which is why it is invoked from execute method
         if (timings)
         {
-            String sql = getSql(); // construct sql only once
-            String id; // this operation timing id
-            
-            if (timingId == null)
+            // timings are enabled 
+            if (operationTime == null || operationTime == noOperationTime)
             {
-                // no timing id specified, use sql hash
-                id = Integer.toHexString(sql.hashCode()).toUpperCase();
+                // operationTime is not created, create it
+                String sql = getSql(); // construct sql only once
+                String id; // this operation timing id
+                
+                if (timingId == null)
+                {
+                    // no timing id specified, use sql hash
+                    id = Integer.toHexString(sql.hashCode()).toUpperCase();
+                }
+                else
+                {
+                    id = timingId;
+                }
+    
+                // get database sum for id
+                Database database = getTable().getDatabase();
+                OperationTime databaseTime = database.getOperationTime(id);
+                
+                if (databaseTime == null)
+                {
+                    // no sum yet, create one
+                    databaseTime = database.createOperationTime(id, "for all uses of " + sql);
+                }
+    
+                // create timing for this operation
+                operationTime = new OperationTime(id, databaseTime);
+                operationTime.setDescription(sql);
             }
-            else
-            {
-                id = timingId;
-            }
-
-            // get database sum for id
-            Database database = getTable().getDatabase();
-            OperationTime databaseTime = database.getOperationTime(id);
-            
-            if (databaseTime == null)
-            {
-                // no sum yet, create one
-                databaseTime = database.createOperationTime(id, "for all uses of " + sql);
-            }
-
-            // create timing for this operation
-            operationTime = new OperationTime(id, databaseTime);
-            operationTime.setDescription(sql);
         }
         else
         {

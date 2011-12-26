@@ -293,8 +293,8 @@ public class OperationTime
      */
     public void logTimings()
     {
-        log.info(description);
         log.info("timingId=" + timingId);
+        log.info(description);
         log.info(format(getPrepareTime()));
         log.info(format(getWriteTime()));
         log.info(format(getExecuteTime()));

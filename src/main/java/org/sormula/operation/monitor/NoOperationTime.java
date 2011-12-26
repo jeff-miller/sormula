@@ -19,7 +19,7 @@ package org.sormula.operation.monitor;
 
 /**
  * Do nothing implementation when no timings are desired. This class provides
- * a way to omit timing and avoid many not null checks in all places where timing
+ * a way to omit timing and avoid numerous not null checks in all places where timing
  * is needed.
  * 
  * @author Jeff Miller
@@ -30,9 +30,16 @@ public class NoOperationTime extends OperationTime
     public NoOperationTime()
     {
         super("no-op");
+        super.setDescription("NoOp");
     }
     
     
+    @Override
+    public void setDescription(String description)
+    {
+    }
+
+
     @Override
     public void startPrepareTime()
     {

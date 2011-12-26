@@ -85,8 +85,6 @@ public class InsertTest extends DatabaseTest<SormulaTest4>
     public void insertByOperation() throws SormulaException
     {
         InsertOperation<SormulaTest4> operation = new InsertOperation<SormulaTest4>(getTable());
-        operation.setTimingId("zzz");
-        operation.setTimings(true); // TODO
 
         // reverse order so that rows are natuarlly in order for order by tests
         for (int i = 1010; i > 1000; --i)
@@ -97,7 +95,6 @@ public class InsertTest extends DatabaseTest<SormulaTest4>
         }
         
         operation.close();
-        operation.logTimings();//TODO
     }
     
     

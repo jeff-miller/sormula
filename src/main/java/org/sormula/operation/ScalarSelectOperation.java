@@ -175,7 +175,7 @@ public class ScalarSelectOperation<R> extends SqlOperation<R>
     @Override
     public void execute() throws OperationException
     {
-        createOperationTime();
+        initOperationTime();
         prepareCheck();
         setNextParameter(1);
         rowsReadCount = 0;

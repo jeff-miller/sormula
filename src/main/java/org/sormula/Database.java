@@ -201,26 +201,57 @@ public class Database
 	}
 	
 	
+	/**
+	 * Gets status of timings.
+	 * 
+	 * @return true if operations are to record execution times
+	 * @since 1.5
+	 */
 	public boolean isTimings()
     {
         return timings;
     }
 
 
+	/**
+	 * Sets timings enabled for all database operations. When enabled all operations will record
+	 * execution times. Use {@link #logTimings()} to write the timings to the log. Use
+	 * {@link #getOperationTime(String)} or {@link #getOperationTimeMap()} to get timings
+	 * that have been recorded.
+	 * 
+	 * @param timings true to enable all operations to record execution timings; false for no
+	 * operation timings by default (can be overriden by each {@link SqlOperation}) 
+	 * @since 1.5
+	 */
     public void setTimings(boolean timings)
     {
         this.timings = timings;
     }
 
 
-    // TODO javadoc
-	// TODO params?
+    /**
+     * Gets the operation time for a specific timing id.
+     * 
+     * @param timingId timing id to get
+     * @return {@link OperationTime} for timing id or null if timing id is not in map
+     * @since 1.5
+     */
 	public OperationTime getOperationTime(String timingId)
 	{
 	    return operationTimeMap.get(timingId);
 	}
 	
 	
+	/**
+	 * Creates an {@link OperationTime} instance with this database total time,
+	 * {@link #getTotalOperationTime()} as the parent time. The new instance is
+	 * add to operation time map, {@link #getOperationTimeMap()}.
+	 * 
+	 * @param timingId timing id for created instance
+	 * @param description description for created instance
+	 * @return new instance of {@link OperationTime} with id and description
+	 * @since 1.5
+	 */
 	public OperationTime createOperationTime(String timingId, String description)
 	{
 	    OperationTime operationTime = new OperationTime(timingId, totalOperationTime);
@@ -230,14 +261,34 @@ public class Database
 	}
 	
 	
-	// TODO, name?
+	/**
+	 * @return operation times for all operations that have been executed
+	 * @since 1.5
+	 */
+	public OperationTime getTotalOperationTime()
+    {
+        return totalOperationTime;
+    }
+
+
+    /**
+     * Gets operation times for all operations have been executed. Key to map is
+     * timing id.
+     * 
+     * @return map of timing ids to operation time
+     * @since 1.5
+     */
 	public Map<String, OperationTime> getOperationTimeMap()
     {
         return operationTimeMap;
     }
 
 
-    // TODO
+    /**
+     * Logs all times from operation time map, {@link #getOperationTimeMap()} to log. Total
+     * operation time, {@link #getTotalOperationTime()} is logged also.
+     * @since 1.5
+     */
 	public void logTimings()
 	{
 	    if (operationTimeMap.size() > 0)

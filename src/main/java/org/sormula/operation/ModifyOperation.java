@@ -125,7 +125,7 @@ public abstract class ModifyOperation<R> extends SqlOperation<R>
     @Override
     public void execute() throws OperationException
     {
-        createOperationTime();
+        initOperationTime();
         prepareCheck();
         int allRowsAffected = 0; 
         OperationTime operationTime = getOperationTime();

@@ -43,9 +43,11 @@ public class CascadeDelete extends ExampleBase
         openDatabase();
         Connection connection = getConnection();
         Database database = new Database(connection, getSchema());
-        table = database.getTable(Student4.class);
+        database.setTimings(true);
         
+        table = database.getTable(Student4.class);
         deleteRow();
+        database.logTimings();
         
         // clean up
         closeDatabase();

@@ -44,9 +44,11 @@ public class CascadeUpdate extends ExampleBase
         openDatabase();
         Connection connection = getConnection();
         Database database = new Database(connection, getSchema());
-        table = database.getTable(Student4.class);
+        database.setTimings(true);
         
+        table = database.getTable(Student4.class);
         updateRows();
+        database.logTimings();
         
         // clean up
         closeDatabase();

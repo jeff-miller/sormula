@@ -179,6 +179,7 @@
     	<delete>
     		<fileset dir="." includes="*.log sormula*.zip example*.zip"/>
     	</delete>
+    	<mkdir dir="test-output"/> <!-- sqlite needs this -->
     </target>
 	
 	<target name="lib" description="Creates sormula.jar" depends="compile-main">

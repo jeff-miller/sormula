@@ -42,11 +42,9 @@ public class CascadeSelect extends ExampleBase
         openDatabase();
         Connection connection = getConnection();
         Database database = new Database(connection, getSchema());
-        database.setTimings(true);
         
         table = database.getTable(Student4.class);
         selectAllRows();
-        database.logTimings();
         
         // clean up
         closeDatabase();

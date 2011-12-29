@@ -264,7 +264,9 @@ public class ScalarSelectOperation<R> extends SqlOperation<R>
             }
             else
             {
-                operationTime.stop();
+                // don't stop timer since count will be 1 more than rows read
+                // ignore time for ResultSet.next when no more rows
+                operationTime.cancel();
             }
         }
         catch (Exception e)

@@ -90,6 +90,7 @@ public class BasicSelect extends ExampleBase
         for (Student s = operation.readNext(); s != null; s = operation.readNext())
             System.out.println(s);
         
+        
         operation.close();
     }
     
@@ -103,11 +104,13 @@ public class BasicSelect extends ExampleBase
         System.out.println("select where id in = " + idList);
         ListSelectOperation<Student> operation = new ArrayListSelectOperation<Student>(table, "idin");
         operation.setParameters(idList);
+        operation.setTimings(true);
         
         operation.execute();
         for (Student s: operation.readAll())
             System.out.println(s);
         
+        operation.logTimings();
         operation.close();
     }
     

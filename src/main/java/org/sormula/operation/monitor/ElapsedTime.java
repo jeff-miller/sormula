@@ -129,6 +129,17 @@ public class ElapsedTime
     
     
     /**
+     * Cancels any time recorded since {@link #start()} and time paused with {@link #pause()}.
+     */
+    public void cancel()
+    {
+        startTime = 0;
+        pauseStartTime = 0;
+        pauseDuration = 0;
+    }
+    
+    
+    /**
      * Stops recording time until {@link #resume()} is invoked. Zero
      * or more pause/resume pairs may be invoked.
      */

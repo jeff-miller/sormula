@@ -82,8 +82,8 @@ public class Database
         tableMap = new HashMap<String, Table<?>>();
         transaction = new Transaction(connection);
         operationTimeMap = new HashMap<String, OperationTime>();
-        totalOperationTime = new OperationTime("total");
-        totalOperationTime.setDescription("Database totals");
+        totalOperationTime = new OperationTime("Database totals");
+        totalOperationTime.setDescription("All operations for database");
     }
 
     

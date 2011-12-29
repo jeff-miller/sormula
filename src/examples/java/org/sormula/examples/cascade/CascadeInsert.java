@@ -65,11 +65,9 @@ public class CascadeInsert extends ExampleBase
         // init
         Connection connection = getConnection();
         Database database = new Database(connection, getSchema());
-        database.setTimings(true);
         
         table = database.getTable(Student4.class);
         insertRows();
-        database.logTimings();
         
         // clean up
         closeDatabase();

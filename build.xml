@@ -22,6 +22,9 @@
 		<antcall target="NameSelect"/>
 		<antcall target="NameUpdate"/>	
 	</target>
+    <target name="BasicInsertZ" description="Runs example">
+        <antcall target="run-example"><param name="class" value="com.something.test.BasicInsertZ"/></antcall>
+    </target>
     <target name="BasicInsert" description="Runs example">
         <antcall target="run-example"><param name="class" value="org.sormula.examples.basic.BasicInsert"/></antcall>
     </target>

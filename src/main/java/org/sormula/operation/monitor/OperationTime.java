@@ -16,6 +16,9 @@
  */
 package org.sormula.operation.monitor;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.sormula.log.ClassLogger;
 import org.sormula.operation.SqlOperation;
 
@@ -40,6 +43,7 @@ public class OperationTime
     private static final ClassLogger log = new ClassLogger();
     
     String timingId;
+    OperationTime parentOperationTime;
     String description;
     ElapsedTime prepareTime;
     ElapsedTime writeTime;
@@ -47,6 +51,7 @@ public class OperationTime
     ElapsedTime readTime;
     ElapsedTime totalTime;
     ElapsedTime active;
+    Map<Integer, OperationTimeSource> operationTimeSourceMap;
     
     
     /**
@@ -69,6 +74,7 @@ public class OperationTime
     public OperationTime(String timingId, OperationTime parentOperationTime)
     {
         this.timingId = timingId;
+        this.parentOperationTime = parentOperationTime;
         totalTime   = new ElapsedTime("totalTime");
 
         ElapsedTime parentPrepareTime;
@@ -97,6 +103,8 @@ public class OperationTime
         writeTime   = new ElapsedTime("write",   totalTime, parentWriteTime);
         executeTime = new ElapsedTime("execute", totalTime, parentExecuteTime);
         readTime    = new ElapsedTime("read",    totalTime, parentReadTime);
+        
+        operationTimeSourceMap = new HashMap<Integer, OperationTimeSource>();
     }
 
     
@@ -197,6 +205,20 @@ public class OperationTime
     
     
     /**
+     * Cancels recording active time.
+     */
+    public void cancel()
+    {
+        if (active != null)
+        {
+            // currently started
+            active.cancel();
+            active = null;
+        }
+    }
+    
+    
+    /**
      * Stops recording the currently active time until {@link #resume()} is invoked. Zero
      * or more pause/resume pairs may be invoked.
      */
@@ -277,18 +299,55 @@ public class OperationTime
     
     
     /**
+     * Records stack trace information and count where timing is initiated. Parent operation
+     * time is updated also.
+     * 
+     * @param stackTraceElement the location on the stack where operation was initiated
+     */
+    public void updateSource(StackTraceElement stackTraceElement)
+    {
+        OperationTimeSource ots = operationTimeSourceMap.get(stackTraceElement.hashCode());
+        
+        if (ots == null)
+        {
+            // first time for location
+            ots = new OperationTimeSource(stackTraceElement);
+            operationTimeSourceMap.put(ots.getId(), ots);
+        }
+        else
+        {
+            // update count
+            ots.incrementCount();
+        }
+        
+        if (parentOperationTime != null) parentOperationTime.updateSource(stackTraceElement);
+    }
+    
+    
+    /**
      * Writes prepare, write, execute, and read time to log along with average, total, and percent.
      */
     public void logTimings()
     {
-        log.info("timingId=" + timingId + " description=" + description);
+        log.info("logTimings:");
+        log.info("timingId   =" + timingId);
+        log.info("description=" + description);
         log.info(format(getPrepareTime()));
         log.info(format(getWriteTime()));
         log.info(format(getExecuteTime()));
         log.info(format(getReadTime()));
         
         // don't show count, avg, or percent for total since counts may vary for prepare, write, execute, read
-        log.info("total        " + getTotalTime().getFormattedTime()); 
+        log.info("total      =100% " + getTotalTime().getFormattedTime()); 
+        
+        if (operationTimeSourceMap.size() > 0)
+        {
+            log.info("initiated from:");
+            for (OperationTimeSource ots: operationTimeSourceMap.values())
+            {
+                log.info(ots.getLocation().toString() + " n=" + ots.getCount());
+            }
+        }
     }
     
     
@@ -296,7 +355,7 @@ public class OperationTime
     {
         int percent = (int)Math.round(100d * et.getTime() / totalTime.getTime());
         
-        return String.format("%-7.7s %3d%% %s n=%3d avg=%s", et.getName(),
+        return String.format("%-11.11s=%3d%% %s n=%3d avg=%s", et.getName(),
             percent, et.getFormattedTime(), et.getCount(), et.getFormattedAverageTime());
     }
 }

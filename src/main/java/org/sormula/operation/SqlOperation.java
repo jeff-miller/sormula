@@ -220,9 +220,12 @@ public abstract class SqlOperation<R>
     /**
      * Sets the id for the operation times {@link #getOperationTime()}. Typically the default id is
      * sufficient. The id is a key into {@link Database#getOperationTimeMap()} which is used 
-     * to aggregate multiple instances of timings for this operation. Use a custom id to force
-     * all operations that use the custom id to be summed into one instance of {@link OperationTime}
-     * in {@link Database#getOperationTimeMap()}.
+     * to sum multiple instances of timings for this operation. 
+     * <p>
+     * Use a custom id to force all operations that use the custom id to be summed into one 
+     * instance of {@link OperationTime} in {@link Database#getOperationTimeMap()}. A good
+     * custom id to use would be the class name of the class that is using the operation,
+     * {@link Class#getName()}.
      * 
      * @param timingId unique id associated with an operation(s)
      * @since 1.5
@@ -316,12 +319,36 @@ public abstract class SqlOperation<R>
                 if (databaseTime == null)
                 {
                     // no sum yet, create one
-                    databaseTime = database.createOperationTime(id, "all uses of " + sql);
+                    databaseTime = database.createOperationTime(id, "All uses of " + sql);
                 }
     
                 // create timing for this operation
                 operationTime = new OperationTime(id, databaseTime);
                 operationTime.setDescription(sql);
+            }
+            
+            // keep record of where and how often operation time was initiated
+            StackTraceElement[] stackTrace = Thread.currentThread().getStackTrace();
+            
+            // search until sormula detected on stack 
+            // skip top (likely java.lang.Thread.getStackTrace)
+            int i = 0;
+            for ( ; i < stackTrace.length; ++i)
+            {
+                if (stackTrace[i].getClassName().startsWith("org.sormula.")) break;
+            }
+            
+            // search for class that used sormula
+            for ( ; i < stackTrace.length; ++i)
+            {
+                String className = stackTrace[i].getClassName();
+                
+                if (!className.startsWith("org.sormula.") || className.startsWith("org.sormula.tests.") || className.startsWith("org.sormula.examples."))
+                {
+                    // found class that invoked sormula execute or select
+                    operationTime.updateSource(stackTrace[i]);
+                    break;
+                }
             }
         }
         else

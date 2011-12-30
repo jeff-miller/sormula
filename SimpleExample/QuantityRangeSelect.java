@@ -10,7 +10,7 @@ import org.sormula.operation.SqlOperation;
 /**
  * Example of a custom select operation. Selects all rows with quantity between
  * minimum and maximum. Uses {@link PreparedStatement#setInt(int, int)} instead
- * of default behavior of {@link SqlOperation#prepareParameters()}.
+ * of default behavior of {@link SqlOperation#writeParameters()}.
  * 
  * @author Jeff
  */
@@ -36,7 +36,7 @@ public class QuantityRangeSelect extends ArrayListSelectOperation<Inventory>
 	
 	
 	@Override
-	protected void prepareParameters() throws OperationException 
+	protected void writeParameters() throws OperationException 
 	{
 		try
 		{

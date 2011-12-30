@@ -30,60 +30,51 @@ public class NoOperationTime extends OperationTime
     public NoOperationTime()
     {
         super("no-op");
-        super.setDescription("NoOp");
+        setDescription("NoOp");
     }
-    
-    
-    @Override
-    public void setDescription(String description)
-    {
-    }
-
 
     @Override
     public void startPrepareTime()
     {
     }
-    
-    
+
     @Override
     public void startWriteTime()
     {
     }
-    
-    
+
     @Override
     public void startExecuteTime()
     {
     }
-    
-    
+
     @Override
     public void startReadTime()
     {
     }
-    
-    
+
     @Override
-    public void stop() 
+    public void stop()
     {
     }
 
+    @Override
+    public void cancel()
+    {
+    }
 
     @Override
     public void pause()
     {
     }
 
-
     @Override
     public void resume()
     {
     }
-    
 
     @Override
-    public void logTimings()
+    public void updateSource(StackTraceElement stackTraceElement)
     {
     }
 }

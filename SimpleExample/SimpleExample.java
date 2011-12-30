@@ -13,9 +13,10 @@ import org.sormula.operation.ListSelectOperation;
  * A simple example to show basic sormula features. Everything needed for this example is
  * in the one directory that contains this class. The database used by this example is
  * simpleDB.script. simpleDB.script may be viewed with any text editor.
- * 
- * Compile with compile.bat 
+ * <p>
+ * Compile with compile.bat<br> 
  * Run with run.bat
+ * </p>
  *  
  * @author Jeff Miller
  */

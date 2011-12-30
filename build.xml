@@ -179,6 +179,8 @@
         <delete dir="${target}"/>
     	<delete dir="javadoc"/>
     	<delete dir="test-output"/>
+    	<delete dir="SimpleExample/simpleDB.tmp"/>
+    	<delete dir="ZeroConfigExample/exampleDB.tmp"/>
     	<delete>
     		<fileset dir="." includes="*.log sormula*.zip example*.zip"/>
     	</delete>

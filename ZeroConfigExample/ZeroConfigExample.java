@@ -19,14 +19,15 @@ import org.sormula.Table;
  * <li>First field corresponds to primary column</li>
  * <li>All fields in class are columns in table</li>
  * </ul>
- * <p>
+ * </p><p>
  * Everything needed for this example is in the one directory that contains 
  * this class. The database used by this example is exampleDB.script. exampleDB.script 
  * may be viewed with any text editor.
  * <p>
- * Compile with compile.bat 
+ * Compile with compile.bat<br> 
  * Run with run.bat
- *  
+ * </p>
+ *   
  * @author Jeff Miller
  */
 public class ZeroConfigExample

@@ -24,6 +24,7 @@ import java.util.Map;
 
 import org.sormula.annotation.Column;
 import org.sormula.log.ClassLogger;
+import org.sormula.operation.ModifyOperation;
 import org.sormula.operation.SqlOperation;
 import org.sormula.operation.monitor.OperationTime;
 import org.sormula.translator.NameTranslator;
@@ -55,6 +56,7 @@ public class Database
     Map<String, OperationTime> operationTimeMap;
     OperationTime totalOperationTime;
     boolean timings;
+    boolean readOnly;
     
     
     /**
@@ -132,6 +134,35 @@ public class Database
     public String getSchema()
     {
         return schema;
+    }
+    
+
+    /**
+     * Gets read-only indicator.
+     * 
+     * @return true if modify operations are not permitted
+     * @since 1.5.1
+     * @see SqlOperation#isReadOnly()
+     */
+    public boolean isReadOnly()
+    {
+        return readOnly;
+    }
+
+
+    /**
+     * Sets read-only indicator. When true, modify operations,
+     * {@link ModifyOperation} will fail with an exception. By default
+     * read-only is false. Set to true as a safe-guard to prevent accidental
+     * modification of database.
+     * 
+     * @param readOnly true to prevent modify operations
+     * @since 1.5.1
+     * @see SqlOperation#setReadOnly(boolean)
+     */
+    public void setReadOnly(boolean readOnly)
+    {
+        this.readOnly = readOnly;
     }
     
 

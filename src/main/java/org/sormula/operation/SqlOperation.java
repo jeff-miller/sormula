@@ -74,6 +74,7 @@ public abstract class SqlOperation<R>
     String timingId;
     OperationTime operationTime;
     boolean timings;
+    boolean readOnly;
     
 
     /**
@@ -81,7 +82,9 @@ public abstract class SqlOperation<R>
      * <p>
      * The operation timings default to the current state of the database 
      * {@link Database#isTimings()}. If timings are enabled for database then
-     * all operations will be timed unless explicitly disabled.
+     * all operations will be timed unless explicitly disabled. Operation
+     * gets the read only setting {@link #setReadOnly(boolean)} from the database
+     * of the table {@link Database#isReadOnly()}.
      * 
      * @param table operations are performed on this table
      * @throws OperationException if error
@@ -94,6 +97,7 @@ public abstract class SqlOperation<R>
         Database database = table.getDatabase();
         connection = database.getConnection();
         setTimings(database.isTimings()); // default to database setting
+        setReadOnly(database.isReadOnly()); // default to database setting
     }
     
     
@@ -119,6 +123,36 @@ public abstract class SqlOperation<R>
         return parameters;
     }
     
+
+    /**
+     * Gets read-only indicator.
+     * 
+     * @return true if modify operations are not permitted
+     * @since 1.5.1
+     * @see Database#isReadOnly()
+     */
+    public boolean isReadOnly()
+    {
+        return readOnly;
+    }
+
+
+    /**
+     * Sets read-only indicator. When true, this operation will
+     * will fail with an exception if it attempts to modify the database. 
+     * By default read-only is set from the database associated with this
+     * operation, {@link Database#isReadOnly()}. Set to true as a safe-guard
+     * to prevent accidental modification of database.
+     * 
+     * @param readOnly true to prevent modify operations
+     * @since 1.5.1
+     * @see Database#setReadOnly(boolean)
+     */
+    public void setReadOnly(boolean readOnly)
+    {
+        this.readOnly = readOnly;
+    }
+
 
     /**
      * Replaced with {@link #writeParameters()}.

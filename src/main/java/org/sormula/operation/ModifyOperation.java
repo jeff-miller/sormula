@@ -125,6 +125,8 @@ public abstract class ModifyOperation<R> extends SqlOperation<R>
     @Override
     public void execute() throws OperationException
     {
+        if (readOnly) throw new OperationException("Attempt to modify with read-only operation");
+            
         initOperationTime();
         prepareCheck();
         int allRowsAffected = 0; 

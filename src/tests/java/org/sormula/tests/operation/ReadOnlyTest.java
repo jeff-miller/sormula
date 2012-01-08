@@ -20,7 +20,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.sormula.Database;
-import org.sormula.SormulaException;
 import org.sormula.operation.DeleteOperation;
 import org.sormula.operation.OperationException;
 import org.sormula.operation.SqlOperation;
@@ -67,14 +66,6 @@ public class ReadOnlyTest extends DatabaseTest<SormulaTest4RO>
     }
 
 
-    @Test
-    public void selectReadOnly() throws SormulaException
-    {
-    	begin();
-	    getTable().selectAll(); // select should not fail
-    }
-
-    
     @Test
     public void insertReadOnly() throws Exception
     {

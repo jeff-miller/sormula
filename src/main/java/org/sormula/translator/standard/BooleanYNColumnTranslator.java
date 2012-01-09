@@ -53,9 +53,9 @@ public class BooleanYNColumnTranslator<R> extends AbstractColumnTranslator<R, Bo
     /**
      * {@inheritDoc}
      */
-    public void read(ResultSet resultSet, int parameterIndex, R row) throws Exception
+    public void read(ResultSet resultSet, int columnIndex, R row) throws Exception
     {
-        String b = resultSet.getString(parameterIndex);
+        String b = resultSet.getString(columnIndex);
         getSormulaField().invokeSetMethod(row, b != null && b.equals("Y") ? true : false);
     }
 }

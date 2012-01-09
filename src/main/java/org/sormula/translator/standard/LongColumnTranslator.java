@@ -52,8 +52,8 @@ public class LongColumnTranslator<R> extends AbstractColumnTranslator<R, Long>
     /**
      * {@inheritDoc}
      */
-    public void read(ResultSet resultSet, int parameterIndex, R row) throws Exception
+    public void read(ResultSet resultSet, int columnIndex, R row) throws Exception
     {
-        getSormulaField().invokeSetMethod(row, resultSet.getLong(parameterIndex));
+        getSormulaField().invokeSetMethod(row, resultSet.getLong(columnIndex));
     }
 }

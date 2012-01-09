@@ -137,8 +137,8 @@ public class StandardColumnTranslator<R> implements ColumnTranslator<R>
     /**
      * {@inheritDoc}
      */
-    public void read(ResultSet resultSet, int parameterIndex, R row) throws Exception
+    public void read(ResultSet resultSet, int columnIndex, R row) throws Exception
     {
-        columnTranslator.read(resultSet, parameterIndex, row);
+        columnTranslator.read(resultSet, columnIndex, row);
     }
 }

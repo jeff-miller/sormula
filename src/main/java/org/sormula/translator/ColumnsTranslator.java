@@ -92,16 +92,16 @@ public class ColumnsTranslator<R>
      * Reads a record from a result set.
      * 
      * @param resultSet JDBC result set
-     * @param parameterIndex starting parameter index
+     * @param columnIndex starting column index
      * @param row write values into this object
      * @return last parameter index + 1
      * 
      * @throws TranslatorException if error
      */
-    public int read(ResultSet resultSet, int parameterIndex, R row) throws TranslatorException
+    public int read(ResultSet resultSet, int columnIndex, R row) throws TranslatorException
     {
-        if (log.isDebugEnabled()) log.debug("read parameterIndex=" + parameterIndex + " row=" + row);
-        int p = parameterIndex;
+        if (log.isDebugEnabled()) log.debug("read columnIndex=" + columnIndex + " row=" + row);
+        int p = columnIndex;
         
         try
         {

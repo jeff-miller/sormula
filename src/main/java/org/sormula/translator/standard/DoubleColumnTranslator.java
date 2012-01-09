@@ -52,8 +52,8 @@ public class DoubleColumnTranslator<R> extends AbstractColumnTranslator<R, Doubl
     /**
      * {@inheritDoc}
      */
-    public void read(ResultSet resultSet, int parameterIndex, R row) throws Exception
+    public void read(ResultSet resultSet, int columnIndex, R row) throws Exception
     {
-        getSormulaField().invokeSetMethod(row, resultSet.getDouble(parameterIndex));
+        getSormulaField().invokeSetMethod(row, resultSet.getDouble(columnIndex));
     }
 }

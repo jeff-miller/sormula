@@ -52,8 +52,8 @@ public class ByteColumnTranslator<R> extends AbstractColumnTranslator<R, Byte>
     /**
      * {@inheritDoc}
      */
-    public void read(ResultSet resultSet, int parameterIndex, R row) throws Exception
+    public void read(ResultSet resultSet, int columnIndex, R row) throws Exception
     {
-        getSormulaField().invokeSetMethod(row, resultSet.getByte(parameterIndex));
+        getSormulaField().invokeSetMethod(row, resultSet.getByte(columnIndex));
     }
 }

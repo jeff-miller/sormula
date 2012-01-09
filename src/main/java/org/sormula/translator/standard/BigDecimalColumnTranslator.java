@@ -53,8 +53,8 @@ public class BigDecimalColumnTranslator<R> extends AbstractColumnTranslator<R, B
     /**
      * {@inheritDoc}
      */
-    public void read(ResultSet resultSet, int parameterIndex, R row) throws Exception
+    public void read(ResultSet resultSet, int columnIndex, R row) throws Exception
     {
-        getSormulaField().invokeSetMethod(row, resultSet.getBigDecimal(parameterIndex));
+        getSormulaField().invokeSetMethod(row, resultSet.getBigDecimal(columnIndex));
     }
 }

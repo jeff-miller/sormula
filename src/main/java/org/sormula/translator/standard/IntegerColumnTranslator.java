@@ -52,8 +52,8 @@ public class IntegerColumnTranslator<R> extends AbstractColumnTranslator<R, Inte
     /**
      * {@inheritDoc}
      */
-    public void read(ResultSet resultSet, int parameterIndex, R row) throws Exception
+    public void read(ResultSet resultSet, int columnIndex, R row) throws Exception
     {
-        getSormulaField().invokeSetMethod(row, resultSet.getInt(parameterIndex));
+        getSormulaField().invokeSetMethod(row, resultSet.getInt(columnIndex));
     }
 }

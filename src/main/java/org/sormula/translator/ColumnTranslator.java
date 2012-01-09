@@ -60,11 +60,11 @@ public interface ColumnTranslator<R>
      * Reads column value from result set and sets in row object.
      * 
      * @param resultSet read column from this result set
-     * @param parameterIndex read value at this index from result set 
+     * @param columnIndex read value at this column index from result set 
      * @param row set value in this row
      * @throws Exception if error
      */
-    public void read(ResultSet resultSet, int parameterIndex, R row) throws Exception;
+    public void read(ResultSet resultSet, int columnIndex, R row) throws Exception;
     
     
     /**

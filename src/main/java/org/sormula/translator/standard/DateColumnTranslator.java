@@ -56,9 +56,9 @@ public class DateColumnTranslator<R> extends AbstractColumnTranslator<R, java.ut
     /**
      * {@inheritDoc}
      */
-    public void read(ResultSet resultSet, int parameterIndex, R row) throws Exception
+    public void read(ResultSet resultSet, int columnIndex, R row) throws Exception
     {
-        java.sql.Timestamp sqlTimestamp = resultSet.getTimestamp(parameterIndex);
+        java.sql.Timestamp sqlTimestamp = resultSet.getTimestamp(columnIndex);
         
         if (sqlTimestamp != null) getSormulaField().invokeSetMethod(row, new java.util.Date(sqlTimestamp.getTime()));
         else                      getSormulaField().invokeSetMethod(row, null);

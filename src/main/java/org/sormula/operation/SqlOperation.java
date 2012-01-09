@@ -180,6 +180,10 @@ public abstract class SqlOperation<R>
 	        AbstractWhereTranslator<R> wt = getWhereTranslator();
 	        boolean inOperator = wt != null && wt.isCollectionOperand();
 	        
+	        // TODO instead of setObject, Map of class to ParameterTranslator
+	        // TODO org.sormula.translator.parameter
+	        // TODO database has default map, operations get reference, may add new ParameterTranslator or replace existing
+	        // TODO ParameterTranslator.write(PreparedStatement, parameterIndex, Object)
 	        try
 	        {
 	            for (Object p: parameters)
@@ -197,6 +201,7 @@ public abstract class SqlOperation<R>
 	                }
 	                else
 	                {
+	                    log.info("parameter type = " + p.getClass());
 	                    preparedStatement.setObject(parameterIndex, p);
 	                    ++parameterIndex;
 	                }

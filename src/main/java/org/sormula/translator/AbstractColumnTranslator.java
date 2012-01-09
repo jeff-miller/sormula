@@ -18,11 +18,14 @@ package org.sormula.translator;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 
 import org.sormula.annotation.Column;
 import org.sormula.log.ClassLogger;
 import org.sormula.reflect.ReflectException;
 import org.sormula.reflect.SormulaField;
+import org.sormula.translator.standard.ObjectTranslator;
 
 
 /**
@@ -39,6 +42,7 @@ public abstract class AbstractColumnTranslator<R, T> implements ColumnTranslator
     
     String columnName;
     SormulaField<R, T> sormulaField;
+    BasicTranslator<T> basicTranslator;
     boolean identity;
     
     
@@ -71,7 +75,7 @@ public abstract class AbstractColumnTranslator<R, T> implements ColumnTranslator
     
     
     /**
-     * Constructs for a column.
+     * Constructs for a column. Translates with {@link ObjectTranslator}.
      * 
      * @param field java reflection Field that corresponds to column
      * @param columnName name of table column
@@ -79,11 +83,27 @@ public abstract class AbstractColumnTranslator<R, T> implements ColumnTranslator
      */
     public AbstractColumnTranslator(Field field, String columnName) throws TranslatorException
     {
+        this(field, columnName, new ObjectTranslator<T>());
+    }
+    
+    
+    /**
+     * Constructs for a column.
+     * 
+     * @param field java reflection Field that corresponds to column
+     * @param columnName name of table column
+     * @param basicTranslator translator for read column from result set and field to set into
+     * prepared statement
+     * @throws TranslatorException if error
+     */
+    public AbstractColumnTranslator(Field field, String columnName, BasicTranslator<T> basicTranslator) throws TranslatorException
+    {
         try
         {
             sormulaField = new SormulaField<R, T>(field);
             Column columnAnnotation = field.getAnnotation(Column.class);
             setIdentity(columnAnnotation != null && columnAnnotation.identity());
+            this.basicTranslator = basicTranslator;
         }
         catch (ReflectException e)
         {
@@ -113,6 +133,15 @@ public abstract class AbstractColumnTranslator<R, T> implements ColumnTranslator
     
     
     /**
+     * @return translator to read result sets and write to prepared statements
+     */
+    public BasicTranslator getBasicTranslator()
+    {
+        return basicTranslator;
+    }
+
+
+    /**
      * {@inheritDoc}
      */
     public boolean isIdentity()
@@ -133,5 +162,23 @@ public abstract class AbstractColumnTranslator<R, T> implements ColumnTranslator
     public SormulaField<R, T> getSormulaField()
     {
         return sormulaField;
+    }
+    
+    
+    /**
+     * {@inheritDoc}
+     */
+    public void write(PreparedStatement preparedStatement, int parameterIndex, R row) throws Exception
+    {
+        basicTranslator.write(preparedStatement, parameterIndex, getSormulaField().invokeGetMethod(row));
+    }
+    
+    
+    /**
+     * {@inheritDoc}
+     */
+    public void read(ResultSet resultSet, int columnIndex, R row) throws Exception
+    {
+        getSormulaField().invokeSetMethod(row, basicTranslator.read(resultSet, columnIndex));
     }
 }

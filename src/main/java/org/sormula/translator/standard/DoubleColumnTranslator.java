@@ -36,24 +36,6 @@ public class DoubleColumnTranslator<R> extends AbstractColumnTranslator<R, Doubl
 	 */
     public DoubleColumnTranslator(Field field, String columnName) throws Exception
     {
-        super(field, columnName);
-    }
-    
-    
-    /**
-     * {@inheritDoc}
-     */
-    public void write(PreparedStatement preparedStatement, int parameterIndex, R row) throws Exception
-    {
-        preparedStatement.setDouble(parameterIndex, getSormulaField().invokeGetMethod(row));
-    }
-    
-    
-    /**
-     * {@inheritDoc}
-     */
-    public void read(ResultSet resultSet, int columnIndex, R row) throws Exception
-    {
-        getSormulaField().invokeSetMethod(row, resultSet.getDouble(columnIndex));
+        super(field, columnName, new DoubleTranslator());
     }
 }

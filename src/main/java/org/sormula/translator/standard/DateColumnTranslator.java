@@ -37,30 +37,6 @@ public class DateColumnTranslator<R> extends AbstractColumnTranslator<R, java.ut
 	 */
     public DateColumnTranslator(Field field, String columnName) throws Exception
     {
-        super(field, columnName);
-    }
-    
-    
-    /**
-     * {@inheritDoc}
-     */
-    public void write(PreparedStatement preparedStatement, int parameterIndex, R row) throws Exception
-    {
-        java.util.Date utilDate = getSormulaField().invokeGetMethod(row);
-        
-        if (utilDate != null) preparedStatement.setTimestamp(parameterIndex, new java.sql.Timestamp(utilDate.getTime()));
-        else                  preparedStatement.setTimestamp(parameterIndex, null);
-    }
-    
-    
-    /**
-     * {@inheritDoc}
-     */
-    public void read(ResultSet resultSet, int columnIndex, R row) throws Exception
-    {
-        java.sql.Timestamp sqlTimestamp = resultSet.getTimestamp(columnIndex);
-        
-        if (sqlTimestamp != null) getSormulaField().invokeSetMethod(row, new java.util.Date(sqlTimestamp.getTime()));
-        else                      getSormulaField().invokeSetMethod(row, null);
+        super(field, columnName, new DateTranslator());
     }
 }

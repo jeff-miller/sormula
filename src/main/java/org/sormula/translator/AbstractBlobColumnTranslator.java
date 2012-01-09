@@ -42,7 +42,7 @@ public abstract class AbstractBlobColumnTranslator<R, T> extends AbstractColumnT
      */
     public AbstractBlobColumnTranslator(Field field, String columnName) throws Exception
     {
-        super(field, columnName);
+        super(field, columnName, null);
     }
     
     

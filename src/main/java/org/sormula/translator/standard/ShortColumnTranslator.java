@@ -36,24 +36,6 @@ public class ShortColumnTranslator<R> extends AbstractColumnTranslator<R, Short>
 	 */
     public ShortColumnTranslator(Field field, String columnName) throws Exception
     {
-        super(field, columnName);
-    }
-    
-    
-    /**
-     * {@inheritDoc}
-     */
-    public void write(PreparedStatement preparedStatement, int parameterIndex, R row) throws Exception
-    {
-        preparedStatement.setShort(parameterIndex, getSormulaField().invokeGetMethod(row));
-    }
-    
-    
-    /**
-     * {@inheritDoc}
-     */
-    public void read(ResultSet resultSet, int columnIndex, R row) throws Exception
-    {
-        getSormulaField().invokeSetMethod(row, resultSet.getShort(columnIndex));
+        super(field, columnName, new ShortTranslator());
     }
 }

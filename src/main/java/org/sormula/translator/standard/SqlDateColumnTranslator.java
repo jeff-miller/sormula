@@ -37,24 +37,6 @@ public class SqlDateColumnTranslator<R> extends AbstractColumnTranslator<R, java
 	 */
     public SqlDateColumnTranslator(Field field, String columnName) throws Exception
     {
-        super(field, columnName);
-    }
-    
-    
-    /**
-     * {@inheritDoc}
-     */
-    public void write(PreparedStatement preparedStatement, int parameterIndex, R row) throws Exception
-    {
-        preparedStatement.setDate(parameterIndex, getSormulaField().invokeGetMethod(row));
-    }
-    
-    
-    /**
-     * {@inheritDoc}
-     */
-    public void read(ResultSet resultSet, int columnIndex, R row) throws Exception
-    {
-        getSormulaField().invokeSetMethod(row, resultSet.getDate(columnIndex));
+        super(field, columnName, new SqlDateTranslator());
     }
 }

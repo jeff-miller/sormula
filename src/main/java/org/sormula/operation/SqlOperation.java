@@ -201,7 +201,7 @@ public abstract class SqlOperation<R>
 	                }
 	                else
 	                {
-	                    log.info("parameter type = " + p.getClass());
+	                    //log.info("parameter type = " + p.getClass());
 	                    preparedStatement.setObject(parameterIndex, p);
 	                    ++parameterIndex;
 	                }

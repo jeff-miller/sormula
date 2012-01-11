@@ -40,6 +40,7 @@ import org.sormula.operation.monitor.OperationTime;
 import org.sormula.reflect.ReflectException;
 import org.sormula.reflect.SormulaField;
 import org.sormula.translator.AbstractWhereTranslator;
+import org.sormula.translator.BasicTranslator;
 import org.sormula.translator.RowTranslator;
 import org.sormula.translator.TranslatorException;
 import org.sormula.translator.WhereTranslator;
@@ -128,7 +129,7 @@ public abstract class SqlOperation<R>
      * Gets read-only indicator.
      * 
      * @return true if modify operations are not permitted
-     * @since 1.5.1
+     * @since 1.6
      * @see Database#isReadOnly()
      */
     public boolean isReadOnly()
@@ -145,7 +146,7 @@ public abstract class SqlOperation<R>
      * to prevent accidental modification of database.
      * 
      * @param readOnly true to prevent modify operations
-     * @since 1.5.1
+     * @since 1.6
      * @see Database#setReadOnly(boolean)
      */
     public void setReadOnly(boolean readOnly)
@@ -176,33 +177,28 @@ public abstract class SqlOperation<R>
         
         if (getParameters() != null)
         {
-	        if (log.isDebugEnabled()) log.debug("write parameters from objects");
+	        if (log.isDebugEnabled()) log.debug("writeParameters parameters from objects");
 	        AbstractWhereTranslator<R> wt = getWhereTranslator();
 	        boolean inOperator = wt != null && wt.isCollectionOperand();
 	        
-	        // TODO instead of setObject, Map of class to ParameterTranslator
-	        // TODO org.sormula.translator.parameter
-	        // TODO database has default map, operations get reference, may add new ParameterTranslator or replace existing
-	        // TODO ParameterTranslator.write(PreparedStatement, parameterIndex, Object)
 	        try
 	        {
 	            for (Object p: parameters)
 	            {
-	                if (log.isDebugEnabled()) log.debug("setParameters parameterIndex=" + parameterIndex + " value='" + p + "'");
+	                if (log.isDebugEnabled()) log.debug("writeParameters parameterIndex=" + parameterIndex + " value='" + p + "'");
 	                
 	                if (inOperator && p instanceof Collection<?>)
 	                {
 	                    // assume parameter is for IN (?, ?,...), set each value within collection
 	                    for (Object inParameter: (Collection<?>)p)
 	                    {
-	                        preparedStatement.setObject(parameterIndex, inParameter);
+	                        writeParameter(parameterIndex, inParameter);
 	                        ++parameterIndex;
 	                    }
 	                }
 	                else
 	                {
-	                    //log.info("parameter type = " + p.getClass());
-	                    preparedStatement.setObject(parameterIndex, p);
+	                    writeParameter(parameterIndex, p);
 	                    ++parameterIndex;
 	                }
 	            }
@@ -217,6 +213,35 @@ public abstract class SqlOperation<R>
         }
     }
 
+    
+    @SuppressWarnings("unchecked") // types are not known until runtime
+    protected <T> void writeParameter(int parameterIndex, T parameter) throws Exception
+    {
+        Class parameterClass = parameter.getClass();
+        BasicTranslator<T> parameterTranslator = (BasicTranslator<T>)table.getParameterTranslator(parameterClass);
+        
+        if (parameterTranslator == null)
+        {
+            // no table-specific translator, use database
+            parameterTranslator = (BasicTranslator<T>)table.getDatabase().getParameterTranslator(parameterClass);
+        }
+        
+        if (parameterTranslator != null)
+        {
+            if (log.isDebugEnabled())
+            {
+                log.debug("writeParameter parameter type="+parameterClass + " value="+parameter);
+            }
+            
+            parameterTranslator.write(preparedStatement, parameterIndex, parameter);
+        }
+        else
+        {
+            throw new OperationException("no translator for parameter type="+parameterClass + 
+                    " index=" + parameterIndex + " value="+parameter);
+        }
+    }
+    
     
     /**
      * Invokes an execute method on a prepared statement. The method invoked must be implemented

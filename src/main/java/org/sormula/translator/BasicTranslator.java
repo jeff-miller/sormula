@@ -16,35 +16,38 @@
  */
 package org.sormula.translator;
 
-import java.lang.reflect.Field;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
-import org.sormula.translator.standard.ObjectTranslator;
-
 
 /**
- * Translates using {@link PreparedStatement#setObject(int, Object)} and {@link ResultSet#getObject(int)}.
- * This translator will use JDBC driver to perform all conversions.
- * 
- * @since 1.0
+ * Interface for getting a value from a result set and setting a value
+ * to a prepared statement.
+ *
+ * @since 1.6
  * @author Jeff Miller
+ * @param <T> type of Java field or Java parameter (not column type)
  */
-public class ObjectColumnTranslator<R> extends AbstractColumnTranslator<R, Object>
+public interface BasicTranslator<T>
 {
-    Field field;
-    String columnName;
-
-    
     /**
-     * Constructs for a field and sql column name.
+     * Reads value from result set.
      * 
-     * @param field row field
-     * @param columnName table column name
+     * @param resultSet read value from this result set
+     * @param columnIndex read value at this column index from result set
+     * @return result set value at parameter index 
      * @throws Exception if error
      */
-    public ObjectColumnTranslator(Field field, String columnName) throws Exception
-    {
-        super(field, columnName, new ObjectTranslator());
-    }
+    public T read(ResultSet resultSet, int columnIndex) throws Exception;
+    
+    
+    /**
+     * Sets parameter value n prepared statement.
+     * 
+     * @param preparedStatement set column value as parameter in this statement
+     * @param parameterIndex set parameter at this index
+     * @param parameter value to set in prepared statement
+     * @throws Exception if error
+     */
+    public void write(PreparedStatement preparedStatement, int parameterIndex, T parameter) throws Exception;
 }

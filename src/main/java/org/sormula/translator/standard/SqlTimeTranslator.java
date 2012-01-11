@@ -14,37 +14,37 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.sormula.translator;
+package org.sormula.translator.standard;
 
-import java.lang.reflect.Field;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
-import org.sormula.translator.standard.ObjectTranslator;
+import org.sormula.translator.BasicTranslator;
 
 
 /**
- * Translates using {@link PreparedStatement#setObject(int, Object)} and {@link ResultSet#getObject(int)}.
- * This translator will use JDBC driver to perform all conversions.
+ * Translates using {@link PreparedStatement#setTime(int, java.sql.Time)} 
+ * and {@link ResultSet#getTime(int)}.
  * 
- * @since 1.0
+ * @since 1.6
  * @author Jeff Miller
  */
-public class ObjectColumnTranslator<R> extends AbstractColumnTranslator<R, Object>
+public class SqlTimeTranslator implements BasicTranslator<java.sql.Time>
 {
-    Field field;
-    String columnName;
-
+    /**
+     * {@inheritDoc}
+     */
+    public void write(PreparedStatement preparedStatement, int parameterIndex, java.sql.Time parameter) throws Exception
+    {
+        preparedStatement.setTime(parameterIndex, parameter);
+    }
+    
     
     /**
-     * Constructs for a field and sql column name.
-     * 
-     * @param field row field
-     * @param columnName table column name
-     * @throws Exception if error
+     * {@inheritDoc}
      */
-    public ObjectColumnTranslator(Field field, String columnName) throws Exception
+    public java.sql.Time read(ResultSet resultSet, int columnIndex) throws Exception
     {
-        super(field, columnName, new ObjectTranslator());
+        return resultSet.getTime(columnIndex);
     }
 }

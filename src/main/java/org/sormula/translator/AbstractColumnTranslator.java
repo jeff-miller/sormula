@@ -81,9 +81,10 @@ public abstract class AbstractColumnTranslator<R, T> implements ColumnTranslator
      * @param columnName name of table column
      * @throws TranslatorException if error
      */
+    @SuppressWarnings("unchecked") // this constructor kept for backward compatibility
     public AbstractColumnTranslator(Field field, String columnName) throws TranslatorException
     {
-        this(field, columnName, new ObjectTranslator<T>());
+        this(field, columnName, (BasicTranslator<T>)new ObjectTranslator());
     }
     
     

@@ -14,37 +14,24 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.sormula.translator;
+package org.sormula.tests.translator.card;
 
-import java.lang.reflect.Field;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
-import org.sormula.translator.standard.ObjectTranslator;
+import org.sormula.translator.BasicTranslator;
 
-
-/**
- * Translates using {@link PreparedStatement#setObject(int, Object)} and {@link ResultSet#getObject(int)}.
- * This translator will use JDBC driver to perform all conversions.
- * 
- * @since 1.0
- * @author Jeff Miller
- */
-public class ObjectColumnTranslator<R> extends AbstractColumnTranslator<R, Object>
+public class RankTranslator implements BasicTranslator<Rank>
 {
-    Field field;
-    String columnName;
-
-    
-    /**
-     * Constructs for a field and sql column name.
-     * 
-     * @param field row field
-     * @param columnName table column name
-     * @throws Exception if error
-     */
-    public ObjectColumnTranslator(Field field, String columnName) throws Exception
+    public Rank read(ResultSet resultSet, int columnIndex) throws Exception
     {
-        super(field, columnName, new ObjectTranslator());
+        // convert int rank number from db to Rank object
+        return new Rank(resultSet.getInt(columnIndex));
+    }
+
+    public void write(PreparedStatement preparedStatement, int parameterIndex, Rank parameter) throws Exception
+    {
+        // convert Rank object to int rank number for db
+        preparedStatement.setInt(parameterIndex, parameter.getValue());
     }
 }

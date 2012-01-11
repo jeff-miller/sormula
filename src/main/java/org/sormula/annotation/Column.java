@@ -25,9 +25,11 @@ import java.sql.Connection;
 import java.sql.Statement;
 
 import org.sormula.Table;
+import org.sormula.translator.BasicTranslator;
 import org.sormula.translator.ColumnTranslator;
 import org.sormula.translator.NameTranslator;
 import org.sormula.translator.standard.StandardColumnTranslator;
+import org.sormula.translator.standard.StandardTranslator;
 
 
 /**
@@ -92,5 +94,11 @@ public @interface Column
      * 
      * @return translator to use for reading and writing values from/to the database
      */
+    // TODO deprecate? or change to "...default DefaultColumnTranslator.class"?
+    // model DefaultColumnTranslator like StandardColumnTranslator but get BasicTranslator from table 
     Class<? extends ColumnTranslator> translator() default StandardColumnTranslator.class;
+    
+    // TODO 
+    // TODO name?
+    Class<? extends BasicTranslator> basictranslator() default StandardTranslator.class;
 }

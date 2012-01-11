@@ -18,6 +18,7 @@ package org.sormula;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 
 import org.sormula.annotation.Column;
 import org.sormula.annotation.Row;
@@ -28,11 +29,13 @@ import org.sormula.operation.InsertOperation;
 import org.sormula.operation.SaveOperation;
 import org.sormula.operation.ScalarSelectOperation;
 import org.sormula.operation.SelectCountOperation;
+import org.sormula.operation.SqlOperation;
 import org.sormula.operation.UpdateOperation;
 import org.sormula.operation.aggregate.SelectAggregateOperation;
 import org.sormula.operation.aggregate.SelectAvgOperation;
 import org.sormula.operation.aggregate.SelectMaxOperation;
 import org.sormula.operation.aggregate.SelectMinOperation;
+import org.sormula.translator.BasicTranslator;
 import org.sormula.translator.NameTranslator;
 import org.sormula.translator.NoNameTranslator;
 import org.sormula.translator.RowTranslator;
@@ -91,6 +94,7 @@ public class Table<R>
     String tableName;
     RowTranslator<R> rowTranslator;
     NameTranslator nameTranslator;
+    Map<String, BasicTranslator<?>> parameterTranslatorMap; // key is row class canonical name
     
     
     /**
@@ -229,6 +233,52 @@ public class Table<R>
     public RowTranslator<R> getRowTranslator()
     {
         return rowTranslator;
+    }
+
+
+    /**
+     * Overrides translator defined in {@link Database} for all operations on this table. See 
+     * {@link Database#addParameterTranslator(Class, BasicTranslator)} for explanation
+     * of translators.
+     * 
+     * @param parameterClassName the class name of parameter type
+     * @param parameterTranslator translator to use when parameter is of type parameterClassName
+     * @since 1.6
+     */
+    public <T> void addParameterTranslator(Class<T> parameterClass, BasicTranslator<T> parameterTranslator)
+    {
+        parameterTranslatorMap.put(parameterClass.getCanonicalName(), parameterTranslator);
+    }
+    
+    
+    /**
+     * Gets the translator to use to convert a parameter set by {@link SqlOperation#setParameters(Object...)}
+     * to the prepared statement for {@link SqlOperation}. If none are set for this table, then
+     * translator is obtained from {@link Database#getParameterTranslator(Class)}. See
+     * {@link Database#getParameterTranslator(Class)} for explanation.
+     * 
+     * @param parameterClassName cannocial class name of parameter
+     * @return translator to prepare parameter
+     * @since 1.6
+     */
+    @SuppressWarnings("unchecked") // map contains mixed types but always consistent with class type
+    public <T> BasicTranslator<T> getParameterTranslator(Class<T> parameterClass)
+    {
+        BasicTranslator<T> parameterTranslator = null;
+        
+        if (parameterTranslatorMap != null)
+        {
+            // get table-specific translator
+            parameterTranslator = (BasicTranslator<T>)parameterTranslatorMap.get(parameterClass);
+        }
+        
+        if (parameterTranslator == null)
+        {
+            // get default translator defined by database
+            parameterTranslator = getDatabase().getParameterTranslator(parameterClass);
+        }
+        
+        return parameterTranslator;
     }
     
     

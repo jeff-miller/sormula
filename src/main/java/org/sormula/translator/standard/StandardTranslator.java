@@ -14,37 +14,35 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.sormula.translator;
+package org.sormula.translator.standard;
 
-import java.lang.reflect.Field;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
-import org.sormula.translator.standard.ObjectTranslator;
+import org.sormula.translator.BasicTranslator;
 
 
 /**
- * Translates using {@link PreparedStatement#setObject(int, Object)} and {@link ResultSet#getObject(int)}.
- * This translator will use JDBC driver to perform all conversions.
+ * Marker so that it can be default for Column annotation. Means to get
+ * BasicTranslator from table and construct DefaultColumnTranslator.
+ * TODO
+ * Delegates to translator based upon field type. This translator should work for all
+ * standard Java data types. 
  * 
- * @since 1.0
+ * @since 1.6
  * @author Jeff Miller
+ * @param <T> needed?
  */
-public class ObjectColumnTranslator<R> extends AbstractColumnTranslator<R, Object>
+public class StandardTranslator<T> implements BasicTranslator<T>
 {
-    Field field;
-    String columnName;
-
-    
-    /**
-     * Constructs for a field and sql column name.
-     * 
-     * @param field row field
-     * @param columnName table column name
-     * @throws Exception if error
-     */
-    public ObjectColumnTranslator(Field field, String columnName) throws Exception
+    public T read(ResultSet resultSet, int columnIndex) throws Exception
     {
-        super(field, columnName, new ObjectTranslator());
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    public void write(PreparedStatement preparedStatement, int parameterIndex, T parameter) throws Exception
+    {
+        // TODO Auto-generated method stub
     }
 }

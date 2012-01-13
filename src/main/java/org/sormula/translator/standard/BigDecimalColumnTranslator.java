@@ -25,13 +25,13 @@ import org.sormula.translator.AbstractColumnTranslator;
 
 
 /**
- * TODO revert and deprecate all nnnnnColumnTranslator classes (obsolete due to TypeTranslator)
- * TODO don't deprecate BooleanYNColumnTranslator
- * Translates a BigDecimal field using {@link PreparedStatement#setBigDecimal(int, BigDecimal)} and {@link ResultSet#getBigDecimal(int)}.
+ * No longer used by {@link StandardColumnTranslator}.
+ * Translates a boolean field using {@link PreparedStatement#setBigDecimal(int, BigDecimal)} and {@link ResultSet#getBigDecimal(int)}.
  * 
  * @since 1.0
  * @author Jeff Miller
  */
+@Deprecated
 public class BigDecimalColumnTranslator<R> extends AbstractColumnTranslator<R, BigDecimal>
 {
 	/**
@@ -39,6 +39,24 @@ public class BigDecimalColumnTranslator<R> extends AbstractColumnTranslator<R, B
 	 */
     public BigDecimalColumnTranslator(Field field, String columnName) throws Exception
     {
-        super(field, columnName, new BigDecimalTranslator());
+        super(field, columnName);
+    }
+    
+    
+    /**
+     * {@inheritDoc}
+     */
+    public void write(PreparedStatement preparedStatement, int parameterIndex, R row) throws Exception
+    {
+        preparedStatement.setBigDecimal(parameterIndex, getSormulaField().invokeGetMethod(row));
+    }
+    
+    
+    /**
+     * {@inheritDoc}
+     */
+    public void read(ResultSet resultSet, int columnIndex, R row) throws Exception
+    {
+        getSormulaField().invokeSetMethod(row, resultSet.getBigDecimal(columnIndex));
     }
 }

@@ -24,11 +24,13 @@ import org.sormula.translator.AbstractColumnTranslator;
 
 
 /**
+ * No longer used by {@link StandardColumnTranslator}.
  * Translates using {@link PreparedStatement#setDouble(int, double)} and {@link ResultSet#getDouble(int)}.
  * 
  * @since 1.0
  * @author Jeff Miller
  */
+@Deprecated
 public class DoubleColumnTranslator<R> extends AbstractColumnTranslator<R, Double>
 {
 	/**
@@ -36,6 +38,24 @@ public class DoubleColumnTranslator<R> extends AbstractColumnTranslator<R, Doubl
 	 */
     public DoubleColumnTranslator(Field field, String columnName) throws Exception
     {
-        super(field, columnName, new DoubleTranslator());
+        super(field, columnName);
+    }
+    
+    
+    /**
+     * {@inheritDoc}
+     */
+    public void write(PreparedStatement preparedStatement, int parameterIndex, R row) throws Exception
+    {
+        preparedStatement.setDouble(parameterIndex, getSormulaField().invokeGetMethod(row));
+    }
+    
+    
+    /**
+     * {@inheritDoc}
+     */
+    public void read(ResultSet resultSet, int columnIndex, R row) throws Exception
+    {
+        getSormulaField().invokeSetMethod(row, resultSet.getDouble(columnIndex));
     }
 }

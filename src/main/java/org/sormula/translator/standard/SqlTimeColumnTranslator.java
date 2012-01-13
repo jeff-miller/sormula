@@ -24,12 +24,14 @@ import org.sormula.translator.AbstractColumnTranslator;
 
 
 /**
+ * No longer used by {@link StandardColumnTranslator}.
  * Translates java.sql.Time class variable using {@link PreparedStatement#setTime(int, java.sql.Time)} 
  * and {@link ResultSet#getTime(int)}.
  * 
  * 
  * @author Jeff Miller
  */
+@Deprecated
 public class SqlTimeColumnTranslator<R> extends AbstractColumnTranslator<R, java.sql.Time>
 {
 	/**
@@ -37,6 +39,24 @@ public class SqlTimeColumnTranslator<R> extends AbstractColumnTranslator<R, java
 	 */
     public SqlTimeColumnTranslator(Field field, String columnName) throws Exception
     {
-        super(field, columnName, new SqlTimeTranslator());
+        super(field, columnName);
+    }
+    
+    
+    /**
+     * {@inheritDoc}
+     */
+    public void write(PreparedStatement preparedStatement, int parameterIndex, R row) throws Exception
+    {
+        preparedStatement.setTime(parameterIndex, getSormulaField().invokeGetMethod(row));
+    }
+    
+    
+    /**
+     * {@inheritDoc}
+     */
+    public void read(ResultSet resultSet, int columnIndex, R row) throws Exception
+    {
+        getSormulaField().invokeSetMethod(row, resultSet.getTime(columnIndex));
     }
 }

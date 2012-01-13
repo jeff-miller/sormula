@@ -24,12 +24,14 @@ import org.sormula.translator.AbstractColumnTranslator;
 
 
 /**
+ * No longer used by {@link StandardColumnTranslator}.
  * Translates java.util.Date class variable in row class using {@link PreparedStatement#setTimestamp(int, java.sql.Timestamp)} 
  * and {@link ResultSet#getTimestamp(int)}. null's are preserved.
  * 
  * @since 1.0
  * @author Jeff Miller
  */
+@Deprecated
 public class DateColumnTranslator<R> extends AbstractColumnTranslator<R, java.util.Date>
 {
 	/**
@@ -37,6 +39,30 @@ public class DateColumnTranslator<R> extends AbstractColumnTranslator<R, java.ut
 	 */
     public DateColumnTranslator(Field field, String columnName) throws Exception
     {
-        super(field, columnName, new DateTranslator());
+        super(field, columnName);
+    }
+    
+    
+    /**
+     * {@inheritDoc}
+     */
+    public void write(PreparedStatement preparedStatement, int parameterIndex, R row) throws Exception
+    {
+        java.util.Date utilDate = getSormulaField().invokeGetMethod(row);
+        
+        if (utilDate != null) preparedStatement.setTimestamp(parameterIndex, new java.sql.Timestamp(utilDate.getTime()));
+        else                  preparedStatement.setTimestamp(parameterIndex, null);
+    }
+    
+    
+    /**
+     * {@inheritDoc}
+     */
+    public void read(ResultSet resultSet, int columnIndex, R row) throws Exception
+    {
+        java.sql.Timestamp sqlTimestamp = resultSet.getTimestamp(columnIndex);
+        
+        if (sqlTimestamp != null) getSormulaField().invokeSetMethod(row, new java.util.Date(sqlTimestamp.getTime()));
+        else                      getSormulaField().invokeSetMethod(row, null);
     }
 }

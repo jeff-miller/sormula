@@ -24,11 +24,13 @@ import org.sormula.translator.AbstractColumnTranslator;
 
 
 /**
+ * No longer used by {@link StandardColumnTranslator}.
  * Translates using {@link PreparedStatement#setFloat(int, float)} and {@link ResultSet#getFloat(int)}.
  * 
  * @since 1.0
  * @author Jeff Miller
  */
+@Deprecated
 public class FloatColumnTranslator<R> extends AbstractColumnTranslator<R, Float>
 {
 	/**
@@ -36,6 +38,24 @@ public class FloatColumnTranslator<R> extends AbstractColumnTranslator<R, Float>
 	 */
     public FloatColumnTranslator(Field field, String columnName) throws Exception
     {
-        super(field, columnName, new FloatTranslator());
+        super(field, columnName);
+    }
+    
+    
+    /**
+     * {@inheritDoc}
+     */
+    public void write(PreparedStatement preparedStatement, int parameterIndex, R row) throws Exception
+    {
+        preparedStatement.setFloat(parameterIndex, getSormulaField().invokeGetMethod(row));
+    }
+    
+    
+    /**
+     * {@inheritDoc}
+     */
+    public void read(ResultSet resultSet, int columnIndex, R row) throws Exception
+    {
+        getSormulaField().invokeSetMethod(row, resultSet.getFloat(columnIndex));
     }
 }

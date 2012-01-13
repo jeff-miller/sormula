@@ -24,12 +24,14 @@ import org.sormula.translator.AbstractColumnTranslator;
 
 
 /**
+ * No longer used by {@link StandardColumnTranslator}.
  * Translates java.sql.Date class variable using {@link PreparedStatement#setDate(int, java.sql.Date)} 
  * and {@link ResultSet#getDate(int)}.
  * 
  * @since 1.0
  * @author Jeff Miller
  */
+@Deprecated
 public class SqlDateColumnTranslator<R> extends AbstractColumnTranslator<R, java.sql.Date>
 {
 	/**
@@ -37,6 +39,24 @@ public class SqlDateColumnTranslator<R> extends AbstractColumnTranslator<R, java
 	 */
     public SqlDateColumnTranslator(Field field, String columnName) throws Exception
     {
-        super(field, columnName, new SqlDateTranslator());
+        super(field, columnName);
+    }
+    
+    
+    /**
+     * {@inheritDoc}
+     */
+    public void write(PreparedStatement preparedStatement, int parameterIndex, R row) throws Exception
+    {
+        preparedStatement.setDate(parameterIndex, getSormulaField().invokeGetMethod(row));
+    }
+    
+    
+    /**
+     * {@inheritDoc}
+     */
+    public void read(ResultSet resultSet, int columnIndex, R row) throws Exception
+    {
+        getSormulaField().invokeSetMethod(row, resultSet.getDate(columnIndex));
     }
 }

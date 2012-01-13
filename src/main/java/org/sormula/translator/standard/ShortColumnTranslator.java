@@ -24,11 +24,13 @@ import org.sormula.translator.AbstractColumnTranslator;
 
 
 /**
+ * No longer used by {@link StandardColumnTranslator}.
  * Translates using {@link PreparedStatement#setShort(int, short)} and {@link ResultSet#getShort(int)}.
  * 
  * @since 1.0
  * @author Jeff Miller
  */
+@Deprecated
 public class ShortColumnTranslator<R> extends AbstractColumnTranslator<R, Short>
 {
 	/**
@@ -36,6 +38,24 @@ public class ShortColumnTranslator<R> extends AbstractColumnTranslator<R, Short>
 	 */
     public ShortColumnTranslator(Field field, String columnName) throws Exception
     {
-        super(field, columnName, new ShortTranslator());
+        super(field, columnName);
+    }
+    
+    
+    /**
+     * {@inheritDoc}
+     */
+    public void write(PreparedStatement preparedStatement, int parameterIndex, R row) throws Exception
+    {
+        preparedStatement.setShort(parameterIndex, getSormulaField().invokeGetMethod(row));
+    }
+    
+    
+    /**
+     * {@inheritDoc}
+     */
+    public void read(ResultSet resultSet, int columnIndex, R row) throws Exception
+    {
+        getSormulaField().invokeSetMethod(row, resultSet.getShort(columnIndex));
     }
 }

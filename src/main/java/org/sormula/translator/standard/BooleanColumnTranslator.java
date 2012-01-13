@@ -24,11 +24,13 @@ import org.sormula.translator.AbstractColumnTranslator;
 
 
 /**
+ * No longer used by {@link StandardColumnTranslator}.
  * Translates a boolean field using {@link PreparedStatement#setBoolean(int, boolean)} and {@link ResultSet#getBoolean(int)}.
  * 
  * @since 1.0
  * @author Jeff Miller
  */
+@Deprecated
 public class BooleanColumnTranslator<R> extends AbstractColumnTranslator<R, Boolean>
 {
 	/**
@@ -36,6 +38,24 @@ public class BooleanColumnTranslator<R> extends AbstractColumnTranslator<R, Bool
 	 */
     public BooleanColumnTranslator(Field field, String columnName) throws Exception
     {
-        super(field, columnName, new BooleanTranslator());
+        super(field, columnName);
+    }
+    
+    
+    /**
+     * {@inheritDoc}
+     */
+    public void write(PreparedStatement preparedStatement, int parameterIndex, R row) throws Exception
+    {
+        preparedStatement.setBoolean(parameterIndex, getSormulaField().invokeGetMethod(row));
+    }
+    
+    
+    /**
+     * {@inheritDoc}
+     */
+    public void read(ResultSet resultSet, int columnIndex, R row) throws Exception
+    {
+        getSormulaField().invokeSetMethod(row, resultSet.getBoolean(columnIndex));
     }
 }

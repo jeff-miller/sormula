@@ -24,12 +24,14 @@ import org.sormula.translator.AbstractColumnTranslator;
 
 
 /**
+ * No longer used by {@link StandardColumnTranslator}.
  * Translates java.sql.Timestamp class variable using {@link PreparedStatement#setTimestamp(int, java.sql.Timestamp)} 
  * and {@link ResultSet#getTimestamp(int)}.
  * 
  * @since 1.0
  * @author Jeff Miller
  */
+@Deprecated
 public class SqlTimestampColumnTranslator<R> extends AbstractColumnTranslator<R, java.sql.Timestamp>
 {
 	/**
@@ -37,6 +39,24 @@ public class SqlTimestampColumnTranslator<R> extends AbstractColumnTranslator<R,
 	 */
     public SqlTimestampColumnTranslator(Field field, String columnName) throws Exception
     {
-        super(field, columnName, new SqlTimestampTranslator());
+        super(field, columnName);
+    }
+    
+    
+    /**
+     * {@inheritDoc}
+     */
+    public void write(PreparedStatement preparedStatement, int parameterIndex, R row) throws Exception
+    {
+        preparedStatement.setTimestamp(parameterIndex, getSormulaField().invokeGetMethod(row));
+    }
+    
+    
+    /**
+     * {@inheritDoc}
+     */
+    public void read(ResultSet resultSet, int columnIndex, R row) throws Exception
+    {
+        getSormulaField().invokeSetMethod(row, resultSet.getTimestamp(columnIndex));
     }
 }

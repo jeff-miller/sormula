@@ -19,7 +19,7 @@ package org.sormula.translator.standard;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
-import org.sormula.translator.BasicTranslator;
+import org.sormula.translator.TypeTranslator;
 
 
 /**
@@ -29,7 +29,7 @@ import org.sormula.translator.BasicTranslator;
  * @since 1.6
  * @author Jeff Miller
  */
-public class SqlTimeTranslator implements BasicTranslator<java.sql.Time>
+public class SqlTimeTranslator implements TypeTranslator<java.sql.Time>
 {
     /**
      * {@inheritDoc}

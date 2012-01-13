@@ -40,7 +40,7 @@ import org.sormula.operation.monitor.OperationTime;
 import org.sormula.reflect.ReflectException;
 import org.sormula.reflect.SormulaField;
 import org.sormula.translator.AbstractWhereTranslator;
-import org.sormula.translator.BasicTranslator;
+import org.sormula.translator.TypeTranslator;
 import org.sormula.translator.RowTranslator;
 import org.sormula.translator.TranslatorException;
 import org.sormula.translator.WhereTranslator;
@@ -218,22 +218,22 @@ public abstract class SqlOperation<R>
     protected <T> void writeParameter(int parameterIndex, T parameter) throws Exception
     {
         Class parameterClass = parameter.getClass();
-        BasicTranslator<T> parameterTranslator = (BasicTranslator<T>)table.getParameterTranslator(parameterClass);
+        TypeTranslator<T> typeTranslator = (TypeTranslator<T>)table.getTypeTranslator(parameterClass);
         
-        if (parameterTranslator == null)
+        if (typeTranslator == null)
         {
             // no table-specific translator, use database
-            parameterTranslator = (BasicTranslator<T>)table.getDatabase().getParameterTranslator(parameterClass);
+            typeTranslator = (TypeTranslator<T>)table.getDatabase().getTypeTranslator(parameterClass);
         }
         
-        if (parameterTranslator != null)
+        if (typeTranslator != null)
         {
             if (log.isDebugEnabled())
             {
                 log.debug("writeParameter parameter type="+parameterClass + " value="+parameter);
             }
             
-            parameterTranslator.write(preparedStatement, parameterIndex, parameter);
+            typeTranslator.write(preparedStatement, parameterIndex, parameter);
         }
         else
         {

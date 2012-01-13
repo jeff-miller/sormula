@@ -39,5 +39,6 @@ public @interface Wheres
      * 
      * @return array of {@link Where} annotations for a row class
      */
+    // TODO deprecate, add value()
     Where[] whereConditions();
 }

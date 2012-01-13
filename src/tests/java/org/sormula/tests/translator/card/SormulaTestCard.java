@@ -17,6 +17,7 @@
 package org.sormula.tests.translator.card;
 
 import org.sormula.annotation.Column;
+import org.sormula.annotation.Type;
 
 
 /**
@@ -27,11 +28,12 @@ import org.sormula.annotation.Column;
  */
 public class SormulaTestCard
 {
-    @Column(primaryKey=true, translator=RankColumnTranslator.class)
-    Rank rank;
+    @Column(primaryKey=true)
+    @Type(translator=RankTranslator.class)
+    Rank rank; 
     
-    @Column(primaryKey=true, translator=SuitColumnTranslator.class)
-    Suit suit;
+    @Column(primaryKey=true)
+    Suit suit; // SuitTranslator defined in Suit class
     
     public SormulaTestCard()
     {

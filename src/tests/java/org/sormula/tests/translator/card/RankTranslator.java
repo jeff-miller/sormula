@@ -19,9 +19,9 @@ package org.sormula.tests.translator.card;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
-import org.sormula.translator.BasicTranslator;
+import org.sormula.translator.TypeTranslator;
 
-public class RankTranslator implements BasicTranslator<Rank>
+public class RankTranslator implements TypeTranslator<Rank>
 {
     public Rank read(ResultSet resultSet, int columnIndex) throws Exception
     {

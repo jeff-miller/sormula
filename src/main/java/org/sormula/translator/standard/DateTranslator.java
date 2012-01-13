@@ -20,7 +20,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.Date;
 
-import org.sormula.translator.BasicTranslator;
+import org.sormula.translator.TypeTranslator;
 
 
 /**
@@ -30,7 +30,7 @@ import org.sormula.translator.BasicTranslator;
  * @since 1.6
  * @author Jeff Miller
  */
-public class DateTranslator implements BasicTranslator<Date>
+public class DateTranslator implements TypeTranslator<Date>
 {
     /**
      * {@inheritDoc}

@@ -28,7 +28,7 @@ import java.sql.ResultSet;
  * @author Jeff Miller
  * @param <T> type of Java field or Java parameter (not column type)
  */
-public interface BasicTranslator<T>
+public interface TypeTranslator<T>
 {
     /**
      * Reads value from result set.

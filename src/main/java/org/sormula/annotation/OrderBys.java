@@ -40,5 +40,6 @@ public @interface OrderBys
      * 
      * @return array of {@link OrderBy} annotations
      */
+    // TODO deprecate, add value()
     OrderBy[] orderByConditions();
 }

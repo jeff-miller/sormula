@@ -17,6 +17,7 @@
 package org.sormula;
 
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -35,7 +36,7 @@ import org.sormula.operation.aggregate.SelectAggregateOperation;
 import org.sormula.operation.aggregate.SelectAvgOperation;
 import org.sormula.operation.aggregate.SelectMaxOperation;
 import org.sormula.operation.aggregate.SelectMinOperation;
-import org.sormula.translator.BasicTranslator;
+import org.sormula.translator.TypeTranslator;
 import org.sormula.translator.NameTranslator;
 import org.sormula.translator.NoNameTranslator;
 import org.sormula.translator.RowTranslator;
@@ -91,10 +92,11 @@ public class Table<R>
     private static final ClassLogger log = new ClassLogger();
     
     Database database;
+    Class<R> rowClass;
     String tableName;
     RowTranslator<R> rowTranslator;
     NameTranslator nameTranslator;
-    Map<String, BasicTranslator<?>> parameterTranslatorMap; // key is row class canonical name
+    Map<String, TypeTranslator<?>> typeTranslatorMap; // key is row class canonical name
     
     
     /**
@@ -108,7 +110,9 @@ public class Table<R>
     public Table(Database database, Class<R> rowClass) throws SormulaException
     {
         this.database = database;
-
+        this.rowClass = rowClass;
+        typeTranslatorMap = new HashMap<String, TypeTranslator<?>>();
+        
         // process row annotation
         Row rowAnnotation = rowClass.getAnnotation(Row.class);
         Class<? extends NameTranslator> nameTranslatorClass = null;
@@ -155,7 +159,8 @@ public class Table<R>
             tableName = nameTranslator.translate(rowClass.getSimpleName(), rowClass);
         }
 
-        rowTranslator = new RowTranslator<R>(rowClass, nameTranslator);
+        //rowTranslator = new RowTranslator<R>(rowClass, nameTranslator);
+        rowTranslator = new RowTranslator<R>(this);
         
         if (log.isDebugEnabled())
         {
@@ -174,6 +179,13 @@ public class Table<R>
     public Database getDatabase()
     {
         return database;
+    }
+
+
+    // TODO
+    public Class<R> getRowClass()
+    {
+        return rowClass;
     }
 
 
@@ -237,48 +249,47 @@ public class Table<R>
 
 
     /**
+     * TODO scrub "parameter"
      * Overrides translator defined in {@link Database} for all operations on this table. See 
-     * {@link Database#addParameterTranslator(Class, BasicTranslator)} for explanation
+     * {@link Database#addTypeTranslator(Class, TypeTranslator)} for explanation
      * of translators.
      * 
-     * @param parameterClassName the class name of parameter type
-     * @param parameterTranslator translator to use when parameter is of type parameterClassName
+     * @param typeClass the class of parameter type
+     * @param typeTranslator translator to use when parameter is of type parameterClassName
      * @since 1.6
      */
-    public <T> void addParameterTranslator(Class<T> parameterClass, BasicTranslator<T> parameterTranslator)
+    public <T> void addTypeTranslator(Class<T> typeClass, TypeTranslator<T> typeTranslator)
     {
-        parameterTranslatorMap.put(parameterClass.getCanonicalName(), parameterTranslator);
+        typeTranslatorMap.put(typeClass.getCanonicalName(), typeTranslator);
     }
     
     
     /**
+     * TODO
      * Gets the translator to use to convert a parameter set by {@link SqlOperation#setParameters(Object...)}
      * to the prepared statement for {@link SqlOperation}. If none are set for this table, then
-     * translator is obtained from {@link Database#getParameterTranslator(Class)}. See
-     * {@link Database#getParameterTranslator(Class)} for explanation.
+     * translator is obtained from {@link Database#getTypeTranslator(Class)}. See
+     * {@link Database#getTypeTranslator(Class)} for explanation.
      * 
-     * @param parameterClassName cannocial class name of parameter
+     * @param typeClass class for TODO
      * @return translator to prepare parameter
      * @since 1.6
      */
     @SuppressWarnings("unchecked") // map contains mixed types but always consistent with class type
-    public <T> BasicTranslator<T> getParameterTranslator(Class<T> parameterClass)
+    public <T> TypeTranslator<T> getTypeTranslator(Class<T> typeClass)
     {
-        BasicTranslator<T> parameterTranslator = null;
+        String typeClassName = typeClass.getCanonicalName();
         
-        if (parameterTranslatorMap != null)
-        {
-            // get table-specific translator
-            parameterTranslator = (BasicTranslator<T>)parameterTranslatorMap.get(parameterClass);
-        }
+        // get table-specific translator
+        TypeTranslator<T> typeTranslator = (TypeTranslator<T>)typeTranslatorMap.get(typeClassName);
         
-        if (parameterTranslator == null)
+        if (typeTranslator == null)
         {
             // get default translator defined by database
-            parameterTranslator = getDatabase().getParameterTranslator(parameterClass);
+            typeTranslator = getDatabase().getTypeTranslator(typeClassName);
         }
         
-        return parameterTranslator;
+        return typeTranslator;
     }
     
     

@@ -19,9 +19,9 @@ package org.sormula.tests.translator.card;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
-import org.sormula.translator.BasicTranslator;
+import org.sormula.translator.TypeTranslator;
 
-public class SuitTranslator implements BasicTranslator<Suit>
+public class SuitTranslator implements TypeTranslator<Suit>
 {
     public Suit read(ResultSet resultSet, int columnIndex) throws Exception
     {

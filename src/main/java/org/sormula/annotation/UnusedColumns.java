@@ -38,5 +38,6 @@ public @interface UnusedColumns
      * 
      * @return array of {@link UnusedColumn} annotations for row class
      */
+    // TODO deprecate, add value()
     UnusedColumn[] unusedColumns();
 }

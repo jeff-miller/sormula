@@ -19,7 +19,7 @@ package org.sormula.translator.standard;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
-import org.sormula.translator.BasicTranslator;
+import org.sormula.translator.TypeTranslator;
 
 
 /**
@@ -29,7 +29,7 @@ import org.sormula.translator.BasicTranslator;
  * @author Jeff Miller
  * @param <T> java type of column/parameter
  */
-public class ObjectTranslator implements BasicTranslator<Object>
+public class ObjectTranslator implements TypeTranslator<Object>
 {
     /**
      * {@inheritDoc}

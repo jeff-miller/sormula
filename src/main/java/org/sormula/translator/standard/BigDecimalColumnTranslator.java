@@ -25,6 +25,8 @@ import org.sormula.translator.AbstractColumnTranslator;
 
 
 /**
+ * TODO revert and deprecate all nnnnnColumnTranslator classes (obsolete due to TypeTranslator)
+ * TODO don't deprecate BooleanYNColumnTranslator
  * Translates a BigDecimal field using {@link PreparedStatement#setBigDecimal(int, BigDecimal)} and {@link ResultSet#getBigDecimal(int)}.
  * 
  * @since 1.0

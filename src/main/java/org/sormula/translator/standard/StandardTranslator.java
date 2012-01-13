@@ -19,10 +19,11 @@ package org.sormula.translator.standard;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
-import org.sormula.translator.BasicTranslator;
+import org.sormula.translator.TypeTranslator;
 
 
 /**
+ * TODO delete since not used?
  * Marker so that it can be default for Column annotation. Means to get
  * BasicTranslator from table and construct DefaultColumnTranslator.
  * TODO
@@ -33,7 +34,7 @@ import org.sormula.translator.BasicTranslator;
  * @author Jeff Miller
  * @param <T> needed?
  */
-public class StandardTranslator<T> implements BasicTranslator<T>
+public class StandardTranslator<T> implements TypeTranslator<T>
 {
     public T read(ResultSet resultSet, int columnIndex) throws Exception
     {

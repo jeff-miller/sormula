@@ -16,7 +16,6 @@
  */
 package org.sormula.tests.translator.card;
 
-import org.sormula.Database;
 import org.sormula.SormulaException;
 import org.sormula.tests.DatabaseTest;
 import org.testng.annotations.AfterClass;
@@ -40,16 +39,17 @@ public class CardTranslatorTest extends DatabaseTest<SormulaTestCard>
     public void setUp() throws Exception
     {
         openDatabase();
-        createTable(SormulaTestCard.class, 
-            "CREATE TABLE " + getSchemaPrefix() + SormulaTestCard.class.getSimpleName() + " (" +
-            " rank INTEGER," +
-            " suit INTEGER " +
-            ")"
-        );
         
-        Database database = getDatabase();
-        database.addParameterTranslator(Rank.class, new RankTranslator());
-        database.addParameterTranslator(Suit.class, new SuitTranslator());
+        // add RankTranslator to test programatic configuration
+        // SuitTranslator is defined with annotation in SormulaTestCard
+        //getDatabase().addTypeTranslator(Rank.class, new RankTranslator());
+
+        createTable(SormulaTestCard.class, 
+                "CREATE TABLE " + getSchemaPrefix() + SormulaTestCard.class.getSimpleName() + " (" +
+                " rank INTEGER," +
+                " suit INTEGER " +
+                ")"
+            );
     }
     
     

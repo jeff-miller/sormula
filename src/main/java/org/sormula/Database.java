@@ -28,7 +28,7 @@ import org.sormula.log.ClassLogger;
 import org.sormula.operation.ModifyOperation;
 import org.sormula.operation.SqlOperation;
 import org.sormula.operation.monitor.OperationTime;
-import org.sormula.translator.BasicTranslator;
+import org.sormula.translator.TypeTranslator;
 import org.sormula.translator.NameTranslator;
 import org.sormula.translator.standard.BigDecimalTranslator;
 import org.sormula.translator.standard.BooleanTranslator;
@@ -73,7 +73,7 @@ public class Database
     OperationTime totalOperationTime;
     boolean timings;
     boolean readOnly;
-    Map<String, BasicTranslator<?>> parameterTranslatorMap; // key is row class canonical name
+    Map<String, TypeTranslator<?>> typeTranslatorMap; // key is row class canonical name
     
     
     /**
@@ -103,27 +103,36 @@ public class Database
         operationTimeMap = new HashMap<String, OperationTime>();
         totalOperationTime = new OperationTime("Database totals");
         totalOperationTime.setDescription("All operations for database");
-        initParameterTranslatorMap();
+        initTypeTranslatorMap();
     }
 
     
-    void initParameterTranslatorMap()
+    void initTypeTranslatorMap()
     {
-        parameterTranslatorMap = new HashMap<String, BasicTranslator<?>>(30);
-        addParameterTranslator(BigDecimal.class, new BigDecimalTranslator());
-        addParameterTranslator(Boolean.class, new BooleanTranslator());
-        addParameterTranslator(Byte.class, new ByteTranslator());
-        addParameterTranslator(Double.class, new DoubleTranslator());
-        addParameterTranslator(Float.class, new FloatTranslator());
-        addParameterTranslator(Integer.class, new IntegerTranslator());
-        addParameterTranslator(Long.class, new LongTranslator());
-        addParameterTranslator(Short.class, new ShortTranslator());
-        addParameterTranslator(Object.class, new ObjectTranslator());
-        addParameterTranslator(String.class, new StringTranslator());
-        addParameterTranslator(java.util.Date.class, new DateTranslator());
-        addParameterTranslator(java.sql.Date.class, new SqlDateTranslator());
-        addParameterTranslator(java.sql.Time.class, new SqlTimeTranslator());
-        addParameterTranslator(java.sql.Timestamp.class, new SqlTimestampTranslator());
+        typeTranslatorMap = new HashMap<String, TypeTranslator<?>>(50);
+        addTypeTranslator(BigDecimal.class, new BigDecimalTranslator());
+        addTypeTranslator(Boolean.class, new BooleanTranslator());
+        addTypeTranslator(Byte.class, new ByteTranslator());
+        addTypeTranslator(Double.class, new DoubleTranslator());
+        addTypeTranslator(Float.class, new FloatTranslator());
+        addTypeTranslator(Integer.class, new IntegerTranslator());
+        addTypeTranslator(Long.class, new LongTranslator());
+        addTypeTranslator(Short.class, new ShortTranslator());
+        addTypeTranslator(Object.class, new ObjectTranslator());
+        addTypeTranslator(String.class, new StringTranslator());
+        addTypeTranslator(java.util.Date.class, new DateTranslator());
+        addTypeTranslator(java.sql.Date.class, new SqlDateTranslator());
+        addTypeTranslator(java.sql.Time.class, new SqlTimeTranslator());
+        addTypeTranslator(java.sql.Timestamp.class, new SqlTimestampTranslator());
+        
+        // add primatives since they will be used by RowTranslator#initColumnTranslators
+        addTypeTranslator("boolean", new BooleanTranslator());
+        addTypeTranslator("byte", new ByteTranslator());
+        addTypeTranslator("double", new DoubleTranslator());
+        addTypeTranslator("float", new FloatTranslator());
+        addTypeTranslator("int", new IntegerTranslator());
+        addTypeTranslator("long", new LongTranslator());
+        addTypeTranslator("short", new ShortTranslator());
     }
     
     
@@ -378,39 +387,53 @@ public class Database
 
 
 	/**
-	 * Defines the translator to use to convert a parameter to a prepared statement. These
+	 * TODO
+	 * Defines the translator to use to convert a type to a prepared statement. These
 	 * translators are used by {@link SqlOperation} to set prepared statement parameters from
 	 * the values set by {@link SqlOperation#setParameters(Object...)} using 
-	 * {@link BasicTranslator#write(java.sql.PreparedStatement, int, Object)}.
+	 * {@link TypeTranslator#write(java.sql.PreparedStatement, int, Object)}.
 	 * <p>
-	 * By default, all subclasses of {@link BasicTranslator} are added during initialization of this class.
+	 * By default, all subclasses of {@link TypeTranslator} are added during initialization of this class.
 	 * Use this method to override default translators or to add a new translator for a 
 	 * type that is not initialized as a default.
 	 * <p>
-	 * These tranlators may be overridden for a table by {@link Table#addParameterTranslator(Class, BasicTranslator)}.
+	 * These tranlators may be overridden for a table by {@link Table#addTypeTranslator(Class, TypeTranslator)}.
 	 * 
 	 * @param parameterClassName the class name of parameter type
-	 * @param parameterTranslator translator to use when parameter is of type parameterClassName
+	 * @param typeTranslator translator to use when parameter is of type parameterClassName
 	 * @since 1.6
 	 */
-    public <T> void addParameterTranslator(Class<T> parameterClass, BasicTranslator<T> parameterTranslator)
+    public <T> void addTypeTranslator(Class<T> parameterClass, TypeTranslator<T> typeTranslator)
     {
-        parameterTranslatorMap.put(parameterClass.getCanonicalName(), parameterTranslator);
+        addTypeTranslator(parameterClass.getCanonicalName(), typeTranslator);
     }
-    
+
+    // TODO for primatives?
+    public <T> void addTypeTranslator(String parameterClassName, TypeTranslator<T> typeTranslator)
+    {
+        typeTranslatorMap.put(parameterClassName, typeTranslator);
+    }
+
     
     /**
+     * TODO
      * Gets the translator to use to convert a parameter set by {@link SqlOperation#setParameters(Object...)}
-     * to the prepared statement for {@link SqlOperation}. {@link BasicTranslator#write(java.sql.PreparedStatement, int, Object)}
+     * to the prepared statement for {@link SqlOperation}. {@link TypeTranslator#write(java.sql.PreparedStatement, int, Object)}
      * is used to translate from a parameter to a prepared statement.
      * 
      * @param parameterClassName cannocial class name of parameter
      * @return translator to prepare parameter
      * @since 1.6
      */
-    @SuppressWarnings("unchecked") // map contains mixed types but always consistent with class type
-    public <T> BasicTranslator<T> getParameterTranslator(Class<T> parameterClass)
+    public <T> TypeTranslator<T> getTypeTranslator(Class<T> typeClass)
     {
-        return (BasicTranslator<T>)parameterTranslatorMap.get(parameterClass.getCanonicalName());
+        return getTypeTranslator(typeClass.getCanonicalName());
+    }
+    
+    // TODO for primatives?
+    @SuppressWarnings("unchecked") // map contains mixed types but always consistent with class type
+    public <T> TypeTranslator<T> getTypeTranslator(String typeClassName)
+    {
+        return (TypeTranslator<T>)typeTranslatorMap.get(typeClassName);
     }
 }

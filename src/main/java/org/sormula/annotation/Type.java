@@ -14,36 +14,31 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.sormula.translator.standard;
+package org.sormula.annotation;
 
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
 import org.sormula.translator.TypeTranslator;
 
 
 /**
- * Translates using {@link PreparedStatement#setFloat(int, float)} and {@link ResultSet#getFloat(int)}.
+ * TODO
+ * Allow on both field and class?
+ * Like Type but clazz obtained from field or class
  * 
  * @since 1.6
  * @author Jeff Miller
  */
-public class FloatTranslator implements TypeTranslator<Float>
+@Retention(RetentionPolicy.RUNTIME)
+@Target({ElementType.FIELD, ElementType.TYPE})
+public @interface Type // TODO name?
 {
     /**
-     * {@inheritDoc}
+     * TODO
+     * @return
      */
-    public void write(PreparedStatement preparedStatement, int parameterIndex, Float parameter) throws Exception
-    {
-        preparedStatement.setFloat(parameterIndex, parameter);
-    }
-    
-    
-    /**
-     * {@inheritDoc}
-     */
-    public Float read(ResultSet resultSet, int columnIndex) throws Exception
-    {
-        return resultSet.getFloat(columnIndex);
-    }
+    Class<? extends TypeTranslator> translator();
 }

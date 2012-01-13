@@ -20,7 +20,7 @@ import java.math.BigDecimal;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
-import org.sormula.translator.BasicTranslator;
+import org.sormula.translator.TypeTranslator;
 
 
 /**
@@ -29,7 +29,7 @@ import org.sormula.translator.BasicTranslator;
  * @since 1.6
  * @author Jeff Miller
  */
-public class BigDecimalTranslator implements BasicTranslator<BigDecimal>
+public class BigDecimalTranslator implements TypeTranslator<BigDecimal>
 {
     /**
      * {@inheritDoc}

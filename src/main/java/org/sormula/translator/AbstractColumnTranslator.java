@@ -34,7 +34,7 @@ import org.sormula.translator.standard.ObjectTranslator;
  * @since 1.0
  * @author Jeff Miller
  * @param <R> row class
- * @param <T> java field type
+ * @param <T> Java field type
  */
 public abstract class AbstractColumnTranslator<R, T> implements ColumnTranslator<R>
 {
@@ -57,8 +57,6 @@ public abstract class AbstractColumnTranslator<R, T> implements ColumnTranslator
      * @return column translator
      * @throws TranslatorException if error
      */
-    // TODO deprecate? 
-    // TODO add public static ColumnTranslator<?> newInstance(Class<? extends ColumnTranslator> columnTranslatorClass, Field field, String columnName, BasicTranslator) throws TranslatorExceptio
 	public static ColumnTranslator<?> newInstance(Class<? extends ColumnTranslator> columnTranslatorClass, 
 	        Field field, String columnName) throws TranslatorException
     {
@@ -83,38 +81,24 @@ public abstract class AbstractColumnTranslator<R, T> implements ColumnTranslator
      * @param columnName name of table column
      * @throws TranslatorException if error
      */
-    @SuppressWarnings("unchecked") // this constructor kept for backward compatibility TODO remove comment?
     public AbstractColumnTranslator(Field field, String columnName) throws TranslatorException
     {
-        this(field, columnName, (TypeTranslator<T>)new ObjectTranslator());
-    }
-    
-    
-    /**
-     * Constructs for a column.
-     * 
-     * @param field java reflection Field that corresponds to column
-     * @param columnName name of table column
-     * @param typeTranslator translator for read column from result set and field to set into
-     * prepared statement
-     * @throws TranslatorException if error
-     */
-    // TODO don't need this constructor if #setTypeTranslator
-    public AbstractColumnTranslator(Field field, String columnName, TypeTranslator<T> typeTranslator) throws TranslatorException
-    {
+        this.columnName = columnName;
+        
         try
         {
             sormulaField = new SormulaField<R, T>(field);
             Column columnAnnotation = field.getAnnotation(Column.class);
             setIdentity(columnAnnotation != null && columnAnnotation.identity());
-            this.typeTranslator = typeTranslator;
         }
         catch (ReflectException e)
         {
             throw new TranslatorException("error creating access to field " + field.getName(), e);
         }
-        
-        this.columnName = columnName;
+    
+        @SuppressWarnings("unchecked")
+        TypeTranslator<T> objectTranslator = (TypeTranslator<T>)new ObjectTranslator();
+        setTypeTranslator(objectTranslator);
     }
     
     
@@ -138,14 +122,20 @@ public abstract class AbstractColumnTranslator<R, T> implements ColumnTranslator
     
     /**
      * @return translator to read result sets and write to prepared statements
+     * @since 1.6
      */
-    public TypeTranslator getTypeTranslator()
+    public TypeTranslator<T> getTypeTranslator()
     {
         return typeTranslator;
     }
 
 
-    //TODO
+    /**
+     * Sets the translator to read result sets and write to prepared statements.
+     * 
+     * @param typeTranslator type translator to use for this column
+     * @since 1.6
+     */
     public void setTypeTranslator(TypeTranslator<T> typeTranslator)
     {
         this.typeTranslator = typeTranslator;

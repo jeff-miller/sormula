@@ -30,16 +30,15 @@ import org.sormula.operation.InsertOperation;
 import org.sormula.operation.SaveOperation;
 import org.sormula.operation.ScalarSelectOperation;
 import org.sormula.operation.SelectCountOperation;
-import org.sormula.operation.SqlOperation;
 import org.sormula.operation.UpdateOperation;
 import org.sormula.operation.aggregate.SelectAggregateOperation;
 import org.sormula.operation.aggregate.SelectAvgOperation;
 import org.sormula.operation.aggregate.SelectMaxOperation;
 import org.sormula.operation.aggregate.SelectMinOperation;
-import org.sormula.translator.TypeTranslator;
 import org.sormula.translator.NameTranslator;
 import org.sormula.translator.NoNameTranslator;
 import org.sormula.translator.RowTranslator;
+import org.sormula.translator.TypeTranslator;
 
 
 /**
@@ -182,7 +181,10 @@ public class Table<R>
     }
 
 
-    // TODO
+    /**
+     * @return row class supplied in constructor
+     * @since 1.6
+     */
     public Class<R> getRowClass()
     {
         return rowClass;
@@ -249,13 +251,12 @@ public class Table<R>
 
 
     /**
-     * TODO scrub "parameter"
      * Overrides translator defined in {@link Database} for all operations on this table. See 
-     * {@link Database#addTypeTranslator(Class, TypeTranslator)} for explanation
+     * {@link Database#addTypeTranslator(Class, TypeTranslator)} for an explanation
      * of translators.
      * 
-     * @param typeClass the class of parameter type
-     * @param typeTranslator translator to use when parameter is of type parameterClassName
+     * @param typeClass class that translator operates upon
+     * @return translator to use for typeClass
      * @since 1.6
      */
     public <T> void addTypeTranslator(Class<T> typeClass, TypeTranslator<T> typeTranslator)
@@ -265,22 +266,21 @@ public class Table<R>
     
     
     /**
-     * TODO
-     * Gets the translator to use to convert a parameter set by {@link SqlOperation#setParameters(Object...)}
-     * to the prepared statement for {@link SqlOperation}. If none are set for this table, then
+     * Gets the translator to use to convert a value to a prepared statement or to 
+     * convert from a result set. If none are set for this table, then
      * translator is obtained from {@link Database#getTypeTranslator(Class)}. See
-     * {@link Database#getTypeTranslator(Class)} for explanation.
+     * {@link Database#getTypeTranslator(Class)} for more details.
      * 
-     * @param typeClass class for TODO
-     * @return translator to prepare parameter
+     * @param typeClass class that translator operates upon
+     * @return translator to use for typeClass
      * @since 1.6
      */
-    @SuppressWarnings("unchecked") // map contains mixed types but always consistent with class type
     public <T> TypeTranslator<T> getTypeTranslator(Class<T> typeClass)
     {
         String typeClassName = typeClass.getCanonicalName();
         
         // get table-specific translator
+        @SuppressWarnings("unchecked") // map contains mixed types but always consistent with class type
         TypeTranslator<T> typeTranslator = (TypeTranslator<T>)typeTranslatorMap.get(typeClassName);
         
         if (typeTranslator == null)

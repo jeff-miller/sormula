@@ -22,14 +22,13 @@ import org.sormula.translator.AbstractColumnTranslator;
 
 
 /**
- * TODO
  * Delegates to translator based upon field type. This translator should work for all
  * standard Java data types. 
  * 
  * @since 1.0
  * @author Jeff Miller
  * @param <R> row class for table
- * @param <T> TODO
+ * @param <T> Java field type
  */
 public class StandardColumnTranslator<R, T> extends AbstractColumnTranslator<R, T>
 {

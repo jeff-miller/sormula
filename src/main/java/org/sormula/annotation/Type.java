@@ -25,20 +25,18 @@ import org.sormula.translator.TypeTranslator;
 
 
 /**
- * TODO
- * Allow on both field and class?
- * Like Type but clazz obtained from field or class
+ * Defines a custom {@link TypeTranslator}. Annotate a row field declaration
+ * or annotate the custom class declaration.
  * 
  * @since 1.6
  * @author Jeff Miller
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.FIELD, ElementType.TYPE})
-public @interface Type // TODO name?
+public @interface Type
 {
     /**
-     * TODO
-     * @return
+     * @return type translator to use on class
      */
     Class<? extends TypeTranslator> translator();
 }

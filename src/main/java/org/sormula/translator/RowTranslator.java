@@ -75,6 +75,7 @@ public class RowTranslator<R> extends ColumnsTranslator<R>
      * 
      * @param table table associated with this row translator
      * @throws TranslatorException if error
+     * @since 1.6
      */
     public RowTranslator(Table<R> table) throws TranslatorException
     {
@@ -98,14 +99,14 @@ public class RowTranslator<R> extends ColumnsTranslator<R>
     
     
     /**
-     * TODO uncomment 
-     * This constructor will not allow this translator to know about custom TODO
-     * Constructs for a row class.
+     * This constructor will not allow this translator to know about {@link TypeTranslator}
+     * for custom types annotated with {@link Type}. Use {@link #RowTranslator(Table)}
+     * instead.
      * 
      * @param rowClass read annotations from this class
      * @param nameTranslator obtain table and column names from this translator
      * @throws TranslatorException if error
-     *
+     */
     @Deprecated
     public RowTranslator(Class<R> rowClass, NameTranslator nameTranslator) throws TranslatorException
     {
@@ -125,7 +126,7 @@ public class RowTranslator<R> extends ColumnsTranslator<R>
             }
         }
     }
-    */
+
     
     /**
      * Column translator used to set the value of a row column that is the identity column 
@@ -146,7 +147,7 @@ public class RowTranslator<R> extends ColumnsTranslator<R>
      * 
      * @throws TranslatorException if error
      */
-    @SuppressWarnings("unchecked") // annotations cannot be parameterized
+    @SuppressWarnings("unchecked") // field types are only known at runtime 
     protected void initColumnTranslators() throws TranslatorException
     {
         Class<R> rowClass = getRowClass();
@@ -235,7 +236,7 @@ public class RowTranslator<R> extends ColumnsTranslator<R>
     }
     
     
-    @SuppressWarnings("unchecked") // types are only known at runtime
+    @SuppressWarnings("unchecked") // field types are only known at runtime
     protected boolean processTypeAnnotation(Type typeAnnotation, Class<?> typeClass) throws TranslatorException
     {
         boolean newTypeTranslator = false;

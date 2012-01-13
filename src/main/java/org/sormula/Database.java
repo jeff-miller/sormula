@@ -24,6 +24,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.sormula.annotation.Column;
+import org.sormula.annotation.Type;
 import org.sormula.log.ClassLogger;
 import org.sormula.operation.ModifyOperation;
 import org.sormula.operation.SqlOperation;
@@ -387,42 +388,49 @@ public class Database
 
 
 	/**
-	 * TODO
-	 * Defines the translator to use to convert a type to a prepared statement. These
-	 * translators are used by {@link SqlOperation} to set prepared statement parameters from
-	 * the values set by {@link SqlOperation#setParameters(Object...)} using 
-	 * {@link TypeTranslator#write(java.sql.PreparedStatement, int, Object)}.
+	 * Defines the translator to use to convert a value to a prepared statement or to convert
+	 * a value from a result set. This method is needed only for type translators that are not
+	 * defined with {@link Type} annotation. 
 	 * <p>
-	 * By default, all subclasses of {@link TypeTranslator} are added during initialization of this class.
-	 * Use this method to override default translators or to add a new translator for a 
-	 * type that is not initialized as a default.
+	 * By default, all primative types and all subclasses of {@link TypeTranslator} in 
+	 * org.sormula.translator.standard package are added during initialization of this class.
+	 * Use this method to override default translators or to add a new translator.
 	 * <p>
 	 * These tranlators may be overridden for a table by {@link Table#addTypeTranslator(Class, TypeTranslator)}.
 	 * 
-	 * @param parameterClassName the class name of parameter type
-	 * @param typeTranslator translator to use when parameter is of type parameterClassName
+	 * @param <T> compile-time type of typeClass
+     * @param typeClass class that translator operates upon
+     * @param typeTranslator translator to use for typeClass
 	 * @since 1.6
 	 */
-    public <T> void addTypeTranslator(Class<T> parameterClass, TypeTranslator<T> typeTranslator)
+    public <T> void addTypeTranslator(Class<T> typeClass, TypeTranslator<T> typeTranslator)
     {
-        addTypeTranslator(parameterClass.getCanonicalName(), typeTranslator);
-    }
-
-    // TODO for primatives?
-    public <T> void addTypeTranslator(String parameterClassName, TypeTranslator<T> typeTranslator)
-    {
-        typeTranslatorMap.put(parameterClassName, typeTranslator);
+        addTypeTranslator(typeClass.getCanonicalName(), typeTranslator);
     }
 
     
     /**
-     * TODO
-     * Gets the translator to use to convert a parameter set by {@link SqlOperation#setParameters(Object...)}
-     * to the prepared statement for {@link SqlOperation}. {@link TypeTranslator#write(java.sql.PreparedStatement, int, Object)}
-     * is used to translate from a parameter to a prepared statement.
+     * Same as {@link #addTypeTranslator(Class, TypeTranslator)} but uses class name. Usefull for adding
+     * primative types like "int", "boolean", "float", etc.
      * 
-     * @param parameterClassName cannocial class name of parameter
-     * @return translator to prepare parameter
+     * @param <T> compile-time type of typeClassName
+     * @param typeClassName class name that translator operates upon
+     * @param typeTranslator translator to use for typeClass
+     * @since 1.6
+     */
+    public <T> void addTypeTranslator(String typeClassName, TypeTranslator<T> typeTranslator)
+    {
+        typeTranslatorMap.put(typeClassName, typeTranslator);
+    }
+
+    
+    /**
+     * Gets the translator to use to convert a value to a prepared statement and to convert
+     * a value from a result set.
+     * 
+     * @param <T> compile-time type of typeClass
+     * @param typeClass class that translator operates upon
+     * @return translator to use for typeClass
      * @since 1.6
      */
     public <T> TypeTranslator<T> getTypeTranslator(Class<T> typeClass)
@@ -430,7 +438,15 @@ public class Database
         return getTypeTranslator(typeClass.getCanonicalName());
     }
     
-    // TODO for primatives?
+    
+    /**
+     * Same as {@link #getTypeTranslator(Class)} but uses class name.
+     * 
+     * @param <T> compile-time type of typeClass
+     * @param typeClassName class name that translator operates upon
+     * @return translator to use for typeClass
+     * @since 1.6
+     */
     @SuppressWarnings("unchecked") // map contains mixed types but always consistent with class type
     public <T> TypeTranslator<T> getTypeTranslator(String typeClassName)
     {

@@ -1,9 +1,9 @@
 /**
- * Classes that convert values to/from standard Java data types and to/from JDBC
- * parameters. Use these translators in {@link org.sormula.annotation.Column#translator()}
- * to override default translantor or to define custom translators.
- * TODO
- * note that {@link org.sormula.translator.ColumnTranslator} is deprecated. Use
- * ... instead
+ * Classes that convert values from standard Java data types to a prepared statement and 
+ * to convert from result set to standard Java data types.
+ * 
+ * @see org.sormula.annotation.Type
+ * @see org.sormula.Database#addTypeTranslator(Class, org.sormula.translator.TypeTranslator)
+ * @see org.sormula.Table#addTypeTranslator(Class, org.sormula.translator.TypeTranslator)
  */
 package org.sormula.translator.standard;

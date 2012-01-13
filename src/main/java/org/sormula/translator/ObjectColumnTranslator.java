@@ -20,16 +20,18 @@ import java.lang.reflect.Field;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
-import org.sormula.translator.standard.ObjectTranslator;
+import org.sormula.translator.standard.StandardColumnTranslator;
 
 
 /**
+ * No longer used by {@link StandardColumnTranslator}.
  * Translates using {@link PreparedStatement#setObject(int, Object)} and {@link ResultSet#getObject(int)}.
  * This translator will use JDBC driver to perform all conversions.
  * 
  * @since 1.0
  * @author Jeff Miller
  */
+@Deprecated
 public class ObjectColumnTranslator<R> extends AbstractColumnTranslator<R, Object>
 {
     Field field;
@@ -45,6 +47,24 @@ public class ObjectColumnTranslator<R> extends AbstractColumnTranslator<R, Objec
      */
     public ObjectColumnTranslator(Field field, String columnName) throws Exception
     {
-        super(field, columnName, new ObjectTranslator());
+        super(field, columnName);
+    }
+    
+    
+    /**
+     * {@inheritDoc}
+     */
+    public void write(PreparedStatement preparedStatement, int parameterIndex, R row) throws Exception
+    {
+        preparedStatement.setObject(parameterIndex, getSormulaField().invokeGetMethod(row));
+    }
+    
+    
+    /**
+     * {@inheritDoc}
+     */
+    public void read(ResultSet resultSet, int columnIndex, R row) throws Exception
+    {
+        getSormulaField().invokeSetMethod(row, resultSet.getObject(columnIndex));
     }
 }

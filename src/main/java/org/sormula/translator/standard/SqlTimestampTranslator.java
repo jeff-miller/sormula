@@ -19,12 +19,14 @@ package org.sormula.translator.standard;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
+import org.sormula.Database;
 import org.sormula.translator.TypeTranslator;
 
 
 /**
  * Translates using {@link PreparedStatement#setTimestamp(int, java.sql.Timestamp)} 
- * and {@link ResultSet#getTimestamp(int)}.
+ * and {@link ResultSet#getTimestamp(int)}. This translator is available by default for
+ * all tables when {@link Database} is created.
  * 
  * @since 1.6
  * @author Jeff Miller

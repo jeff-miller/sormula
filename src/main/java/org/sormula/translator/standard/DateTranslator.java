@@ -20,12 +20,14 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.Date;
 
+import org.sormula.Database;
 import org.sormula.translator.TypeTranslator;
 
 
 /**
  * Translates using {@link PreparedStatement#setTimestamp(int, java.sql.Timestamp)} and {@link ResultSet#getTimestamp(int)}
- * for java.util.Date objects. null's are preserved.
+ * for java.util.Date objects. null's are preserved. This translator is available by default for 
+ * all tables when {@link Database} is created.
  * 
  * @since 1.6
  * @author Jeff Miller

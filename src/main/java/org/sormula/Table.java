@@ -256,7 +256,7 @@ public class Table<R>
      * of translators.
      * 
      * @param typeClass class that translator operates upon
-     * @return translator to use for typeClass
+     * @param typeTranslator to use for typeClass
      * @since 1.6
      */
     public <T> void addTypeTranslator(Class<T> typeClass, TypeTranslator<T> typeTranslator)

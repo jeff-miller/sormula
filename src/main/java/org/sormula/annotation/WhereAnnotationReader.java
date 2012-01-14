@@ -58,7 +58,9 @@ public class WhereAnnotationReader
             if (wheresAnnotation != null)
             {
                 // look for name
-                for (Where w: wheresAnnotation.whereConditions())
+                Where[] wheres = wheresAnnotation.value();
+                if (wheres.length == 0) wheres = wheresAnnotation.whereConditions(); // remove when deprecated removed
+                for (Where w: wheres)
                 {
                     if (w.name().equals(name))
                     {

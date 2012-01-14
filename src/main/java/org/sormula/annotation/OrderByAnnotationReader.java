@@ -17,6 +17,8 @@
 package org.sormula.annotation;
 
 
+
+
 /**
  * Reads {@link OrderBy} annotations from a class.
  * 
@@ -58,7 +60,9 @@ public class OrderByAnnotationReader
             if (orderBysAnnotation != null)
             {
                 // look for name
-                for (OrderBy o: orderBysAnnotation.orderByConditions())
+                OrderBy[] orderbys = orderBysAnnotation.value();
+                if (orderbys.length == 0) orderbys = orderBysAnnotation.orderByConditions();
+                for (OrderBy o: orderbys)
                 {
                     if (o.name().equals(name))
                     {

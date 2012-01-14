@@ -36,12 +36,19 @@ import java.lang.annotation.Target;
 public @interface OrderBys
 {
     /**
-     * Array of order by conditions.
+     * Use {@link #value()}.
+     */
+    @Deprecated
+    OrderBy[] orderByConditions() default {};
+    
+    
+    /**
+     * Order by conditions. value() is the default and does not need to be specified. 
+     * <p> 
+     * "default {}" allows either method to be used. It will be removed when 
+     * {@link #orderByConditions()} is removed.
      * 
      * @return array of {@link OrderBy} annotations
      */
-    // TODO deprecate, add value()
-    OrderBy[] orderByConditions() default {};
-    
-    // can't do since this becomes required OrderBy[] value();
+    OrderBy[] value()  default {};
 }

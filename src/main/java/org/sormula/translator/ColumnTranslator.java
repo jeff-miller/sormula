@@ -62,7 +62,7 @@ public interface ColumnTranslator<R>
      * @param resultSet read column from this result set
      * @param columnIndex read value at this column index from result set 
      * @param row set value in this row
-     * @throws Exception if error TODO TranslatorException?
+     * @throws Exception if error 
      */
     public void read(ResultSet resultSet, int columnIndex, R row) throws Exception;
     
@@ -73,7 +73,7 @@ public interface ColumnTranslator<R>
      * @param preparedStatement set column value as parameter in this statement
      * @param parameterIndex set parameter at this index
      * @param row get value from this row
-     * @throws Exception if error TODO TranslatorException?
+     * @throws Exception if error 
      */
     public void write(PreparedStatement preparedStatement, int parameterIndex, R row) throws Exception;
 }

@@ -29,12 +29,12 @@ import org.sormula.annotation.Wheres;
  * @author Jeff Miller
  */
 @Row(tableName="sormulatest4") // use same table that was created in InsertTest
-@Wheres(whereConditions={
-        @Where(name="w1", fieldNames={"type", "id"}),
-        @Where(name="w2", whereFields={
-                @WhereField(name="type", comparisonOperator="<>"),
-                @WhereField(booleanOperator="OR", name="description", comparisonOperator="LIKE", operand="'%operation%'")
-        })
+@Wheres({
+    @Where(name="w1", fieldNames={"type", "id"}),
+    @Where(name="w2", whereFields={
+            @WhereField(name="type", comparisonOperator="<>"),
+            @WhereField(booleanOperator="OR", name="description", comparisonOperator="LIKE", operand="'%operation%'")
+    })
 })
 public class SormulaTest4MC
 {

@@ -26,8 +26,7 @@ import org.sormula.annotation.UnusedColumns;
  * 
  * @author Jeff Miller
  */
-@UnusedColumns(unusedColumns=
-{    
+@UnusedColumns({    
     @UnusedColumn(name="unusedInt", value="123"),
     @UnusedColumn(name="unusedString", value="'unused'")
 })

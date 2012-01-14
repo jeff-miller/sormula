@@ -33,7 +33,7 @@ import org.sormula.annotation.Where;
  */
 @Row(tableName="studentthree")
 @Where(name="fn", fieldNames="firstName")
-@UnusedColumns(unusedColumns=@UnusedColumn(name="ssn", value="0"))
+@UnusedColumns(@UnusedColumn(name="ssn", value="0"))
 public class Student3
 {
     @Column(name="student_id", primaryKey=true)

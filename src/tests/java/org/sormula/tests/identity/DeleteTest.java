@@ -18,6 +18,7 @@ package org.sormula.tests.identity;
 
 import org.sormula.SormulaException;
 import org.sormula.annotation.Column;
+import org.sormula.log.ClassLogger;
 import org.sormula.tests.DatabaseTest;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
@@ -33,35 +34,50 @@ import org.testng.annotations.Test;
 @Test(singleThreaded=true, groups="identity.delete", dependsOnGroups="identity.insert")
 public class DeleteTest extends DatabaseTest<IdentityTest>
 {
+    private static final ClassLogger log = new ClassLogger();
+    
     @BeforeClass
     public void setUp() throws Exception
     {
-        openDatabase();
-        createTable(IdentityTest.class, null);
+        if (isTestIdentity())
+        {
+            openDatabase();
+            createTable(IdentityTest.class, null);
+        }
     }
     
     
     @AfterClass
     public void tearDown() throws Exception
     {
-        closeDatabase();
+        if (isTestIdentity())
+        {
+            closeDatabase();
+        }
     }
     
     
     @Test
     public void deleteOne() throws SormulaException
     {
-    	begin();
-        selectTestRows(); // must perform each time since other tests are destructive
-        
-        // choose random row
-        IdentityTest row = getRandom();
-
-        assert getTable().delete(row) == 1 : "delete one row failed";
-        
-        // read row to confirm that delete applied
-        assert getTable().select(row.getId()) == null : "row was not deleted";
-        
-        commit();
+        if (isTestIdentity())
+        {
+        	begin();
+            selectTestRows(); // must perform each time since other tests are destructive
+            
+            // choose random row
+            IdentityTest row = getRandom();
+    
+            assert getTable().delete(row) == 1 : "delete one row failed";
+            
+            // read row to confirm that delete applied
+            assert getTable().select(row.getId()) == null : "row was not deleted";
+            
+            commit();
+        }
+        else
+        {
+            log.info("skipping deleteOne for IDENTITY type");
+        }
     }
 }

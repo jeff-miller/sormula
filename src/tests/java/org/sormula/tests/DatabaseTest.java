@@ -106,6 +106,12 @@ public class DatabaseTest<R>
     {
         return jdbcProperties.getBoolean("testTime");
     }
+    
+    
+    public boolean isTestIdentity()
+    {
+        return jdbcProperties.getBoolean("testIdentity");
+    }
 
 
     public void openDatabase() throws Exception

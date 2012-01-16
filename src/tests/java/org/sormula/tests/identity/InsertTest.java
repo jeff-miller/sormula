@@ -20,6 +20,7 @@ import java.util.ArrayList;
 
 import org.sormula.SormulaException;
 import org.sormula.annotation.Column;
+import org.sormula.log.ClassLogger;
 import org.sormula.tests.DatabaseTest;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
@@ -35,54 +36,77 @@ import org.testng.annotations.Test;
 @Test(singleThreaded=true, groups="identity.insert")
 public class InsertTest extends DatabaseTest<IdentityTest>
 {
+    private static final ClassLogger log = new ClassLogger();
+    
     @BeforeClass
     public void setUp() throws Exception
     {
-        // TODO skip identity tests if jdbc.properties indicates
-        openDatabase();
-        createTable(IdentityTest.class, 
-            "CREATE TABLE " + getSchemaPrefix() + IdentityTest.class.getSimpleName() + " (" +
-            " id INTEGER GENERATED ALWAYS AS IDENTITY(START WITH 101) PRIMARY KEY," +
-            " description VARCHAR(30)" +
-            ")"
-        );
+        if (isTestIdentity())
+        {
+            openDatabase();
+            createTable(IdentityTest.class, 
+                "CREATE TABLE " + getSchemaPrefix() + IdentityTest.class.getSimpleName() + " (" +
+                " id INTEGER GENERATED ALWAYS AS IDENTITY(START WITH 101) PRIMARY KEY," +
+                " description VARCHAR(30)" +
+                ")"
+            );
+        }
     }
     
     
     @AfterClass
     public void tearDown() throws Exception
     {
-        closeDatabase();
+        if (isTestIdentity())
+        {
+            closeDatabase();
+        }
     }
     
     
     @Test
     public void insertOne() throws SormulaException
     {
-        IdentityTest row = new IdentityTest(-1, "Insert one");
-        assert getTable().insert(row) == 1 : "insert one failed";
-        assert row.getId() > 0 : "indentity column was not generated";
-        commit();
+        if (isTestIdentity())
+        {
+            begin();
+            IdentityTest row = new IdentityTest(-1, "Insert one");
+            assert getTable().insert(row) == 1 : "insert one failed";
+            assert row.getId() > 0 : "indentity column was not generated";
+            commit();
+        }
+        else
+        {
+            log.info("skipping insertOne for IDENTITY type");
+        }
     }
     
     
     @Test
     public void insertCollection() throws SormulaException
     {
-        ArrayList<IdentityTest> list = new ArrayList<IdentityTest>();
-        
-        for (int i = 1; i < 10; ++i)
+        if (isTestIdentity())
         {
-            list.add(new IdentityTest(-i, "Insert collection " + i));
+            begin();
+            ArrayList<IdentityTest> list = new ArrayList<IdentityTest>();
+            
+            for (int i = 1; i < 10; ++i)
+            {
+                list.add(new IdentityTest(-i, "Insert collection " + i));
+            }
+            
+            assert getTable().insertAll(list) == list.size() : "insert collection failed";
+            
+            for (IdentityTest row: list)
+            {
+                assert row.getId() > 0 : "indentity column was not generated";
+            }
+            
+            commit();
         }
-        
-        assert getTable().insertAll(list) == list.size() : "insert collection failed";
-        
-        for (IdentityTest row: list)
+        else
         {
-            assert row.getId() > 0 : "indentity column was not generated";
+            log.info("skipping insertCollection for IDENTITY type");
         }
-        
-        commit();
     }
 }

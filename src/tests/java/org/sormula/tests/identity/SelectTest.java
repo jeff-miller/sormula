@@ -18,6 +18,7 @@ package org.sormula.tests.identity;
 
 import org.sormula.SormulaException;
 import org.sormula.annotation.Column;
+import org.sormula.log.ClassLogger;
 import org.sormula.tests.DatabaseTest;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
@@ -33,34 +34,49 @@ import org.testng.annotations.Test;
 @Test(singleThreaded=true, groups="identity.select", dependsOnGroups="identity.insert")
 public class SelectTest extends DatabaseTest<IdentityTest>
 {
+    private static final ClassLogger log = new ClassLogger();
+    
     @BeforeClass
     public void setUp() throws Exception
     {
-        openDatabase();
-        createTable(IdentityTest.class, null);
+        if (isTestIdentity())
+        {
+            openDatabase();
+            createTable(IdentityTest.class, null);
+        }
     }
     
     
     @AfterClass
     public void tearDown() throws Exception
     {
-        closeDatabase();
+        if (isTestIdentity())
+        {
+            closeDatabase();
+        }
     }
 
     
     @Test
     public void selectByPrimaryKey() throws SormulaException
     {
-    	begin();
-    	selectTestRows(); // must perform each time since other tests are destructive
-
-    	// choose random row
-    	IdentityTest row = getRandom();
-        
-        // select by primary key
-    	IdentityTest selected = getTable().select(row.getId());
-        assert selected != null && row.getId() == selected.getId() : "select by primary key failed";
-        
-        commit();
+        if (isTestIdentity())
+        {
+        	begin();
+        	selectTestRows(); // must perform each time since other tests are destructive
+    
+        	// choose random row
+        	IdentityTest row = getRandom();
+            
+            // select by primary key
+        	IdentityTest selected = getTable().select(row.getId());
+            assert selected != null && row.getId() == selected.getId() : "select by primary key failed";
+            
+            commit();
+        }
+        else
+        {
+            log.info("skipping selectByPrimaryKey for IDENTITY type");
+        }
     }
 }

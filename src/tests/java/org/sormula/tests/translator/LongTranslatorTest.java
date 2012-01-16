@@ -16,7 +16,6 @@
  */
 package org.sormula.tests.translator;
 
-import java.sql.Time;
 import java.util.List;
 
 import org.sormula.SormulaException;
@@ -28,29 +27,30 @@ import org.testng.annotations.Test;
 
 
 /**
- * Tests {@link TimeTranslator}. This test is separate from
+ * Tests {@link LongTranslator}. This test is separate from
  * {@link ColumnTranslatorTest} because some databases don't support 
- * {@link Time}.  This test is condition based upon testTime property
+ * BIGINT data type. This test is condition based upon testLong property
  * in jdbc.properties.
  * 
  * @author Jeff Miller
  */
 @Test(singleThreaded=true, groups="translator")
-public class TimeTranslatorTest extends DatabaseTest<SormulaTestTime>
+public class LongTranslatorTest extends DatabaseTest<SormulaTestLong>
 {
     private static final ClassLogger log = new ClassLogger();
-    SormulaTestTime inserted;
+	SormulaTestLong inserted;
     
     
     @BeforeClass
     public void setUp() throws Exception
     {
-        if (isTestTime())
+        if (isTestBigDecimal())
         {
             openDatabase();
-            createTable(SormulaTestTime.class, 
-                "CREATE TABLE " + getSchemaPrefix() + SormulaTestTime.class.getSimpleName() + " (" +
-                " testSqlTime TIME " +
+            createTable(SormulaTestLong.class, 
+                "CREATE TABLE " + getSchemaPrefix() + SormulaTestLong.class.getSimpleName() + " (" +
+                " testLong1 BIGINT," +
+                " testLong2 BIGINT" +
                 ")"
             );
         }
@@ -60,7 +60,7 @@ public class TimeTranslatorTest extends DatabaseTest<SormulaTestTime>
     @AfterClass
     public void tearDown() throws Exception
     {
-        if (isTestTime())
+        if (isTestLong())
         {
             closeDatabase();
         }
@@ -70,15 +70,16 @@ public class TimeTranslatorTest extends DatabaseTest<SormulaTestTime>
     @Test
     public void insertTest() throws SormulaException
     {
-        if (isTestTime())
+        if (isTestLong())
         {
-            inserted = new SormulaTestTime();
-            inserted.setTestSqlTime(new java.sql.Time(13*60*60*1000L + 25*60*1000L + 11*1000L));
+            inserted = new SormulaTestLong();
+            inserted.setTestLong1(123456789012345678L);
+            inserted.setTestLong2(-123456789012345678L);
             assert getTable().insert(inserted) == 1 : "1 row not inserted";
         }
         else
         {
-            log.info("skipping insertTest for java.sql.Time");
+            log.info("skipping insertTest for long");
         }
     }
     
@@ -86,17 +87,18 @@ public class TimeTranslatorTest extends DatabaseTest<SormulaTestTime>
     @Test(dependsOnMethods="insertTest")
     public void selectTest() throws SormulaException
     {
-        if (isTestTime())
+        if (isTestLong())
         {
-            List<SormulaTestTime> list = getTable().selectAll();
+            List<SormulaTestLong> list = getTable().selectAll();
             assert list.size() == 1 : "unexpected row count";
-            SormulaTestTime selected = list.get(0);
+            SormulaTestLong selected = list.get(0);
             String message = " column inserted != selected";
-            assert inserted.getTestSqlTime().equals(selected.getTestSqlTime()) : "testSqlTime" + message;
+            assert inserted.getTestLong1() == selected.getTestLong1()     : "testLong1" + message;
+            assert inserted.getTestLong2().equals(selected.getTestLong2()): "testLong2" + message;
         }
         else
         {
-            log.info("skipping selectTest for java.sql.Time");
+            log.info("skipping selectTest for long");
         }
     }
 }

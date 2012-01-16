@@ -30,7 +30,7 @@ import org.testng.annotations.Test;
 
 /**
  * Tests {@link BigDecimalTranslator}. This test is separate from
- * {@link ColumnTranslatorTest} because some database JDBC drivers don't support 
+ * {@link ColumnTranslatorTest} because some databases don't support 
  * {@link BigDecimal}. This test is condition based upon testBigDecimal property
  * in jdbc.properties.
  * 

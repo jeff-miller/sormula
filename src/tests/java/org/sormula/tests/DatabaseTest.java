@@ -102,6 +102,12 @@ public class DatabaseTest<R>
     }
     
     
+    public boolean isTestLong()
+    {
+        return jdbcProperties.getBoolean("testLong");
+    }
+    
+    
     public boolean isTestTime()
     {
         return jdbcProperties.getBoolean("testTime");

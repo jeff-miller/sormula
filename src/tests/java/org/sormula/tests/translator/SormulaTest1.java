@@ -45,8 +45,6 @@ public class SormulaTest1
     Float testFloat2;
     int testInteger1;
     Integer testInteger2;
-    long testLong1;
-    Long testLong2;
     short testShort1;
     Short testShort2;
     java.util.Date testDate;
@@ -162,22 +160,6 @@ public class SormulaTest1
     public void setTestInteger2(Integer testInteger2)
     {
         this.testInteger2 = testInteger2;
-    }
-    public long getTestLong1()
-    {
-        return testLong1;
-    }
-    public void setTestLong1(long testLong1)
-    {
-        this.testLong1 = testLong1;
-    }
-    public Long getTestLong2()
-    {
-        return testLong2;
-    }
-    public void setTestLong2(Long testLong2)
-    {
-        this.testLong2 = testLong2;
     }
     public short getTestShort1()
     {

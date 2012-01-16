@@ -58,8 +58,6 @@ public class ColumnTranslatorTest extends DatabaseTest<SormulaTest1>
             " testFloat2 DECIMAL(6,2)," +
             " testInteger1 INTEGER," +
             " testInteger2 INTEGER," +
-            " testLong1 BIGINT," +
-            " testLong2 BIGINT," +
             " testShort1 SMALLINT," +
             " testShort2 SMALLINT," +
             " testDate TIMESTAMP," +
@@ -99,8 +97,6 @@ public class ColumnTranslatorTest extends DatabaseTest<SormulaTest1>
         inserted.setTestFloat2(-567.89f);
         inserted.setTestInteger1(1234567890);
         inserted.setTestInteger2(-1234567890);
-        inserted.setTestLong1(123456789012345678L);
-        inserted.setTestLong2(-123456789012345678L);
         inserted.setTestShort1((short)12345);
         inserted.setTestShort2((short)-12345);
         
@@ -132,7 +128,6 @@ public class ColumnTranslatorTest extends DatabaseTest<SormulaTest1>
          assert inserted.isTestBooleanYN1() == selected.isTestBooleanYN1() : "testBooleanYN1" + message;
          assert inserted.getTestByte1()     == selected.getTestByte1()     : "testByte1" + message;
          assert inserted.getTestInteger1()  == selected.getTestInteger1()  : "testInteger1" + message;
-         assert inserted.getTestLong1()     == selected.getTestLong1()     : "testLong1" + message;
          assert inserted.getTestShort1()    == selected.getTestShort1()    : "testShort1" + message;
          
          float deltaFloat1 = Math.abs(inserted.getTestFloat1()  - selected.getTestFloat1()); 
@@ -148,7 +143,6 @@ public class ColumnTranslatorTest extends DatabaseTest<SormulaTest1>
          assert inserted.getTestBooleanYN2().equals(selected.getTestBooleanYN2()) : "testBooleanYN2" + message;
          assert inserted.getTestByte2()     .equals(selected.getTestByte2())      : "testByte2" + message;
          assert inserted.getTestInteger2()  .equals(selected.getTestInteger2())   : "testInteger2" + message;
-         assert inserted.getTestLong2()     .equals(selected.getTestLong2())      : "testLong2" + message;
          assert inserted.getTestShort2()    .equals(selected.getTestShort2())     : "testShort2" + message;
 
          float deltaFloat2 = Math.abs(inserted.getTestFloat2()  - selected.getTestFloat2()); 

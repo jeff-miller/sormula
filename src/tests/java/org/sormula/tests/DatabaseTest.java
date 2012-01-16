@@ -100,6 +100,12 @@ public class DatabaseTest<R>
     {
         return jdbcProperties.getBoolean("testBigDecimal");
     }
+    
+    
+    public boolean isTestTime()
+    {
+        return jdbcProperties.getBoolean("testTime");
+    }
 
 
     public void openDatabase() throws Exception

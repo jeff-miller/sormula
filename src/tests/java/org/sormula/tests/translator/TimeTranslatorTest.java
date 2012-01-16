@@ -16,42 +16,41 @@
  */
 package org.sormula.tests.translator;
 
-import java.math.BigDecimal;
+import java.sql.Time;
 import java.util.List;
 
 import org.sormula.SormulaException;
 import org.sormula.log.ClassLogger;
 import org.sormula.tests.DatabaseTest;
-import org.sormula.translator.standard.BigDecimalTranslator;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 
 /**
- * Tests {@link BigDecimalTranslator}. This test is separate from
+ * Tests {@link TimeTranslator}. This test is separate from
  * {@link ColumnTranslatorTest} because some database JDBC drivers don't support 
- * {@link BigDecimal}. This test is condition based upon testBigDecimal property
+ * {@link Time}.  This test is condition based upon testTime property
  * in jdbc.properties.
  * 
  * @author Jeff Miller
  */
 @Test(singleThreaded=true, groups="translator")
-public class BigDecimalTranslatorTest extends DatabaseTest<SormulaTestBD>
+public class TimeTranslatorTest extends DatabaseTest<SormulaTestTime>
 {
     private static final ClassLogger log = new ClassLogger();
-	SormulaTestBD inserted;
+    SormulaTestTime inserted;
     
     
     @BeforeClass
     public void setUp() throws Exception
     {
-        if (isTestBigDecimal())
+        if (isTestTime())
         {
             openDatabase();
-            createTable(SormulaTestBD.class, 
-                "CREATE TABLE " + getSchemaPrefix() + SormulaTestBD.class.getSimpleName() + " (" +
-                " testBigDecimal DECIMAL(18,8)" + // firebird only allows max precesion of 18
+            createTable(SormulaTestTime.class, 
+                "CREATE TABLE " + getSchemaPrefix() + SormulaTestTime.class.getSimpleName() + " (" +
+                " testSqlTime TIME " +
                 ")"
             );
         }
@@ -61,7 +60,7 @@ public class BigDecimalTranslatorTest extends DatabaseTest<SormulaTestBD>
     @AfterClass
     public void tearDown() throws Exception
     {
-        if (isTestBigDecimal())
+        if (isTestTime())
         {
             closeDatabase();
         }
@@ -71,15 +70,15 @@ public class BigDecimalTranslatorTest extends DatabaseTest<SormulaTestBD>
     @Test
     public void insertTest() throws SormulaException
     {
-        if (isTestBigDecimal())
+        if (isTestTime())
         {
-            inserted = new SormulaTestBD();
-            inserted.setTestBigDecimal(new BigDecimal("1234567890.01234567"));
+            inserted = new SormulaTestTime();
+            inserted.setTestSqlTime(new java.sql.Time(13*60*60*1000L + 25*60*1000L + 11*1000L));
             assert getTable().insert(inserted) == 1 : "1 row not inserted";
         }
         else
         {
-            log.info("skipping insertTest for BigDecimal");
+            log.info("skipping insertTest for java.sql.Time");
         }
     }
     
@@ -87,17 +86,17 @@ public class BigDecimalTranslatorTest extends DatabaseTest<SormulaTestBD>
     @Test(dependsOnMethods="insertTest")
     public void selectTest() throws SormulaException
     {
-        if (isTestBigDecimal())
+        if (isTestTime())
         {
-            List<SormulaTestBD> list = getTable().selectAll();
+            List<SormulaTestTime> list = getTable().selectAll();
             assert list.size() == 1 : "unexpected row count";
-            SormulaTestBD selected = list.get(0);
+            SormulaTestTime selected = list.get(0);
             String message = " column inserted != selected";
-            assert inserted.getTestBigDecimal().equals(selected.getTestBigDecimal()) : "testBigDecimal" + message;
+            assert inserted.getTestSqlTime().equals(selected.getTestSqlTime()) : "testSqlTime" + message;
         }
         else
         {
-            log.info("skipping selectTest for BigDecimal");
+            log.info("skipping selectTest for java.sql.Time");
         }
     }
 }

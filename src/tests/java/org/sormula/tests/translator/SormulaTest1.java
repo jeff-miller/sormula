@@ -52,7 +52,6 @@ public class SormulaTest1
     java.util.Date testDate;
     java.util.Date testNullDate;
     java.sql.Date testSqlDate;  // TODO separate table and separate test, conditional based upon jdbc.properties (verify Oracle issue)
-    java.sql.Time testSqlTime;
     java.sql.Timestamp testSqlTimestamp;
     GregorianCalendar testGc;
     String testString1;
@@ -219,14 +218,6 @@ public class SormulaTest1
     public void setTestSqlDate(java.sql.Date testSqlDate)
     {
         this.testSqlDate = testSqlDate;
-    }
-    public java.sql.Time getTestSqlTime()
-    {
-        return testSqlTime;
-    }
-    public void setTestSqlTime(java.sql.Time testSqlTime)
-    {
-        this.testSqlTime = testSqlTime;
     }
     public java.sql.Timestamp getTestSqlTimestamp()
     {

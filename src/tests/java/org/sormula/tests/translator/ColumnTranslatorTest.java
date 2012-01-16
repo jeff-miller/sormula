@@ -65,7 +65,6 @@ public class ColumnTranslatorTest extends DatabaseTest<SormulaTest1>
             " testDate TIMESTAMP," +
             " testNullDate TIMESTAMP," +
             " testSqlDate DATE," +
-            " testSqlTime TIME," +
             " testSqlTimestamp TIMESTAMP," +
             " testGc TIMESTAMP," +
             " testString1 VARCHAR(10)," +
@@ -113,7 +112,6 @@ public class ColumnTranslatorTest extends DatabaseTest<SormulaTest1>
         inserted.setTestDate(new java.util.Date(System.currentTimeMillis()));
         inserted.setTestNullDate(null);
         inserted.setTestSqlDate(new java.sql.Date(new GregorianCalendar(2010, 6, 4).getTimeInMillis()));
-        inserted.setTestSqlTime(new java.sql.Time(13*60*60*1000L + 25*60*1000L + 11*1000L));
         inserted.setTestSqlTimestamp(new java.sql.Timestamp(System.currentTimeMillis()));
         inserted.setTestGc(new GregorianCalendar());
         
@@ -174,7 +172,6 @@ public class ColumnTranslatorTest extends DatabaseTest<SormulaTest1>
          assert selected.getTestNullDate() == null : "testNullDate" + message;
          assert inserted.getTestDate()        .equals(selected.getTestDate())         : "testDate" + message;
          assert inserted.getTestSqlDate()     .equals(selected.getTestSqlDate())      : "testSqlDate" + message;
-         assert inserted.getTestSqlTime()     .equals(selected.getTestSqlTime())      : "testSqlTime" + message;
          assert inserted.getTestSqlTimestamp().equals(selected.getTestSqlTimestamp()) : "testSqlTimestamp" + message;
          assert inserted.getTestGc()          .equals(selected.getTestGc())           : "testGc" + message;
     }

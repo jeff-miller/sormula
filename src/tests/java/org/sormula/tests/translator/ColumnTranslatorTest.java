@@ -16,7 +16,6 @@
  */
 package org.sormula.tests.translator;
 
-import java.math.BigDecimal;
 import java.util.GregorianCalendar;
 import java.util.List;
 
@@ -47,7 +46,6 @@ public class ColumnTranslatorTest extends DatabaseTest<SormulaTest1>
         openDatabase();
         createTable(SormulaTest1.class, 
             "CREATE TABLE " + getSchemaPrefix() + SormulaTest1.class.getSimpleName() + " (" +
-            " testBigDecimal DECIMAL(18,8)," + // firebird only allows max precesion of 18
             " testBoolean1 VARCHAR(5)," +
             " testBoolean2 VARCHAR(5)," +
             " testBooleanYN1 CHAR(1)," +
@@ -90,7 +88,6 @@ public class ColumnTranslatorTest extends DatabaseTest<SormulaTest1>
         inserted = new SormulaTest1();
         
         // primatives and object equivalents
-        inserted.setTestBigDecimal(new BigDecimal("1234567890.01234567"));
         inserted.setTestBoolean1(true);
         inserted.setTestBoolean2(true);
         inserted.setTestBooleanYN1(true);
@@ -149,7 +146,6 @@ public class ColumnTranslatorTest extends DatabaseTest<SormulaTest1>
              inserted.getTestDouble1() + " " + selected.getTestDouble1() + " delta="+deltaDouble1;
 
          // object column tests
-         assert inserted.getTestBigDecimal().equals(selected.getTestBigDecimal()) : "testBigDecimal" + message;
          assert inserted.getTestBoolean2()  .equals(selected.getTestBoolean2())   : "testBoolean2" + message;
          assert inserted.getTestBooleanYN2().equals(selected.getTestBooleanYN2()) : "testBooleanYN2" + message;
          assert inserted.getTestByte2()     .equals(selected.getTestByte2())      : "testByte2" + message;

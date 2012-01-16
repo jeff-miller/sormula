@@ -105,6 +105,7 @@
         	<sysproperty key="dbdir" value="${db.dir}"/>
         	<sysproperty key="seed" value="${seed}"/>
         	<sysproperty key="timings" value="${timings}"/>
+        	<sysproperty key="skipBigDecimal" value="${skipBigDecimal}"/>
         	<classpath refid="tests.libpath"/>
         	<classpath>
         		<path path="${target}"/>

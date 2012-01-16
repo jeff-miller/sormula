@@ -17,6 +17,7 @@
 package org.sormula.tests;
 
 import java.io.FileInputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -71,6 +72,7 @@ public class DatabaseTest<R>
     	}
     }
     
+    JdbcProperties jdbcProperties;
     Database database;
     Statement statement;
     Table<R> table;
@@ -81,16 +83,33 @@ public class DatabaseTest<R>
     List<R> all;
     
     
+    public DatabaseTest() 
+    {
+        try
+        {
+            jdbcProperties = new JdbcProperties(log.isDebugEnabled());
+        }
+        catch (IOException e)
+        {
+            log.error("error opening jdbc properties", e);
+        }
+    }
+    
+    
+    public boolean isTestBigDecimal()
+    {
+        return jdbcProperties.getBoolean("testBigDecimal");
+    }
+
+
     public void openDatabase() throws Exception
     {
-        Properties properties = new JdbcProperties(log.isDebugEnabled());
-        
         // get connection
         Connection connection;
-        Class.forName(properties.getProperty("jdbc.driver"));
-        String url = properties.getProperty("jdbc.url");
-        String user = properties.getProperty("jdbc.user", "");
-        String password = properties.getProperty("jdbc.password", "");
+        Class.forName(jdbcProperties.getString("jdbc.driver"));
+        String url = jdbcProperties.getString("jdbc.url");
+        String user = jdbcProperties.getString("jdbc.user");
+        String password = jdbcProperties.getString("jdbc.password");
         
         if (user.length() == 0 && password.length() == 0)
         {
@@ -102,15 +121,15 @@ public class DatabaseTest<R>
             connection = DriverManager.getConnection(url, user, password); 
         }
         
-        useTransacation = Boolean.parseBoolean(properties.getProperty("jdbc.transaction", "false"));
+        useTransacation = jdbcProperties.getBoolean("jdbc.transaction");
         
         // shutdown commands
-        sqlShutdown = properties.getProperty("jdbc.shutdown.sql", "");
-        driverShutdown = properties.getProperty("jdbc.shutdown.driver", "");
+        sqlShutdown = jdbcProperties.getString("jdbc.shutdown.sql");
+        driverShutdown = jdbcProperties.getString("jdbc.shutdown.driver");
         
         // create sormula database
         assert connection != null : "db connection is null";
-        database = new Database(connection, properties.getProperty("jdbc.schema", ""));
+        database = new Database(connection, jdbcProperties.getString("jdbc.schema"));
         database.setTimings(Boolean.parseBoolean(System.getProperty("timings")));
         
         // statement for ddl and other
@@ -275,7 +294,7 @@ class JdbcProperties extends Properties
     private static final ClassLogger log = new ClassLogger();
     
 
-    public JdbcProperties(boolean logProperties) throws Exception
+    public JdbcProperties(boolean logProperties) throws IOException
     {
         String dbdir = System.getProperty("dbdir");
         assert dbdir != null : "No dbdir property set";
@@ -291,5 +310,17 @@ class JdbcProperties extends Properties
             log.info("propertes from " + jdbcPropertiesName);
             list(System.out);
         }
+    }
+    
+    
+    public String getString(String name)
+    {
+        return getProperty(name, "");
+    }
+    
+    
+    public boolean getBoolean(String name)
+    {
+        return Boolean.parseBoolean(getProperty(name, "false"));
     }
 }

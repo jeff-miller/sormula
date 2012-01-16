@@ -16,7 +16,6 @@
  */
 package org.sormula.tests.translator;
 
-import java.math.BigDecimal;
 import java.util.GregorianCalendar;
 
 import org.sormula.annotation.Column;
@@ -30,8 +29,6 @@ import org.sormula.translator.standard.BooleanYNColumnTranslator;
  */
 public class SormulaTest1
 {
-    BigDecimal testBigDecimal; // TODO separate table and separate test, conditional based upon jdbc.properties
-    
     boolean testBoolean1;
     Boolean testBoolean2;
     
@@ -71,14 +68,6 @@ public class SormulaTest1
     static int staticMember;
     
     
-    public BigDecimal getTestBigDecimal()
-    {
-        return testBigDecimal;
-    }
-    public void setTestBigDecimal(BigDecimal testBigDecimal)
-    {
-        this.testBigDecimal = testBigDecimal;
-    }
     public boolean isTestBoolean1()
     {
         return testBoolean1;

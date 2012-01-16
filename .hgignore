@@ -1,5 +1,5 @@
 ^javadoc/
 ^target/
 ^test-output/
-test.log$
+\.log$
 \.orig

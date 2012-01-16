@@ -86,6 +86,7 @@ import org.sormula.translator.TypeTranslator;
  * @author Jeff Miller
  * @param <R> type of row objects
  */
+// TODO allow @Type for subclasses of Table
 public class Table<R>
 {
     private static final ClassLogger log = new ClassLogger();

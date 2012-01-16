@@ -21,12 +21,16 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+import org.sormula.Database;
+import org.sormula.Table;
 import org.sormula.translator.TypeTranslator;
 
 
 /**
  * Defines a custom {@link TypeTranslator}. Annotate a row field declaration
- * or annotate the custom class declaration.
+ * or annotate the custom class declaration. Type annotations may also be used
+ * on subclass of {@link Table} or subclass of {@link Database}. A type only
+ * needs to be annotated once for a database or only once per table.
  * 
  * @since 1.6
  * @author Jeff Miller

@@ -17,6 +17,7 @@
 package org.sormula.tests.translator;
 
 import java.math.BigDecimal;
+import java.util.GregorianCalendar;
 
 import org.sormula.annotation.Column;
 import org.sormula.annotation.Transient;
@@ -29,7 +30,7 @@ import org.sormula.translator.standard.BooleanYNColumnTranslator;
  */
 public class SormulaTest1
 {
-    BigDecimal testBigDecimal;
+    BigDecimal testBigDecimal; // TODO separate table and separate test, conditional based upon jdbc.properties
     
     boolean testBoolean1;
     Boolean testBoolean2;
@@ -53,9 +54,10 @@ public class SormulaTest1
     Short testShort2;
     java.util.Date testDate;
     java.util.Date testNullDate;
-    java.sql.Date testSqlDate;
+    java.sql.Date testSqlDate;  // TODO separate table and separate test, conditional based upon jdbc.properties (verify Oracle issue)
     java.sql.Time testSqlTime;
     java.sql.Timestamp testSqlTimestamp;
+    GregorianCalendar testGc;
     String testString1;
     
     @Column(name="ts2") // test explicit name
@@ -244,6 +246,14 @@ public class SormulaTest1
     public void setTestSqlTimestamp(java.sql.Timestamp testSqlTimestamp)
     {
         this.testSqlTimestamp = testSqlTimestamp;
+    }
+    public GregorianCalendar getTestGc()
+    {
+        return testGc;
+    }
+    public void setTestGc(GregorianCalendar testGc)
+    {
+        this.testGc = testGc;
     }
     public String getTestString1()
     {

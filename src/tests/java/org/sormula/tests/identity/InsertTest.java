@@ -38,6 +38,7 @@ public class InsertTest extends DatabaseTest<IdentityTest>
     @BeforeClass
     public void setUp() throws Exception
     {
+        // TODO skip identity tests if jdbc.properties indicates
         openDatabase();
         createTable(IdentityTest.class, 
             "CREATE TABLE " + getSchemaPrefix() + IdentityTest.class.getSimpleName() + " (" +

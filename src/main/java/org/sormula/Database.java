@@ -20,6 +20,7 @@ import java.math.BigDecimal;
 import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -29,14 +30,15 @@ import org.sormula.log.ClassLogger;
 import org.sormula.operation.ModifyOperation;
 import org.sormula.operation.SqlOperation;
 import org.sormula.operation.monitor.OperationTime;
-import org.sormula.translator.TypeTranslator;
 import org.sormula.translator.NameTranslator;
+import org.sormula.translator.TypeTranslator;
 import org.sormula.translator.standard.BigDecimalTranslator;
 import org.sormula.translator.standard.BooleanTranslator;
 import org.sormula.translator.standard.ByteTranslator;
 import org.sormula.translator.standard.DateTranslator;
 import org.sormula.translator.standard.DoubleTranslator;
 import org.sormula.translator.standard.FloatTranslator;
+import org.sormula.translator.standard.GregorianCalendarTranslator;
 import org.sormula.translator.standard.IntegerTranslator;
 import org.sormula.translator.standard.LongTranslator;
 import org.sormula.translator.standard.ObjectTranslator;
@@ -62,6 +64,7 @@ import org.sormula.translator.standard.StringTranslator;
  * @since 1.0
  * @author Jeff Miller
  */
+// TODO allow @Type for subclasses of database
 public class Database
 {
     private static final ClassLogger log = new ClassLogger();
@@ -125,6 +128,7 @@ public class Database
         addTypeTranslator(java.sql.Date.class, new SqlDateTranslator());
         addTypeTranslator(java.sql.Time.class, new SqlTimeTranslator());
         addTypeTranslator(java.sql.Timestamp.class, new SqlTimestampTranslator());
+        addTypeTranslator(GregorianCalendar.class, new GregorianCalendarTranslator());
         
         // add primatives since they will be used by RowTranslator#initColumnTranslators
         addTypeTranslator("boolean", new BooleanTranslator());

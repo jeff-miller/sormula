@@ -236,6 +236,8 @@ public class RowTranslator<R> extends ColumnsTranslator<R>
     }
     
     
+    // TODO move to class like WhereAnnotationReader, use to init Type for table, field, field class, AND database
+    // TODO will need interface for get/add TypeTranslator
     @SuppressWarnings("unchecked") // field types are only known at runtime
     protected boolean processTypeAnnotation(Type typeAnnotation, Class<?> typeClass) throws TranslatorException
     {

@@ -749,28 +749,17 @@ public abstract class SqlOperation<R>
         {
             try
             {
-                // look in operation class first
-                Where whereAnnotation = new WhereAnnotationReader(this.getClass()).getAnnotation(whereConditionName);
+                // look for where in operation, table class, row class,
+                Where whereAnnotation = new WhereAnnotationReader(
+                        this.getClass(), table.getClass(), table.getRowClass()).getAnnotation(whereConditionName);
+                
                 if (whereAnnotation != null)
                 {
-                    if (log.isDebugEnabled()) log.debug(whereConditionName + 
-                            " Where annotation from operation class, " + this.getClass()); 
                     setWhereTranslator(new WhereTranslator<R>(table.getRowTranslator(), whereAnnotation));
                 }
                 else
                 {
-                    // look in row class if not found in operation class
-                    if (log.isDebugEnabled()) log.debug(whereConditionName + 
-                            " where annotation from row class," + table.getRowTranslator().getRowClass());
-                    whereAnnotation = new WhereAnnotationReader(table.getRowTranslator().getRowClass()).getAnnotation(whereConditionName);
-                    if (whereAnnotation != null)
-                    {
-                        setWhereTranslator(new WhereTranslator<R>(table.getRowTranslator(), whereAnnotation));
-                    }
-                    else
-                    {
-                        throw new OperationException("no Where annotation named, " + whereConditionName);
-                    }
+                    throw new OperationException("no Where annotation named, " + whereConditionName);
                 }
             }
             catch (TranslatorException e)

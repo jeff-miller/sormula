@@ -16,6 +16,8 @@
  */
 package org.sormula.annotation;
 
+import org.sormula.log.ClassLogger;
+
 
 /**
  * Reads {@link Where} annotations from a class.
@@ -25,17 +27,32 @@ package org.sormula.annotation;
  */
 public class WhereAnnotationReader
 {
-    Class<?> source;
+    private static final ClassLogger log = new ClassLogger();
+    Class<?>[] sources;
     
 
     /**
      * Constructs for a class.
      * 
+     * @param sources classes that contain {@link Where} or {@link Wheres} annotations
+     * @since 1.6
+     */
+    public WhereAnnotationReader(Class<?>... sources)  
+    {
+        this.sources = sources;
+    }
+    
+    
+    /**
+     * Constructs for a class.
+     * 
      * @param source class that contains {@link Where} or {@link Wheres} annotations
      */
-    public WhereAnnotationReader(Class<?> source)
+    @Deprecated
+    public WhereAnnotationReader(Class<?> source) 
     {
-        this.source = source;
+        sources = new Class<?>[1];
+        sources[0] = source;
     }
     
 
@@ -47,26 +64,38 @@ public class WhereAnnotationReader
      */
     public Where getAnnotation(String name)
     {
-        // look for single where annotation
-        Where whereAnnotation = source.getAnnotation(Where.class);
+        Where whereAnnotation = null;
         
-        if (whereAnnotation == null || !whereAnnotation.name().equals(name))
+        for (Class<?> s : sources)
         {
-            // no single annotation or name does not match
-            Wheres wheresAnnotation = source.getAnnotation(Wheres.class);
+            // look for single where annotation
+            whereAnnotation = s.getAnnotation(Where.class);
             
-            if (wheresAnnotation != null)
+            if (whereAnnotation != null && whereAnnotation.name().equals(name))
             {
-                // look for name
-                Where[] wheres = wheresAnnotation.value();
-                if (wheres.length == 0) wheres = wheresAnnotation.whereConditions(); // remove when deprecated removed
-                for (Where w: wheres)
+                // found in single Where annoation
+                if (log.isDebugEnabled()) log.debug(name + " where annotation from " + s.getCanonicalName());
+                break;
+            }
+            else
+            {
+                // no single annotation or name does not match
+                Wheres wheresAnnotation = s.getAnnotation(Wheres.class);
+                
+                if (wheresAnnotation != null)
                 {
-                    if (w.name().equals(name))
+                    // look for name
+                    Where[] wheres = wheresAnnotation.value();
+                    if (wheres.length == 0) wheres = wheresAnnotation.whereConditions(); // remove when deprecated removed
+                    for (Where w: wheres)
                     {
-                        // found
-                        whereAnnotation = w;
-                        break;
+                        if (w.name().equals(name))
+                        {
+                            // found
+                            whereAnnotation = w;
+                            if (log.isDebugEnabled()) log.debug(name + " where annotation from " + s.getCanonicalName());
+                            break;
+                        }
                     }
                 }
             }

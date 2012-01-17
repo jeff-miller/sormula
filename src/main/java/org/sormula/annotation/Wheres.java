@@ -22,9 +22,13 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+import org.sormula.Table;
+import org.sormula.operation.SqlOperation;
+
 
 /**
- * Defines two or more {@link Where} annotations for a row class. Annotates a row class.
+ * Defines two or more {@link Where} annotations for a row class. Annotates a row class,
+ * {@link Table} subclass, or {@link SqlOperation}.
  *
  * @since 1.0
  * @author Jeff Miller

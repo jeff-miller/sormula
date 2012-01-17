@@ -49,7 +49,7 @@ public class SormulaTest1
     Short testShort2;
     java.util.Date testDate;
     java.util.Date testNullDate;
-    java.sql.Date testSqlDate;  // TODO separate table and separate test, conditional based upon jdbc.properties (verify Oracle issue)
+    java.sql.Date testSqlDate;
     java.sql.Timestamp testSqlTimestamp;
     GregorianCalendar testGc;
     String testString1;

@@ -22,12 +22,13 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+import org.sormula.Table;
 import org.sormula.operation.SqlOperation;
 
 
 /**
  * Defines columns to be used in a where condition for a row class. Use this to annotate
- * a row class or within {@linkplain Wheres} annotation.
+ * a row class, {@link Table} subclass, {@link SqlOperation} or within {@linkplain Wheres} annotation.
  * 
  * @since 1.0
  * @author Jeff Miller

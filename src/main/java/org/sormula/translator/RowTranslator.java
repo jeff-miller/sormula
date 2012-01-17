@@ -278,15 +278,17 @@ public class RowTranslator<R> extends ColumnsTranslator<R>
      */
     protected void initUnusedColumnSql(Class<R> rowClass) throws TranslatorException
     {
-        UnusedColumns unusedColumnsAnnotation = rowClass.getAnnotation(UnusedColumns.class);
+        // look for annotation on table subclass and row class
+        UnusedColumns unusedColumnsAnnotation = table.getClass().getAnnotation(UnusedColumns.class);
+        if (unusedColumnsAnnotation == null) unusedColumnsAnnotation = rowClass.getAnnotation(UnusedColumns.class);
         
         if (unusedColumnsAnnotation != null)
         {
             // at least one unused column
-            
-            // allocate typical space needed
             UnusedColumn[] unusedColumnAnnotations = unusedColumnsAnnotation.value();
             if (unusedColumnAnnotations.length == 0) unusedColumnAnnotations = unusedColumnsAnnotation.unusedColumns(); // remove when deprecated removed
+            
+            // allocate typical space needed
             StringBuilder insertNames = new StringBuilder(unusedColumnAnnotations.length * 20);
             StringBuilder insertValues = new StringBuilder(unusedColumnAnnotations.length * 5);
             StringBuilder update = new StringBuilder(unusedColumnAnnotations.length * 25);

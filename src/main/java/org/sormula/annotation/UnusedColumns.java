@@ -21,10 +21,13 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+import org.sormula.Table;
+
 
 /**
  * Defines columns that are required for a table but are not used by row object. Allows updates
- * and inserts into a table where columns are required but not used by row class. Annotates a row class.
+ * and inserts into a table where columns are required but not used by row class. 
+ * Annotates a row class or {@link Table} subclass.
  * 
  * @since 1.0
  * @author Jeff Miller

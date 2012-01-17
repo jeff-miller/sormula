@@ -25,10 +25,13 @@ import org.sormula.Table;
 import org.sormula.annotation.OrderBy;
 import org.sormula.annotation.OrderBys;
 import org.sormula.annotation.Row;
+import org.sormula.annotation.UnusedColumn;
+import org.sormula.annotation.UnusedColumns;
 import org.sormula.annotation.Where;
-import org.sormula.annotation.Wheres;
 import org.sormula.operation.ArrayListSelectOperation;
+import org.sormula.operation.InsertOperation;
 import org.sormula.operation.LinkedHashMapSelectOperation;
+import org.sormula.operation.OperationException;
 import org.sormula.tests.DatabaseTest;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
@@ -36,12 +39,12 @@ import org.testng.annotations.Test;
 
 
 /**
- * Tests all select operations with {@linkplain Wheres} annotations on table class.
+ * Tests operations with annotations on table class.
  * 
  * @author Jeff Miller
  */
-@Test(singleThreaded=true, groups="operation.select", dependsOnGroups="operation.insert")
-public class SelectTestTableAnnotation extends DatabaseTest<SormulaTest4>
+@Test(singleThreaded=true, groups="operation", dependsOnGroups="operation.insert")
+public class TableAnnotationTest extends DatabaseTest<SormulaTest4>
 {
     CustomTable customTable;
     
@@ -135,12 +138,35 @@ public class SelectTestTableAnnotation extends DatabaseTest<SormulaTest4>
         
         commit();
     }
+    
+    
+    @Test
+    public void insertOne() throws SormulaException
+    {
+        InsertOperation<SormulaTest4> o = new InsertOperation<SormulaTest4>(getTable());
+        
+        // unusedInt is not in table because it will cause problems with other tests
+        // therefore, attempt insert, and then verify that unused column was used in SQL
+        try
+        {
+            o.insert(new SormulaTest4(51, 1, "Insert for unused column test"));
+        }
+        catch (OperationException e)
+        {
+        }
+        
+        assert o.getPreparedSql().contains("unusedInt") : "unusedInt column not in SQL";
+    }
 }
+
 
 @Row(tableName="SormulaTest4")
 @Where(name="byCustomTableType", fieldNames="type")
 @OrderBys({
     @OrderBy(name="ob2CustomTable", ascending="description")
+})
+@UnusedColumns({ // note: this will affect insert and updates
+    @UnusedColumn(name="unusedInt", value="123"),
 })
 class CustomTable extends Table<SormulaTest4>
 {

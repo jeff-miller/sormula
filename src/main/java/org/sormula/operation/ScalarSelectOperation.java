@@ -295,28 +295,16 @@ public class ScalarSelectOperation<R> extends SqlOperation<R>
         {
             try
             {
-                // look in operation class first
-                OrderBy orderByAnnotation = new OrderByAnnotationReader(this.getClass()).getAnnotation(orderByName);
+                // look for order annotation in operation, table class, row class (in that order)
+                OrderBy orderByAnnotation = new OrderByAnnotationReader(
+                        this.getClass(), table.getClass(), table.getRowClass()).getAnnotation(orderByName);
                 if (orderByAnnotation != null)
                 {
-                    if (log.isDebugEnabled()) log.debug(orderByName + 
-                            " OrderBy annotation from operation class, " + this.getClass()); 
                     setOrderByTranslator(new OrderByTranslator<R>(table.getRowTranslator(), orderByAnnotation));
                 }
                 else
                 {
-                    // look in row class if not found in operation class
-                    if (log.isDebugEnabled()) log.debug(orderByName + 
-                            " OrderBy annotation from row class," + table.getRowTranslator().getRowClass());
-                    orderByAnnotation = new OrderByAnnotationReader(table.getRowTranslator().getRowClass()).getAnnotation(orderByName);
-                    if (orderByAnnotation != null)
-                    {
-                        setOrderByTranslator(new OrderByTranslator<R>(table.getRowTranslator(), orderByAnnotation));
-                    }
-                    else
-                    {
-                        throw new OperationException("no OrderBy annotation named, " + orderByName);
-                    }
+                    throw new OperationException("no OrderBy annotation named, " + orderByName);
                 }
             }
             catch (TranslatorException e)

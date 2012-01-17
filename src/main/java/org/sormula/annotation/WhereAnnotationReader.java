@@ -32,7 +32,7 @@ public class WhereAnnotationReader
     
 
     /**
-     * Constructs for a class.
+     * Constructs for classes that may contain the annotation.
      * 
      * @param sources classes that contain {@link Where} or {@link Wheres} annotations
      * @since 1.6
@@ -75,7 +75,7 @@ public class WhereAnnotationReader
             {
                 // found in single Where annoation
                 if (log.isDebugEnabled()) log.debug(name + " where annotation from " + s.getCanonicalName());
-                break;
+                return whereAnnotation;
             }
             else
             {
@@ -92,15 +92,15 @@ public class WhereAnnotationReader
                         if (w.name().equals(name))
                         {
                             // found
-                            whereAnnotation = w;
                             if (log.isDebugEnabled()) log.debug(name + " where annotation from " + s.getCanonicalName());
-                            break;
+                            return w;
                         }
                     }
                 }
             }
         }
         
-        return whereAnnotation;
+        // not found
+        return null;
     }
 }

@@ -17,13 +17,17 @@
 package org.sormula.tests.operation;
 
 import java.util.List;
+import java.util.Map;
 
 import org.sormula.Database;
 import org.sormula.SormulaException;
 import org.sormula.Table;
+import org.sormula.annotation.OrderBy;
+import org.sormula.annotation.OrderBys;
 import org.sormula.annotation.Where;
 import org.sormula.annotation.Wheres;
 import org.sormula.operation.ArrayListSelectOperation;
+import org.sormula.operation.LinkedHashMapSelectOperation;
 import org.sormula.tests.DatabaseTest;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
@@ -38,14 +42,29 @@ import org.testng.annotations.Test;
 @Test(singleThreaded=true, groups="operation.select", dependsOnGroups="operation.insert")
 public class SelectTestTableAnnotation extends DatabaseTest<SormulaTest4>
 {
+    CustomTable customTable;
+    
+    
     @BeforeClass
     public void setUp() throws Exception
     {
         openDatabase();
-        createTable(SormulaTest4.class, null);
+        
+        // use CustomTable for all SormulaTest4 operations
+        customTable = new CustomTable(getDatabase(), SormulaTest4.class);
+        getDatabase().addTable(customTable);
     }
     
     
+    
+    @Override
+    public CustomTable getTable()
+    {
+        return customTable;
+    }
+
+
+
     @AfterClass
     public void tearDown() throws Exception
     {
@@ -71,13 +90,9 @@ public class SelectTestTableAnnotation extends DatabaseTest<SormulaTest4>
         
         assert expectedCount > 0 : "no rows meet expected condition to test";
         
-        // use CustomTable for all SormulaTest4 operations
-        CustomTable ct = new CustomTable(getDatabase(), SormulaTest4.class);
-        getDatabase().addTable(ct);
-        
         // select all type 3 rows
         List<SormulaTest4> selectedList = new ArrayListSelectOperation<SormulaTest4>(
-                getDatabase().getTable(SormulaTest4.class), "byCustomTableType").selectAll(3);
+                getTable(), "byCustomTableType").selectAll(3);
 
         assert expectedCount == selectedList.size() : "simple select returned wrong number of rows";
         
@@ -89,10 +104,43 @@ public class SelectTestTableAnnotation extends DatabaseTest<SormulaTest4>
         
         commit();
     }
+    
+    
+    @Test
+    public void selectLinkedHashMap() throws SormulaException
+    {
+        begin();
+        
+        LinkedHashMapSelectOperation<Integer, SormulaTest4> operation = 
+            new LinkedHashMapSelectOperation<Integer, SormulaTest4>(getTable(), "" /*select all*/);
+        operation.setGetKeyMethodName("getId");
+        
+        // select into map
+        operation.setOrderBy("ob2CustomTable"); // by description
+        operation.execute();
+        Map<Integer, SormulaTest4> result = operation.readAll();
+        operation.close();
+        
+        assert result.size() > 0 : "no rows selected";
+        
+        String previousDescription = "";
+        for (SormulaTest4 r: result.values())
+        {
+            assert r.getDescription().compareTo(previousDescription) >= 0 : 
+                r.getId() + " row is not in ascending order by description";
+            
+            assert result.get(r.getId()) != null : r.getId() + " is not in map";
+        }
+        
+        commit();
+    }
 }
 
 
 @Where(name="byCustomTableType", fieldNames="type")
+@OrderBys({
+    @OrderBy(name="ob2CustomTable", ascending="description")
+})
 class CustomTable extends Table<SormulaTest4>
 {
     public CustomTable(Database database, Class<SormulaTest4> rowClass) throws SormulaException

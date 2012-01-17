@@ -749,7 +749,7 @@ public abstract class SqlOperation<R>
         {
             try
             {
-                // look for where in operation, table class, row class,
+                // look for where annotation in operation, table class, row class (in that order)
                 Where whereAnnotation = new WhereAnnotationReader(
                         this.getClass(), table.getClass(), table.getRowClass()).getAnnotation(whereConditionName);
                 

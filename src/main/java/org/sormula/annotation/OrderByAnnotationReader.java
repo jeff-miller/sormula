@@ -16,6 +16,8 @@
  */
 package org.sormula.annotation;
 
+import org.sormula.log.ClassLogger;
+
 
 
 
@@ -27,7 +29,20 @@ package org.sormula.annotation;
  */
 public class OrderByAnnotationReader
 {
-    Class<?> source;
+    private static final ClassLogger log = new ClassLogger();
+    Class<?>[] sources;
+    
+
+    /**
+     * Constructs for classes that may contain the annotation.
+     * 
+     * @param sources classes that contain {@link OrderBy} or {@link OrderBys} annotations
+     * @since 1.6
+     */
+    public OrderByAnnotationReader(Class<?>... sources)  
+    {
+        this.sources = sources;
+    }
     
 
     /**
@@ -35,9 +50,11 @@ public class OrderByAnnotationReader
      * 
      * @param source class that contains {@link OrderBy} or {@link OrderBys} annotations
      */
+    @Deprecated
     public OrderByAnnotationReader(Class<?> source)
     {
-        this.source = source;
+        sources = new Class<?>[1];
+        sources[0] = source;
     }
     
 
@@ -49,31 +66,43 @@ public class OrderByAnnotationReader
      */
     public OrderBy getAnnotation(String name)
     {
-        // look for single OrderBy annotation
-        OrderBy orderByAnnotation = source.getAnnotation(OrderBy.class);
+        OrderBy orderByAnnotation = null;
         
-        if (orderByAnnotation == null || !orderByAnnotation.name().equals(name))
+        for (Class<?> s : sources)
         {
-            // no single annotation or name does not match
-            OrderBys orderBysAnnotation = source.getAnnotation(OrderBys.class);
+            // look for single OrderBy annotation
+            orderByAnnotation = s.getAnnotation(OrderBy.class);
             
-            if (orderBysAnnotation != null)
+            if (orderByAnnotation != null && orderByAnnotation.name().equals(name))
             {
-                // look for name
-                OrderBy[] orderbys = orderBysAnnotation.value();
-                if (orderbys.length == 0) orderbys = orderBysAnnotation.orderByConditions();
-                for (OrderBy o: orderbys)
+                // found in single OrderBy annoation
+                if (log.isDebugEnabled()) log.debug(name + " order annotation from " + s.getCanonicalName());
+                return orderByAnnotation;
+            }
+            else
+            {
+                // no single annotation or name does not match
+                OrderBys orderBysAnnotation = s.getAnnotation(OrderBys.class);
+                
+                if (orderBysAnnotation != null)
                 {
-                    if (o.name().equals(name))
+                    // look for name
+                    OrderBy[] orderbys = orderBysAnnotation.value();
+                    if (orderbys.length == 0) orderbys = orderBysAnnotation.orderByConditions();
+                    for (OrderBy o: orderbys)
                     {
-                        // found
-                        orderByAnnotation = o;
-                        break;
+                        if (o.name().equals(name))
+                        {
+                            // found
+                            if (log.isDebugEnabled()) log.debug(name + " order annotation from " + s.getCanonicalName());
+                            return o;
+                        }
                     }
                 }
             }
         }
         
-        return orderByAnnotation;
+        // not found
+        return null;
     }
 }

@@ -118,7 +118,9 @@ public class Table<R>
         typeTranslatorMap = new HashMap<String, TypeTranslator<?>>();
         
         // process row annotation
-        Row rowAnnotation = rowClass.getAnnotation(Row.class);
+        Row rowAnnotation = getClass().getAnnotation(Row.class); // look in table subclass first
+        if (rowAnnotation == null) rowAnnotation = rowClass.getAnnotation(Row.class); // look in row class if none for table subclass
+        
         Class<? extends NameTranslator> nameTranslatorClass = null;
         
         if (rowAnnotation != null)

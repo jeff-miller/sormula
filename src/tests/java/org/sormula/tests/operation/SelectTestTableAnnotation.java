@@ -24,6 +24,7 @@ import org.sormula.SormulaException;
 import org.sormula.Table;
 import org.sormula.annotation.OrderBy;
 import org.sormula.annotation.OrderBys;
+import org.sormula.annotation.Row;
 import org.sormula.annotation.Where;
 import org.sormula.annotation.Wheres;
 import org.sormula.operation.ArrayListSelectOperation;
@@ -136,7 +137,7 @@ public class SelectTestTableAnnotation extends DatabaseTest<SormulaTest4>
     }
 }
 
-
+@Row(tableName="SormulaTest4")
 @Where(name="byCustomTableType", fieldNames="type")
 @OrderBys({
     @OrderBy(name="ob2CustomTable", ascending="description")

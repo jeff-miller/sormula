@@ -22,10 +22,14 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+import org.sormula.Table;
+import org.sormula.operation.SqlOperation;
+
 
 /**
  * Defines two or more order by phrases for row class. Use this annotation if
- * more than one {@linkplain OrderBy} is needed for a row class. Annotates a row class.
+ * more than one {@link OrderBy} is needed. Annotates a row class,
+ * {@link Table} subclass, {@link SqlOperation} or within {@link OrderBy}.
  *
  * @since 1.0
  * @author Jeff Miller

@@ -21,13 +21,14 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+import org.sormula.Table;
 import org.sormula.translator.NameTranslator;
 import org.sormula.translator.NoNameTranslator;
 
 
 /**
- * Defines class attributes for a row class. Annotates a row class. This annotation
- * is only required if table name is different from class name or if a name
+ * Defines class attributes for a row class. Annotates a row class or {@link Table} subclass. 
+ * This annotation is only required if table name is different from class name or if a name
  * translator is needed.
  * 
  * @since 1.0

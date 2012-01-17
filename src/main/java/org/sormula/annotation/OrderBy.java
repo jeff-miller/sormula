@@ -22,11 +22,17 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+import org.sormula.Table;
+import org.sormula.operation.SqlOperation;
+
 
 /**
- * Defines columns to be used in a order phrase. Annotates a row class or used 
- * within {@linkplain OrderBys} annotation. Use only one of these methods: {@link #ascending()},
- * {@link #descending()}, or {@link #orderByFields()}.
+ * Defines columns to be used in a order phrase. Use this to annotate
+ * a row class, {@link Table} subclass, {@link SqlOperation} or  
+ * within {@linkplain OrderBys} annotation.
+ * <p>
+ * Use only one of these methods: {@link #ascending()}, {@link #descending()}, or 
+ * {@link #orderByFields()}.
  * 
  * @since 1.0
  * @author Jeff Miller

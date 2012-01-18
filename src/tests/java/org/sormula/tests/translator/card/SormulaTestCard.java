@@ -17,7 +17,7 @@
 package org.sormula.tests.translator.card;
 
 import org.sormula.annotation.Column;
-import org.sormula.annotation.Type;
+import org.sormula.annotation.ImplicitType;
 
 
 /**
@@ -29,7 +29,7 @@ import org.sormula.annotation.Type;
 public class SormulaTestCard
 {
     @Column(primaryKey=true)
-    @Type(translator=RankTranslator.class)
+    @ImplicitType(translator=RankTranslator.class)
     Rank rank; 
     
     @Column(primaryKey=true)

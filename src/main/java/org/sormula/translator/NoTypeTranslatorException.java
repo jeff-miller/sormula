@@ -20,7 +20,7 @@ import java.lang.reflect.Field;
 
 import org.sormula.Database;
 import org.sormula.Table;
-import org.sormula.annotation.Type;
+import org.sormula.annotation.ImplicitType;
 import org.sormula.translator.standard.StandardColumnTranslator;
 
 
@@ -28,7 +28,7 @@ import org.sormula.translator.standard.StandardColumnTranslator;
  * No type translator defined. Thrown by {@link StandardColumnTranslator}
  * when a nonstandard field type is used but no {@link TypeTranslator} has
  * been defined for nonstandard field type. A nonstandard type translator
- * may be defined by {@link Type}, {@link Database#addTypeTranslator(Class, TypeTranslator)}, or
+ * may be defined by {@link ImplicitType}, {@link Database#addTypeTranslator(Class, TypeTranslator)}, or
  * {@link Table#addTypeTranslator(Class, TypeTranslator)}.
  * 
  * @since 1.0

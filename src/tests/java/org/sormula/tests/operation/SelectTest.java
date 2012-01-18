@@ -318,6 +318,7 @@ public class SelectTest extends DatabaseTest<SormulaTest4>
     public void selectIn() throws SormulaException
     {
         begin();
+        selectTestRows();
         
         // perform with different test sizes but same operation to test that correctly prepare 
         ListSelectOperation<SormulaTest4> operation = new ArrayListSelectOperation<SormulaTest4>(getTable(), "idIn");

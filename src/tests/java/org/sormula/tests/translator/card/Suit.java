@@ -20,10 +20,10 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import org.sormula.annotation.Type;
+import org.sormula.annotation.ImplicitType;
 
 
-@Type(translator=SuitTranslator.class) 
+@ImplicitType(translator=SuitTranslator.class) 
 public class Suit 
 {
     static List<String> suit = new ArrayList<String>(

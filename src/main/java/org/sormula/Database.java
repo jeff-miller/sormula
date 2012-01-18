@@ -25,7 +25,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.sormula.annotation.Column;
-import org.sormula.annotation.Type;
+import org.sormula.annotation.ImplicitType;
 import org.sormula.log.ClassLogger;
 import org.sormula.operation.ModifyOperation;
 import org.sormula.operation.SqlOperation;
@@ -394,7 +394,7 @@ public class Database
 	/**
 	 * Defines the translator to use to convert a value to a prepared statement or to convert
 	 * a value from a result set. This method is needed only for type translators that are not
-	 * defined with {@link Type} annotation. 
+	 * defined with {@link ImplicitType} annotation. 
 	 * <p>
 	 * By default, all primative types and all subclasses of {@link TypeTranslator} in 
 	 * org.sormula.translator.standard package are added during initialization of this class.

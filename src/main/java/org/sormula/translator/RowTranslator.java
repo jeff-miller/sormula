@@ -32,6 +32,7 @@
  */
 package org.sormula.translator;
 
+import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 
@@ -39,7 +40,7 @@ import org.sormula.Table;
 import org.sormula.annotation.Column;
 import org.sormula.annotation.Row;
 import org.sormula.annotation.Transient;
-import org.sormula.annotation.Type;
+import org.sormula.annotation.ImplicitType;
 import org.sormula.annotation.UnusedColumn;
 import org.sormula.annotation.UnusedColumns;
 import org.sormula.annotation.cascade.Cascade;
@@ -100,7 +101,7 @@ public class RowTranslator<R> extends ColumnsTranslator<R>
     
     /**
      * This constructor will not allow this translator to know about {@link TypeTranslator}
-     * for custom types annotated with {@link Type}. Use {@link #RowTranslator(Table)}
+     * for custom types annotated with {@link ImplicitType}. Use {@link #RowTranslator(Table)}
      * instead.
      * 
      * @param rowClass read annotations from this class
@@ -173,10 +174,18 @@ public class RowTranslator<R> extends ColumnsTranslator<R>
             else 
             {
                 // check for Type annotation on field type and field 
-                Class<?> fieldClass = f.getType();
-                if (!processTypeAnnotation(fieldClass.getAnnotation(Type.class), fieldClass))
-                    processTypeAnnotation(f.getAnnotation(Type.class), fieldClass);
-                    
+                Class fieldClass = f.getType();
+                if (table.getTypeTranslator(fieldClass) == null)
+                {
+                    TypeTranslator typeTranslator = processTypeAnnotation(fieldClass, f);
+                    if (typeTranslator != null)
+                    {
+                        if (log.isDebugEnabled()) log.debug("add type translator=" + typeTranslator.getClass().getCanonicalName() + 
+                                " to row table type=" + rowClass.getCanonicalName() + " for type="+fieldClass.getCanonicalName());
+                        table.addTypeTranslator(fieldClass, typeTranslator);
+                    }
+                }
+                
                 // determine column translator to use
                 String columnName = "";
                 Class<? extends ColumnTranslator> columnTranslatorClass;
@@ -238,26 +247,18 @@ public class RowTranslator<R> extends ColumnsTranslator<R>
     
     // TODO move to class like WhereAnnotationReader, use to init Type for table, field, field class, AND database
     // TODO will need interface for get/add TypeTranslator
-    @SuppressWarnings("unchecked") // field types are only known at runtime
-    protected boolean processTypeAnnotation(Type typeAnnotation, Class<?> typeClass) throws TranslatorException
+    protected TypeTranslator<?> processTypeAnnotation(AnnotatedElement... annotatedElements) throws TranslatorException
     {
-        boolean newTypeTranslator = false;
-        
-        if (typeAnnotation != null)
+        for (AnnotatedElement ae : annotatedElements)
         {
-            // add type translator
-            TypeTranslator<?> typeTranslator = table.getTypeTranslator(typeClass);
+            ImplicitType typeAnnotation = ae.getAnnotation(ImplicitType.class);
             
-            if (typeTranslator == null)
+            if (typeAnnotation != null)
             {
-                // type translator not yet defined, add 
-                // note: first Type annotation for a class is used; others are ignored 
+                // create type translator
                 try
                 {
-                    if (log.isDebugEnabled()) log.debug("add type translator=" + typeAnnotation.translator().getCanonicalName() + 
-                            " to row table type=" + rowClass.getCanonicalName() + " for type="+typeClass.getCanonicalName());
-                    table.addTypeTranslator(typeClass, typeAnnotation.translator().newInstance());
-                    newTypeTranslator = true;
+                    return typeAnnotation.translator().newInstance();
                 }
                 catch (Exception e)
                 {
@@ -266,7 +267,8 @@ public class RowTranslator<R> extends ColumnsTranslator<R>
             }
         }
         
-        return newTypeTranslator;
+        // not found or error
+        return null;
     }
     
     

@@ -16,10 +16,16 @@
  */
 package org.sormula.translator;
 
+import org.sormula.annotation.ExplicitType;
+import org.sormula.annotation.ImplicitType;
+
 
 
 /**
- * TODO
+ * Interface for classes that add and retrieve {@link TypeTranslator} using a
+ * key of {@link Class}. Methods use wildcard type since custom translator types
+ * are not known when obtained from annotations like {@link ExplicitType} or
+ * {@link ImplicitType}. 
  * 
  * @author Jeff Miller
  * @since 1.6
@@ -30,20 +36,18 @@ public interface TypeTranslatorMap
      * Defines the translator to use to convert a value to a prepared statement or to convert
      * a value from a result set.  
      * 
-     * @param <T> compile-time type of typeClass
      * @param typeClass class that translator operates upon
      * @param typeTranslator translator to use for typeClass
      */
-    public <T> void putTypeTranslator(Class<T> typeClass, TypeTranslator<T> typeTranslator);
+    public void putTypeTranslator(Class<?> typeClass, TypeTranslator<?> typeTranslator);
 
     
     /**
      * Gets the translator to use to convert a value to a prepared statement and to convert
      * a value from a result set.
      * 
-     * @param <T> compile-time type of typeClass
      * @param typeClass class that translator operates upon
      * @return translator to use for typeClass
      */
-    public <T> TypeTranslator<T> getTypeTranslator(Class<T> typeClass);
+    public TypeTranslator<?> getTypeTranslator(Class<?> typeClass);
 }

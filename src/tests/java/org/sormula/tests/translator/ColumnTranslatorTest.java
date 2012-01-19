@@ -111,62 +111,66 @@ public class ColumnTranslatorTest extends DatabaseTest<SormulaTest1>
         inserted.setTestSqlTimestamp(new java.sql.Timestamp(System.currentTimeMillis()));
         inserted.setTestGc(new GregorianCalendar());
         
+        begin();
         assert getTable().insert(inserted) == 1 : "1 row not inserted";
+        commit();
     }
     
     
     @Test(dependsOnMethods="insertTest")
     public void selectTest() throws SormulaException
     {
-         List<SormulaTest1> list = getTable().selectAll();
-         assert list.size() == 1 : "unexpected row count";
-         SormulaTest1 selected = list.get(0);
-         String message = " column inserted != selected";
+        begin();
+        List<SormulaTest1> list = getTable().selectAll();
+        assert list.size() == 1 : "unexpected row count";
+        SormulaTest1 selected = list.get(0);
+        String message = " column inserted != selected";
          
-         // primitive column tests
-         assert inserted.isTestBoolean1()   == selected.isTestBoolean1()   : "testBoolean1" + message;
-         assert inserted.isTestBooleanYN1() == selected.isTestBooleanYN1() : "testBooleanYN1" + message;
-         assert inserted.getTestByte1()     == selected.getTestByte1()     : "testByte1" + message;
-         assert inserted.getTestInteger1()  == selected.getTestInteger1()  : "testInteger1" + message;
-         assert inserted.getTestShort1()    == selected.getTestShort1()    : "testShort1" + message;
+        // primitive column tests
+        assert inserted.isTestBoolean1()   == selected.isTestBoolean1()   : "testBoolean1" + message;
+        assert inserted.isTestBooleanYN1() == selected.isTestBooleanYN1() : "testBooleanYN1" + message;
+        assert inserted.getTestByte1()     == selected.getTestByte1()     : "testByte1" + message;
+        assert inserted.getTestInteger1()  == selected.getTestInteger1()  : "testInteger1" + message;
+        assert inserted.getTestShort1()    == selected.getTestShort1()    : "testShort1" + message;
          
-         float deltaFloat1 = Math.abs(inserted.getTestFloat1()  - selected.getTestFloat1()); 
-         assert deltaFloat1  < 0.01 : "testFloat1" + message + " " +
-             inserted.getTestFloat1() + " " + selected.getTestFloat1() + " delta="+deltaFloat1;
+        float deltaFloat1 = Math.abs(inserted.getTestFloat1()  - selected.getTestFloat1()); 
+        assert deltaFloat1  < 0.01 : "testFloat1" + message + " " +
+            inserted.getTestFloat1() + " " + selected.getTestFloat1() + " delta="+deltaFloat1;
 
-         double deltaDouble1 = Math.abs(inserted.getTestDouble1()  - selected.getTestDouble1()); 
-         assert deltaDouble1  < 0.001 : "testDouble1" + message + " " +
-             inserted.getTestDouble1() + " " + selected.getTestDouble1() + " delta="+deltaDouble1;
+        double deltaDouble1 = Math.abs(inserted.getTestDouble1()  - selected.getTestDouble1()); 
+        assert deltaDouble1  < 0.001 : "testDouble1" + message + " " +
+            inserted.getTestDouble1() + " " + selected.getTestDouble1() + " delta="+deltaDouble1;
 
-         // object column tests
-         assert inserted.getTestBoolean2()  .equals(selected.getTestBoolean2())   : "testBoolean2" + message;
-         assert inserted.getTestBooleanYN2().equals(selected.getTestBooleanYN2()) : "testBooleanYN2" + message;
-         assert inserted.getTestByte2()     .equals(selected.getTestByte2())      : "testByte2" + message;
-         assert inserted.getTestInteger2()  .equals(selected.getTestInteger2())   : "testInteger2" + message;
-         assert inserted.getTestShort2()    .equals(selected.getTestShort2())     : "testShort2" + message;
+        // object column tests
+        assert inserted.getTestBoolean2()  .equals(selected.getTestBoolean2())   : "testBoolean2" + message;
+        assert inserted.getTestBooleanYN2().equals(selected.getTestBooleanYN2()) : "testBooleanYN2" + message;
+        assert inserted.getTestByte2()     .equals(selected.getTestByte2())      : "testByte2" + message;
+        assert inserted.getTestInteger2()  .equals(selected.getTestInteger2())   : "testInteger2" + message;
+        assert inserted.getTestShort2()    .equals(selected.getTestShort2())     : "testShort2" + message;
 
-         float deltaFloat2 = Math.abs(inserted.getTestFloat2()  - selected.getTestFloat2()); 
-         assert deltaFloat2  < 0.01 : "testFloat2" + message + " " +
-             inserted.getTestFloat2() + " " + selected.getTestFloat2() + " delta="+deltaFloat2;
+        float deltaFloat2 = Math.abs(inserted.getTestFloat2()  - selected.getTestFloat2()); 
+        assert deltaFloat2  < 0.01 : "testFloat2" + message + " " +
+            inserted.getTestFloat2() + " " + selected.getTestFloat2() + " delta="+deltaFloat2;
          
-         double deltaDouble2 = Math.abs(inserted.getTestDouble2()  - selected.getTestDouble2()); 
-         assert deltaDouble2  < 0.001 : "testDouble2" + message + " " +
-             inserted.getTestDouble2() + " " + selected.getTestDouble2() + " delta="+deltaDouble2;
+        double deltaDouble2 = Math.abs(inserted.getTestDouble2()  - selected.getTestDouble2()); 
+        assert deltaDouble2  < 0.001 : "testDouble2" + message + " " +
+            inserted.getTestDouble2() + " " + selected.getTestDouble2() + " delta="+deltaDouble2;
          
-         // string column tests
-         assert inserted.getTestString1()   .equals(selected.getTestString1())    : "testString1" + message;
-         if (selected.getTestString2().length() != 10)
-         {
-        	 // CHAR not always implemented consistently in all db's
-        	 log.warn("CHAR not padded with blanks length=" + selected.getTestString2().length());
-         }
-         assert inserted.getTestString2()   .equals(selected.getTestString2().trim()) : "testString2" + message;
+        // string column tests
+        assert inserted.getTestString1()   .equals(selected.getTestString1())    : "testString1" + message;
+        if (selected.getTestString2().length() != 10)
+        {
+            // CHAR not always implemented consistently in all db's
+            log.warn("CHAR not padded with blanks length=" + selected.getTestString2().length());
+        }
+        assert inserted.getTestString2()   .equals(selected.getTestString2().trim()) : "testString2" + message;
          
-         // date/time tests
-         assert selected.getTestNullDate() == null : "testNullDate" + message;
-         assert inserted.getTestDate()        .equals(selected.getTestDate())         : "testDate" + message;
-         assert inserted.getTestSqlDate()     .equals(selected.getTestSqlDate())      : "testSqlDate" + message;
-         assert inserted.getTestSqlTimestamp().equals(selected.getTestSqlTimestamp()) : "testSqlTimestamp" + message;
-         assert inserted.getTestGc()          .equals(selected.getTestGc())           : "testGc" + message;
+        // date/time tests
+        assert selected.getTestNullDate() == null : "testNullDate" + message;
+        assert inserted.getTestDate()        .equals(selected.getTestDate())         : "testDate" + message;
+        assert inserted.getTestSqlDate()     .equals(selected.getTestSqlDate())      : "testSqlDate" + message;
+        assert inserted.getTestSqlTimestamp().equals(selected.getTestSqlTimestamp()) : "testSqlTimestamp" + message;
+        assert inserted.getTestGc()          .equals(selected.getTestGc())           : "testGc" + message;
+        commit();
     }
 }

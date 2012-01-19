@@ -18,6 +18,7 @@ package org.sormula.tests.annotation;
 
 import java.util.ArrayList;
 
+import org.sormula.Database;
 import org.sormula.SormulaException;
 import org.sormula.tests.DatabaseTest;
 import org.testng.annotations.AfterClass;
@@ -33,24 +34,26 @@ import org.testng.annotations.Test;
 @Test(singleThreaded=true, groups="annotation.insert")
 public class InsertTest extends DatabaseTest<SormulaTestA>
 {
-    boolean preMethod;
-    boolean postMethod;
-
+    TestDB db;
     
     @BeforeClass
     public void setUp() throws Exception
     {
         openDatabase();
         
-        // SormulaTestATable is used for tables usinng row SormulaTestA.class
-        getDatabase().addTable(new SormulaTestATable(getDatabase(), SormulaTestA.class));
+        // use database with annotations, getDatabase() override
+        Database standardTestDb = super.getDatabase();
+        db = new TestDB(standardTestDb.getConnection(), standardTestDb.getSchema());
         
         createTable(SormulaTestA.class, 
             "CREATE TABLE " + getSchemaPrefix() + " STA (" +
             " id INTEGER NOT NULL PRIMARY KEY," +
             " type SMALLINT," +
             " description VARCHAR(30)," +
-            " unusedInt INTEGER NOT NULL" +
+            " unusedInt INTEGER NOT NULL, " +
+            " test1 INTEGER NOT NULL, " +
+            " test2 INTEGER NOT NULL, " +
+            " test3 CHAR(1) NOT NULL " + 
             ")"
         );
     }
@@ -63,16 +66,38 @@ public class InsertTest extends DatabaseTest<SormulaTestA>
     }
     
     
+    @Override
+    public Database getDatabase()
+    {
+        return db;
+    }
+
+
     @Test
     public void insertCollection() throws SormulaException
     {
+        begin();
         ArrayList<SormulaTestA> list = new ArrayList<SormulaTestA>();
         
-        for (int i = 101; i < 400; ++i)
+        for (int id = 101; id < 400; ++id)
         {
-            list.add(new SormulaTestA(i, i%5, "Insert collection " + i));
+            SormulaTestA row = new SormulaTestA(id, id%5, "Insert collection " + id);
+            row.setTest1(new Test1(id%4));
+            row.setTest2(new Test2(id%4));
+            row.setTest3(new Test3("G"));
+            list.add(row);
         }
         
         assert getTable().insertAll(list) == list.size() : "insert collection failed";
+        
+        // verify test types are correct
+        for (SormulaTestA row : getTable().selectAll())
+        {
+            assert row.getTest1().intValue() == row.getId()%4 : "Test1 type is not correct";
+            assert row.getTest2().intValue() == row.getId()%4 : "Test2 type is not correct";
+            assert row.getTest3().codeValue().equals("G")     : "Test3 type is not correct";
+        }
+            
+        commit();
     }
 }

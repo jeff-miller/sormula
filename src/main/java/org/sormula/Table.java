@@ -22,6 +22,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.sormula.annotation.Column;
+import org.sormula.annotation.ExplicitTypeAnnotationReader;
 import org.sormula.annotation.Row;
 import org.sormula.log.ClassLogger;
 import org.sormula.operation.ArrayListSelectOperation;
@@ -39,6 +40,7 @@ import org.sormula.translator.NameTranslator;
 import org.sormula.translator.NoNameTranslator;
 import org.sormula.translator.RowTranslator;
 import org.sormula.translator.TypeTranslator;
+import org.sormula.translator.TypeTranslatorMap;
 
 
 /**
@@ -86,12 +88,7 @@ import org.sormula.translator.TypeTranslator;
  * @author Jeff Miller
  * @param <R> type of row objects
  */
-//TODO allow @Type for subclasses of Table
-//TODO allow @Row for subclasses of Table
-//TODO allow @Where, @Wheres for subclasses of Table
-//TODO allow @OrderBy, @OrderBys for subclasses of Table
-//TODO allow @UnusedColumn, @UnusedColumns for subclasses of Table
-public class Table<R>
+public class Table<R> implements TypeTranslatorMap
 {
     private static final ClassLogger log = new ClassLogger();
     
@@ -116,6 +113,17 @@ public class Table<R>
         this.database = database;
         this.rowClass = rowClass;
         typeTranslatorMap = new HashMap<String, TypeTranslator<?>>();
+        
+        // process any type annotations
+        try
+        {
+            new ExplicitTypeAnnotationReader(this, this.getClass()).install();
+        }
+        catch (Exception e)
+        {
+            throw new SormulaException("error getting ExplicitType from table " + 
+                    getClass().getCanonicalName(), e);
+        }
         
         // process row annotation
         Row rowAnnotation = getClass().getAnnotation(Row.class); // look in table subclass first
@@ -165,7 +173,6 @@ public class Table<R>
             tableName = nameTranslator.translate(rowClass.getSimpleName(), rowClass);
         }
 
-        //rowTranslator = new RowTranslator<R>(rowClass, nameTranslator);
         rowTranslator = new RowTranslator<R>(this);
         
         if (log.isDebugEnabled())
@@ -259,14 +266,14 @@ public class Table<R>
 
     /**
      * Overrides translator defined in {@link Database} for all operations on this table. See 
-     * {@link Database#addTypeTranslator(Class, TypeTranslator)} for an explanation
+     * {@link Database#putTypeTranslator(Class, TypeTranslator)} for an explanation
      * of translators.
      * 
      * @param typeClass class that translator operates upon
      * @param typeTranslator to use for typeClass
      * @since 1.6
      */
-    public <T> void addTypeTranslator(Class<T> typeClass, TypeTranslator<T> typeTranslator)
+    public void putTypeTranslator(Class<?> typeClass, TypeTranslator<?> typeTranslator)
     {
         typeTranslatorMap.put(typeClass.getCanonicalName(), typeTranslator);
     }
@@ -282,13 +289,12 @@ public class Table<R>
      * @return translator to use for typeClass
      * @since 1.6
      */
-    public <T> TypeTranslator<T> getTypeTranslator(Class<T> typeClass)
+    public TypeTranslator<?> getTypeTranslator(Class<?> typeClass)
     {
         String typeClassName = typeClass.getCanonicalName();
         
         // get table-specific translator
-        @SuppressWarnings("unchecked") // map contains mixed types but always consistent with class type
-        TypeTranslator<T> typeTranslator = (TypeTranslator<T>)typeTranslatorMap.get(typeClassName);
+        TypeTranslator<?> typeTranslator = (TypeTranslator<?>)typeTranslatorMap.get(typeClassName);
         
         if (typeTranslator == null)
         {

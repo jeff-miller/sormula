@@ -27,23 +27,24 @@ import org.sormula.translator.TypeTranslator;
 
 
 /**
- * TODO
- * Defines a custom {@link TypeTranslator}. Annotate a row field declaration
- * or annotate the custom class declaration. Type annotations may also be used
- * on subclass of {@link Table} or subclass of {@link Database}. A type only
+ * Associates a type with a {@link TypeTranslator}. Annotate row class,
+ * subclass of {@link Table} or subclass of {@link Database}. A type only
  * needs to be annotated once for a database or only once per table.
- * TODO adds to table type map via ... 
+ * <p>
+ * When used on row or table class, then type is defined with
+ * {@link Table#putTypeTranslator(Class, TypeTranslator)}. When used on
+ * a database, then type is added with 
+ * {@link Database#putTypeTranslator(Class, TypeTranslator)}.
  * 
  * @since 1.6
  * @author Jeff Miller
  */
 @Retention(RetentionPolicy.RUNTIME)
-@Target(ElementType.ANNOTATION_TYPE)
+@Target({ElementType.TYPE, ElementType.ANNOTATION_TYPE})
 public @interface ExplicitType
 {
     /**
-     * TODO
-     * @return
+     * @return class type that will be converted with translator
      */
     Class<?> type();
     

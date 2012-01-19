@@ -21,18 +21,16 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-import org.sormula.Database;
 import org.sormula.Table;
 import org.sormula.translator.TypeTranslator;
 
 
 /**
- * TODO
- * Defines a custom {@link TypeTranslator}. Annotate a row field declaration
- * or annotate the custom class declaration. Type annotations may also be used
- * on subclass of {@link Table} or subclass of {@link Database}. A type only
- * needs to be annotated once for a database or only once per table.
- * TODO adds to table type map via ... 
+ * Defines a {@link TypeTranslator} for a row field or row field class. The type
+ * is inferred from Field type or Class declaration. Annotate a row field declaration 
+ * or annotate the class declaration that is used as a field in a row class. A 
+ * {@link TypeTranslator} for a type only needs to be annotated once for a table. 
+ * Types are added to table with {@link Table#putTypeTranslator(Class, TypeTranslator)}.
  * 
  * @since 1.6
  * @author Jeff Miller

@@ -73,9 +73,11 @@ public class BigDecimalTranslatorTest extends DatabaseTest<SormulaTestBD>
     {
         if (isTestBigDecimal())
         {
+            begin();
             inserted = new SormulaTestBD();
             inserted.setTestBigDecimal(new BigDecimal("1234567890.01234567"));
             assert getTable().insert(inserted) == 1 : "1 row not inserted";
+            commit();
         }
         else
         {
@@ -89,11 +91,13 @@ public class BigDecimalTranslatorTest extends DatabaseTest<SormulaTestBD>
     {
         if (isTestBigDecimal())
         {
+            begin();
             List<SormulaTestBD> list = getTable().selectAll();
             assert list.size() == 1 : "unexpected row count";
             SormulaTestBD selected = list.get(0);
             String message = " column inserted != selected";
             assert inserted.getTestBigDecimal().equals(selected.getTestBigDecimal()) : "testBigDecimal" + message;
+            commit();
         }
         else
         {

@@ -21,30 +21,29 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+import org.sormula.Database;
 import org.sormula.Table;
+import org.sormula.translator.TypeTranslator;
 
 
 /**
- * TODO
- * Defines columns that are required for a table but are not used by row object. Allows updates
- * and inserts into a table where columns are required but not used by row class. 
- * Annotates a row class or {@link Table} subclass.
+ * List of {@link ExplicitType}. Annotate row class,
+ * subclass of {@link Table} or subclass of {@link Database}. 
+ * <p>
+ * When used on row or table class, then type is defined with
+ * {@link Table#putTypeTranslator(Class, TypeTranslator)}. When used on
+ * a database, then type is added with 
+ * {@link Database#putTypeTranslator(Class, TypeTranslator)}.
  * 
  * @since 1.6
  * @author Jeff Miller
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
-public @interface TypeTranslators
+public @interface ExplicitTypes
 {
     /**
-     * TODO
-     * Columns that are not used by row class. value() is the default and does not need to be specified. 
-     * <p> 
-     * "default {}" allows either method to be used. It will be removed when 
-     * {@link #unusedColumns()} is removed.
-     * 
-     * @return array of {@link ExplicitType} annotations for row class
+     * @return array of {@link ExplicitType} annotations 
      */
     ExplicitType[] value();
 }

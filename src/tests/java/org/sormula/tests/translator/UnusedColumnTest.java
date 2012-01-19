@@ -63,9 +63,11 @@ public class UnusedColumnTest extends DatabaseTest<SormulaTest3>
     @Test
     public void insertTest() throws SormulaException
     {
+        begin();
         SormulaTest3 sormulaTest3 = new SormulaTest3();
         sormulaTest3.setTestInteger(primaryKey);
         assert getTable().insert(sormulaTest3) == 1 : "1 row not inserted";
+        commit();
     }
     
     
@@ -76,8 +78,10 @@ public class UnusedColumnTest extends DatabaseTest<SormulaTest3>
     @Test(dependsOnMethods="insertTest")
     public void updateTest() throws SormulaException
     {
+        begin();
         SormulaTest3 sormulaTest3 = getTable().select(primaryKey);
         assert sormulaTest3 != null : "no row for primary key";
         getTable().update(sormulaTest3);
+        commit();
     }
 }

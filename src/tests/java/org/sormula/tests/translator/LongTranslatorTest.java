@@ -72,10 +72,12 @@ public class LongTranslatorTest extends DatabaseTest<SormulaTestLong>
     {
         if (isTestLong())
         {
+            begin();
             inserted = new SormulaTestLong();
             inserted.setTestLong1(123456789012345678L);
             inserted.setTestLong2(-123456789012345678L);
             assert getTable().insert(inserted) == 1 : "1 row not inserted";
+            commit();
         }
         else
         {
@@ -89,12 +91,14 @@ public class LongTranslatorTest extends DatabaseTest<SormulaTestLong>
     {
         if (isTestLong())
         {
+            begin();
             List<SormulaTestLong> list = getTable().selectAll();
             assert list.size() == 1 : "unexpected row count";
             SormulaTestLong selected = list.get(0);
             String message = " column inserted != selected";
             assert inserted.getTestLong1() == selected.getTestLong1()     : "testLong1" + message;
             assert inserted.getTestLong2().equals(selected.getTestLong2()): "testLong2" + message;
+            commit();
         }
         else
         {

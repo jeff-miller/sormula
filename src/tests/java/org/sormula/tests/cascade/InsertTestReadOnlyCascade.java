@@ -85,6 +85,7 @@ public class InsertTestReadOnlyCascade extends DatabaseTest<SormulaTestParentRea
     @Test
     void insertOneToOne() throws SormulaException
     {
+        begin();
         SormulaTestParentReadOnlyCascade parent = new SormulaTestParentReadOnlyCascade(900, "ROC Insert parent 900");
         SormulaTestChild1ReadOnlyCascade child1 = new SormulaTestChild1ReadOnlyCascade(9900, "ROC 1-to-1 Child of parent 9900");
         parent.setChild1Id(9900);
@@ -93,13 +94,15 @@ public class InsertTestReadOnlyCascade extends DatabaseTest<SormulaTestParentRea
         
         // verify that child was NOT inserted
         Table<SormulaTestChild1ReadOnlyCascade> child1Table = getDatabase().getTable(SormulaTestChild1ReadOnlyCascade.class);
-        assert child1Table.select(child1.getId()) == null : "child " + child1.getId() + " was inserted using readonly cascade"; 
+        assert child1Table.select(child1.getId()) == null : "child " + child1.getId() + " was inserted using readonly cascade";
+        commit();
     }
     
     
     @Test
     public void insertOneToManyList() throws SormulaException
     {
+        begin();
         SormulaTestParentReadOnlyCascade parent = new SormulaTestParentReadOnlyCascade(950, "ROC Insert parent " + 950);
         
         for (int i = 1; i <= 10; ++i)
@@ -120,5 +123,6 @@ public class InsertTestReadOnlyCascade extends DatabaseTest<SormulaTestParentRea
             assert operation.readNext() == null : "child " + c.getId() + " was inserted using readonly cascade"; 
         }
         operation.close();
+        commit();
     }
 }

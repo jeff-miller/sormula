@@ -21,6 +21,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.sormula.Database;
 import org.sormula.SormulaException;
 import org.sormula.Table;
 import org.sormula.log.ClassLogger;
@@ -45,14 +46,16 @@ import org.testng.annotations.Test;
 public class SelectTest extends DatabaseTest<SormulaTestA>
 {
     private static final ClassLogger log = new ClassLogger();
+    TestDB db;
     
     @BeforeClass
     public void setUp() throws Exception
     {
         openDatabase();
         
-        // SormulaTestATable is used for tables usinng row SormulaTestA.class
-        getDatabase().addTable(new SormulaTestATable(getDatabase(), SormulaTestA.class));
+        // use database with annotations, getDatabase() override
+        Database standardTestDb = super.getDatabase();
+        db = new TestDB(standardTestDb.getConnection(), standardTestDb.getSchema());
 
         createTable(SormulaTestA.class, null);
     }
@@ -62,6 +65,13 @@ public class SelectTest extends DatabaseTest<SormulaTestA>
     public void tearDown() throws Exception
     {
         closeDatabase();
+    }
+    
+    
+    @Override
+    public Database getDatabase()
+    {
+        return db;
     }
 
     

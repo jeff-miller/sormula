@@ -63,7 +63,9 @@ public class InsertTest extends DatabaseTest<SormulaTest4>
     @Test
     public void insertOne() throws SormulaException
     {
+        begin();
         assert getTable().insert(new SormulaTest4(13, 1, "Insert one")) == 1 : "insert one failed";
+        commit();
     }
     
     
@@ -77,13 +79,16 @@ public class InsertTest extends DatabaseTest<SormulaTest4>
             list.add(new SormulaTest4(i, 2, "Insert collection " + i));
         }
         
+        begin();
         assert getTable().insertAll(list) == list.size() : "insert collection failed";
+        commit();
     }
     
     
     @Test
     public void insertByOperation() throws SormulaException
     {
+        begin();
         InsertOperation<SormulaTest4> operation = new InsertOperation<SormulaTest4>(getTable());
         
         // reverse order so that rows are natuarlly in order for order by tests
@@ -95,12 +100,14 @@ public class InsertTest extends DatabaseTest<SormulaTest4>
         }
         
         operation.close();
+        commit();
     }
     
     
     @Test
     public void insertNotifyMethods() throws SormulaException
     {
+        begin();
         final SormulaTest4 testRow = new SormulaTest4(7, 4, "Insert 7");
         
         InsertOperation<SormulaTest4> operation = new InsertOperation<SormulaTest4>(getTable())
@@ -123,5 +130,6 @@ public class InsertTest extends DatabaseTest<SormulaTest4>
         operation.close();
         
         assert preMethod && postMethod : "notify methods failed";
+        commit();
     }
 }

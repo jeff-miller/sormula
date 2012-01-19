@@ -95,10 +95,12 @@ public class InsertTest extends DatabaseTest<SormulaTestParent>
     @Test
     public void insertOneToOne() throws SormulaException
     {
+        begin();
         insertOneToOne(101, 1019);
         insertOneToOne(102, 1029);
         insertOneToOne(103, 1039);
         insertOneToOne(104, 1049);
+        commit();
     }
     void insertOneToOne(int parentId, int childId) throws SormulaException
     {
@@ -117,11 +119,13 @@ public class InsertTest extends DatabaseTest<SormulaTestParent>
     @Test
     public void insertOneToManyList() throws SormulaException
     {
+        begin();
         insertOneToManyList(205, 2500);
         insertOneToManyList(204, 2400);
         insertOneToManyList(203, 2300);
         insertOneToManyList(202, 2200);
         insertOneToManyList(201, 2100);
+        commit();
     }
     void insertOneToManyList(int parentId, int childId) throws SormulaException
     {
@@ -153,11 +157,13 @@ public class InsertTest extends DatabaseTest<SormulaTestParent>
     @Test
     public void insertOneToManyMap() throws SormulaException
     {
+        begin();
         insertOneToManyMap(305, 3500);
         insertOneToManyMap(304, 3400);
         insertOneToManyMap(303, 3300);
         insertOneToManyMap(302, 3200);
         insertOneToManyMap(301, 3100);
+        commit();
     }
     void insertOneToManyMap(int parentId, int childId) throws SormulaException
     {

@@ -25,6 +25,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.sormula.annotation.Column;
+import org.sormula.annotation.ExplicitTypeAnnotationReader;
 import org.sormula.annotation.ImplicitType;
 import org.sormula.log.ClassLogger;
 import org.sormula.operation.ModifyOperation;
@@ -32,6 +33,7 @@ import org.sormula.operation.SqlOperation;
 import org.sormula.operation.monitor.OperationTime;
 import org.sormula.translator.NameTranslator;
 import org.sormula.translator.TypeTranslator;
+import org.sormula.translator.TypeTranslatorMap;
 import org.sormula.translator.standard.BigDecimalTranslator;
 import org.sormula.translator.standard.BooleanTranslator;
 import org.sormula.translator.standard.ByteTranslator;
@@ -64,8 +66,7 @@ import org.sormula.translator.standard.StringTranslator;
  * @since 1.0
  * @author Jeff Miller
  */
-// TODO allow @Type for subclasses of database
-public class Database
+public class Database implements TypeTranslatorMap
 {
     private static final ClassLogger log = new ClassLogger();
     Connection connection;
@@ -107,37 +108,62 @@ public class Database
         operationTimeMap = new HashMap<String, OperationTime>();
         totalOperationTime = new OperationTime("Database totals");
         totalOperationTime.setDescription("All operations for database");
-        initTypeTranslatorMap();
+        
+        try
+        {
+            initTypeTranslatorMap();
+        }
+        catch (SormulaException e)
+        {
+            // TODO keep backward compatibility?
+            // don't throw since previous versions did not have
+            // constructor signature with "throws SormulaException" 
+            log.error("error initializing types", e);
+        }
     }
 
     
-    void initTypeTranslatorMap()
+    void initTypeTranslatorMap() throws SormulaException
     {
         typeTranslatorMap = new HashMap<String, TypeTranslator<?>>(50);
-        addTypeTranslator(BigDecimal.class, new BigDecimalTranslator());
-        addTypeTranslator(Boolean.class, new BooleanTranslator());
-        addTypeTranslator(Byte.class, new ByteTranslator());
-        addTypeTranslator(Double.class, new DoubleTranslator());
-        addTypeTranslator(Float.class, new FloatTranslator());
-        addTypeTranslator(Integer.class, new IntegerTranslator());
-        addTypeTranslator(Long.class, new LongTranslator());
-        addTypeTranslator(Short.class, new ShortTranslator());
-        addTypeTranslator(Object.class, new ObjectTranslator());
-        addTypeTranslator(String.class, new StringTranslator());
-        addTypeTranslator(java.util.Date.class, new DateTranslator());
-        addTypeTranslator(java.sql.Date.class, new SqlDateTranslator());
-        addTypeTranslator(java.sql.Time.class, new SqlTimeTranslator());
-        addTypeTranslator(java.sql.Timestamp.class, new SqlTimestampTranslator());
-        addTypeTranslator(GregorianCalendar.class, new GregorianCalendarTranslator());
         
-        // add primatives since they will be used by RowTranslator#initColumnTranslators
-        addTypeTranslator("boolean", new BooleanTranslator());
-        addTypeTranslator("byte", new ByteTranslator());
-        addTypeTranslator("double", new DoubleTranslator());
-        addTypeTranslator("float", new FloatTranslator());
-        addTypeTranslator("int", new IntegerTranslator());
-        addTypeTranslator("long", new LongTranslator());
-        addTypeTranslator("short", new ShortTranslator());
+        // standard primatives (used by RowTranslator#initColumnTranslators)
+        putTypeTranslator("boolean", new BooleanTranslator());
+        putTypeTranslator("byte", new ByteTranslator());
+        putTypeTranslator("double", new DoubleTranslator());
+        putTypeTranslator("float", new FloatTranslator());
+        putTypeTranslator("int", new IntegerTranslator());
+        putTypeTranslator("long", new LongTranslator());
+        putTypeTranslator("short", new ShortTranslator());
+
+        // standard types
+        putTypeTranslator(BigDecimal.class, new BigDecimalTranslator());
+        putTypeTranslator(Boolean.class, new BooleanTranslator());
+        putTypeTranslator(Byte.class, new ByteTranslator());
+        putTypeTranslator(Double.class, new DoubleTranslator());
+        putTypeTranslator(Float.class, new FloatTranslator());
+        putTypeTranslator(Integer.class, new IntegerTranslator());
+        putTypeTranslator(Long.class, new LongTranslator());
+        putTypeTranslator(Short.class, new ShortTranslator());
+        putTypeTranslator(Object.class, new ObjectTranslator());
+        putTypeTranslator(String.class, new StringTranslator());
+        putTypeTranslator(java.util.Date.class, new DateTranslator());
+        putTypeTranslator(java.sql.Date.class, new SqlDateTranslator());
+        putTypeTranslator(java.sql.Time.class, new SqlTimeTranslator());
+        putTypeTranslator(java.sql.Timestamp.class, new SqlTimestampTranslator());
+        putTypeTranslator(GregorianCalendar.class, new GregorianCalendarTranslator());
+        
+        // custom types
+        try
+        {
+            new ExplicitTypeAnnotationReader(this, this.getClass()).install();
+        }
+        catch (Exception e)
+        {
+            throw new SormulaException("error getting ExplicitType from database " + 
+                    getClass().getCanonicalName(), e);
+        }
+        
     }
     
     
@@ -400,29 +426,27 @@ public class Database
 	 * org.sormula.translator.standard package are added during initialization of this class.
 	 * Use this method to override default translators or to add a new translator.
 	 * <p>
-	 * These tranlators may be overridden for a table by {@link Table#addTypeTranslator(Class, TypeTranslator)}.
+	 * These tranlators may be overridden for a table by {@link Table#putTypeTranslator(Class, TypeTranslator)}.
 	 * 
-	 * @param <T> compile-time type of typeClass
      * @param typeClass class that translator operates upon
      * @param typeTranslator translator to use for typeClass
 	 * @since 1.6
 	 */
-    public <T> void addTypeTranslator(Class<T> typeClass, TypeTranslator<T> typeTranslator)
+    public void putTypeTranslator(Class<?> typeClass, TypeTranslator<?> typeTranslator)
     {
-        addTypeTranslator(typeClass.getCanonicalName(), typeTranslator);
+        putTypeTranslator(typeClass.getCanonicalName(), typeTranslator);
     }
 
     
     /**
-     * Same as {@link #addTypeTranslator(Class, TypeTranslator)} but uses class name. Usefull for adding
+     * Same as {@link #putTypeTranslator(Class, TypeTranslator)} but uses class name. Usefull for adding
      * primative types like "int", "boolean", "float", etc.
      * 
-     * @param <T> compile-time type of typeClassName
      * @param typeClassName class name that translator operates upon
      * @param typeTranslator translator to use for typeClass
      * @since 1.6
      */
-    public <T> void addTypeTranslator(String typeClassName, TypeTranslator<T> typeTranslator)
+    public void putTypeTranslator(String typeClassName, TypeTranslator<?> typeTranslator)
     {
         typeTranslatorMap.put(typeClassName, typeTranslator);
     }
@@ -432,12 +456,11 @@ public class Database
      * Gets the translator to use to convert a value to a prepared statement and to convert
      * a value from a result set.
      * 
-     * @param <T> compile-time type of typeClass
      * @param typeClass class that translator operates upon
      * @return translator to use for typeClass
      * @since 1.6
      */
-    public <T> TypeTranslator<T> getTypeTranslator(Class<T> typeClass)
+    public TypeTranslator<?> getTypeTranslator(Class<?> typeClass)
     {
         return getTypeTranslator(typeClass.getCanonicalName());
     }
@@ -446,14 +469,12 @@ public class Database
     /**
      * Same as {@link #getTypeTranslator(Class)} but uses class name.
      * 
-     * @param <T> compile-time type of typeClass
      * @param typeClassName class name that translator operates upon
      * @return translator to use for typeClass
      * @since 1.6
      */
-    @SuppressWarnings("unchecked") // map contains mixed types but always consistent with class type
-    public <T> TypeTranslator<T> getTypeTranslator(String typeClassName)
+    public TypeTranslator<?> getTypeTranslator(String typeClassName)
     {
-        return (TypeTranslator<T>)typeTranslatorMap.get(typeClassName);
+        return typeTranslatorMap.get(typeClassName);
     }
 }

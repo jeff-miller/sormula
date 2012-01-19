@@ -177,12 +177,12 @@ public class RowTranslator<R> extends ColumnsTranslator<R>
                 Class fieldClass = f.getType();
                 if (table.getTypeTranslator(fieldClass) == null)
                 {
-                    TypeTranslator typeTranslator = processTypeAnnotation(fieldClass, f);
+                    TypeTranslator typeTranslator = readmplicitType(fieldClass, f);
                     if (typeTranslator != null)
                     {
                         if (log.isDebugEnabled()) log.debug("add type translator=" + typeTranslator.getClass().getCanonicalName() + 
-                                " to row table type=" + rowClass.getCanonicalName() + " for type="+fieldClass.getCanonicalName());
-                        table.addTypeTranslator(fieldClass, typeTranslator);
+                                " to row table =" + rowClass.getCanonicalName() + " field="+fieldClass.getCanonicalName());
+                        table.putTypeTranslator(fieldClass, typeTranslator);
                     }
                 }
                 
@@ -245,9 +245,7 @@ public class RowTranslator<R> extends ColumnsTranslator<R>
     }
     
     
-    // TODO move to class like WhereAnnotationReader, use to init Type for table, field, field class, AND database
-    // TODO will need interface for get/add TypeTranslator
-    protected TypeTranslator<?> processTypeAnnotation(AnnotatedElement... annotatedElements) throws TranslatorException
+    protected TypeTranslator<?> readmplicitType(AnnotatedElement... annotatedElements) throws TranslatorException
     {
         for (AnnotatedElement ae : annotatedElements)
         {

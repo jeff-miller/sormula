@@ -18,68 +18,79 @@ package org.sormula.annotation;
 
 import java.lang.reflect.AnnotatedElement;
 
+import org.sormula.Database;
+import org.sormula.Table;
+import org.sormula.translator.TypeTranslator;
+import org.sormula.translator.TypeTranslatorMap;
+
 
 /**
- * Reads {@link ExplicitType} annotations TODO from a class.
- * first Type annotation for a class is used; others are ignored
+ * Reads {@link ExplicitType} annotations from classes. The first ExplicitType
+ * annotation found for a class is used. If ExplicitType is already defined for
+ * a class type, then it is ignored.
  * 
  * @author Jeff Miller
  * @since 1.6
  */
 public class ExplicitTypeAnnotationReader
 {
-    //private static final ClassLogger log = new ClassLogger();
-    AnnotatedElement[] sources;
+    TypeTranslatorMap typeTranslatorMap;
+    Class<?>[] sources;
     
 
     /**
      * Constructs for classes that may contain the annotation.
      * 
-     * @param sources classes that contain {@link ExplicitType} or {@link TypeTranslators} annotations
+     * @param typeTranslatorMap a class that implements {@link TypeTranslatorMap}; typically
+     * {@link Database} and {@link Table}
+     * @param sources classes that contain {@link ExplicitType} or {@link ExplicitTypes} annotations
      */
-    public ExplicitTypeAnnotationReader(AnnotatedElement... sources)  
+    public ExplicitTypeAnnotationReader(TypeTranslatorMap typeTranslatorMap, Class<?>... sources)  
     {
+        this.typeTranslatorMap = typeTranslatorMap;
         this.sources = sources;
     }
     
 
-    // TODO name install?
-    public ExplicitType getAnnotation()
+    /**
+     * Reads {@link ExplicitType} annotations from sources and adds them to
+     * type map if they are not already defined.
+     * 
+     * @throws Exception if error creating {@link TypeTranslator}
+     */
+    public void install() throws Exception
     {
-        ExplicitType typeAnnotation = null;
-        
         for (AnnotatedElement ae : sources)
         {
-            typeAnnotation = ae.getAnnotation(ExplicitType.class);
-            if (typeAnnotation != null) break;
-        }
-        
-        return typeAnnotation;
-    }
-    
-    
-    // TODO name install?
-    public ExplicitType getAnnotation2()
-    {
-        ExplicitType typeAnnotation = null;
-        
-        for (AnnotatedElement ae : sources)
-        {
-            typeAnnotation = ae.getAnnotation(ExplicitType.class);
-            if (typeAnnotation != null) break;
+            ExplicitType typeAnnotation = ae.getAnnotation(ExplicitType.class);
+            if (typeAnnotation != null) 
+            {
+                updateMap(typeAnnotation);
+            }
 
             // look in Types in all sources
-            TypeTranslators typesAnnotation = ae.getAnnotation(TypeTranslators.class);
+            ExplicitTypes typesAnnotation = ae.getAnnotation(ExplicitTypes.class);
             
             if (typesAnnotation != null)
             {
                 for (ExplicitType t: typesAnnotation.value())
                 {
-                    
+                    updateMap(t);    
                 }
             }
         }
+    }
+    
+    
+    protected void updateMap(ExplicitType typeAnnotation) throws Exception
+    {
+        Class<?> typeClass = typeAnnotation.type();
         
-        return typeAnnotation;
+        if (typeTranslatorMap.getTypeTranslator(typeClass) == null)
+        {
+            // no type translator for type, add it
+            typeTranslatorMap.putTypeTranslator(typeClass, 
+                    (TypeTranslator<?>)typeAnnotation.translator().newInstance());
+        }
     }
 }

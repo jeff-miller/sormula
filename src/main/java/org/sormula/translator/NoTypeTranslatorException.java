@@ -28,8 +28,8 @@ import org.sormula.translator.standard.StandardColumnTranslator;
  * No type translator defined. Thrown by {@link StandardColumnTranslator}
  * when a nonstandard field type is used but no {@link TypeTranslator} has
  * been defined for nonstandard field type. A nonstandard type translator
- * may be defined by {@link ImplicitType}, {@link Database#addTypeTranslator(Class, TypeTranslator)}, or
- * {@link Table#addTypeTranslator(Class, TypeTranslator)}.
+ * may be defined by {@link ImplicitType}, {@link Database#putTypeTranslator(Class, TypeTranslator)}, or
+ * {@link Table#putTypeTranslator(Class, TypeTranslator)}.
  * 
  * @since 1.0
  * @author Jeff Miller

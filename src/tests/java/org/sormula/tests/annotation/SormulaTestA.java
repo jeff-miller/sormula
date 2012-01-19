@@ -17,7 +17,6 @@
 package org.sormula.tests.annotation;
 
 
-
 /**
  * Row class for {@link InsertTest} and {@link SelectTest}.
  * 
@@ -28,6 +27,9 @@ public class SormulaTestA
     int id;
     int type;
     String description;
+    Test1 test1;
+    Test2 test2;
+    Test3 test3;
     
     
     public SormulaTestA()
@@ -70,6 +72,36 @@ public class SormulaTestA
     public void setType(int type)
     {
         this.type = type;
+    }
+
+
+    public Test1 getTest1()
+    {
+        return test1;
+    }
+    public void setTest1(Test1 type1)
+    {
+        this.test1 = type1;
+    }
+
+
+    public Test2 getTest2()
+    {
+        return test2;
+    }
+    public void setTest2(Test2 test2)
+    {
+        this.test2 = test2;
+    }
+
+
+    public Test3 getTest3()
+    {
+        return test3;
+    }
+    public void setTest3(Test3 test3)
+    {
+        this.test3 = test3;
     }
 
 

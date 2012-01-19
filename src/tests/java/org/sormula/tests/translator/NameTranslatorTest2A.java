@@ -77,22 +77,26 @@ public class NameTranslatorTest2A extends DatabaseTest<SormulaTest2A>
         inserted.setTestString("abcdef");
         inserted.setTestDate(new java.util.Date(System.currentTimeMillis()));
         
+        begin();
         assert getTable().insert(inserted) == 1 : "1 row not inserted";
+        commit();
     }
     
     
     @Test(dependsOnMethods="insertTest")
     public void selectTest() throws SormulaException
     {
-         List<SormulaTest2A> list = getTable().selectAll();
-         assert list.size() == 1 : "unexpected row count";
-         SormulaTest2A selected = list.get(0);
-         String message = " column inserted != selected";
+        begin();
+        List<SormulaTest2A> list = getTable().selectAll();
+        assert list.size() == 1 : "unexpected row count";
+        SormulaTest2A selected = list.get(0);
+        String message = " column inserted != selected";
          
-         assert inserted.isTestBooleanYesNo() == selected.isTestBooleanYesNo() : "testBooleanYN" + message;
-         assert inserted.getTestInteger() == selected.getTestInteger() : "testInteger" + message;
-         assert Math.abs(inserted.getTestDouble() - selected.getTestDouble()) < 0.001 : "testDouble" + message;
-         assert inserted.getTestString().equals(selected.getTestString()) : "testString" + message;
-         assert inserted.getTestDate().equals(selected.getTestDate()) : "testDate" + message;
+        assert inserted.isTestBooleanYesNo() == selected.isTestBooleanYesNo() : "testBooleanYN" + message;
+        assert inserted.getTestInteger() == selected.getTestInteger() : "testInteger" + message;
+        assert Math.abs(inserted.getTestDouble() - selected.getTestDouble()) < 0.001 : "testDouble" + message;
+        assert inserted.getTestString().equals(selected.getTestString()) : "testString" + message;
+        assert inserted.getTestDate().equals(selected.getTestDate()) : "testDate" + message;
+        commit();
     }
 }

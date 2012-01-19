@@ -20,7 +20,8 @@
 		<antcall target="NameDelete"/>
 		<antcall target="NameInsert"/>
 		<antcall target="NameSelect"/>
-		<antcall target="NameUpdate"/>	
+		<antcall target="NameUpdate"/>
+		<antcall target="LocalDateExample"/>
 	</target>
     <target name="BasicInsertZ" description="Runs example">
         <antcall target="run-example"><param name="class" value="com.something.test.BasicInsertZ"/></antcall>
@@ -79,6 +80,10 @@
 
     <target name="BlobExample" description="Runs example">
         <antcall target="run-example"><param name="class" value="org.sormula.examples.blob.BlobExample"/></antcall>
+    </target>
+
+    <target name="LocalDateExample" description="Runs example">
+        <antcall target="run-example"><param name="class" value="org.sormula.examples.jodatime.LocalDateExample"/></antcall>
     </target>
     
     <target name="run-example" description="called by other task to run an example" depends="compile-main, compile-examples">

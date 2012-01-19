@@ -6,5 +6,6 @@
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="lib" path="src/main/resources/slf4j-api-1.6.1.jar"/>
 	<classpathentry kind="lib" path="src/tests/resources/testng-6.3.1.jar"/>
+	<classpathentry kind="lib" path="src/examples/resources/joda-time-2.0.jar"/>
 	<classpathentry kind="output" path="target"/>
 </classpath>

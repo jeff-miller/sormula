@@ -117,7 +117,7 @@ public class Table<R> implements TypeTranslatorMap
         // process any type annotations
         try
         {
-            new ExplicitTypeAnnotationReader(this, this.getClass()).install();
+            new ExplicitTypeAnnotationReader(this, this.getClass(), rowClass).install();
         }
         catch (Exception e)
         {

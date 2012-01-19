@@ -44,7 +44,7 @@ public class LongTranslatorTest extends DatabaseTest<SormulaTestLong>
     @BeforeClass
     public void setUp() throws Exception
     {
-        if (isTestBigDecimal())
+        if (isTestLong())
         {
             openDatabase();
             createTable(SormulaTestLong.class, 

@@ -79,6 +79,7 @@ public class LocalDateExample extends ExampleBase
         student.setLastName("Miller");
         student.setGraduationDate(new LocalDate());
         System.out.println(table.insert(student) + " row inserted");
+        System.out.println(table.select(1234));
     }
     
     

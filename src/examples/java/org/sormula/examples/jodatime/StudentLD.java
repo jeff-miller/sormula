@@ -30,7 +30,7 @@ public class StudentLD
     String firstName;
     String lastName;
     
-    //@ImplicitType(translator=LocalDateTranslator.class) // define here as alternate to @ExplicitType
+    //@ImplicitType(translator=LocalDateTranslator.class) // alternative to @ExplicitType
     LocalDate graduationDate;
     
     

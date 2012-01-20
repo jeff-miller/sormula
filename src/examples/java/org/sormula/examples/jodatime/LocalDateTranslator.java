@@ -32,7 +32,7 @@ public class LocalDateTranslator implements TypeTranslator<LocalDate>
 {
     public LocalDate read(ResultSet resultSet, int columnIndex) throws Exception
     {
-        // convert from db TIMESTAMP to LocalDate
+        // convert from TIMESTAMP to LocalDate
         Timestamp timestamp = resultSet.getTimestamp(columnIndex);
         
         if (timestamp == null)
@@ -47,7 +47,7 @@ public class LocalDateTranslator implements TypeTranslator<LocalDate>
 
     public void write(PreparedStatement preparedStatement, int parameterIndex, LocalDate parameter) throws Exception
     {
-        // convert from LocalDate to db TIMESTAMP
+        // convert from LocalDate to TIMESTAMP
         if (parameter == null)
         {
             preparedStatement.setTimestamp(parameterIndex, null);

@@ -96,9 +96,9 @@ public class ScalarSelectOperation<R> extends SqlOperation<R>
     
     /**
      * Gets the maximum number of rows to read from result set. The default
-     * is {@linkplain Integer#MAX_VALUE}.
+     * is {@link Integer#MAX_VALUE}.
      * 
-     * @return 0..{@linkplain Integer#MAX_VALUE}
+     * @return 0..{@link Integer#MAX_VALUE}
      * @since 1.4
      */
     public int getMaximumRowsRead()
@@ -118,7 +118,7 @@ public class ScalarSelectOperation<R> extends SqlOperation<R>
      * I will add support for SQL level limits through a method like 
      * "setMaximumRows(int)" and SQL "FETCH FIRST n ROWS ONLY".
      * 
-     * @param maximumRowsRead 0..{@linkplain Integer#MAX_VALUE}
+     * @param maximumRowsRead 0..{@link Integer#MAX_VALUE}
      * @since 1.4
      */
     public void setMaximumRowsRead(int maximumRowsRead)
@@ -283,7 +283,7 @@ public class ScalarSelectOperation<R> extends SqlOperation<R>
      * order of the rows are read from database but is only meaningful if the 
      * resulting collection type is also ordered.
      * 
-     * @param orderByName name of order phrase to use as defined in {@linkplain OrderBy#name()}
+     * @param orderByName name of order phrase to use as defined in {@link OrderBy#name()}
      * in {@link OrderBy} annotation on row R; use empty string for no ordering
      * @throws OperationException if error
      */
@@ -334,8 +334,8 @@ public class ScalarSelectOperation<R> extends SqlOperation<R>
     /**
      * Set parameters, executes, reads one row, closes.
      * 
-     * @param parameters query parameters as objects (see {@linkplain #setParameters(Object...)})
-     * @return {@linkplain #readNext()}
+     * @param parameters query parameters as objects (see {@link #setParameters(Object...)})
+     * @return {@link #readNext()}
      * @throws OperationException if error
      * @since 1.4
      */
@@ -353,8 +353,8 @@ public class ScalarSelectOperation<R> extends SqlOperation<R>
      * Set parameters, executes, reads one row, closes.
      * 
      * @param whereParameters query parameters are read from an existing row object 
-     * (see {@linkplain #setRowParameters(Object)})
-     * @return {@linkplain #readNext()}
+     * (see {@link #setRowParameters(Object)})
+     * @return {@link #readNext()}
      * @throws OperationException if error
      * @since 1.4
      */
@@ -452,7 +452,7 @@ public class ScalarSelectOperation<R> extends SqlOperation<R>
     
     /**
      * Invoked prior to reading row. Performs all select cascade operations 
-     * where {@linkplain SelectCascade#post()} is false.
+     * where {@link SelectCascade#post()} is false.
      * 
      * @param row row that will get column values from table 
      */
@@ -464,7 +464,7 @@ public class ScalarSelectOperation<R> extends SqlOperation<R>
 
     /**
      * Invoked after reading row. Performs all select cascade operations 
-     * where {@linkplain SelectCascade#post()} is true.
+     * where {@link SelectCascade#post()} is true.
      * 
      * @param row row that got column values from table 
      */

@@ -47,7 +47,7 @@ public class SelectCascadeOperation<S, T> extends CascadeOperation<S, T>
 	
 	
     /**
-     * Constructor used by {@linkplain SelectOperation}.
+     * Constructor used by {@link SelectOperation}.
      *  
      * @param targetField cascade select operation modifies this field
      * @param targetTable cascade select operation is performed on this table 
@@ -142,8 +142,8 @@ public class SelectCascadeOperation<S, T> extends CascadeOperation<S, T>
     /**
      * Uses reflection to get fields for each of the source class
      * variables that will be read from source and set as parameters on
-     * cascade operation. Parameter values are set when {@linkplain #setParameters} is
-     * invoked by {@linkplain #cascade}.
+     * cascade operation. Parameter values are set when {@link #setParameters} is
+     * invoked by {@link #cascade}.
      * 
      * @throws OperationException if error
      */
@@ -175,8 +175,8 @@ public class SelectCascadeOperation<S, T> extends CascadeOperation<S, T>
     
     
     /**
-     * {@linkplain #cascade} invokes this method to set parameters in cascade operation based 
-     * upon parameter fields that were created by {@linkplain #prepareParameterFields()}. 
+     * {@link #cascade} invokes this method to set parameters in cascade operation based 
+     * upon parameter fields that were created by {@link #prepareParameterFields()}. 
      * Override for custom parameter initialization.
      * 
      * @param sourceRow cascade source row

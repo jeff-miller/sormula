@@ -39,7 +39,7 @@ import org.testng.annotations.Test;
 
 
 /**
- * Tests all select operations and {@linkplain Wheres} annotations.
+ * Tests all select operations and {@link Wheres} annotations.
  * 
  * @author Jeff Miller
  */

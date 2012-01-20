@@ -198,7 +198,7 @@ public abstract class AbstractWhereTranslator<R> extends ColumnsTranslator<R>
      * Creates column phrase with parameter placeholders and comparison operators like:<br> 
      * "c1 cop1 a1 bo2 c2 cop2 a2 bo3 c3 cop3 a3..." where cN is column name,
      * copN is {@link WhereField#comparisonOperator()}, aN is operand (typically "?"), and 
-     * boN is {@linkplain WhereField#booleanOperator()}
+     * boN is {@link WhereField#booleanOperator()}
      * 
      * @return "c1 cop1 a1 bo2 c2 cop2 a2 bo3 c3 cop3 a3..."
      */

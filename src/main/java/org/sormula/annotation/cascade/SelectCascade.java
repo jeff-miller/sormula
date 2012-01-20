@@ -31,7 +31,7 @@ import org.sormula.operation.ScalarSelectOperation;
 
 
 /**
- * Used within a {@linkplain Cascade} annotation to define a cascade select operation.
+ * Used within a {@link Cascade} annotation to define a cascade select operation.
  * 
  * @since 1.0
  * @author Jeff Miller
@@ -67,7 +67,7 @@ public @interface SelectCascade
     
     /**
      * Specifies the where condition to use in cascade. Name is one of names
-     * specified on target class by {@linkplain Where#name()} or "primaryKey"
+     * specified on target class by {@link Where#name()} or "primaryKey"
      * for primary key. An empty string indicates no where condition (select all).
      * 
      * @return where condition name of target row; "primaryKey" to select by
@@ -78,7 +78,7 @@ public @interface SelectCascade
     
     /**
      * Specifies the order condition to use in cascade. Name is one of names
-     * specified on target class by {@linkplain OrderBy#name()} or empty string for
+     * specified on target class by {@link OrderBy#name()} or empty string for
      * unordered.
      * 
      * @return order condition name of target row; empty string for none

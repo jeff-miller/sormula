@@ -25,8 +25,8 @@ import org.sormula.annotation.Wheres;
 
 
 /**
- * Row class for {@linkplain InsertTest}, {@linkplain SelectTest}, {@linkplain UpdateTest},
- * and {@linkplain DeleteTest}.
+ * Row class for {@link InsertTest}, {@link SelectTest}, {@link UpdateTest},
+ * and {@link DeleteTest}.
  * 
  * @author Jeff Miller
  */

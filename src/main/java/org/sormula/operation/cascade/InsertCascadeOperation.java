@@ -33,7 +33,7 @@ import org.sormula.reflect.SormulaField;
 public class InsertCascadeOperation<S, T> extends ModifyCascadeOperation<S, T>
 {
     /**
-     * Constructor used by {@linkplain InsertOperation}.
+     * Constructor used by {@link InsertOperation}.
      *  
      * @param targetField cascade insert operation uses row(s) from this field
      * @param targetTable cascade insert operation is performed on this table 

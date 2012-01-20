@@ -24,7 +24,7 @@ import org.sormula.annotation.Wheres;
 
 
 /**
- * Row class for {@linkplain SelectTestMC}.
+ * Row class for {@link SelectTestMC}.
  * 
  * @author Jeff Miller
  */

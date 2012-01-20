@@ -52,7 +52,7 @@ import org.sormula.translator.standard.StringTranslator;
 
 
 /**
- * Source of {@linkplain Table} objects for reading/writing from/to database. For single threaded use 
+ * Source of {@link Table} objects for reading/writing from/to database. For single threaded use 
  * only. Construct new instances for each transaction and/or thread.
  * <p>
  * Example - Construct database from JDBC connection:
@@ -193,7 +193,7 @@ public class Database implements TypeTranslatorMap
     
 
     /**
-     * Gets connection to use for sql operations. Used by {@linkplain SqlOperation} subclasses
+     * Gets connection to use for sql operations. Used by {@link SqlOperation} subclasses
      * to obtain the connection to use for the operation methods.
      * 
      * @return JDBC connection
@@ -275,7 +275,7 @@ public class Database implements TypeTranslatorMap
     
     /**
      * Adds a table object to cache to be used for row objects of type
-     * {@linkplain Table#getClass()}. Use this method to save table in cache. This method provides
+     * {@link Table#getClass()}. Use this method to save table in cache. This method provides
      * a way to ensure that a custom subclass of {@link Table} is returned from {@link #getTable(Class)}
      * for the table row class. 
      * 

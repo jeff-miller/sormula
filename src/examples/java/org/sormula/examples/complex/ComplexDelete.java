@@ -26,7 +26,7 @@ import org.sormula.examples.ExampleBase;
 
 
 /**
- * Same as DeleteExample1 but does not always use default names. See {@linkplain Student3}
+ * Same as DeleteExample1 but does not always use default names. See {@link Student3}
  * for details about name differences.
  */
 public class ComplexDelete extends ExampleBase

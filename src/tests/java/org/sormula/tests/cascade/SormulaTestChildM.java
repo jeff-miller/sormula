@@ -21,7 +21,7 @@ import org.sormula.annotation.Where;
 
 
 /**
- * Child of {@linkplain SormulaTestParent} from a map. Child may occur 0 to n times for 1 parent.
+ * Child of {@link SormulaTestParent} from a map. Child may occur 0 to n times for 1 parent.
  * 
  * @author Jeff Miller
  */

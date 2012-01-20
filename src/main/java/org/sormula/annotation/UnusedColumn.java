@@ -24,7 +24,7 @@ import java.lang.annotation.Target;
 
 /**
  * Define column that requires values for insert or update but is not used by row object.
- * Used with {@linkplain UnusedColumns} annotation.
+ * Used with {@link UnusedColumns} annotation.
  * <p>
  * To insert null into unused column, omit UnusedColumn annotation. null values are not
  * permittted by Annotation syntax.

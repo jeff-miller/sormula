@@ -29,7 +29,7 @@ import org.sormula.Database;
  * Cascade annotation for a one to many relationship between source row and 
  * target row. Insert, update, and delete cascades default to standard primary key operations. Select
  * cascade must be defined since {@link SelectCascade#sourceParameterFieldNames()} are not known
- * by default. For more complex cascade relationships, use {@linkplain Cascade}.
+ * by default. For more complex cascade relationships, use {@link Cascade}.
  * <p>
  * More than one operation is allowed per field even though it is not likely that you would
  * need more than one. {@link #selects()}, {@link #updates()}, {@link #inserts()},
@@ -52,7 +52,7 @@ public @interface OneToManyCascade
 
     
     /**
-     * Class type of target field to affect. Used as parameter to {@linkplain Database#getTable(Class)} to
+     * Class type of target field to affect. Used as parameter to {@link Database#getTable(Class)} to
      * get table for cascade operation. {@link #targetClass()} is optional for scalar fields since
      * target class can be obtained from target field at runtime. For nonscalar target field types, 
      * like {@link Collection} types, {@link #targetClass()} must be specified.

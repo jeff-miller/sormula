@@ -25,7 +25,7 @@ import org.testng.annotations.Test;
 
 
 /**
- * Tests cascade udpates for {@linkplain SormulaTestParent}.
+ * Tests cascade udpates for {@link SormulaTestParent}.
  * 
  * @author Jeff Miller
  */

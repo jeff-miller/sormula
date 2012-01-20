@@ -44,10 +44,10 @@ import org.sormula.translator.TypeTranslatorMap;
 
 
 /**
- * A table within a sql database. Contains a {@linkplain RowTranslator} for reading/writing
+ * A table within a sql database. Contains a {@link RowTranslator} for reading/writing
  * data form/to database and contains methods for common input/output operations. The RowTranslator
  * is created based upon fields within the row class of type R and from annotations for the
- * class. All common input/output methods use the primary key defined by {@linkplain Column#primaryKey()} 
+ * class. All common input/output methods use the primary key defined by {@link Column#primaryKey()} 
  * annotation on class R.
  * <p>
  * Example 1 - Get table from database:
@@ -102,7 +102,7 @@ public class Table<R> implements TypeTranslatorMap
     
     /**
      * Constructs for a database and the class that used for row objects. Creates
-     * a {@linkplain RowTranslator} for mapping row objects to/from database.
+     * a {@link RowTranslator} for mapping row objects to/from database.
      * 
      * @param database database for this table
      * @param rowClass row objects are of this type
@@ -243,7 +243,7 @@ public class Table<R> implements TypeTranslatorMap
 
     
     /**
-     * Gets translator defined by {@linkplain Row#nameTranslator()}.
+     * Gets translator defined by {@link Row#nameTranslator()}.
      * 
      * @return translator for converting java names to sql table and column names
      */
@@ -326,7 +326,7 @@ public class Table<R> implements TypeTranslatorMap
     
     /**
      * Selects one row in table using primary key. Primary key must be defined by one
-     * or more {@linkplain Column#primaryKey()} annotations.
+     * or more {@link Column#primaryKey()} annotations.
      * <p>
      * Example:
      * <blockquote><pre>
@@ -623,7 +623,7 @@ public class Table<R> implements TypeTranslatorMap
     
     /**
      * Updates one row in table by primary key. Primary key must be defined by one
-     * or more {@linkplain Column#primaryKey()} annotations.
+     * or more {@link Column#primaryKey()} annotations.
      * <p>
      * Example:
      * <blockquote><pre>
@@ -645,7 +645,7 @@ public class Table<R> implements TypeTranslatorMap
     
     /**
      * Updates collection of rows using primary key. Primary key must be defined by one
-     * or more {@linkplain Column#primaryKey()} annotations.
+     * or more {@link Column#primaryKey()} annotations.
      * <p>
      * Example:
      * <blockquote><pre>
@@ -669,7 +669,7 @@ public class Table<R> implements TypeTranslatorMap
     
     /**
      * Deletes by primary key. Primary key must be defined by one
-     * or more {@linkplain Column#primaryKey()} annotations.
+     * or more {@link Column#primaryKey()} annotations.
      * <p>
      * Example:
      * <blockquote><pre>
@@ -690,7 +690,7 @@ public class Table<R> implements TypeTranslatorMap
     
     /**
      * Deletes by primary key. Primary key must be defined by one
-     * or more {@linkplain Column#primaryKey()} annotations.
+     * or more {@link Column#primaryKey()} annotations.
      * <p>
      * Example:
      * <blockquote><pre>
@@ -712,7 +712,7 @@ public class Table<R> implements TypeTranslatorMap
     
     /**
      * Deletes many rows by primary key. Primary key must be defined by one
-     * or more {@linkplain Column#primaryKey()} annotations.
+     * or more {@link Column#primaryKey()} annotations.
      * <p>
      * Example:
      * <blockquote><pre>

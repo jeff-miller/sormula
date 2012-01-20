@@ -19,8 +19,8 @@ package org.sormula.tests.zeroannotation;
 
 /**
  * Row class with no annotations. First column is primary key when no annotation is specified.
- * Used by {@linkplain InsertTest}, {@linkplain SelectTest}, {@linkplain UpdateTest},
- * and {@linkplain DeleteTest}.
+ * Used by {@link InsertTest}, {@link SelectTest}, {@link UpdateTest},
+ * and {@link DeleteTest}.
  * <p>
  * No annotations are needed for insert, update, delete, and select by primary key if row
  * class conforms to the following:

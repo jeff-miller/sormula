@@ -25,7 +25,7 @@ import org.testng.annotations.Test;
 
 
 /**
- * Tests cascade deletes for {@linkplain SormulaTestParent}.
+ * Tests cascade deletes for {@link SormulaTestParent}.
  * Delete parents with odd number id (and cascades to children).
  * 
  * @author Jeff Miller

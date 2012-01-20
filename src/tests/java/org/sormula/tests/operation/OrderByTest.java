@@ -31,7 +31,7 @@ import org.testng.annotations.Test;
 
 
 /**
- * Tests {@linkplain OrderBys} annotation.
+ * Tests {@link OrderBys} annotation.
  * 
  * @author Jeff Miller
  */

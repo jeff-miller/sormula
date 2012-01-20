@@ -526,7 +526,7 @@ public abstract class SqlOperation<R>
     
     /**
      * Prepares cascades for all cascade annotations on row class. Cascade annotations
-     * are {@linkplain OneToManyCascade}, {@linkplain OneToOneCascade}, and {linkplain Cascade}.
+     * are {@link OneToManyCascade}, {@link OneToOneCascade}, and {linkplain Cascade}.
      *  
      * @throws OperationException if error
      */
@@ -624,7 +624,7 @@ public abstract class SqlOperation<R>
     
     
     /**
-     * Creates a {@linkplain SormulaField} from {@linkplain Field}.
+     * Creates a {@link SormulaField} from {@link Field}.
      * 
      * @param field creates for this field
      * @return sormula field based upon field parameter
@@ -731,10 +731,10 @@ public abstract class SqlOperation<R>
 
 
     /**
-     * Sets where condition from annotation name as defined in {@linkplain Where#name()} for row.
+     * Sets where condition from annotation name as defined in {@link Where#name()} for row.
      * 
      * @param whereConditionName name of where condition to use; 
-     * "primaryKey" for key defined by {@linkplain Column#primaryKey()}; 
+     * "primaryKey" for key defined by {@link Column#primaryKey()}; 
      * empty string for no where condition
      */
     public void setWhere(String whereConditionName) throws OperationException

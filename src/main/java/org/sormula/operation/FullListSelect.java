@@ -100,7 +100,7 @@ public class FullListSelect<R> extends FullSelect<R, List<R>>
      * </pre></blockquote>
      * @param table select from this table
      * @param whereConditionName name of where condition to use; see {@link SqlOperation#setWhere(String)}
-     * @param orderByName name of order phrase to use as defined in {@linkplain OrderBy#name()}; see
+     * @param orderByName name of order phrase to use as defined in {@link OrderBy#name()}; see
      * {@link ScalarSelectOperation#setOrderBy(String)}
      */
     public FullListSelect(Table<R> table, String whereConditionName, String orderByName) throws SormulaException

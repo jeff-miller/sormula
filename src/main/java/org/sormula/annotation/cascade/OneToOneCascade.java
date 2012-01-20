@@ -26,7 +26,7 @@ import java.lang.annotation.Target;
  * Cascade annotation for a one to one relationship between source row and 
  * target row. Insert, update, and delete cascades default to standard primary key operations. Select
  * cascade must be defined since {@link SelectCascade#sourceParameterFieldNames()} are not known
- * by default. For more complex cascade relationships, use {@linkplain Cascade}.
+ * by default. For more complex cascade relationships, use {@link Cascade}.
  * <p>
  * More than one operation is allowed per field even though it is not likely that you would
  * need more than one. {@link #selects()}, {@link #updates()}, {@link #inserts()},

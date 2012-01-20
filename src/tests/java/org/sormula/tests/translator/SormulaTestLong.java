@@ -19,7 +19,7 @@ package org.sormula.tests.translator;
 
 
 /**
- * Row class for {@linkplain LongTranslatorTest}.
+ * Row class for {@link LongTranslatorTest}.
  * @author Jeff Miller
  */
 public class SormulaTestLong

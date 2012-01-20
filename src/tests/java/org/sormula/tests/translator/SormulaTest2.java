@@ -23,7 +23,7 @@ import org.sormula.translator.standard.BooleanYNColumnTranslator;
 
 
 /**
- * Row class for {@linkplain NameTranslatorTest}.
+ * Row class for {@link NameTranslatorTest}.
  * @author Jeff Miller
  */
 @Row(nameTranslator=StandardNameTranslator.class)

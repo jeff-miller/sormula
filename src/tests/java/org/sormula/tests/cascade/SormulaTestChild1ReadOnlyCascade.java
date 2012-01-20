@@ -21,7 +21,7 @@ import org.sormula.annotation.Row;
 
 
 /**
- * Child of {@linkplain SormulaTestParentReadOnlyCascade}. Child may occur 0 or 1 times for 1 parent.
+ * Child of {@link SormulaTestParentReadOnlyCascade}. Child may occur 0 or 1 times for 1 parent.
  * 
  * @author Jeff Miller
  */

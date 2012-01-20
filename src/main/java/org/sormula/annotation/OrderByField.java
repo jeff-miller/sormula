@@ -23,7 +23,7 @@ import java.lang.annotation.Target;
 
 
 /**
- * Defines a field within a {@linkplain OrderBy} annotation.
+ * Defines a field within a {@link OrderBy} annotation.
  * 
  * @since 1.0
  * @author Jeff Miller

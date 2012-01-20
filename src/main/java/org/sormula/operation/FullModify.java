@@ -63,7 +63,7 @@ public class FullModify<R>
      * Modifies one row. Set parameters, executes, closes.
      * 
      * @param row row to use for parameters
-     * @return {@linkplain ModifyOperation#getRowsAffected()}
+     * @return {@link ModifyOperation#getRowsAffected()}
      * @throws OperationException if error
      */
     public int execute(R row) throws OperationException
@@ -79,7 +79,7 @@ public class FullModify<R>
      * Modifies a collection of rows. Set parameters, executes, closes.
      * 
      * @param rows collection of rows to use as parameters 
-     * @return {@linkplain ModifyOperation#getRowsAffected()}
+     * @return {@link ModifyOperation#getRowsAffected()}
      * @throws OperationException if error
      */
     public int executeAll(Collection<R> rows) throws OperationException
@@ -94,7 +94,7 @@ public class FullModify<R>
     /**
      * Modifies row(s) with sql parametes as Objects
      * 
-     * @param parameters operation parameters as objects (see {@linkplain ModifyOperation#setParameters(Object...)})
+     * @param parameters operation parameters as objects (see {@link ModifyOperation#setParameters(Object...)})
      * @return count of rows affected
      * @throws OperationException if error
      */

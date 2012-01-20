@@ -51,9 +51,9 @@ import org.sormula.translator.standard.StandardColumnTranslator;
 
 
 /**
- * Translates a row to prepared statement and from result set. {@linkplain ColumnTranslator} objects
+ * Translates a row to prepared statement and from result set. {@link ColumnTranslator} objects
  * are created for each column based upon annotations on row class. If no annotation exists for a member then
- * column name is same as member name and {@linkplain StandardColumnTranslator} is used.
+ * column name is same as member name and {@link StandardColumnTranslator} is used.
  * 
  * @since 1.0
  * @author Jeff Miller
@@ -323,7 +323,7 @@ public class RowTranslator<R> extends ColumnsTranslator<R>
     
     
     /**
-     * Gets translator defined by {@linkplain Row#nameTranslator()}.
+     * Gets translator defined by {@link Row#nameTranslator()}.
      * 
      * @return translator for converting java names to sql names
      */

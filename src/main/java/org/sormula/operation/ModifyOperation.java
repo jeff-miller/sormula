@@ -208,7 +208,7 @@ public abstract class ModifyOperation<R> extends SqlOperation<R>
      * Modifies one row. Set parameters, executes, closes.
      * 
      * @param row row to use for parameters
-     * @return {@linkplain #getRowsAffected()}
+     * @return {@link #getRowsAffected()}
      * @throws OperationException if error
      * @since 1.4
      */
@@ -225,7 +225,7 @@ public abstract class ModifyOperation<R> extends SqlOperation<R>
      * Modifies a collection of rows. Set parameters, executes, closes.
      * 
      * @param rows collection of rows to use as parameters 
-     * @return {@linkplain #getRowsAffected()}
+     * @return {@link #getRowsAffected()}
      * @throws OperationException if error
      * @since 1.4
      */
@@ -241,7 +241,7 @@ public abstract class ModifyOperation<R> extends SqlOperation<R>
     /**
      * Modifies row(s) with sql parametes as Objects
      * 
-     * @param parameters operation parameters as objects (see {@linkplain #setParameters(Object...)})
+     * @param parameters operation parameters as objects (see {@link #setParameters(Object...)})
      * @return count of rows affected
      * @throws OperationException if error
      * @since 1.4
@@ -258,7 +258,7 @@ public abstract class ModifyOperation<R> extends SqlOperation<R>
     /**
      * Invoked prior to JDBC execute. Override to modify the row prior to JDBC execute.
      * Default implementaion does nothing. This method is not invoked when 
-     * {@linkplain ModifyOperation#setParameters(Object...)} is used since no row is available.
+     * {@link ModifyOperation#setParameters(Object...)} is used since no row is available.
      * 
      * @param row row for JDBC execute
      * @throws OperationException if error
@@ -271,7 +271,7 @@ public abstract class ModifyOperation<R> extends SqlOperation<R>
     /**
      * Invoked after JDBC execute. Override to modify the row after JDBC execute has occured.
      * Default implementaion does nothing. This method is not invoked when 
-     * {@linkplain ModifyOperation#setParameters(Object...)} is used since no row is available. 
+     * {@link ModifyOperation#setParameters(Object...)} is used since no row is available. 
      * 
      * @param row row for JDBC execute
      * @throws OperationException if error

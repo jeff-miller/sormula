@@ -25,7 +25,7 @@ import org.sormula.operation.DeleteOperation;
 
 
 /**
- * Used within a {@linkplain Cascade} annotation to define a cascade delete operation.
+ * Used within a {@link Cascade} annotation to define a cascade delete operation.
  * 
  * @since 1.0
  * @author Jeff Miller

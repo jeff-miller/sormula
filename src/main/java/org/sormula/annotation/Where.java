@@ -28,7 +28,7 @@ import org.sormula.operation.SqlOperation;
 
 /**
  * Defines columns to be used in a where condition for a row class. Use this to annotate
- * a row class, {@link Table} subclass, {@link SqlOperation} or within {@linkplain Wheres} annotation.
+ * a row class, {@link Table} subclass, {@link SqlOperation} or within {@link Wheres} annotation.
  * 
  * @since 1.0
  * @author Jeff Miller

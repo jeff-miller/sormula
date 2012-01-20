@@ -47,8 +47,8 @@ public abstract class ModifyCascadeOperation<S, T> extends CascadeOperation<S, T
      * @param targetField cascade operation uses row(s) from this field
      * @param targetTable cascade operation is performed on this table 
      * @param cascadeOperationClass class of cascade operation
-     * @param post true if cascade is performed after row execute (see {@linkplain ModifyOperation#postExecute});
-     * false if cascade is performed before row execute (see {@linkplain ModifyOperation#preExecute}
+     * @param post true if cascade is performed after row execute (see {@link ModifyOperation#postExecute});
+     * false if cascade is performed before row execute (see {@link ModifyOperation#preExecute}
      */
     public ModifyCascadeOperation(SormulaField<S, ?> targetField, Table<T> targetTable, 
             Class <?> cascadeOperationClass, boolean post)

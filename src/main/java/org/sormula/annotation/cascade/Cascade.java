@@ -41,7 +41,7 @@ import org.sormula.Database;
 public @interface Cascade
 {
     /**
-     * Class type of target field to affect. Used as parameter to {@linkplain Database#getTable(Class)} to
+     * Class type of target field to affect. Used as parameter to {@link Database#getTable(Class)} to
      * get table for cascade operation. {@link #targetClass()} is optional for scalar fields since
      * target class can be obtained from target field at runtime. For nonscalar target field types, 
      * like {@link Collection} types, {@link #targetClass()} must be specified.

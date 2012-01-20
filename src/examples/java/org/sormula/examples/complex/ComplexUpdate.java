@@ -27,7 +27,7 @@ import org.sormula.examples.ExampleBase;
 
 
 /**
- * Same as UpdateExample1 but does not always use default names. See {@linkplain Student3}
+ * Same as UpdateExample1 but does not always use default names. See {@link Student3}
  * for details about name differences.
  */
 public class ComplexUpdate extends ExampleBase

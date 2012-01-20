@@ -27,7 +27,7 @@ import org.sormula.operation.SqlOperation;
 
 
 /**
- * Defines a field within a {@linkplain Where} annotation. 
+ * Defines a field within a {@link Where} annotation. 
  * 
  * @since 1.0
  * @author Jeff Miller

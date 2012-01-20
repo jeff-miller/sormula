@@ -19,7 +19,7 @@ package org.sormula.tests.translator;
 
 
 /**
- * Row class for {@linkplain TimeTranslatorTest}.
+ * Row class for {@link TimeTranslatorTest}.
  * @author Jeff Miller
  */
 public class SormulaTestTime

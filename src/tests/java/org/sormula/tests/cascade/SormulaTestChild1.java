@@ -20,7 +20,7 @@ import org.sormula.annotation.Column;
 
 
 /**
- * Child of {@linkplain SormulaTestParent}. Child may occur 0 or 1 times for 1 parent.
+ * Child of {@link SormulaTestParent}. Child may occur 0 or 1 times for 1 parent.
  * 
  * @author Jeff Miller
  */

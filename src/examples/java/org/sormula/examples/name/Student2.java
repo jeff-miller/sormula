@@ -25,7 +25,7 @@ import org.sormula.translator.StandardNameTranslator;
 
 
 /**
- * Row class where table name and column names are derived from {@linkplain StandardNameTranslator}.
+ * Row class where table name and column names are derived from {@link StandardNameTranslator}.
  * See {@link NameInsert} for table definition.
  */
 @Row(nameTranslator=StandardNameTranslator.class)

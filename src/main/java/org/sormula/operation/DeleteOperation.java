@@ -76,7 +76,7 @@ public class DeleteOperation<R> extends ModifyOperation<R>
      * Alias for {@link #modify(Object)}.
      * 
      * @param row row to use for parameters
-     * @return {@linkplain #getRowsAffected()}
+     * @return {@link #getRowsAffected()}
      * @throws OperationException if error
      * @since 1.4
      */
@@ -91,7 +91,7 @@ public class DeleteOperation<R> extends ModifyOperation<R>
      * Alias for {@link #modifyAll(Collection)}.
      * 
      * @param rows collection of rows to use as parameters 
-     * @return {@linkplain #getRowsAffected()}
+     * @return {@link #getRowsAffected()}
      * @throws OperationException if error
      * @since 1.4
      */
@@ -105,7 +105,7 @@ public class DeleteOperation<R> extends ModifyOperation<R>
      * Deletes rows based upon parameters. Set parameters, executes, closes. 
      * Alias for {@link #modify(Object...)}.
      * 
-     * @param parameters operation parameters as objects (see {@linkplain #setParameters(Object...)})
+     * @param parameters operation parameters as objects (see {@link #setParameters(Object...)})
      * @return count of rows affected
      * @throws OperationException if error
      * @since 1.4

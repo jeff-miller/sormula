@@ -22,7 +22,7 @@ import org.sormula.annotation.Where;
 
 
 /**
- * Child of {@linkplain SormulaTestParentReadOnlyCascade}. Child may occur 0 to n times for 1 parent.
+ * Child of {@link SormulaTestParentReadOnlyCascade}. Child may occur 0 to n times for 1 parent.
  * 
  * @author Jeff Miller
  */

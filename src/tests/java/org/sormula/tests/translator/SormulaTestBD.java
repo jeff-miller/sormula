@@ -20,7 +20,7 @@ import java.math.BigDecimal;
 
 
 /**
- * Row class for {@linkplain BigDecimalTranslatorTest}.
+ * Row class for {@link BigDecimalTranslatorTest}.
  * @author Jeff Miller
  */
 public class SormulaTestBD

@@ -35,7 +35,7 @@ import org.sormula.reflect.SormulaField;
 public class DeleteCascadeOperation<S, T> extends ModifyCascadeOperation<S, T>
 {
     /**
-     * Constructor used by {@linkplain InsertOperation}.
+     * Constructor used by {@link InsertOperation}.
      *  
      * @param targetField cascade delete operation uses row(s) from this field
      * @param targetTable cascade delete operation is performed on this table 

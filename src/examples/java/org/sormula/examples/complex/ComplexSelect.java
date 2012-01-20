@@ -27,7 +27,7 @@ import org.sormula.operation.ListSelectOperation;
 
 
 /**
- * Same as SelectExample1 but does not always use default names. See {@linkplain Student3}
+ * Same as SelectExample1 but does not always use default names. See {@link Student3}
  * for details about name differences.
  */
 public class ComplexSelect extends ExampleBase

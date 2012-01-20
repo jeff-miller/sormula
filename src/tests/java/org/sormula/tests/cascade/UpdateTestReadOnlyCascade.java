@@ -25,7 +25,7 @@ import org.testng.annotations.Test;
 
 
 /**
- * Tests readonly cascade udpates for {@linkplain SormulaTestParentReadOnlyCascade}.
+ * Tests readonly cascade udpates for {@link SormulaTestParentReadOnlyCascade}.
  * 
  * @author Jeff Miller
  */

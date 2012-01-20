@@ -29,7 +29,7 @@ import org.sormula.operation.SqlOperation;
 /**
  * Defines columns to be used in a order phrase. Use this to annotate
  * a row class, {@link Table} subclass, {@link SqlOperation} or  
- * within {@linkplain OrderBys} annotation.
+ * within {@link OrderBys} annotation.
  * <p>
  * Use only one of these methods: {@link #ascending()}, {@link #descending()}, or 
  * {@link #orderByFields()}.

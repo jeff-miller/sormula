@@ -25,7 +25,7 @@ import org.sormula.operation.UpdateOperation;
 
 
 /**
- * Used within a {@linkplain Cascade} annotation to define a cascade update operation.  
+ * Used within a {@link Cascade} annotation to define a cascade update operation.  
  * 
  * @since 1.0
  * @author Jeff Miller

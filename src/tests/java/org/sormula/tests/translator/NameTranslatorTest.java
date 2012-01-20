@@ -28,8 +28,8 @@ import org.testng.annotations.Test;
 
 
 /**
- * Tests {@linkplain StandardNameTranslator} for table and column names.  
- * {@linkplain SormulaTest2} has name translator defined with {@linkplain Row} annotation.
+ * Tests {@link StandardNameTranslator} for table and column names.  
+ * {@link SormulaTest2} has name translator defined with {@link Row} annotation.
  * 
  * @author Jeff Miller
  */

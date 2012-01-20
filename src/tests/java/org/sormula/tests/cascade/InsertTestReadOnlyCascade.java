@@ -27,7 +27,7 @@ import org.testng.annotations.Test;
 
 
 /**
- * Tests cascade inserts for {@linkplain SormulaTestParentReadOnlyCascade}. Inserts
+ * Tests cascade inserts for {@link SormulaTestParentReadOnlyCascade}. Inserts
  * should not cascade.
  * 
  * @author Jeff Miller

@@ -25,7 +25,7 @@ import org.testng.annotations.Test;
 
 
 /**
- * Tests readonly cascade deletes for {@linkplain SormulaTestParentReadOnlyCascade}.
+ * Tests readonly cascade deletes for {@link SormulaTestParentReadOnlyCascade}.
  * Delete parents with odd number id (and cascades to children).
  * 
  * @author Jeff Miller

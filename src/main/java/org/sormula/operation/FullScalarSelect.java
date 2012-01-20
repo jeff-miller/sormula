@@ -102,8 +102,8 @@ public class FullScalarSelect<R>
     /**
      * Set parameters, executes, reads one row, closes.
      * 
-     * @param parameters query parameters as objects (see {@linkplain SelectOperation#setParameters(Object...)})
-     * @return {@linkplain SelectOperation#readNext()}
+     * @param parameters query parameters as objects (see {@link SelectOperation#setParameters(Object...)})
+     * @return {@link SelectOperation#readNext()}
      * @throws OperationException if error
      */
     public R execute(Object... parameters) throws OperationException
@@ -120,8 +120,8 @@ public class FullScalarSelect<R>
      * Set parameters, executes, reads one row, closes.
      * 
      * @param whereParameters query parameters are read from an existing row object 
-     * (see {@linkplain SelectOperation#setRowParameters(Object)})
-     * @return {@linkplain SelectOperation#readNext()}
+     * (see {@link SelectOperation#setRowParameters(Object)})
+     * @return {@link SelectOperation#readNext()}
      * @throws OperationException if error
      */
     public R execute(R whereParameters) throws OperationException

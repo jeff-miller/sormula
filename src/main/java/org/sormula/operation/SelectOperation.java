@@ -122,8 +122,8 @@ public abstract class SelectOperation<R, C> extends ScalarSelectOperation<R>
     /**
      * Set parameters, executes, reads all rows in result set, closes.
      * 
-     * @param parameters query parameters as objects (see {@linkplain #setParameters(Object...)})
-     * @return {@linkplain #readAll()}
+     * @param parameters query parameters as objects (see {@link #setParameters(Object...)})
+     * @return {@link #readAll()}
      * @throws OperationException if error
      * @since 1.4
      */
@@ -141,8 +141,8 @@ public abstract class SelectOperation<R, C> extends ScalarSelectOperation<R>
      * Set parameters, executes, reads all rows in result set, closes.
      * 
      * @param whereParameters query parameters are read from an existing row object 
-     * (see {@linkplain #setParameters(Object...)})
-     * @return {@linkplain #readAll()}
+     * (see {@link #setParameters(Object...)})
+     * @return {@link #readAll()}
      * @throws OperationException if error
      * @since 1.4
      */

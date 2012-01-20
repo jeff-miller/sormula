@@ -20,8 +20,8 @@ import org.sormula.annotation.Column;
 
 
 /**
- * Row class for {@linkplain InsertTest}, @linkplain SelectTest}, @linkplain UpdateTest},
- * and @linkplain DeleteTest}.
+ * Row class for {@link InsertTest}, @link SelectTest}, @link UpdateTest},
+ * and @link DeleteTest}.
  * 
  * @author Jeff Miller
  */

@@ -29,8 +29,8 @@ import org.sormula.translator.StandardNameTranslator;
 
 
 /**
- * Same as InsertExample1 but uses {@linkplain StandardNameTranslator} which derives
- * column names from row class names with underscores between words. See {@linkplain Student2}.
+ * Same as InsertExample1 but uses {@link StandardNameTranslator} which derives
+ * column names from row class names with underscores between words. See {@link Student2}.
  */
 public class NameInsert extends ExampleBase
 {

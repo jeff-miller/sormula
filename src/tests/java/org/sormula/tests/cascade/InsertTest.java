@@ -29,7 +29,7 @@ import org.testng.annotations.Test;
 
 
 /**
- * Tests cascade inserts for {@linkplain SormulaTestParent}.
+ * Tests cascade inserts for {@link SormulaTestParent}.
  * 
  * @author Jeff Miller
  */

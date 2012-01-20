@@ -28,7 +28,7 @@ import org.testng.annotations.Test;
 
 
 /**
- * Tests {@linkplain StandardNameTranslator} for table and column names. StandardNameTranslator
+ * Tests {@link StandardNameTranslator} for table and column names. StandardNameTranslator
  * is defined as default in {@link Database} instead of at row class as in {@link NameTranslatorTest}.
  * 
  * @author Jeff Miller

@@ -57,7 +57,7 @@ public class UnusedColumnTest extends DatabaseTest<SormulaTest3>
     
     
     /**
-     * Test that insert sets {@linkplain UnusedColumn#value()} for unused columns.
+     * Test that insert sets {@link UnusedColumn#value()} for unused columns.
      * Throws SQLException if unused columns do not contain a value since they are declared as NOT NULL.
      */
     @Test
@@ -72,7 +72,7 @@ public class UnusedColumnTest extends DatabaseTest<SormulaTest3>
     
     
     /**
-     * Test that update sets {@linkplain UnusedColumn#value()} for unused columns.
+     * Test that update sets {@link UnusedColumn#value()} for unused columns.
      * Throws SQLException if unused columns do not contain a value since they are declared as NOT NULL.
      */
     @Test(dependsOnMethods="insertTest")

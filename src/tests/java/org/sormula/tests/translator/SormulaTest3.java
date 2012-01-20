@@ -22,7 +22,7 @@ import org.sormula.annotation.UnusedColumns;
 
 
 /**
- * Row class for {@linkplain UnusedColumnTest}.
+ * Row class for {@link UnusedColumnTest}.
  * 
  * @author Jeff Miller
  */

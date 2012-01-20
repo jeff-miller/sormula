@@ -61,8 +61,8 @@ public class FullSelect<R, C>
     /**
      * Set parameters, executes, reads one row, closes.
      * 
-     * @param parameters query parameters as objects (see {@linkplain SelectOperation#setParameters(Object...)})
-     * @return {@linkplain SelectOperation#readNext()}
+     * @param parameters query parameters as objects (see {@link SelectOperation#setParameters(Object...)})
+     * @return {@link SelectOperation#readNext()}
      * @throws OperationException if error
      */
     public R execute(Object... parameters) throws OperationException
@@ -79,8 +79,8 @@ public class FullSelect<R, C>
      * Set parameters, executes, reads one row, closes.
      * 
      * @param whereParameters query parameters are read from an existing row object 
-     * (see {@linkplain SelectOperation#setRowParameters(Object)})
-     * @return {@linkplain SelectOperation#readNext()}
+     * (see {@link SelectOperation#setRowParameters(Object)})
+     * @return {@link SelectOperation#readNext()}
      * @throws OperationException if error
      */
     public R execute(R whereParameters) throws OperationException
@@ -96,8 +96,8 @@ public class FullSelect<R, C>
     /**
      * Set parameters, executes, reads all rows in result set, closes.
      * 
-     * @param parameters query parameters as objects (see {@linkplain SelectOperation#setParameters(Object...)})
-     * @return {@linkplain SelectOperation#readAll()}
+     * @param parameters query parameters as objects (see {@link SelectOperation#setParameters(Object...)})
+     * @return {@link SelectOperation#readAll()}
      * @throws OperationException if error
      */
     public C executeAll(Object... parameters) throws OperationException
@@ -114,8 +114,8 @@ public class FullSelect<R, C>
      * Set parameters, executes, reads all rows in result set, closes.
      * 
      * @param whereParameters query parameters are read from an existing row object 
-     * (see {@linkplain SelectOperation#setParameters(Object...)})
-     * @return {@linkplain SelectOperation#readAll()}
+     * (see {@link SelectOperation#setParameters(Object...)})
+     * @return {@link SelectOperation#readAll()}
      * @throws OperationException if error
      */
     public C executeAll(R whereParameters) throws OperationException

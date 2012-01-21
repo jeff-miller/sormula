@@ -115,9 +115,9 @@ public class Database implements TypeTranslatorMap
         }
         catch (SormulaException e)
         {
-            // TODO keep backward compatibility?
-            // don't throw since previous versions did not have
-            // constructor signature with "throws SormulaException" 
+            // unlikely class construction error, don't throw to keep backward compatibility with version 1.5
+            // since previous versions did not have constructor signature with "throws SormulaException"
+            // if error creating a TypeTranslator, then it will be apparent with first use
             log.error("error initializing types", e);
         }
     }
@@ -189,6 +189,11 @@ public class Database implements TypeTranslatorMap
         connection = null;
         schema = null;
         tableMap = null;
+        transaction = null;
+        nameTranslatorClass = null;
+        operationTimeMap = null;
+        totalOperationTime = null;
+        typeTranslatorMap = null;
     }
     
 

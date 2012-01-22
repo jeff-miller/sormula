@@ -18,7 +18,6 @@ package org.sormula.examples.name;
 
 import java.util.Date;
 
-import org.sormula.annotation.Column;
 import org.sormula.annotation.Row;
 import org.sormula.annotation.Where;
 import org.sormula.translator.StandardNameTranslator;
@@ -32,7 +31,6 @@ import org.sormula.translator.StandardNameTranslator;
 @Where(name="fn", fieldNames="firstName")
 public class Student2
 {
-    @Column(primaryKey=true)
     int id;
     String firstName;
     String lastName;

@@ -18,6 +18,7 @@ package org.sormula.examples.basic;
 
 import java.sql.Connection;
 import java.util.ArrayList;
+import java.util.List;
 
 import org.sormula.Database;
 import org.sormula.SormulaException;
@@ -90,7 +91,6 @@ public class BasicSelect extends ExampleBase
         for (Student s = operation.readNext(); s != null; s = operation.readNext())
             System.out.println(s);
         
-        
         operation.close();
     }
     
@@ -103,28 +103,20 @@ public class BasicSelect extends ExampleBase
         
         System.out.println("select where id in = " + idList);
         ListSelectOperation<Student> operation = new ArrayListSelectOperation<Student>(table, "idin");
-        operation.setParameters(idList);
         operation.setTimings(true);
         
-        operation.execute();
-        for (Student s: operation.readAll())
+        for (Student s: operation.selectAll(idList))
             System.out.println(s);
         
         operation.logTimings();
-        operation.close();
     }
     
     
     void selectWhere2() throws SormulaException
     {
         System.out.println("select using SelectJohns class");
-        SelectJohns operation = new SelectJohns(table);
-        operation.execute();
-
-        for (Student s: operation.readAll())
+        for (Student s: new SelectJohns(table).selectAll())
             System.out.println(s);
-        
-        operation.close();
     }
 }
 
@@ -136,6 +128,11 @@ class SelectJohns extends ArrayListSelectOperation<Student>
     public SelectJohns(Table<Student> table) throws OperationException
     {
         super(table, "fn2");
-        setParameters("John");
+    }
+
+    @Override
+    public List<Student> selectAll(Object... parameters) throws OperationException
+    {
+        return super.selectAll("John");
     }
 }

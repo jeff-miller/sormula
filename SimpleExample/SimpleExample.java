@@ -11,7 +11,7 @@ import org.sormula.operation.ListSelectOperation;
 
 /**
  * A simple example to show basic sormula features. Everything needed for this example is
- * in the one directory that contains this class. The database used by this example is
+ * in the directory that contains this class. The database used by this example is
  * simpleDB.script. simpleDB.script may be viewed with any text editor.
  * <p>
  * Compile with compile.bat<br> 
@@ -47,12 +47,6 @@ public class SimpleExample
     }
     
     
-    public Connection getConnection()
-    {
-        return connection;
-    }
-
-
     public void close() throws Exception
     {
         connection.close();
@@ -70,7 +64,7 @@ public class SimpleExample
         System.out.println("removeInventory");
     	
         // set up
-        Database database = new Database(getConnection());
+        Database database = new Database(connection);
         Table<Inventory> inventoryTable = database.getTable(Inventory.class);
         
         // get part by primary key
@@ -92,29 +86,22 @@ public class SimpleExample
         System.out.println("clearInventory");
     	
         // set up
-        Database database = new Database(getConnection());
+        Database database = new Database(connection);
         Table<Inventory> inventoryTable = database.getTable(Inventory.class);
-        List<Inventory> clearList = new ArrayList<Inventory>();
         
         // select for a specific manufacturer ("manf" is name of where annotation in Inventory.java)
         ListSelectOperation<Inventory> operation = new ArrayListSelectOperation<Inventory>(
                 inventoryTable, "manf");
-        operation.setParameters(manufacturerId);
-        operation.execute();
         
         // for all inventory of manufacturer
-        for (Inventory inventory: operation.readAll())
+        List<Inventory> list = operation.selectAll(manufacturerId);
+        for (Inventory inventory: list)
         {
-            // remember for update
             inventory.setQuantity(0);
-            clearList.add(inventory);
         }
         
         // update
-        inventoryTable.updateAll(clearList);
-        
-        // clean up
-        operation.close();
+        inventoryTable.updateAll(list);
     }    
     
     
@@ -129,23 +116,21 @@ public class SimpleExample
         System.out.println("clearInventory2");
     	
         // set up
-        Database database = new Database(getConnection());
+        Database database = new Database(connection);
         Table<Inventory> inventoryTable = database.getTable(Inventory.class);
-        List<Inventory> clearList = new ArrayList<Inventory>();
         
         // select operation for a specific manufacturer ("manf" is name of where annotation in Inventory.java)
-        ArrayListSelectOperation<Inventory> s = new ArrayListSelectOperation<Inventory>(inventoryTable, "manf");
+        ArrayListSelectOperation<Inventory> operation = new ArrayListSelectOperation<Inventory>(inventoryTable, "manf");
         		
         // for all inventory of manufacturer
-        for (Inventory inventory: s.selectAll(manufacturerId))
+        List<Inventory> list = operation.selectAll(manufacturerId);
+        for (Inventory inventory: list)
         {
-            // remember for update
             inventory.setQuantity(0);
-            clearList.add(inventory);
         }
         
         // update
-        inventoryTable.updateAll(clearList);
+        inventoryTable.updateAll(list);
     }
     
     
@@ -162,7 +147,7 @@ public class SimpleExample
         System.out.println("selectByRange " + minimumQuanity + " " + maximumQuantity);
     	
         // set up
-        Database database = new Database(getConnection());
+        Database database = new Database(connection);
         Table<Inventory> inventoryTable = database.getTable(Inventory.class);
         
         // execute
@@ -190,22 +175,18 @@ public class SimpleExample
         System.out.println("selectByRange2 " + minimumQuanity + " " + maximumQuantity);
     	
         // set up
-        Database database = new Database(getConnection());
+        Database database = new Database(connection);
         Table<Inventory> inventoryTable = database.getTable(Inventory.class);
         
         // select operation for range
         QuantityRangeSelect operation = new QuantityRangeSelect(inventoryTable);
         operation.setRange(minimumQuanity, maximumQuantity);
-        operation.execute();
         
         // show results
-        for (Inventory inventory: operation.readAll())
+        for (Inventory inventory: operation.selectAll())
         {
             System.out.println(inventory.getPartNumber() + " quantity=" + inventory.getQuantity());
         }
-        
-        // clean up
-        operation.close();
     }
     
     
@@ -221,7 +202,7 @@ public class SimpleExample
         System.out.println("selectIn partNumbers=" + partNumbers);
         
         // set up
-        Database database = new Database(getConnection());
+        Database database = new Database(connection);
         Table<Inventory> inventoryTable = database.getTable(Inventory.class);
         
         // select operation for list 

@@ -17,6 +17,7 @@
 package org.sormula.examples.blob;
 
 import org.sormula.annotation.Column;
+import org.sormula.annotation.ImplicitType;
 import org.sormula.annotation.Row;
 
 
@@ -29,7 +30,7 @@ public class SomeRow1
     @Column(primaryKey=true)
     int id;
     
-    @Column(translator=WidgetColumnTranslator1.class)
+    @ImplicitType(translator=WidgetTanslator1.class)
     Widget widget;
     
     

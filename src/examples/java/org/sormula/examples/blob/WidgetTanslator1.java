@@ -20,37 +20,27 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.lang.reflect.Field;
 import java.sql.Blob;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
 import javax.sql.rowset.serial.SerialBlob;
 
-import org.sormula.translator.AbstractColumnTranslator;
+import org.sormula.translator.TypeTranslator;
 
 
 /**
- * Translates a {@link Widget} field using {@link PreparedStatement#setBlob(int, Blob)} and 
- * {@link ResultSet#getBlob(int)}. {@link AbstractColumnTranslator} is the base class.
- * <p>
- * Replaced by {@link WidgetTanslator1}.
+ * Translates a {@link Widget} field using {@link TypeTranslator}. Replaces
+ * {@link WidgetColumnTranslator1}. 
  */
-@Deprecated
-public class WidgetColumnTranslator1 extends AbstractColumnTranslator<SomeRow1, Widget>
+public class WidgetTanslator1 implements TypeTranslator<Widget>
 {
-    public WidgetColumnTranslator1(Field field, String columnName) throws Exception
-    {
-        super(field, columnName);
-    }
-    
-    
-    public void write(PreparedStatement preparedStatement, int parameterIndex, SomeRow1 row) throws Exception
+    public void write(PreparedStatement preparedStatement, int parameterIndex, Widget parameter) throws Exception
     {
         // convert from domain object to bytes
         ByteArrayOutputStream bos = new ByteArrayOutputStream(1000);
         ObjectOutputStream oos = new ObjectOutputStream(bos);
-        oos.writeObject(row.getWidget());
+        oos.writeObject(parameter);
         oos.close();
         
         // convert bytes to jdbc blob
@@ -58,7 +48,7 @@ public class WidgetColumnTranslator1 extends AbstractColumnTranslator<SomeRow1, 
     }
     
     
-    public void read(ResultSet resultSet, int parameterIndex, SomeRow1 row) throws Exception
+    public Widget read(ResultSet resultSet, int parameterIndex) throws Exception
     {
         // convert from jdbc blob to bytes to domain object
         Blob blob = resultSet.getBlob(parameterIndex);
@@ -66,6 +56,6 @@ public class WidgetColumnTranslator1 extends AbstractColumnTranslator<SomeRow1, 
         Widget widget = (Widget)ois.readObject();
         ois.close();
 
-        row.setWidget(widget);
+        return widget;
     }
 }

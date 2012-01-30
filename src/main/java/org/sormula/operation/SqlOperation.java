@@ -53,7 +53,7 @@ import org.sormula.translator.WhereTranslator;
  * @author Jeff Miller
  * @param <R> class type which contains members for columns of a row in a table
  */
-public abstract class SqlOperation<R>
+public abstract class SqlOperation<R> implements AutoCloseable
 {
     private static final ClassLogger log = new ClassLogger();
     private static NoOperationTime noOperationTime = new NoOperationTime();

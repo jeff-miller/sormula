@@ -66,7 +66,7 @@ import org.sormula.translator.standard.StringTranslator;
  * @since 1.0
  * @author Jeff Miller
  */
-public class Database implements TypeTranslatorMap
+public class Database implements TypeTranslatorMap, AutoCloseable
 {
     private static final ClassLogger log = new ClassLogger();
     Connection connection;
@@ -103,7 +103,7 @@ public class Database implements TypeTranslatorMap
     {
         this.connection = connection;
         this.schema = schema;
-        tableMap = new HashMap<String, Table<?>>();
+        tableMap = new HashMap<>();
         transaction = new Transaction(connection);
         operationTimeMap = new HashMap<String, OperationTime>();
         totalOperationTime = new OperationTime("Database totals");

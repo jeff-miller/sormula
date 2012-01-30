@@ -1,4 +1,4 @@
-sormula
+sormula for JDK 1.7
 
 - See SimpleExample directory for stand-alone example
 - See ZeroConfigExample directory for a stand-alone example using sormula with 

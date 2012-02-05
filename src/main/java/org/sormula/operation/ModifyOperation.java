@@ -64,7 +64,7 @@ public abstract class ModifyOperation<R> extends SqlOperation<R>
      */
     public void setRow(R row)
     {
-        rows = new ArrayList<R>(1);
+        rows = new ArrayList<>(1);
         rows.add(row);
     }
     

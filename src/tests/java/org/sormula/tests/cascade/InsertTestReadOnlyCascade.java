@@ -49,7 +49,7 @@ public class InsertTestReadOnlyCascade extends DatabaseTest<SormulaTestParentRea
             );
             
             // create child table for 1 to 1 relationship
-            DatabaseTest<SormulaTestChild1ReadOnlyCascade> child1 = new DatabaseTest<SormulaTestChild1ReadOnlyCascade>();
+            DatabaseTest<SormulaTestChild1ReadOnlyCascade> child1 = new DatabaseTest<>();
             child1.openDatabase();
             child1.createTable(SormulaTestChild1ReadOnlyCascade.class, 
                     "CREATE TABLE " + getSchemaPrefix() + 
@@ -61,7 +61,7 @@ public class InsertTestReadOnlyCascade extends DatabaseTest<SormulaTestParentRea
             child1.closeDatabase();
             
             // create child table for 1 to n relationship
-            DatabaseTest<SormulaTestChildNReadOnlyCascade> childN = new DatabaseTest<SormulaTestChildNReadOnlyCascade>();
+            DatabaseTest<SormulaTestChildNReadOnlyCascade> childN = new DatabaseTest<>();
             childN.openDatabase();
             childN.createTable(SormulaTestChildNReadOnlyCascade.class, 
                     "CREATE TABLE " + getSchemaPrefix() + 
@@ -115,7 +115,7 @@ public class InsertTestReadOnlyCascade extends DatabaseTest<SormulaTestParentRea
         
         // verify that all children were NOT inserted
         Table<SormulaTestChildNReadOnlyCascade> childTable = getDatabase().getTable(SormulaTestChildNReadOnlyCascade.class);
-        ScalarSelectOperation<SormulaTestChildNReadOnlyCascade> operation = new ScalarSelectOperation<SormulaTestChildNReadOnlyCascade>(childTable);
+        ScalarSelectOperation<SormulaTestChildNReadOnlyCascade> operation = new ScalarSelectOperation<>(childTable);
         for (SormulaTestChildNReadOnlyCascade c: parent.getChildList())
         {
             operation.setParameters(c.getId());

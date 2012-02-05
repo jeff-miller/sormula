@@ -39,12 +39,9 @@ import org.sormula.operation.SqlOperation;
 public @interface Wheres
 {
     /**
-     * Where conditions. value() is the default and does not need to be specified.
-     * <p> 
-     * "default {}" allows either method to be used. It will be removed when 
-     * {@link #whereConditions()} is removed.
+     * Where conditions. 
      * 
      * @return array of {@link Where} annotations for a row class
      */
-    Where[] value() default {};
+    Where[] value();
 }

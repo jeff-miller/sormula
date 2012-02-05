@@ -143,7 +143,7 @@ public class OrderByTranslator<R> extends ColumnsTranslator<R>
     protected void initColumnTranslatorList(int columns)
     {
         super.initColumnTranslatorList(columns);
-        orderQualifierList = new ArrayList<String>(columns);
+        orderQualifierList = new ArrayList<>(columns);
     }
 
 

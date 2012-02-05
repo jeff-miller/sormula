@@ -86,7 +86,7 @@ public class SelectTest extends DatabaseTest<SormulaTestA>
         assert table.insert(new SormulaTestA(6002, 0, "6002")) == 1 : "test row was not inserted";
         
         // test IN with constant operand
-        assert new ArrayListSelectOperation<SormulaTestA>(table, "idIn2").selectAll().size() == 2 :
+        assert new ArrayListSelectOperation<>(table, "idIn2").selectAll().size() == 2 :
             "IN (6001, 6002) operator did not work";
         
         commit();
@@ -112,7 +112,7 @@ public class SelectTest extends DatabaseTest<SormulaTestA>
         assert expectedCount > 0 : "no rows meet expected condition to test";
         
         // select all type 3 rows
-        List<SormulaTestA> selectedList = new ArrayListSelectOperation<SormulaTestA>(getTable(), "byType").selectAll(3);
+        List<SormulaTestA> selectedList = new ArrayListSelectOperation<>(getTable(), "byType").selectAll(3);
 
         assert expectedCount == selectedList.size() : "simple select returned wrong number of rows";
         
@@ -132,7 +132,7 @@ public class SelectTest extends DatabaseTest<SormulaTestA>
         begin();
 
         // execute to make sure ob1 found, no need to test ordering
-        ArrayListSelectOperation<SormulaTestA> operation = new ArrayListSelectOperation<SormulaTestA>(getTable(), "");
+        ArrayListSelectOperation<SormulaTestA> operation = new ArrayListSelectOperation<>(getTable(), "");
         operation.setOrderBy("ob1");
         operation.execute();
         operation.readAll();
@@ -149,7 +149,7 @@ public class SelectTest extends DatabaseTest<SormulaTestA>
         begin();
         
         LinkedHashMapSelectOperation<Integer, SormulaTestA> operation = 
-            new LinkedHashMapSelectOperation<Integer, SormulaTestA>(getTable(), "" /*select all*/);
+            new LinkedHashMapSelectOperation<>(getTable(), "" /*select all*/);
         operation.setGetKeyMethodName("getId");
         
         // select into map
@@ -180,7 +180,7 @@ public class SelectTest extends DatabaseTest<SormulaTestA>
         selectTestRows();
         
         // perform with different test sizes but same operation to test that correctly prepare 
-        ListSelectOperation<SormulaTestA> operation = new ArrayListSelectOperation<SormulaTestA>(getTable(), "idIn");
+        ListSelectOperation<SormulaTestA> operation = new ArrayListSelectOperation<>(getTable(), "idIn");
         selectIn(operation, 3);
         selectIn(operation, 4);
         operation.close();
@@ -191,7 +191,7 @@ public class SelectTest extends DatabaseTest<SormulaTestA>
     protected void selectIn(ListSelectOperation<SormulaTestA> operation, int testFactor) throws SormulaException
     {
         // choose id's divisible by testFactor for in clause
-        Set<Integer> idSet = new HashSet<Integer>(getAll().size());
+        Set<Integer> idSet = new HashSet<>(getAll().size());
         for (SormulaTestA r : getAll())
         {
             if (r.getId() % testFactor == 0)

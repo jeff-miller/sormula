@@ -291,7 +291,7 @@ public class DatabaseTest<R>
     public Set<R> getRandomSet()
     {
         int size = 10;
-        Set<R> set = new HashSet<R>(size * 2);
+        Set<R> set = new HashSet<>(size * 2);
         
         // choose random set
         for (int i = 0; i < size; ++i)

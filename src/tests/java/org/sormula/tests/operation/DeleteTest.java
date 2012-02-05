@@ -98,7 +98,7 @@ public class DeleteTest extends DatabaseTest<SormulaTest4>
     	begin();
         selectTestRows(); // must perform each time since other tests are destructive
         
-        DeleteOperation<SormulaTest4> operation = new DeleteOperation<SormulaTest4>(getTable());
+        DeleteOperation<SormulaTest4> operation = new DeleteOperation<>(getTable());
         
         for (int i = 0; i < 10; ++i)
         {

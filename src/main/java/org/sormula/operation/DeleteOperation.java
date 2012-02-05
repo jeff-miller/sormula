@@ -178,7 +178,7 @@ public class DeleteOperation<R> extends ModifyOperation<R>
         if (targetTable != null && deleteCascades != null)
         {
             SormulaField<R, ?> targetField = createTargetField(field);
-            co = new ArrayList<CascadeOperation<R, ?>>(deleteCascades.length);
+            co = new ArrayList<>(deleteCascades.length);
             
             // for each cascade operation
             for (DeleteCascade c: deleteCascades)

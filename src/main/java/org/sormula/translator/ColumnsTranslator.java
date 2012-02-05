@@ -81,10 +81,10 @@ public class ColumnsTranslator<R>
     
     protected void initColumnTranslatorList(int columns)
     {
-        columnTranslatorList = new ArrayList<ColumnTranslator<R>>(columns);
+        columnTranslatorList = new ArrayList<>(columns);
         
         // for lookup by field name
-        columnTranslatorMap = new HashMap<String, ColumnTranslator<R>>(columns * 2);
+        columnTranslatorMap = new HashMap<>(columns * 2);
     }
     
 

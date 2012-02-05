@@ -535,7 +535,7 @@ public abstract class SqlOperation<R> implements AutoCloseable
                 if (cascadeOperations == null)
                 {
                     // create only if needed so that no penalty for pre/postExecuteCascade and no memory usage
-                    cascadeOperations = new ArrayList<CascadeOperation<R,?>>();
+                    cascadeOperations = new ArrayList<>();
                 }
                 
                 cascadeOperations.addAll(prepareCascades(f));
@@ -626,7 +626,7 @@ public abstract class SqlOperation<R> implements AutoCloseable
         
         try
         {
-            targetField = new SormulaField<R, Object>(field);
+            targetField = new SormulaField<>(field);
         }
         catch (ReflectException e)
         {
@@ -745,7 +745,7 @@ public abstract class SqlOperation<R> implements AutoCloseable
                 
                 if (whereAnnotation != null)
                 {
-                    setWhereTranslator(new WhereTranslator<R>(table.getRowTranslator(), whereAnnotation));
+                    setWhereTranslator(new WhereTranslator<>(table.getRowTranslator(), whereAnnotation));
                 }
                 else
                 {

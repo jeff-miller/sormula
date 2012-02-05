@@ -26,7 +26,7 @@ import org.sormula.annotation.ImplicitType;
 @ImplicitType(translator=SuitTranslator.class) 
 public class Suit 
 {
-    static List<String> suit = new ArrayList<String>(
+    static List<String> suit = new ArrayList<>(
             Arrays.asList("", "Hearts", "Diamonds", "Clubs", "Spades"));
     int id;
     

@@ -63,6 +63,6 @@ public class LinkedHashMapSelectOperation<K, R> extends MapSelectOperation<K, R>
     @Override
     protected Map<K, R> createReadAllCollection()
     {
-        return new LinkedHashMap<K, R>(getDefaultReadAllSize());
+        return new LinkedHashMap<>(getDefaultReadAllSize());
     }
 }

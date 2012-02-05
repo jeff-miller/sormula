@@ -109,7 +109,7 @@ public class UpdateTest extends DatabaseTest<SormulaTest4>
     {
     	begin();
     	selectTestRows(); // must perform each time since other tests are destructive
-        UpdateOperation<SormulaTest4> operation = new UpdateOperation<SormulaTest4>(getTable());
+        UpdateOperation<SormulaTest4> operation = new UpdateOperation<>(getTable());
         
         for (int i = 0; i < 10; ++i)
         {

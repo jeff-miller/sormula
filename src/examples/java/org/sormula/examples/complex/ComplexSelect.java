@@ -78,7 +78,7 @@ public class ComplexSelect extends ExampleBase
         System.out.println("select where first name = " + whereParameter);
         
         // TODO change all references to SqlOperation.close() to use AutoCloseable.close - search for ".close()"
-        try (ListSelectOperation<Student3> operation = new ArrayListSelectOperation<Student3>(table, "fn"))
+        try (ListSelectOperation<Student3> operation = new ArrayListSelectOperation<>(table, "fn"))
         {
             operation.setParameters(whereParameter);
             

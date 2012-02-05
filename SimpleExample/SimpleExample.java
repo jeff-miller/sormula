@@ -90,8 +90,7 @@ public class SimpleExample
         Table<Inventory> inventoryTable = database.getTable(Inventory.class);
         
         // select for a specific manufacturer ("manf" is name of where annotation in Inventory.java)
-        ListSelectOperation<Inventory> operation = new ArrayListSelectOperation<Inventory>(
-                inventoryTable, "manf");
+        ListSelectOperation<Inventory> operation = new ArrayListSelectOperation<>(inventoryTable, "manf");
         
         // for all inventory of manufacturer
         List<Inventory> list = operation.selectAll(manufacturerId);
@@ -120,7 +119,7 @@ public class SimpleExample
         Table<Inventory> inventoryTable = database.getTable(Inventory.class);
         
         // select operation for a specific manufacturer ("manf" is name of where annotation in Inventory.java)
-        ArrayListSelectOperation<Inventory> operation = new ArrayListSelectOperation<Inventory>(inventoryTable, "manf");
+        ArrayListSelectOperation<Inventory> operation = new ArrayListSelectOperation<>(inventoryTable, "manf");
         		
         // for all inventory of manufacturer
         List<Inventory> list = operation.selectAll(manufacturerId);
@@ -195,7 +194,7 @@ public class SimpleExample
      */
     public void selectIn() throws Exception
     {
-        ArrayList<Integer> partNumbers = new ArrayList<Integer>();
+        ArrayList<Integer> partNumbers = new ArrayList<>();
         partNumbers.add(999);
         partNumbers.add(777);
         partNumbers.add(1234);
@@ -208,7 +207,7 @@ public class SimpleExample
         // select operation for list 
         // SELECT PARTNUMBER, QUANTITY, MANFID FROM INVENTORY WHERE PARTNUMBER IN (?, ?, ?)
         ArrayListSelectOperation<Inventory> operation =
-            new ArrayListSelectOperation<Inventory>(inventoryTable, "partNumberIn");
+            new ArrayListSelectOperation<>(inventoryTable, "partNumberIn");
 
         // show results
         for (Inventory inventory: operation.selectAll(partNumbers))

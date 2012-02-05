@@ -185,7 +185,7 @@ public class InsertOperation<R> extends ModifyOperation<R>
         if (targetTable != null && insertCascades != null)
         {
             SormulaField<R, ?> targetField = createTargetField(field);
-            co = new ArrayList<CascadeOperation<R, ?>>(insertCascades.length);
+            co = new ArrayList<>(insertCascades.length);
             
             // for each cascade operation
             for (InsertCascade c: insertCascades)

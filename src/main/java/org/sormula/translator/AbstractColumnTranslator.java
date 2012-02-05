@@ -87,7 +87,7 @@ public abstract class AbstractColumnTranslator<R, T> implements ColumnTranslator
         
         try
         {
-            sormulaField = new SormulaField<R, T>(field);
+            sormulaField = new SormulaField<>(field);
             Column columnAnnotation = field.getAnnotation(Column.class);
             setIdentity(columnAnnotation != null && columnAnnotation.identity());
         }

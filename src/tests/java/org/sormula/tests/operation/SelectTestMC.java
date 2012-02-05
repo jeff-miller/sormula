@@ -93,7 +93,7 @@ public class SelectTestMC extends DatabaseTest<SormulaTest4MC>
     	}
         
         // select all for condition w1
-        ListSelectOperation<SormulaTest4MC> operation = new ArrayListSelectOperation<SormulaTest4MC>(getTable(), "w1");
+        ListSelectOperation<SormulaTest4MC> operation = new ArrayListSelectOperation<>(getTable(), "w1");
         operation.setParameters(2, 199);
         operation.execute();
         List<SormulaTest4MC> selectedList = operation.readAll();
@@ -130,7 +130,7 @@ public class SelectTestMC extends DatabaseTest<SormulaTest4MC>
         assert expectedCount > 0 : "no rows meet expected condition to test";
         
         // select all rows with condition
-        ListSelectOperation<SormulaTest4MC> operation = new ArrayListSelectOperation<SormulaTest4MC>(getTable(), "w2");
+        ListSelectOperation<SormulaTest4MC> operation = new ArrayListSelectOperation<>(getTable(), "w2");
         operation.setParameters(2);
         operation.execute();
         List<SormulaTest4MC> selectedList = operation.readAll();

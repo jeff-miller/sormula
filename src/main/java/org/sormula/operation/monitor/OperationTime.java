@@ -104,7 +104,7 @@ public class OperationTime
         executeTime = new ElapsedTime("execute", totalTime, parentExecuteTime);
         readTime    = new ElapsedTime("read",    totalTime, parentReadTime);
         
-        operationTimeSourceMap = new HashMap<Integer, OperationTimeSource>();
+        operationTimeSourceMap = new HashMap<>();
     }
 
     

@@ -49,7 +49,7 @@ public class InsertTest extends DatabaseTest<SormulaTestParent>
         );
         
         // create child table for 1 to 1 relationship
-        DatabaseTest<SormulaTestChild1> child1 = new DatabaseTest<SormulaTestChild1>();
+        DatabaseTest<SormulaTestChild1> child1 = new DatabaseTest<>();
         child1.openDatabase();
         child1.createTable(SormulaTestChild1.class, 
                 "CREATE TABLE " + getSchemaPrefix() + SormulaTestChild1.class.getSimpleName() + " (" +
@@ -60,7 +60,7 @@ public class InsertTest extends DatabaseTest<SormulaTestParent>
         child1.closeDatabase();
         
         // create child table for 1 to n relationship
-        DatabaseTest<SormulaTestChildN> childN = new DatabaseTest<SormulaTestChildN>();
+        DatabaseTest<SormulaTestChildN> childN = new DatabaseTest<>();
         childN.openDatabase();
         childN.createTable(SormulaTestChildN.class, 
                 "CREATE TABLE " + getSchemaPrefix() + SormulaTestChildN.class.getSimpleName() + " (" +
@@ -72,7 +72,7 @@ public class InsertTest extends DatabaseTest<SormulaTestParent>
         childN.closeDatabase();
         
         // create child table for map relationship
-        DatabaseTest<SormulaTestChildM> childM = new DatabaseTest<SormulaTestChildM>();
+        DatabaseTest<SormulaTestChildM> childM = new DatabaseTest<>();
         childM.openDatabase();
         childM.createTable(SormulaTestChildM.class, 
                 "CREATE TABLE " + getSchemaPrefix() + SormulaTestChildM.class.getSimpleName() + " (" +
@@ -141,7 +141,7 @@ public class InsertTest extends DatabaseTest<SormulaTestParent>
         
         // verify that all children were inserted
         Table<SormulaTestChildN> childTable = getDatabase().getTable(SormulaTestChildN.class);
-        ScalarSelectOperation<SormulaTestChildN> operation = new ScalarSelectOperation<SormulaTestChildN>(childTable);
+        ScalarSelectOperation<SormulaTestChildN> operation = new ScalarSelectOperation<>(childTable);
         
         for (SormulaTestChildN c: parent.getChildList())
         {
@@ -168,7 +168,7 @@ public class InsertTest extends DatabaseTest<SormulaTestParent>
     void insertOneToManyMap(int parentId, int childId) throws SormulaException
     {
         SormulaTestParent parent = new SormulaTestParent(parentId, "Insert parent " + parentId);
-        Map<Integer, SormulaTestChildM> map = new HashMap<Integer, SormulaTestChildM>(50);
+        Map<Integer, SormulaTestChildM> map = new HashMap<>(50);
         parent.setChildMap(map);
         
         for (int i = 1; i <= 20; ++i)
@@ -182,7 +182,7 @@ public class InsertTest extends DatabaseTest<SormulaTestParent>
         
         // verify that all children were inserted
         Table<SormulaTestChildM> childTable = getDatabase().getTable(SormulaTestChildM.class);
-        ScalarSelectOperation<SormulaTestChildM> operation = new ScalarSelectOperation<SormulaTestChildM>(childTable);
+        ScalarSelectOperation<SormulaTestChildM> operation = new ScalarSelectOperation<>(childTable);
         for (SormulaTestChildM c: parent.getChildMap().values())
         {
             operation.setParameters(c.getId());

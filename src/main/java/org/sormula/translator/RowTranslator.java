@@ -85,7 +85,7 @@ public class RowTranslator<R> extends ColumnsTranslator<R>
         nameTranslator = table.getNameTranslator();
         initColumnTranslators();
         initUnusedColumnSql(rowClass);
-        primaryKeyWhereTranslator = new PrimaryKeyWhereTranslator<R>(this);
+        primaryKeyWhereTranslator = new PrimaryKeyWhereTranslator<>(this);
         
         if (log.isDebugEnabled())
         {

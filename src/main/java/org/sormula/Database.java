@@ -105,7 +105,7 @@ public class Database implements TypeTranslatorMap, AutoCloseable
         this.schema = schema;
         tableMap = new HashMap<>();
         transaction = new Transaction(connection);
-        operationTimeMap = new HashMap<String, OperationTime>();
+        operationTimeMap = new HashMap<>();
         totalOperationTime = new OperationTime("Database totals");
         totalOperationTime.setDescription("All operations for database");
         
@@ -125,7 +125,7 @@ public class Database implements TypeTranslatorMap, AutoCloseable
     
     void initTypeTranslatorMap() throws SormulaException
     {
-        typeTranslatorMap = new HashMap<String, TypeTranslator<?>>(50);
+        typeTranslatorMap = new HashMap<>(50);
         
         // standard primatives (used by RowTranslator#initColumnTranslators)
         putTypeTranslator("boolean", new BooleanTranslator());
@@ -268,7 +268,7 @@ public class Database implements TypeTranslatorMap, AutoCloseable
         if (table == null)
         {
             // default
-            table = new Table<R>(this, rowClass);
+            table = new Table<>(this, rowClass);
             addTable(table);
         }
 
@@ -408,7 +408,7 @@ public class Database implements TypeTranslatorMap, AutoCloseable
 	    if (operationTimeMap.size() > 0)
 	    {
     	    log.info("logTimings:");
-    	    ArrayList<String> timingIdList = new ArrayList<String>(operationTimeMap.keySet());
+    	    ArrayList<String> timingIdList = new ArrayList<>(operationTimeMap.keySet());
     	    Collections.sort(timingIdList);
     	    
     	    for (String timingId: timingIdList)

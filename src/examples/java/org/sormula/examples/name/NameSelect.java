@@ -77,7 +77,7 @@ public class NameSelect extends ExampleBase
     {
         String whereParameter = "John";
         System.out.println("select where first name = " + whereParameter);
-        ListSelectOperation<Student2> operation = new ArrayListSelectOperation<Student2>(table, "fn");
+        ListSelectOperation<Student2> operation = new ArrayListSelectOperation<>(table, "fn");
         operation.setParameters(whereParameter);
         
         System.out.println("read as a collection");

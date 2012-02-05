@@ -57,7 +57,7 @@ public class OrderByTest extends DatabaseTest<SormulaTest4>
     public void simpleOrder() throws SormulaException
     {
     	begin();
-        ListSelectOperation<SormulaTest4> operation = new ArrayListSelectOperation<SormulaTest4>(getTable(), "");
+        ListSelectOperation<SormulaTest4> operation = new ArrayListSelectOperation<>(getTable(), "");
         operation.setOrderBy("ob1");
         operation.execute();
         

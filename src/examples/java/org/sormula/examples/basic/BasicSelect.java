@@ -78,7 +78,7 @@ public class BasicSelect extends ExampleBase
     {
         String whereParameter = "John";
         System.out.println("select where first name = " + whereParameter);
-        ListSelectOperation<Student> operation = new ArrayListSelectOperation<Student>(table, "fn");
+        ListSelectOperation<Student> operation = new ArrayListSelectOperation<>(table, "fn");
         operation.setParameters(whereParameter);
         
         System.out.println("read as a collection");
@@ -97,12 +97,12 @@ public class BasicSelect extends ExampleBase
     
     void selectIn() throws SormulaException
     {
-        ArrayList<Integer> idList = new ArrayList<Integer>();
+        ArrayList<Integer> idList = new ArrayList<>();
         idList.add(1234);
         idList.add(8888);
         
         System.out.println("select where id in = " + idList);
-        ListSelectOperation<Student> operation = new ArrayListSelectOperation<Student>(table, "idin");
+        ListSelectOperation<Student> operation = new ArrayListSelectOperation<>(table, "idin");
         operation.setTimings(true);
         
         for (Student s: operation.selectAll(idList))

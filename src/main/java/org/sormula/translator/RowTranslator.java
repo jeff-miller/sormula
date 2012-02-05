@@ -97,36 +97,6 @@ public class RowTranslator<R> extends ColumnsTranslator<R>
             }
         }
     }
-    
-    
-    /**
-     * This constructor will not allow this translator to know about {@link TypeTranslator}
-     * for custom types annotated with {@link ImplicitType}. Use {@link #RowTranslator(Table)}
-     * instead.
-     * 
-     * @param rowClass read annotations from this class
-     * @param nameTranslator obtain table and column names from this translator
-     * @throws TranslatorException if error
-     */
-    @Deprecated
-    public RowTranslator(Class<R> rowClass, NameTranslator nameTranslator) throws TranslatorException
-    {
-        super(rowClass);
-        this.nameTranslator = nameTranslator;
-        initColumnTranslators();
-        initUnusedColumnSql(rowClass);
-        primaryKeyWhereTranslator = new PrimaryKeyWhereTranslator<R>(this);
-        
-        if (log.isDebugEnabled())
-        {
-            log.debug(rowClass.getCanonicalName() + " primary key columns:");
-            
-            for (ColumnTranslator<R> ct: primaryKeyWhereTranslator.getColumnTranslatorList())
-            {
-                log.debug(ct.getColumnName());
-            }
-        }
-    }
 
     
     /**
@@ -214,8 +184,7 @@ public class RowTranslator<R> extends ColumnsTranslator<R>
                     AbstractColumnTranslator.newInstance(columnTranslatorClass, f, columnName);
                 addColumnTranslator(translator);
 
-                // remove table!=null check when deprecated constructor is removed
-                if (translator instanceof AbstractColumnTranslator && table != null) 
+                if (translator instanceof AbstractColumnTranslator) 
                 {
                     TypeTranslator<?> typeTranslator = table.getTypeTranslator(fieldClass);
                     
@@ -286,7 +255,6 @@ public class RowTranslator<R> extends ColumnsTranslator<R>
         {
             // at least one unused column
             UnusedColumn[] unusedColumnAnnotations = unusedColumnsAnnotation.value();
-            if (unusedColumnAnnotations.length == 0) unusedColumnAnnotations = unusedColumnsAnnotation.unusedColumns(); // remove when deprecated removed
             
             // allocate typical space needed
             StringBuilder insertNames = new StringBuilder(unusedColumnAnnotations.length * 20);

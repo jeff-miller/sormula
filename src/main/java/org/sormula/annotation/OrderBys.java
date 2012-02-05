@@ -40,13 +40,6 @@ import org.sormula.operation.SqlOperation;
 public @interface OrderBys
 {
     /**
-     * Use {@link #value()}.
-     */
-    @Deprecated
-    OrderBy[] orderByConditions() default {};
-    
-    
-    /**
      * Order by conditions. value() is the default and does not need to be specified. 
      * <p> 
      * "default {}" allows either method to be used. It will be removed when 

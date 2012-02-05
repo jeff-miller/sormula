@@ -17,7 +17,6 @@
 package org.sormula.translator;
 
 import org.sormula.annotation.Where;
-import org.sormula.annotation.WhereAnnotationReader;
 import org.sormula.annotation.WhereField;
 
 
@@ -30,32 +29,6 @@ import org.sormula.annotation.WhereField;
  */
 public class WhereTranslator<R> extends AbstractWhereTranslator<R>
 {
-    /**
-     * Not used. Looks for where condition only in row class and not any other class.
-     * 
-     * @param rowTranslator row translator for where condition
-     * @param whereConditionName name supplied in {@link Where}
-     * @throws TranslatorException if error
-     */
-    @Deprecated
-    public WhereTranslator(RowTranslator<R> rowTranslator, String whereConditionName) throws TranslatorException
-    {
-        super(rowTranslator);
-        Where whereAnnotation = new WhereAnnotationReader(
-                rowTranslator.getRowClass()).getAnnotation(whereConditionName);        
-        
-        if (whereAnnotation != null)
-        {
-            init(rowTranslator, whereAnnotation);
-        }
-        else
-        {
-            throw new TranslatorException("no Where annotation named " + whereConditionName + " for " + 
-                    rowTranslator.getRowClass().getCanonicalName());
-        }
-    }
-    
-    
     /**
      * Constructs for where annotation. 
      * 

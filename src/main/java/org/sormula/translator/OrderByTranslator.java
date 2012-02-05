@@ -20,7 +20,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.sormula.annotation.OrderBy;
-import org.sormula.annotation.OrderByAnnotationReader;
 import org.sormula.annotation.OrderByField;
 
 
@@ -35,34 +34,6 @@ public class OrderByTranslator<R> extends ColumnsTranslator<R>
 {
     List<String> orderQualifierList;
     String orderByName;
-    
-    
-    /**
-     * Not used. Looks for order condition only in row class and not any other class. 
-     * 
-     * @param rowTranslator row translator from which to get column information
-     * @param orderByName name supplied in {@link OrderBy}
-     * @throws TranslatorException if error
-     */
-    @Deprecated
-    public OrderByTranslator(RowTranslator<R> rowTranslator, String orderByName) throws TranslatorException
-    {
-        super(rowTranslator.getRowClass());
-        this.orderByName = orderByName;
-        
-        OrderBy orderByAnnotation = new OrderByAnnotationReader(
-                rowTranslator.getRowClass()).getAnnotation(orderByName);        
-
-        if (orderByAnnotation != null)
-        {
-            init(rowTranslator, orderByAnnotation);
-        }
-        else
-        {
-            throw new TranslatorException("no OrderBy named " + orderByName + " for " + 
-                    rowTranslator.getRowClass().getCanonicalName());
-        }
-    }
     
     
     /**

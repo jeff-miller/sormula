@@ -98,22 +98,22 @@ public class DeleteTest extends DatabaseTest<SormulaTest4>
     	begin();
         selectTestRows(); // must perform each time since other tests are destructive
         
-        DeleteOperation<SormulaTest4> operation = new DeleteOperation<>(getTable());
-        
-        for (int i = 0; i < 10; ++i)
+        try (DeleteOperation<SormulaTest4> operation = new DeleteOperation<>(getTable()))
         {
-            // choose random to delete
-            SormulaTest4 row = getRandom();
-
-            // delete
-            operation.setRow(row);
-            operation.execute();
-            
-            // confirm
-            assert getTable().select(row.getId()) == null : row.getId() + " was not deleted";
-        }
+            for (int i = 0; i < 10; ++i)
+            {
+                // choose random to delete
+                SormulaTest4 row = getRandom();
+    
+                // delete
+                operation.setRow(row);
+                operation.execute();
+                
+                // confirm
+                assert getTable().select(row.getId()) == null : row.getId() + " was not deleted";
+            }
+        }        
         
-        operation.close();
         commit();
     }
 }

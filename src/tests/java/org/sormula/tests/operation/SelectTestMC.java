@@ -93,11 +93,13 @@ public class SelectTestMC extends DatabaseTest<SormulaTest4MC>
     	}
         
         // select all for condition w1
-        ListSelectOperation<SormulaTest4MC> operation = new ArrayListSelectOperation<>(getTable(), "w1");
-        operation.setParameters(2, 199);
-        operation.execute();
-        List<SormulaTest4MC> selectedList = operation.readAll();
-        operation.close();
+        List<SormulaTest4MC> selectedList;
+        try (ListSelectOperation<SormulaTest4MC> operation = new ArrayListSelectOperation<>(getTable(), "w1"))
+        {
+            operation.setParameters(2, 199);
+            operation.execute();
+            selectedList = operation.readAll();
+        }
         
         assert expectedCount == selectedList.size() : "simple select returned wrong number of rows";
         
@@ -130,11 +132,13 @@ public class SelectTestMC extends DatabaseTest<SormulaTest4MC>
         assert expectedCount > 0 : "no rows meet expected condition to test";
         
         // select all rows with condition
-        ListSelectOperation<SormulaTest4MC> operation = new ArrayListSelectOperation<>(getTable(), "w2");
-        operation.setParameters(2);
-        operation.execute();
-        List<SormulaTest4MC> selectedList = operation.readAll();
-        operation.close();
+        List<SormulaTest4MC> selectedList;
+        try (ListSelectOperation<SormulaTest4MC> operation = new ArrayListSelectOperation<>(getTable(), "w2"))
+        {
+            operation.setParameters(2);
+            operation.execute();
+            selectedList = operation.readAll();
+        }
         
         assert expectedCount == selectedList.size() : "select with operator wrong number of rows";
         

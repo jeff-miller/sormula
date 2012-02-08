@@ -132,11 +132,12 @@ public class SelectTest extends DatabaseTest<SormulaTestA>
         begin();
 
         // execute to make sure ob1 found, no need to test ordering
-        ArrayListSelectOperation<SormulaTestA> operation = new ArrayListSelectOperation<>(getTable(), "");
-        operation.setOrderBy("ob1");
-        operation.execute();
-        operation.readAll();
-        operation.close();
+        try (ArrayListSelectOperation<SormulaTestA> operation = new ArrayListSelectOperation<>(getTable(), ""))
+        {
+            operation.setOrderBy("ob1");
+            operation.execute();
+            operation.readAll();
+        }
         
         commit();
     }
@@ -147,16 +148,18 @@ public class SelectTest extends DatabaseTest<SormulaTestA>
     public void selectLinkedHashMap() throws SormulaException
     {
         begin();
+        Map<Integer, SormulaTestA> result;
         
-        LinkedHashMapSelectOperation<Integer, SormulaTestA> operation = 
-            new LinkedHashMapSelectOperation<>(getTable(), "" /*select all*/);
-        operation.setGetKeyMethodName("getId");
-        
-        // select into map
-        operation.setOrderBy("ob2"); // by description
-        operation.execute();
-        Map<Integer, SormulaTestA> result = operation.readAll();
-        operation.close();
+        try (LinkedHashMapSelectOperation<Integer, SormulaTestA> operation = 
+            new LinkedHashMapSelectOperation<>(getTable(), "" /*select all*/))
+        {
+            operation.setGetKeyMethodName("getId");
+            
+            // select into map
+            operation.setOrderBy("ob2"); // by description
+            operation.execute();
+            result = operation.readAll();
+        }
         
         assert result.size() > 0 : "no rows selected";
         
@@ -180,10 +183,12 @@ public class SelectTest extends DatabaseTest<SormulaTestA>
         selectTestRows();
         
         // perform with different test sizes but same operation to test that correctly prepare 
-        ListSelectOperation<SormulaTestA> operation = new ArrayListSelectOperation<>(getTable(), "idIn");
-        selectIn(operation, 3);
-        selectIn(operation, 4);
-        operation.close();
+        try (ListSelectOperation<SormulaTestA> operation = new ArrayListSelectOperation<>(getTable(), "idIn"))
+        {
+            selectIn(operation, 3);
+            selectIn(operation, 4);
+        }
+
         commit();
     }
     

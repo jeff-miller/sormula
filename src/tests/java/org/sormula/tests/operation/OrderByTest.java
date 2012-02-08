@@ -57,23 +57,25 @@ public class OrderByTest extends DatabaseTest<SormulaTest4>
     public void simpleOrder() throws SormulaException
     {
     	begin();
-        ListSelectOperation<SormulaTest4> operation = new ArrayListSelectOperation<>(getTable(), "");
-        operation.setOrderBy("ob1");
-        operation.execute();
         
-        // test if results in proper order
-        SormulaTest4 previousRow = null;
-        for (SormulaTest4 row: operation.readAll())
-        {
-            if (previousRow != null)
-            {
-                assert row.getType() >= previousRow.getType() : "simple order rows are not in ascending order";
-            }
+    	try (ListSelectOperation<SormulaTest4> operation = new ArrayListSelectOperation<>(getTable(), ""))
+    	{
+            operation.setOrderBy("ob1");
+            operation.execute();
             
-            previousRow = row;
-        }
+            // test if results in proper order
+            SormulaTest4 previousRow = null;
+            for (SormulaTest4 row: operation.readAll())
+            {
+                if (previousRow != null)
+                {
+                    assert row.getType() >= previousRow.getType() : "simple order rows are not in ascending order";
+                }
+                
+                previousRow = row;
+            }
+    	}
         
-        operation.close();
         commit();
     }
     
@@ -82,29 +84,30 @@ public class OrderByTest extends DatabaseTest<SormulaTest4>
     public void complexOrder() throws SormulaException
     {
     	begin();
-    	ComplexOrderQuery operation = new ComplexOrderQuery(getTable());
-        
-        // test if results in proper order
-        SormulaTest4 previousRow = null;
-        for (SormulaTest4 row: operation.readAll())
-        {
-            if (previousRow != null)
+    	
+    	try (ComplexOrderQuery operation = new ComplexOrderQuery(getTable()))
+    	{
+            // test if results in proper order
+            SormulaTest4 previousRow = null;
+            for (SormulaTest4 row: operation.readAll())
             {
-                if  (row.getType() == previousRow.getType())
+                if (previousRow != null)
                 {
-                    // types are equal, test next order by column, id
-                    assert row.getId() >= previousRow.getId() : "complex order id is not in ascending order";
+                    if  (row.getType() == previousRow.getType())
+                    {
+                        // types are equal, test next order by column, id
+                        assert row.getId() >= previousRow.getId() : "complex order id is not in ascending order";
+                    }
+                    else
+                    {
+                        assert row.getType() <= previousRow.getType(): "complex order type is not in descending order";
+                    }
                 }
-                else
-                {
-                    assert row.getType() <= previousRow.getType(): "complex order type is not in descending order";
-                }
+                
+                previousRow = row;
             }
-            
-            previousRow = row;
-        }
+    	}
         
-        operation.close();
         commit();
     }
 }

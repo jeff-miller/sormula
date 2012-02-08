@@ -129,15 +129,16 @@ public class SelectTest extends DatabaseTest<SormulaTest4>
         }
         
         // sum with SQL using explict operation
-        SelectAggregateOperation<SormulaTest4, Integer> selectSum = 
-                new SelectAggregateOperation<>(getTable(), "SUM", "id");
-        selectSum.setWhere("byType");
-        selectSum.setParameters(type);
-        selectSum.execute();
-        
-        // sums should be same
-        assert sum == selectSum.readAggregate() : "select aggregate sum failed";
-        selectSum.close();
+        try (SelectAggregateOperation<SormulaTest4, Integer> selectSum = 
+                new SelectAggregateOperation<>(getTable(), "SUM", "id"))
+        {
+            selectSum.setWhere("byType");
+            selectSum.setParameters(type);
+            selectSum.execute();
+            
+            // sums should be same
+            assert sum == selectSum.readAggregate() : "select aggregate sum failed";
+        }
 
         // test with table methods
         assert min == getTable().<Integer>selectMin("id", "byType", type) : "select aggregate min failed";
@@ -224,9 +225,11 @@ public class SelectTest extends DatabaseTest<SormulaTest4>
         assert expectedCount > 0 : "no rows meet expected condition to test";
         
         // select all rows with "operation" in description
-        DescriptionSelect operation = new DescriptionSelect(getTable());
-        List<SormulaTest4> selectedList = operation.readAll();
-        operation.close();
+        List<SormulaTest4> selectedList;
+        try (DescriptionSelect operation = new DescriptionSelect(getTable()))
+        {
+            selectedList = operation.readAll();
+        }
         
         assert expectedCount == selectedList.size() : "select by operation wrong number of rows";
         
@@ -259,18 +262,19 @@ public class SelectTest extends DatabaseTest<SormulaTest4>
         assert expectedCount > 0 : "customSql no rows meet expected condition to test";
 
         // select with custom sql
-        ArrayListSelectOperation<SormulaTest4> operation = new ArrayListSelectOperation<SormulaTest4>(getTable(), "")
-        {
-            @Override
-            protected String getSql()
+        List<SormulaTest4> selectedList;
+        try (ArrayListSelectOperation<SormulaTest4> operation = new ArrayListSelectOperation<SormulaTest4>(getTable(), "")
             {
-                return getBaseSql() + " where type in(2,4,999)";
-            }
-        };
-        
-        operation.execute();
-        List<SormulaTest4> selectedList = operation.readAll();
-        operation.close();
+                @Override
+                protected String getSql()
+                {
+                    return getBaseSql() + " where type in(2,4,999)";
+                }
+            })
+        {        
+            operation.execute();
+            selectedList = operation.readAll();
+        }
         
         // confirm
         assert expectedCount == selectedList.size() : "customSql operation wrong number of rows";
@@ -288,16 +292,18 @@ public class SelectTest extends DatabaseTest<SormulaTest4>
     public void selectLinkedHashMap() throws SormulaException
     {
         begin();
+        Map<Integer, SormulaTest4> result;
         
-        LinkedHashMapSelectOperation<Integer, SormulaTest4> operation = 
-            new LinkedHashMapSelectOperation<>(getTable(), "" /*select all*/);
-        operation.setGetKeyMethodName("getId");
-        
-        // select into map
-        operation.setOrderBy("ob2"); // by description
-        operation.execute();
-        Map<Integer, SormulaTest4> result = operation.readAll();
-        operation.close();
+        try (LinkedHashMapSelectOperation<Integer, SormulaTest4> operation = 
+            new LinkedHashMapSelectOperation<>(getTable(), "" /*select all*/))
+        {
+            operation.setGetKeyMethodName("getId");
+            
+            // select into map
+            operation.setOrderBy("ob2"); // by description
+            operation.execute();
+            result = operation.readAll();
+        }
         
         assert result.size() > 0 : "no rows selected";
         
@@ -321,10 +327,12 @@ public class SelectTest extends DatabaseTest<SormulaTest4>
         selectTestRows();
         
         // perform with different test sizes but same operation to test that correctly prepare 
-        ListSelectOperation<SormulaTest4> operation = new ArrayListSelectOperation<>(getTable(), "idIn");
-        selectIn(operation, 5);
-        selectIn(operation, 7);
-        operation.close();
+        try (ListSelectOperation<SormulaTest4> operation = new ArrayListSelectOperation<>(getTable(), "idIn"))
+        {
+            selectIn(operation, 5);
+            selectIn(operation, 7);
+        }
+        
         commit();
     }
     

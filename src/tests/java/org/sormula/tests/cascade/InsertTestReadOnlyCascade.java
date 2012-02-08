@@ -115,14 +115,17 @@ public class InsertTestReadOnlyCascade extends DatabaseTest<SormulaTestParentRea
         
         // verify that all children were NOT inserted
         Table<SormulaTestChildNReadOnlyCascade> childTable = getDatabase().getTable(SormulaTestChildNReadOnlyCascade.class);
-        ScalarSelectOperation<SormulaTestChildNReadOnlyCascade> operation = new ScalarSelectOperation<>(childTable);
-        for (SormulaTestChildNReadOnlyCascade c: parent.getChildList())
+        
+        try (ScalarSelectOperation<SormulaTestChildNReadOnlyCascade> operation = new ScalarSelectOperation<>(childTable))
         {
-            operation.setParameters(c.getId());
-            operation.execute();
-            assert operation.readNext() == null : "child " + c.getId() + " was inserted using readonly cascade"; 
+            for (SormulaTestChildNReadOnlyCascade c: parent.getChildList())
+            {
+                operation.setParameters(c.getId());
+                operation.execute();
+                assert operation.readNext() == null : "child " + c.getId() + " was inserted using readonly cascade"; 
+            }
         }
-        operation.close();
+
         commit();
     }
 }

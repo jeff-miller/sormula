@@ -39,12 +39,13 @@ public class WidgetTanslator1 implements TypeTranslator<Widget>
     {
         // convert from domain object to bytes
         ByteArrayOutputStream bos = new ByteArrayOutputStream(1000);
-        ObjectOutputStream oos = new ObjectOutputStream(bos);
-        oos.writeObject(parameter);
-        oos.close();
-        
-        // convert bytes to jdbc blob
-        preparedStatement.setBlob(parameterIndex, new SerialBlob(bos.toByteArray()));
+        try (ObjectOutputStream oos = new ObjectOutputStream(bos))
+        {
+            oos.writeObject(parameter);
+            
+            // convert bytes to jdbc blob
+            preparedStatement.setBlob(parameterIndex, new SerialBlob(bos.toByteArray()));
+        }
     }
     
     
@@ -52,10 +53,9 @@ public class WidgetTanslator1 implements TypeTranslator<Widget>
     {
         // convert from jdbc blob to bytes to domain object
         Blob blob = resultSet.getBlob(parameterIndex);
-        ObjectInputStream ois = new ObjectInputStream(new ByteArrayInputStream(blob.getBytes(1, (int)blob.length())));
-        Widget widget = (Widget)ois.readObject();
-        ois.close();
-
-        return widget;
+        try (ObjectInputStream ois = new ObjectInputStream(new ByteArrayInputStream(blob.getBytes(1, (int)blob.length()))))
+        {
+            return (Widget)ois.readObject();
+        }
     }
 }

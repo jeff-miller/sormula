@@ -319,9 +319,10 @@ class JdbcProperties extends Properties
         
         // read db properties
         String jdbcPropertiesName = "jdbc/" + dbdir + "/jdbc.properties";
-        InputStream is = new FileInputStream(jdbcPropertiesName);
-        load(is);
-        is.close();
+        try (InputStream is = new FileInputStream(jdbcPropertiesName))
+        {
+            load(is);
+        }
         
         if (logProperties)
         {

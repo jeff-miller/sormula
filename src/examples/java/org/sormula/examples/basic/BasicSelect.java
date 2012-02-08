@@ -78,20 +78,21 @@ public class BasicSelect extends ExampleBase
     {
         String whereParameter = "John";
         System.out.println("select where first name = " + whereParameter);
-        ListSelectOperation<Student> operation = new ArrayListSelectOperation<>(table, "fn");
-        operation.setParameters(whereParameter);
         
-        System.out.println("read as a collection");
-        operation.execute();
-        for (Student s: operation.readAll())
-            System.out.println(s);
+        try (ListSelectOperation<Student> operation = new ArrayListSelectOperation<>(table, "fn"))
+        {
+            operation.setParameters(whereParameter);
         
-        System.out.println("read one row at a time");
-        operation.execute();
-        for (Student s = operation.readNext(); s != null; s = operation.readNext())
-            System.out.println(s);
-        
-        operation.close();
+            System.out.println("read as a collection");
+            operation.execute();
+            for (Student s: operation.readAll())
+                System.out.println(s);
+            
+            System.out.println("read one row at a time");
+            operation.execute();
+            for (Student s = operation.readNext(); s != null; s = operation.readNext())
+                System.out.println(s);
+        }
     }
     
     

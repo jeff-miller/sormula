@@ -141,16 +141,16 @@ public class InsertTest extends DatabaseTest<SormulaTestParent>
         
         // verify that all children were inserted
         Table<SormulaTestChildN> childTable = getDatabase().getTable(SormulaTestChildN.class);
-        ScalarSelectOperation<SormulaTestChildN> operation = new ScalarSelectOperation<>(childTable);
         
-        for (SormulaTestChildN c: parent.getChildList())
+        try (ScalarSelectOperation<SormulaTestChildN> operation = new ScalarSelectOperation<>(childTable))
         {
-            operation.setParameters(c.getId());
-            operation.execute();
-            assert operation.readNext() != null : "child " + c.getId() + " was not inserted"; 
+            for (SormulaTestChildN c: parent.getChildList())
+            {
+                operation.setParameters(c.getId());
+                operation.execute();
+                assert operation.readNext() != null : "child " + c.getId() + " was not inserted"; 
+            }
         }
-        
-        operation.close();
     }
     
 
@@ -182,13 +182,15 @@ public class InsertTest extends DatabaseTest<SormulaTestParent>
         
         // verify that all children were inserted
         Table<SormulaTestChildM> childTable = getDatabase().getTable(SormulaTestChildM.class);
-        ScalarSelectOperation<SormulaTestChildM> operation = new ScalarSelectOperation<>(childTable);
-        for (SormulaTestChildM c: parent.getChildMap().values())
+        
+        try (ScalarSelectOperation<SormulaTestChildM> operation = new ScalarSelectOperation<>(childTable))
         {
-            operation.setParameters(c.getId());
-            operation.execute();
-            assert operation.readNext() != null : "child " + c.getId() + " was not inserted"; 
+            for (SormulaTestChildM c: parent.getChildMap().values())
+            {
+                operation.setParameters(c.getId());
+                operation.execute();
+                assert operation.readNext() != null : "child " + c.getId() + " was not inserted"; 
+            }
         }
-        operation.close();
     }
 }

@@ -9,7 +9,7 @@ import org.sormula.annotation.Wheres;
  * 
  * @author Jeff Miller
  */
-@Wheres(whereConditions={
+@Wheres({
     @Where(name="manf", fieldNames="manufacturerId"),
     @Where(name="partNumberIn", whereFields=@WhereField(name="partNumber", comparisonOperator="IN"))}
 )

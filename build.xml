@@ -205,7 +205,7 @@
 	
     <target name="dist" description="Creates sormula.zip for distribution" depends="lib, javadoc">
         <property name="p" value="sormula"/>
-	    <zip zipfile="sormula-${version}.zip" basedir=".."
+	    <zip destfile="sormula-${version}.zip" basedir=".."
 	            includes="${p}/**/*"
 	            excludes="${p}/sormula-${version}.zip
 	    	              ${p}/.hg/**/* 

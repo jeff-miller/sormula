@@ -135,8 +135,7 @@ public class SelectTest extends DatabaseTest<SormulaTestA>
         try (ArrayListSelectOperation<SormulaTestA> operation = new ArrayListSelectOperation<>(getTable(), ""))
         {
             operation.setOrderBy("ob1");
-            operation.execute();
-            operation.readAll();
+            operation.selectAll();
         }
         
         commit();

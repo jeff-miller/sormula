@@ -205,9 +205,10 @@
 	
     <target name="dist" description="Creates sormula.zip for distribution" depends="lib, javadoc">
         <property name="p" value="sormula"/>
-	    <zip destfile="sormula-${version}.zip" basedir=".."
+    	<property name="d" value="sormula-${version}${dist.suffix}.zip"/>
+	    <zip destfile="${d}" basedir=".."
 	            includes="${p}/**/*"
-	            excludes="${p}/sormula-${version}.zip
+	            excludes="${p}/${d}
 	    	              ${p}/.hg/**/* 
 	    	              ${p}/target/**
 	    	              ${p}/test-output/**
@@ -231,13 +232,13 @@
 	    </target>
     
     <target name="example" description="Creates example.zip for distribution" depends="init">
-        <zip zipfile="example-${version}.zip" basedir="."
+        <zip zipfile="example-${version}${dist.suffix}.zip" basedir="."
         	    includes="SimpleExample/**/*"
                 excludes="SimpleExample/simpleDB.tmp SimpleExample/.classpath SimpleExample/.project"/>
     </target>
     
     <target name="zero-config-example" description="Creates zero-config-example.zip for distribution" depends="init">
-        <zip zipfile="zero-config-example-${version}.zip" basedir="."
+        <zip zipfile="zero-config-example-${version}${dist.suffix}.zip" basedir="."
     	        includes="ZeroConfigExample/**/*"
                 excludes="ZeroConfigExample/exampleDB.tmp ZeroConfigExample/.classpath ZeroConfigExample/.project"/>
     </target>

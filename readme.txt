@@ -1,7 +1,8 @@
 sormula for JDK 7
 
-- This version is the same as version 1.6 but has been converted to use new featues 
-  of JDK 7. The most notable is SqlOperation implements AutoCloseable.
+- This version is built from Sormula 1.6 to use new featues of JDK 7 
+- SqlOperation (and subclasses) implement AutoCloseable
+- Deprecated classes and methods from Sormula 1.6 have been removed
 - See SimpleExample directory for stand-alone example
 - See ZeroConfigExample directory for a stand-alone example using sormula with 
   nothing but sormula.jar in path and no configuration

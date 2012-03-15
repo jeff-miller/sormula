@@ -42,7 +42,7 @@ public class SelectTest extends DatabaseTest<IdentityTest>
         if (isTestIdentity())
         {
             openDatabase();
-            createTable(IdentityTest.class, null);
+            createTable(IdentityTest.class);
         }
     }
     

@@ -23,6 +23,7 @@ import java.util.Map;
 
 import org.sormula.annotation.Column;
 import org.sormula.annotation.ExplicitTypeAnnotationReader;
+import org.sormula.annotation.OrderBy;
 import org.sormula.annotation.Row;
 import org.sormula.log.ClassLogger;
 import org.sormula.operation.ArrayListSelectOperation;
@@ -36,9 +37,11 @@ import org.sormula.operation.aggregate.SelectAggregateOperation;
 import org.sormula.operation.aggregate.SelectAvgOperation;
 import org.sormula.operation.aggregate.SelectMaxOperation;
 import org.sormula.operation.aggregate.SelectMinOperation;
+import org.sormula.operation.aggregate.SelectSumOperation;
 import org.sormula.translator.NameTranslator;
 import org.sormula.translator.NoNameTranslator;
 import org.sormula.translator.RowTranslator;
+import org.sormula.translator.TranslatorException;
 import org.sormula.translator.TypeTranslator;
 import org.sormula.translator.TypeTranslatorMap;
 
@@ -173,7 +176,7 @@ public class Table<R> implements TypeTranslatorMap
             tableName = nameTranslator.translate(rowClass.getSimpleName(), rowClass);
         }
 
-        rowTranslator = new RowTranslator<R>(this);
+        rowTranslator = initRowTranslator();
         
         if (log.isDebugEnabled())
         {
@@ -183,6 +186,13 @@ public class Table<R> implements TypeTranslatorMap
         }
     }
 
+    
+    protected RowTranslator<R> initRowTranslator() throws TranslatorException
+    {
+        // default
+        return new RowTranslator<R>(this);
+    }
+    
 
     /**
      * Gets the database supplied in constructor.
@@ -261,6 +271,32 @@ public class Table<R> implements TypeTranslatorMap
     public RowTranslator<R> getRowTranslator()
     {
         return rowTranslator;
+    }
+    
+    
+    /**
+     * Creates new instance of row. Typically used by select operations for
+     * each row that is read from result set.
+     * 
+     * @return new instance of row created with zero-arg constructor
+     * @throws SormulaException if error
+     * @since 1.7
+     */
+    public R newRow() throws SormulaException
+    {
+        R row;
+        
+        try
+        {
+            row = rowClass.newInstance();
+        }
+        catch (Exception e)
+        {
+            throw new SormulaException("error creating row instance for " + rowClass.getName() +
+                    "; make sure row has public zero-arg constructor", e);
+        }
+        
+        return row;
     }
 
 
@@ -347,6 +383,55 @@ public class Table<R> implements TypeTranslatorMap
     
     
     /**
+     * Selects one row for where condition and parameters.
+     * 
+     * @param whereConditionName name of where condition to use; empty string to select arbitrary row in table
+     * @param parameters parameter values for where condition
+     * @return row for where condition and parameters; null if none found
+     * @throws SormulaException if error
+     * @since 1.7
+     */
+    public R selectWhere(String whereConditionName, Object...parameters) throws SormulaException
+    {
+        return new ScalarSelectOperation<R>(this, whereConditionName).select(parameters);
+    }
+    
+    
+    /**
+     * Selects list of rows for where condition and parameters.
+     * 
+     * @param whereConditionName name of where condition to use; empty string to select all rows in table
+     * @param parameters parameter values for where condition
+     * @return rows for where condition and parameters; empty list if none found
+     * @throws SormulaException if error
+     * @since 1.7
+     */
+    public List<R> selectAllWhere(String whereConditionName, Object...parameters) throws SormulaException
+    {
+        ArrayListSelectOperation<R> operation = new ArrayListSelectOperation<R>(this, whereConditionName);
+        return operation.selectAll(parameters);
+    }
+    
+    
+    /**
+     * Selects list of rows for where condition and parameters.
+     * 
+     * @param whereConditionName name of where condition to use; empty string to select all rows in table
+     * @param orderByName name of order phrase to use as defined in {@link OrderBy#name()}
+     * @param parameters parameter values for where condition
+     * @return rows for where condition and parameters; empty list if none found
+     * @throws SormulaException if error
+     * @since 1.7
+     */
+    public List<R> selectAllWhereOrdered(String whereConditionName, String orderByName, Object...parameters) throws SormulaException
+    {
+        ArrayListSelectOperation<R> operation = new ArrayListSelectOperation<R>(this, whereConditionName);
+        operation.setOrderBy(orderByName);
+        return operation.selectAll(parameters);
+    }
+    
+    
+    /**
      * Select list of rows using custom sql.
      * <p>
      * Example:
@@ -416,7 +501,7 @@ public class Table<R> implements TypeTranslatorMap
      * int bigOrderCount = table.selectCount("quanityExceeds", 100);
      * </pre></blockquote>
      * @param whereConditionName name of where condition to use; empty string to count all rows in table
-     * @param parameters parameters for where condition
+     * @param parameters parameter values for where condition
      * @return count of all rows in table
      * @throws SormulaException if error
      */
@@ -434,6 +519,10 @@ public class Table<R> implements TypeTranslatorMap
 
     /**
      * Selects count of rows.
+     * <p>
+     * The data type returned from database is the same type as the expression. For example,
+     * if expression is a column, then the returned type is the same type as column. If
+     * expression is "*", then return types are database dependent.
      * 
      * @param <T> aggregate result type
      * @param expression expression to use as parameter to function; typically it is the name of a column
@@ -448,11 +537,15 @@ public class Table<R> implements TypeTranslatorMap
     
     /**
      * Selects count of rows.
+     * <p>
+     * The data type returned from database is the same type as the expression. For example,
+     * if expression is a column, then the returned type is the same type as column. If
+     * expression is "*", then return types are database dependent.
      * 
      * @param <T> aggregate result type
      * @param expression expression to use as parameter to function; typically it is the name of a column
      * @param whereConditionName name of where condition to use; empty string to count all rows in table
-     * @param parameters parameters for where condition
+     * @param parameters parameter values for where condition
      * @return count of rows for expression and where condition
      * @throws SormulaException if error
      */
@@ -488,7 +581,8 @@ public class Table<R> implements TypeTranslatorMap
      * 
      * @param <T> aggregate result type
      * @param expression expression to use as parameter to function; typically it is the name of a column
-     * @param parameters parameters for where condition
+     * @param whereConditionName name of where condition to use; empty string to count all rows in table
+     * @param parameters parameter values for where condition
      * @return minimum value for expression and where condition 
      * @throws SormulaException if error
      */
@@ -523,7 +617,8 @@ public class Table<R> implements TypeTranslatorMap
      * 
      * @param <T> aggregate result type
      * @param expression expression to use as parameter to function; typically it is the name of a column
-     * @param parameters parameters for where condition
+     * @param whereConditionName name of where condition to use; empty string to count all rows in table
+     * @param parameters parameter values for where condition
      * @return maximum value for expression and where condition 
      * @throws SormulaException if error
      */
@@ -558,13 +653,52 @@ public class Table<R> implements TypeTranslatorMap
      * 
      * @param <T> aggregate result type
      * @param expression expression to use as parameter to function; typically it is the name of a column
-     * @param parameters parameters for where condition
+     * @param whereConditionName name of where condition to use; empty string to count all rows in table
+     * @param parameters parameter values for where condition
      * @return average value for expression and where condition 
      * @throws SormulaException if error
      */
     public <T> T selectAvg(String expression, String whereConditionName, Object...parameters) throws SormulaException
     {
         SelectAggregateOperation<R, T> selectOperation = new SelectAvgOperation<R, T>(this, expression);
+        selectOperation.setWhere(whereConditionName);
+        selectOperation.setParameters(parameters);
+        selectOperation.execute();
+        T result = selectOperation.readAggregate();
+        selectOperation.close();
+        return result;
+    }
+    
+    
+    /**
+     * Selects sum.
+     * 
+     * @param <T> aggregate result type
+     * @param expression expression to use as parameter to function; typically it is the name of a column
+     * @return sum for expression  
+     * @throws SormulaException if error
+     * @since 1.7
+     */
+    public <T> T selectSum(String expression) throws SormulaException
+    {
+        return this.<T>selectSum(expression, "");
+    }
+    
+    
+    /**
+     * Selects sum.
+     * 
+     * @param <T> aggregate result type
+     * @param expression expression to use as parameter to function; typically it is the name of a column
+     * @param whereConditionName name of where condition to use; empty string to count all rows in table
+     * @param parameters parameter values for where condition
+     * @return sum for expression and where condition 
+     * @throws SormulaException if error
+     * @since 1.7
+     */
+    public <T> T selectSum(String expression, String whereConditionName, Object...parameters) throws SormulaException
+    {
+        SelectAggregateOperation<R, T> selectOperation = new SelectSumOperation<R, T>(this, expression);
         selectOperation.setWhere(whereConditionName);
         selectOperation.setParameters(parameters);
         selectOperation.execute();

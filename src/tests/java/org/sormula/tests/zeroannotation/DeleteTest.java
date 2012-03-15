@@ -38,7 +38,7 @@ public class DeleteTest extends DatabaseTest<ZeroAnnotationTest>
     public void setUp() throws Exception
     {
         openDatabase();
-        createTable(ZeroAnnotationTest.class, null);
+        createTable(ZeroAnnotationTest.class);
     }
     
     

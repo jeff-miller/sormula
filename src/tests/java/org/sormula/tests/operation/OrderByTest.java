@@ -42,7 +42,7 @@ public class OrderByTest extends DatabaseTest<SormulaTest4>
     public void setUp() throws Exception
     {
         openDatabase();
-        createTable(SormulaTest4.class, null);
+        createTable(SormulaTest4.class);
     }
     
     

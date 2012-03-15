@@ -43,7 +43,7 @@ public class SelectTestMC extends DatabaseTest<SormulaTest4MC>
     public void setUp() throws Exception
     {
         openDatabase();
-        createTable(SormulaTest4MC.class, null);
+        createTable(SormulaTest4MC.class);
     }
     
     

@@ -62,7 +62,9 @@ public class InsertTest extends DatabaseTest<ZeroAnnotationTest>
     @Test
     public void insertOne() throws SormulaException
     {
+        begin();
         assert getTable().insert(new ZeroAnnotationTest(13, 1, "Insert one")) == 1 : "insert one failed";
+        commit();
     }
     
     
@@ -76,6 +78,8 @@ public class InsertTest extends DatabaseTest<ZeroAnnotationTest>
             list.add(new ZeroAnnotationTest(i, 2, "Insert collection " + i));
         }
         
+        begin();
         assert getTable().insertAll(list) == list.size() : "insert collection failed";
+        commit();
     }
 }

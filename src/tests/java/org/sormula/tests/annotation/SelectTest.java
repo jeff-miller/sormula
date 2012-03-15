@@ -57,7 +57,7 @@ public class SelectTest extends DatabaseTest<SormulaTestA>
         Database standardTestDb = super.getDatabase();
         db = new TestDB(standardTestDb.getConnection(), standardTestDb.getSchema());
 
-        createTable(SormulaTestA.class, null);
+        createTable(SormulaTestA.class);
     }
     
     

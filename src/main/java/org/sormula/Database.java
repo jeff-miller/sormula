@@ -97,7 +97,9 @@ public class Database implements TypeTranslatorMap
      * in form of "schema.table".
      * 
      * @param connection JDBC connection
-     * @param schema name of schema to be prefixed to table name in all table names in sql statements
+     * @param schema name of schema to be prefixed to table name in all table names in sql statements;
+     * {@link Connection#getCatalog()} is typically the schema name but catalog methods are inconsistently
+     * supported by jdbc drivers
      */
     public Database(Connection connection, String schema)
     {
@@ -248,6 +250,37 @@ public class Database implements TypeTranslatorMap
         this.readOnly = readOnly;
     }
     
+    
+    /**
+     * Gets table object for reading/writing row objects of type R from/to
+     * table. Table objects are cahced in map by canonical class name. If
+     * one exists, it is returned, otherwise a default one is created if create is true.
+     * <p>
+     * This method is optional. A table object may also be created with {@link Table} constructor.
+     * 
+     * @param <R> row class type
+     * @param rowClass annotations on this class determine mapping from row objects to/from database 
+     * @return table object for reading/writing row objects of type R from/to database; null if table
+     * does not exist and create is false
+     * @throws SormulaException if error
+     * @since 1.7
+     */
+    public <R> Table<R> getTable(Class<R> rowClass, boolean create) throws SormulaException
+    {
+        Table<?> table = tableMap.get(rowClass.getCanonicalName());
+        
+        if (table == null && create)
+        {
+            // default
+            table = new Table<R>(this, rowClass);
+            addTable(table);
+        }
+
+        @SuppressWarnings("unchecked") // tableMap contains different types but always same type for rowClass name
+        Table<R> t = (Table<R>)table;
+        return t;
+    }
+    
 
     /**
      * Gets table object for reading/writing row objects of type R from/to
@@ -263,18 +296,7 @@ public class Database implements TypeTranslatorMap
      */
 	public <R> Table<R> getTable(Class<R> rowClass) throws SormulaException
     {
-        Table<?> table = tableMap.get(rowClass.getCanonicalName());
-        
-        if (table == null)
-        {
-            // default
-            table = new Table<R>(this, rowClass);
-            addTable(table);
-        }
-
-        @SuppressWarnings("unchecked") // tableMap contains different types but always same type for rowClass name
-        Table<R> t = (Table<R>)table;
-        return t;
+	    return getTable(rowClass, true);
     }
     
     
@@ -288,7 +310,7 @@ public class Database implements TypeTranslatorMap
      */
     public void addTable(Table<?> table)
     {
-        tableMap.put(table.getRowTranslator().getRowClass().getCanonicalName(), table);
+        tableMap.put(table.getRowClass().getCanonicalName(), table);
     }
 
 

@@ -73,9 +73,13 @@ public class DatabaseTest<R>
     }
     
     JdbcProperties jdbcProperties;
+    String schema;
+    String url;
+    String user;
+    String password;
     Database database;
-    Statement statement;
     Table<R> table;
+    String qualifiedTableName;
     Random random = new Random(testSeed);
     boolean useTransacation;
     String sqlShutdown;
@@ -123,11 +127,27 @@ public class DatabaseTest<R>
     public void openDatabase() throws Exception
     {
         // get connection
-        Connection connection;
         Class.forName(jdbcProperties.getString("jdbc.driver"));
-        String url = jdbcProperties.getString("jdbc.url");
-        String user = jdbcProperties.getString("jdbc.user");
-        String password = jdbcProperties.getString("jdbc.password");
+        schema = jdbcProperties.getString("jdbc.schema");
+        url = jdbcProperties.getString("jdbc.url");
+        user = jdbcProperties.getString("jdbc.user");
+        password = jdbcProperties.getString("jdbc.password");
+        useTransacation = jdbcProperties.getBoolean("jdbc.transaction");
+        
+        // shutdown commands
+        sqlShutdown = jdbcProperties.getString("jdbc.shutdown.sql");
+        driverShutdown = jdbcProperties.getString("jdbc.shutdown.driver");
+        
+        // create sormula database
+        Connection connection = getConnection();
+        database = new Database(connection, schema);
+        database.setTimings(Boolean.parseBoolean(System.getProperty("timings")));
+    }
+    
+    
+    public Connection getConnection() throws SQLException
+    {
+        Connection connection;
         
         if (user.length() == 0 && password.length() == 0)
         {
@@ -139,69 +159,85 @@ public class DatabaseTest<R>
             connection = DriverManager.getConnection(url, user, password); 
         }
         
-        useTransacation = jdbcProperties.getBoolean("jdbc.transaction");
-        
-        // shutdown commands
-        sqlShutdown = jdbcProperties.getString("jdbc.shutdown.sql");
-        driverShutdown = jdbcProperties.getString("jdbc.shutdown.driver");
-        
-        // create sormula database
         assert connection != null : "db connection is null";
-        database = new Database(connection, jdbcProperties.getString("jdbc.schema"));
-        database.setTimings(Boolean.parseBoolean(System.getProperty("timings")));
         
-        // statement for ddl and other
-        statement = connection.createStatement();
+        // set auto commit according to transaction property
+        connection.setAutoCommit(!useTransacation);
+        
+        return connection;
     }
     
     
     public void createTable(Class<R> rowClass, String ddl) throws Exception
     {
+        createTable(rowClass);
+        qualifiedTableName = table.getQualifiedTableName();
+        if (ddl != null) createTable(ddl);
+    }
+    
+    
+    protected void createTable(Class<R> rowClass) throws Exception
+    {
         table = getDatabase().getTable(rowClass);
         assert table != null : "table creation error";
-        
-        if (ddl != null)
+    }
+    
+    
+    protected void createTable(String ddl) throws Exception
+    {
+        // drop table if already exists from previous test
+        try
         {
-            // drop table if already exists from previous test
-            try
-            {
-                dropTable();
-                log.debug("existing table for " + rowClass.getCanonicalName() + " was dropped before creating new version");
-            }
-            catch (SQLException e)
-            {
-                // ignore table does not exist exception
-                log.debug("exception dropping table for " + rowClass.getCanonicalName() +
-                        " :" + e.getMessage());
-            }
-            
-            log.debug(ddl);
-            statement.executeUpdate(ddl);
+            dropTable();
+            log.debug("existing table " + qualifiedTableName + " was dropped before creating new version");
         }
+        catch (SQLException e)
+        {
+            // ignore table does not exist exception
+            log.debug("exception dropping " + qualifiedTableName + " :" + e.getMessage());
+        }
+        
+        log.debug(ddl);
+        Connection connection = getConnection();
+        Statement statement = connection.createStatement();
+        statement.executeUpdate(ddl);
+        statement.close();
+        if (useTransacation) connection.commit();
+        connection.close();
     }
     
     
     public void dropTable() throws SQLException
     {
-    	String ddl = "DROP TABLE " + table.getQualifiedTableName();
+    	String ddl = "DROP TABLE " + qualifiedTableName;
     	log.debug(ddl);
+        Connection connection = getConnection();
+        Statement statement = connection.createStatement();
         statement.executeUpdate(ddl);
+        statement.close();
+        if (useTransacation) connection.commit();
+        connection.close();
     }
     
     
     public void closeDatabase()
     {
-        getDatabase().logTimings();
+        database.logTimings();
         
         try
         {
+            database.getConnection().close();
+            database.close();
+            
             if (sqlShutdown.length() > 0)
             {
+                Connection connection = getConnection();
+                Statement statement = connection.createStatement();
                 statement.execute(sqlShutdown);
+                statement.close();
+                if (useTransacation) connection.commit();
+                connection.close();
             }
-            
-            statement.close();
-            database.close();
             
             if (driverShutdown.length() > 0)
             {
@@ -245,18 +281,18 @@ public class DatabaseTest<R>
     }
 
 
-    public Statement getStatement()
-    {
-        return statement;
-    }
-    
-    
     public int randomInt(int upper)
     {
         return random.nextInt(upper);
     }
     
     
+    public String getSchema()
+    {
+        return schema;
+    }
+
+
     public String getSchemaPrefix()
     {
         if (database.getSchema().length() == 0)
@@ -282,6 +318,12 @@ public class DatabaseTest<R>
     }
     
     
+    public void setAll(List<R> all)
+    {
+        this.all = all;
+    }
+
+
     public R getRandom()
     {
         return all.get(randomInt(all.size()));
@@ -290,7 +332,7 @@ public class DatabaseTest<R>
     
     public Set<R> getRandomSet()
     {
-        int size = 10;
+        int size = Math.min(10, all.size());
         Set<R> set = new HashSet<R>(size * 2);
         
         // choose random set

@@ -43,7 +43,7 @@ public class UpdateTest extends DatabaseTest<IdentityTest>
         if (isTestIdentity())
         {
             openDatabase();
-            createTable(IdentityTest.class, null);
+            createTable(IdentityTest.class);
         }
     }
     

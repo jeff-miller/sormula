@@ -177,7 +177,7 @@ public class RowTranslator<R> extends ColumnsTranslator<R>
                 Class fieldClass = f.getType();
                 if (table.getTypeTranslator(fieldClass) == null)
                 {
-                    TypeTranslator typeTranslator = readmplicitType(fieldClass, f);
+                    TypeTranslator typeTranslator = readimplicitType(fieldClass, f);
                     if (typeTranslator != null)
                     {
                         if (log.isDebugEnabled()) log.debug("add type translator=" + typeTranslator.getClass().getCanonicalName() + 
@@ -245,7 +245,7 @@ public class RowTranslator<R> extends ColumnsTranslator<R>
     }
     
     
-    protected TypeTranslator<?> readmplicitType(AnnotatedElement... annotatedElements) throws TranslatorException
+    protected TypeTranslator<?> readimplicitType(AnnotatedElement... annotatedElements) throws TranslatorException
     {
         for (AnnotatedElement ae : annotatedElements)
         {
@@ -338,9 +338,12 @@ public class RowTranslator<R> extends ColumnsTranslator<R>
      * are typically created by select operations when they are reading data from a
      * result set.
      * 
+     * Moved to {@link Table}.
+     * 
      * @return object to hold one row 
      * @throws TranslatorException if new row instance cannot be created
      */
+    @Deprecated
     public R newInstance() throws TranslatorException
     {
         R row;

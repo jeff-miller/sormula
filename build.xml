@@ -199,6 +199,7 @@
 	      	              org/sormula/tests/**/*"
 	        />
 		<!-- keep examples up-to-date -->
+		<copy preservelastmodified="true" file="${lib.jar}" todir="ActiveRecordExample" />
 		<copy preservelastmodified="true" file="${lib.jar}" todir="SimpleExample" />
 		<copy preservelastmodified="true" file="${lib.jar}" todir="ZeroConfigExample" />
 	</target>
@@ -229,6 +230,12 @@
 	        	<classpath refid="main.libpath"/>
 	        </javadoc>
 	    </target>
+    
+    <target name="active-record-example" description="Creates active-record-example.zip for distribution" depends="init">
+        <zip zipfile="active-record-example-${version}.zip" basedir="."
+                includes="ActiveRecordExample/**/*"
+                excludes="ActiveRecordExample/simpleDB.tmp ActiveRecordExample/.classpath ActiveRecordExample/.project"/>
+    </target>
     
     <target name="example" description="Creates example.zip for distribution" depends="init">
         <zip zipfile="example-${version}.zip" basedir="."

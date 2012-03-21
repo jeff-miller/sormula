@@ -1,18 +1,22 @@
+import java.io.PrintWriter;
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.SQLException;
+import java.sql.SQLFeatureNotSupportedException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Logger;
 
-import org.sormula.Database;
-import org.sormula.Table;
-import org.sormula.operation.ArrayListSelectOperation;
-import org.sormula.operation.ListSelectOperation;
+import javax.sql.DataSource;
+
+import org.sormula.active.ActiveDatabase;
+import org.sormula.active.ActiveTable;
 
 
 /**
- * A simple example to show basic sormula features. Everything needed for this example is
- * in the directory that contains this class. The database used by this example is
- * simpleDB.script. simpleDB.script may be viewed with any text editor.
+ * SimpleExample converted to use active record package. Everything needed for this 
+ * example is in the directory that contains this class. The database used by this 
+ * example is simpleDB.script. simpleDB.script may be viewed with any text editor.
  * <p>
  * Compile with compile.bat<br> 
  * Run with run.bat
@@ -20,35 +24,28 @@ import org.sormula.operation.ListSelectOperation;
  *  
  * @author Jeff Miller
  */
-public class SimpleExample
+public class ActiveRecordExample
 {
-    Connection connection;
+    DataSource dataSource;
     
     
     public static void main(String[] args) throws Exception
     {
         System.out.println("begin");
-        SimpleExample simpleExample = new SimpleExample();
+        ActiveRecordExample simpleExample = new ActiveRecordExample();
         simpleExample.removeInventory(1234, 1);
         simpleExample.clearInventory("xyz");
         simpleExample.selectByRange(1, 10);
         simpleExample.selectByRange2(1, 10);
         simpleExample.selectIn();
-        simpleExample.close();
         System.out.println("end");
     }
     
     
-    public SimpleExample() throws Exception
+    public ActiveRecordExample() throws Exception 
     {
-        Class.forName("org.hsqldb.jdbc.JDBCDriver");
-        connection = DriverManager.getConnection("jdbc:hsqldb:file:simpleDB;shutdown=true");
-    }
-    
-    
-    public void close() throws Exception
-    {
-        connection.close();
+        dataSource = new BasicDataSource();
+        ActiveDatabase.setDefault(new ActiveDatabase(dataSource));
     }
     
     
@@ -58,20 +55,16 @@ public class SimpleExample
      * @param partNumber id of part to affect 
      * @param delta reduce inventory quantity by this amount
      */
-    public void removeInventory(int partNumber, int delta) throws Exception
+    public void removeInventory(int partNumber, int delta) 
     {
         System.out.println("removeInventory");
     	
-        // set up
-        Database database = new Database(connection);
-        Table<Inventory> inventoryTable = database.getTable(Inventory.class);
-        
         // get part by primary key
-        Inventory inventory = inventoryTable.select(partNumber);
+        Inventory inventory = Inventory.table.select(partNumber);
         
         // update
         inventory.setQuantity(inventory.getQuantity() - delta);
-        inventoryTable.update(inventory);
+        inventory.update();
     }    
     
     
@@ -84,22 +77,17 @@ public class SimpleExample
     {
         System.out.println("clearInventory");
     	
-        // set up
-        Database database = new Database(connection);
-        Table<Inventory> inventoryTable = database.getTable(Inventory.class);
-        
         // select for a specific manufacturer ("manf" is name of where annotation in Inventory.java)
-        ListSelectOperation<Inventory> operation = new ArrayListSelectOperation<Inventory>(inventoryTable, "manf");
+        List<Inventory> list = Inventory.table.selectAllWhere("manf", manufacturerId);
         
         // for all inventory of manufacturer
-        List<Inventory> list = operation.selectAll(manufacturerId);
         for (Inventory inventory: list)
         {
             inventory.setQuantity(0);
         }
         
         // update
-        inventoryTable.updateAll(list);
+        Inventory.table.updateAll(list);
     }    
     
     
@@ -114,14 +102,10 @@ public class SimpleExample
     public void selectByRange(int minimumQuanity, int maximumQuantity) throws Exception
     {
         System.out.println("selectByRange " + minimumQuanity + " " + maximumQuantity);
-    	
-        // set up
-        Database database = new Database(connection);
-        Table<Inventory> inventoryTable = database.getTable(Inventory.class);
-        
-        // execute
-        List<Inventory> results = inventoryTable.selectAllCustom(
-        		"where quantity between ? and ?", minimumQuanity, maximumQuantity);
+
+        // select
+        List<Inventory> results = Inventory.table.selectAllCustom(
+                "where quantity between ? and ?", minimumQuanity, maximumQuantity);
         
         // show results
         for (Inventory inventory: results)
@@ -133,7 +117,7 @@ public class SimpleExample
     
     /**
      * Select all inventory with quantity in a range. Part and quantity are logged for
-     * each row selected.
+     * each row selected. Uses explicit active database instead of a default.
      * 
      * @param minimumQuanity select rows with quantity of at least this amount
      * @param maximumQuantity select rows with quantity no more than this amount
@@ -142,17 +126,17 @@ public class SimpleExample
     public void selectByRange2(int minimumQuanity, int maximumQuantity) throws Exception
     {
         System.out.println("selectByRange2 " + minimumQuanity + " " + maximumQuantity);
-    	
-        // set up
-        Database database = new Database(connection);
-        Table<Inventory> inventoryTable = database.getTable(Inventory.class);
         
-        // select operation for range
-        QuantityRangeSelect operation = new QuantityRangeSelect(inventoryTable);
-        operation.setRange(minimumQuanity, maximumQuantity);
+        // use a specific active data base (data source) instead of default
+        ActiveTable<Inventory> table = new ActiveTable<Inventory>(
+                new ActiveDatabase(dataSource), Inventory.class);
+
+        // select
+        List<Inventory> results = table.selectAllCustom(
+                "where quantity between ? and ?", minimumQuanity, maximumQuantity);
         
         // show results
-        for (Inventory inventory: operation.selectAll())
+        for (Inventory inventory: results)
         {
             System.out.println(inventory.getPartNumber() + " quantity=" + inventory.getQuantity());
         }
@@ -170,19 +154,65 @@ public class SimpleExample
         partNumbers.add(1234);
         System.out.println("selectIn partNumbers=" + partNumbers);
         
-        // set up
-        Database database = new Database(connection);
-        Table<Inventory> inventoryTable = database.getTable(Inventory.class);
-        
-        // select operation for list 
-        // SELECT PARTNUMBER, QUANTITY, MANFID FROM INVENTORY WHERE PARTNUMBER IN (?, ?, ?)
-        ArrayListSelectOperation<Inventory> operation =
-            new ArrayListSelectOperation<Inventory>(inventoryTable, "partNumberIn");
+        // select 
+        List<Inventory> results = Inventory.table.selectAllWhere("partNumberIn", partNumbers);
 
         // show results
-        for (Inventory inventory: operation.selectAll(partNumbers))
+        for (Inventory inventory: results)
         {
             System.out.println(inventory.getPartNumber());
         }
+    }
+}
+
+
+class BasicDataSource implements DataSource
+{
+    public BasicDataSource() throws Exception
+    {
+        Class.forName("org.hsqldb.jdbc.JDBCDriver");
+    }
+
+    public Connection getConnection() throws SQLException
+    {
+        return DriverManager.getConnection("jdbc:hsqldb:file:simpleDB;shutdown=true");
+    }
+
+    public Connection getConnection(String username, String password) throws SQLException
+    {
+        return null;
+    }
+    
+    public PrintWriter getLogWriter() throws SQLException
+    {
+        return null;
+    }
+
+    public void setLogWriter(PrintWriter out) throws SQLException
+    {
+    }
+
+    public void setLoginTimeout(int seconds) throws SQLException
+    {
+    }
+
+    public int getLoginTimeout() throws SQLException
+    {
+        return 0;
+    }
+
+    public Logger getParentLogger() throws SQLFeatureNotSupportedException
+    {
+        return null;
+    }
+
+    public <T> T unwrap(Class<T> iface) throws SQLException
+    {
+        return null;
+    }
+
+    public boolean isWrapperFor(Class<?> iface) throws SQLException
+    {
+        return false;
     }
 }

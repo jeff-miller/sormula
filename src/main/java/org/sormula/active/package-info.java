@@ -15,7 +15,15 @@
  * <p>
  * {@link org.sormula.active.ActiveTable} can find active records and operate upon a {@link java.util.Collection} 
  * of active records.
- * 
- * TODO example? get from example package
+ * <p>
+ * For example:
+ * <blockquote><pre>
+ * // get part by primary key
+ * Inventory inventory = Inventory.table.select(partNumber);
+ *       
+ * // update
+ * inventory.setQuantity(inventory.getQuantity() - 42);
+ * inventory.update();
+ * </pre></blockquote>
  */
 package org.sormula.active;

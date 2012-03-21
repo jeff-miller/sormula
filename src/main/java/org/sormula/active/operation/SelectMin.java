@@ -22,7 +22,7 @@ import org.sormula.active.ActiveTable;
 
 
 /**
- * Delegate for {@link Table#selectMin()}.
+ * Delegate for selectMin methods in {@link Table}.
  * 
  * @author Jeff Miller
  * @since 1.7

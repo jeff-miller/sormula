@@ -22,7 +22,7 @@ import org.sormula.active.ActiveTable;
 
 
 /**
- * Delegate for {@link Table#selectSum()}.
+ * Delegate for selectSum methods in {@link Table}.
  * 
  * @author Jeff Miller
  * @since 1.7

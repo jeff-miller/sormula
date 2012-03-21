@@ -78,7 +78,30 @@ public abstract class ActiveRecord<R extends ActiveRecord> implements Serializab
     }
 
 
-    // TODO add static methods analogous to ActiveTable for static ActiveDatabase?
+    /**
+     * Creates a table that can be used to for records of type recordClass for the default
+     * active database. Use to initialize active record static table member like the following:
+     * <blockquote><pre>
+     * public class SomeRecord extends ActiveRecord
+     * {
+     *     private static final long serialVersionUID = 1L;
+     *     public static final ActiveTable&lt;SomeRecord&gt; table = table(SomeRecord.class);
+     *     ...
+     * }
+     * </pre></blockquote>
+     * Use like:
+     * <blockquote><pre>
+     * List&lt;SomeRecord&gt; records = SomeRecord.table.selectAll();
+     * </pre></blockquote>
+     * 
+     * @param recordClass type of records of table
+     * @return ActiveTable instance for records of type R
+     * @throws ActiveException if error
+     */
+    public static <R extends ActiveRecord> ActiveTable<R> table(Class<R> recordClass) throws ActiveException
+    {
+        return new ActiveTable<R>(recordClass);
+    }
     
     
     /**
@@ -89,9 +112,7 @@ public abstract class ActiveRecord<R extends ActiveRecord> implements Serializab
      */
     public int save() throws ActiveException
     {
-        testActiveDatabase(); // friendly fail fast when active database is not known
-        ActiveTable<R> activeRecordTable = new ActiveTable<R>(activeDatabase, recordClass);
-        return activeRecordTable.save(recordClass.cast(this));
+        return createTable().save(recordClass.cast(this));
     }
 
 
@@ -103,9 +124,7 @@ public abstract class ActiveRecord<R extends ActiveRecord> implements Serializab
      */
     public int insert() throws ActiveException
     {
-        testActiveDatabase(); // friendly fail fast when active database is not known
-        ActiveTable<R> activeRecordTable = new ActiveTable<R>(activeDatabase, recordClass);
-        return activeRecordTable.insert(recordClass.cast(this));
+        return createTable().insert(recordClass.cast(this));
     }
 
     
@@ -117,9 +136,7 @@ public abstract class ActiveRecord<R extends ActiveRecord> implements Serializab
      */
     public int update() throws ActiveException
     {
-        testActiveDatabase(); // friendly fail fast when active database is not known
-        ActiveTable<R> activeRecordTable = new ActiveTable<R>(activeDatabase, recordClass);
-        return activeRecordTable.update(recordClass.cast(this));
+        return createTable().update(recordClass.cast(this));
     }
     
     
@@ -131,9 +148,7 @@ public abstract class ActiveRecord<R extends ActiveRecord> implements Serializab
      */
     public int delete() throws ActiveException
     {
-        testActiveDatabase(); // friendly fail fast when active database is not known
-        ActiveTable<R> activeRecordTable = new ActiveTable<R>(activeDatabase, recordClass);
-        return activeRecordTable.delete(recordClass.cast(this));
+        return createTable().delete(recordClass.cast(this));
     }
     
     
@@ -148,8 +163,9 @@ public abstract class ActiveRecord<R extends ActiveRecord> implements Serializab
     }
     
     
-    protected void testActiveDatabase() throws ActiveException
+    protected ActiveTable<R> createTable() throws ActiveException
     {
-        if (activeDatabase == null) throw new ActiveException("no active database for active record " + this);
+        if (activeDatabase == null) return new ActiveTable<R>(recordClass);
+        else return new ActiveTable<R>(activeDatabase, recordClass);
     }
 }

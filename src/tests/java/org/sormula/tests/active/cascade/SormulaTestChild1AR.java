@@ -61,24 +61,4 @@ public class SormulaTestChild1AR extends ActiveRecord
     {
         this.description = description;
     }
-
-
-    @Override
-    public int hashCode()
-    {
-        return id;
-    }
-
-
-    @Override
-    public boolean equals(Object obj)
-    {
-        if (obj instanceof SormulaTestChild1AR)
-        {
-            SormulaTestChild1AR other = (SormulaTestChild1AR) obj;
-            return id == other.id;
-        }
-        
-        return false;
-    }
 }

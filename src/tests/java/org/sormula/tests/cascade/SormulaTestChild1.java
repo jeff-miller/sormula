@@ -16,7 +16,6 @@
  */
 package org.sormula.tests.cascade;
 
-import org.sormula.annotation.Column;
 
 
 /**
@@ -26,7 +25,6 @@ import org.sormula.annotation.Column;
  */
 public class SormulaTestChild1
 {
-    @Column(primaryKey=true)
     int id;
     String description;
     
@@ -60,25 +58,5 @@ public class SormulaTestChild1
     public void setDescription(String description)
     {
         this.description = description;
-    }
-
-
-    @Override
-    public int hashCode()
-    {
-        return id;
-    }
-
-
-    @Override
-    public boolean equals(Object obj)
-    {
-        if (obj instanceof SormulaTestChild1)
-        {
-            SormulaTestChild1 other = (SormulaTestChild1) obj;
-            return id == other.id;
-        }
-        
-        return false;
     }
 }

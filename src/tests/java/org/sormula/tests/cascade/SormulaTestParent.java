@@ -141,24 +141,4 @@ public class SormulaTestParent
 	{
 		this.childMap = childMap;
 	}
-
-
-	@Override
-    public int hashCode()
-    {
-        return id;
-    }
-
-
-    @Override
-    public boolean equals(Object obj)
-    {
-        if (obj instanceof SormulaTestParent)
-        {
-            SormulaTestParent other = (SormulaTestParent) obj;
-            return id == other.id;
-        }
-        
-        return false;
-    }
 }

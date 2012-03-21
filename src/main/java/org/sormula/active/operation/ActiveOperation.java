@@ -63,6 +63,12 @@ public abstract class ActiveOperation<R extends ActiveRecord, T>
         this.activeTable = activeTable;
         this.exceptionMessage = exceptionMessage;
         activeDatabase = activeTable.getActiveDatabase();
+        
+        if (activeDatabase == null)
+        {
+            activeDatabase = ActiveDatabase.getDefault();
+            if (activeDatabase == null) throw new ActiveException("no default active database has been set; use ActiveDatabase#setDefault");
+        }
     }
 
     
@@ -130,14 +136,14 @@ public abstract class ActiveOperation<R extends ActiveRecord, T>
                 transaction.begin();
             }
         }
-        catch (SQLException e)
-        {
-            throw new ActiveException("error creating operation database", e);
-        }
         catch (SormulaException e)
         {
             close(); // avoid connection leak
             throw new ActiveException("error starting active record transaction", e);
+        }
+        catch (Exception e)
+        {
+            throw new ActiveException("error creating operation database", e);
         }
     }
     
@@ -153,6 +159,7 @@ public abstract class ActiveOperation<R extends ActiveRecord, T>
                 if (log.isDebugEnabled()) log.debug("ActiveOperation commit transaction");
                 transaction.commit();
                 transaction = null;
+                if (operationDatabase.isTimings()) operationDatabase.logTimings();
             }
         }
         catch (SormulaException e)

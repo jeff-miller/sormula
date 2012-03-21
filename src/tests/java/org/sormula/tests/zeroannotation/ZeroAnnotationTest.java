@@ -81,24 +81,4 @@ public class ZeroAnnotationTest
     {
         this.type = type;
     }
-
-
-    @Override
-    public int hashCode()
-    {
-        return id;
-    }
-
-
-    @Override
-    public boolean equals(Object obj)
-    {
-        if (obj instanceof ZeroAnnotationTest)
-        {
-            ZeroAnnotationTest other = (ZeroAnnotationTest) obj;
-            return id == other.id;
-        }
-        
-        return false;
-    }
 }

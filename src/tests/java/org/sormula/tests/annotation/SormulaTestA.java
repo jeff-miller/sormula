@@ -103,24 +103,4 @@ public class SormulaTestA
     {
         this.test3 = test3;
     }
-
-
-    @Override
-    public int hashCode()
-    {
-        return id;
-    }
-
-
-    @Override
-    public boolean equals(Object obj)
-    {
-        if (obj instanceof SormulaTestA)
-        {
-            SormulaTestA other = (SormulaTestA) obj;
-            return id == other.id;
-        }
-        
-        return false;
-    }
 }

@@ -89,24 +89,4 @@ public class SormulaTest4
     {
         this.type = type;
     }
-
-
-    @Override
-    public int hashCode()
-    {
-        return id;
-    }
-
-
-    @Override
-    public boolean equals(Object obj)
-    {
-        if (obj instanceof SormulaTest4)
-        {
-            SormulaTest4 other = (SormulaTest4) obj;
-            return id == other.id;
-        }
-        
-        return false;
-    }
 }

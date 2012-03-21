@@ -74,31 +74,4 @@ public class SormulaTestChildNAR extends ActiveRecord
     {
         this.description = description;
     }
-
-
-    @Override
-    public int hashCode()
-    {
-        return id;
-    }
-
-
-    @Override
-    public boolean equals(Object obj)
-    {
-        if (obj instanceof SormulaTestChildNAR)
-        {
-            SormulaTestChildNAR other = (SormulaTestChildNAR) obj;
-            return id == other.id;
-        }
-        
-        return false;
-    }
-
-
-	@Override
-	public String toString() 
-	{
-		return id + " " + description;
-	}
 }

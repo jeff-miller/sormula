@@ -55,6 +55,12 @@ public class ActiveDatabaseTest<R extends ActiveRecord> extends DatabaseTest<R>
     }
 
 
+    public DataSource getDataSource()
+    {
+        return dataSource;
+    }
+
+
     public ActiveDatabase getActiveDatabase()
     {
         return activeDatabase;

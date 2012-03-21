@@ -1,7 +1,7 @@
 /**
  * An implementation of the <a href="http://www.google.com/search?q=active+record+pattern&oq=active+record">
- * active record pattern</a> built on top of sormula. You can accomplish all of your database needs by using only the
- * classes in this package. 
+ * active record pattern</a> built on top of sormula. Classes in this package may be used as an independent
+ * alternative to other class in sormula.
  * <p>
  * {@link org.sormula.active.ActiveRecord} objects know about their {@link org.sormula.active.ActiveDatabase} 
  * so they may be inserted, updated, deleted by simply calling the inherited methods 
@@ -16,6 +16,6 @@
  * {@link org.sormula.active.ActiveTable} can find active records and operate upon a {@link java.util.Collection} 
  * of active records.
  * 
- * TODO example?
+ * TODO example? get from example package
  */
 package org.sormula.active;

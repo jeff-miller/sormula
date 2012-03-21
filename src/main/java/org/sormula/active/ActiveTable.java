@@ -53,8 +53,23 @@ import org.sormula.active.operation.UpdateAll;
  */
 public class ActiveTable<R extends ActiveRecord>
 {
-    ActiveDatabase activeDatabase;
-    Class<R> recordClass;
+    final ActiveDatabase activeDatabase;
+    final Class<R> recordClass;
+    
+    
+    /**
+     * Constructs for default active database and a record type. Uses the default active database
+     * that is configured with {@link ActiveDatabase#setDefault(ActiveDatabase)}. The default
+     * active database must be configured prior to first database access by this table.
+     * 
+     * @param recordClass Java class of record
+     * @throws ActiveException if error
+     */
+    public ActiveTable(Class<R> recordClass) throws ActiveException
+    {
+        this.activeDatabase = null; // ActiveOperation constructor will initialize with ActiveDatabase.getDefault 
+        this.recordClass = recordClass;
+    }
     
     
     /**
@@ -62,9 +77,13 @@ public class ActiveTable<R extends ActiveRecord>
      * 
      * @param activeDatabase active database that defines data source for records
      * @param recordClass Java class of record
+     * @throws ActiveException if activeDatabase is null
      */
-    public ActiveTable(ActiveDatabase activeDatabase, Class<R> recordClass)
+    public ActiveTable(ActiveDatabase activeDatabase, Class<R> recordClass) throws ActiveException
     {
+        // fail here since activeDatabase must be known; use ActiveTable(Class<R> recordClass) to use default
+        if (activeDatabase == null) throw new ActiveException("no active database for " + recordClass);
+        
         this.activeDatabase = activeDatabase;
         this.recordClass = recordClass;
     }

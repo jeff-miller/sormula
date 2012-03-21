@@ -23,6 +23,7 @@ import org.sormula.SormulaException;
 import org.sormula.Table;
 import org.sormula.active.ActiveDatabase;
 import org.sormula.active.ActiveRecord;
+import org.sormula.annotation.ExplicitTypeAnnotationReader;
 
 
 /**
@@ -45,10 +46,18 @@ public class OperationDatabase extends Database
      * @param activeDatabase active database determines data source
      * @throws SQLException if error
      */
-    public OperationDatabase(ActiveDatabase activeDatabase) throws SQLException
+    public OperationDatabase(ActiveDatabase activeDatabase) throws Exception
     {
         super(activeDatabase.getDataSource().getConnection(), activeDatabase.getSchema());
         this.activeDatabase = activeDatabase;
+        
+        // configure explicit types from active database object
+        new ExplicitTypeAnnotationReader(this, activeDatabase.getClass()).install();
+        
+        // initialized from active database
+        setReadOnly(activeDatabase.isReadOnly());
+        setNameTranslatorClass(activeDatabase.getNameTranslatorClass());
+        setTimings(activeDatabase.isTimings());
     }
     
     

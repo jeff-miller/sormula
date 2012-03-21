@@ -17,10 +17,10 @@
 package org.sormula.tests.active;
 
 import org.sormula.active.ActiveRecord;
+import org.sormula.active.ActiveTable;
 import org.sormula.annotation.OrderBy;
 import org.sormula.annotation.Where;
 
-// TODO cascade tests
 
 /**
  * Active record for tests in org.sormula.tests.active.
@@ -32,6 +32,8 @@ import org.sormula.annotation.Where;
 public class SormulaTestAR extends ActiveRecord
 {
     private static final long serialVersionUID = 1L;
+    public static final ActiveTable<SormulaTestAR> table = table(SormulaTestAR.class);
+    
     int id;
     int type;
     String description;
@@ -77,25 +79,5 @@ public class SormulaTestAR extends ActiveRecord
     public void setType(int type)
     {
         this.type = type;
-    }
-
-
-    @Override
-    public int hashCode()
-    {
-        return id;
-    }
-
-
-    @Override
-    public boolean equals(Object obj)
-    {
-        if (obj instanceof SormulaTestAR)
-        {
-            SormulaTestAR other = (SormulaTestAR) obj;
-            return id == other.id;
-        }
-        
-        return false;
     }
 }

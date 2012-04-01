@@ -18,6 +18,7 @@ package org.sormula.tests.active;
 
 import java.util.List;
 
+import org.sormula.active.ActiveDatabase;
 import org.sormula.active.ActiveTable;
 import org.sormula.log.ClassLogger;
 import org.testng.annotations.AfterClass;
@@ -148,6 +149,21 @@ public class SelectTest extends ActiveDatabaseTest<SormulaTestAR>
         assert rActual != null && rActual.getType() == rExpected.getType() : rActual.getId() + " row is incorrect type for where condition";
     }
     
+    
+    @Test
+    public void selectWhereAR2()
+    {
+        selectTestRows(); // must perform each time since other tests are destructive
+        SormulaTestAR rExpected = getRandom();
+
+        // test default active data base
+        ActiveDatabase.setDefault(getActiveDatabase());
+        
+        // select one (more than one record is possible, test first one found)
+        SormulaTestAR rActual = SormulaTestAR.table.selectWhere("byType", rExpected.getType());
+        assert rActual != null && rActual.getType() == rExpected.getType() : rActual.getId() + " row is incorrect type for where condition";
+    }
+
     
     @Test
     public void selectAllWhereAR()

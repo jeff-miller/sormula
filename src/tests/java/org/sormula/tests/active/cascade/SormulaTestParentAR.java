@@ -30,7 +30,7 @@ import org.sormula.annotation.cascade.SelectCascade;
  * 
  * @author Jeff Miller
  */
-public class SormulaTestParentAR extends ActiveRecord
+public class SormulaTestParentAR extends ActiveRecord<SormulaTestParentAR>
 {
     private static final long serialVersionUID = 1L;
     int id;

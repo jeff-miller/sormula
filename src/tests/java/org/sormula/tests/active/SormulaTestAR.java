@@ -29,7 +29,7 @@ import org.sormula.annotation.Where;
  */
 @Where(name="byType", fieldNames="type")
 @OrderBy(name="obDesc", ascending="description")
-public class SormulaTestAR extends ActiveRecord
+public class SormulaTestAR extends ActiveRecord<SormulaTestAR>
 {
     private static final long serialVersionUID = 1L;
     public static final ActiveTable<SormulaTestAR> table = table(SormulaTestAR.class);

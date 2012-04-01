@@ -24,7 +24,7 @@ import org.sormula.active.ActiveRecord;
  * 
  * @author Jeff Miller
  */
-public class SormulaTestChild1AR extends ActiveRecord
+public class SormulaTestChild1AR extends ActiveRecord<SormulaTestChild1AR>
 {
     private static final long serialVersionUID = 1L;
     int id;

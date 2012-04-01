@@ -21,7 +21,8 @@ import java.io.Serializable;
 
 
 /**
- * Base class for active records.
+ * Base class for active records. See {@link #table(Class)} for an example how to add
+ * a static member named table to the sublcass that extends ActiveRecord.  
  * 
  * @author Jeff Miller
  * @since 1.7
@@ -82,7 +83,7 @@ public abstract class ActiveRecord<R extends ActiveRecord> implements Serializab
      * Creates a table that can be used to for records of type recordClass for the default
      * active database. Use to initialize active record static table member like the following:
      * <blockquote><pre>
-     * public class SomeRecord extends ActiveRecord
+     * public class SomeRecord extends ActiveRecord&lg;SomeRecord&gt;
      * {
      *     private static final long serialVersionUID = 1L;
      *     public static final ActiveTable&lt;SomeRecord&gt; table = table(SomeRecord.class);
@@ -106,6 +107,8 @@ public abstract class ActiveRecord<R extends ActiveRecord> implements Serializab
     
     /**
      * Saves record into database. Delegates to {@link ActiveTable#save(ActiveRecord)}.
+     * The database used is {@link #getActiveDatabase()}. If no active database is set for
+     * this record, then the default active database is used, {@link ActiveDatabase#getDefault()}.
      * 
      * @return number of records affected; typically 1 if record was saved or 0 if not saved
      * @throws ActiveException if error
@@ -118,6 +121,8 @@ public abstract class ActiveRecord<R extends ActiveRecord> implements Serializab
 
     /**
      * Inserts record into database. Delegates to {@link ActiveTable#insert(ActiveRecord)}.
+     * The database used is {@link #getActiveDatabase()}. If no active database is set for
+     * this record, then the default active database is used, {@link ActiveDatabase#getDefault()}.
      * 
      * @return number of records affected; typically 1 if record was inserted or 0 if not inserted
      * @throws ActiveException if error
@@ -130,6 +135,8 @@ public abstract class ActiveRecord<R extends ActiveRecord> implements Serializab
     
     /**
      * Updates record in database. Delegates to {@link ActiveTable#update(ActiveRecord)}.
+     * The database used is {@link #getActiveDatabase()}. If no active database is set for
+     * this record, then the default active database is used, {@link ActiveDatabase#getDefault()}.
      * 
      * @return number of records affected; typically 1 if record was updated or 0 if not updated
      * @throws ActiveException if error
@@ -142,6 +149,8 @@ public abstract class ActiveRecord<R extends ActiveRecord> implements Serializab
     
     /**
      * Deletes record from database. Delegates to {@link ActiveTable#delete(ActiveRecord)}.
+     * The database used is {@link #getActiveDatabase()}. If no active database is set for
+     * this record, then the default active database is used, {@link ActiveDatabase#getDefault()}.
      * 
      * @return number of records affected; typically 1 if record was deleted or 0 if not deleted
      * @throws ActiveException if error

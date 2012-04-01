@@ -26,7 +26,7 @@ import org.sormula.annotation.Where;
  * @author Jeff Miller
  */
 @Where(name="byParent", fieldNames="parentId")
-public class SormulaTestChildNAR extends ActiveRecord
+public class SormulaTestChildNAR extends ActiveRecord<SormulaTestChildNAR>
 {
     private static final long serialVersionUID = 1L;
     int id;

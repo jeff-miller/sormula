@@ -18,6 +18,7 @@ package org.sormula.tests.active;
 
 import java.util.ArrayList;
 
+import org.sormula.active.ActiveDatabase;
 import org.sormula.active.ActiveTable;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
@@ -82,6 +83,19 @@ public class SaveTest extends ActiveDatabaseTest<SormulaTestAR>
         record.setType(8);
         record.setDescription("Save one AR 3");
         assert table.save(record) == 1 : record.getDescription() + " failed";
+    }
+    
+    
+    @Test
+    public void saveOneAR4()
+    {
+        // test default active data base
+        ActiveDatabase.setDefault(getActiveDatabase());
+        SormulaTestAR record = new SormulaTestAR();
+        record.setId(8004);
+        record.setType(8);
+        record.setDescription("Save one AR 4");
+        assert record.save() == 1 : record.getDescription() + " failed";
     }
     
     

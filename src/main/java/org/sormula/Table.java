@@ -351,7 +351,7 @@ public class Table<R> implements TypeTranslatorMap
      * Table&lt;Order&gt; table = database.getTable(Order.class);
      * List&ltOrder&gt; orders = table.selectAll();
      * </pre></blockquote>
-     * @return list of all rows
+     * @return list of all rows; empty list if none found
      * @throws SormulaException if error
      */
     public List<R> selectAll() throws SormulaException
@@ -442,7 +442,7 @@ public class Table<R> implements TypeTranslatorMap
      * </pre></blockquote>
      * @param customSql custom sql to be appended to base sql (for example, "where somecolumn=?")
      * @param parameters parameter value to be set in customSql
-     * @return list of rows selected
+     * @return list of rows selected; empty list if none found
      * @throws SormulaException if error
      */
     public List<R> selectAllCustom(String customSql, Object... parameters) throws SormulaException
@@ -715,12 +715,12 @@ public class Table<R> implements TypeTranslatorMap
      * <blockquote><pre>
      * Database database = ...
      * Table&lt;Student&gt; table = database.getTable(Student.class);
-     * Student student = new Student();
-     * student.setId(1234);
-     * student.setFirstName("Jeff");
-     * student.setLastName("Miller");
-     * student.setGraduationDate(new Date(System.currentTimeMillis()));
-     * table.insert(student);
+     * Student s = new Student();
+     * s.setId(1234);
+     * s.setFirstName("Jeff");
+     * s.setLastName("Miller");
+     * s.setGraduationDate(new Date(System.currentTimeMillis()));
+     * table.insert(s);
      * </pre></blockquote>
      * @param row row to insert
      * @return count of rows affected
@@ -740,9 +740,9 @@ public class Table<R> implements TypeTranslatorMap
      * Database database = ...
      * Table&lt;Student&gt; table = database.getTable(Student.class);
      * ArrayList&lt;Student&gt; list = new ArrayList&lt;Student&gt;();
-     * list.add(student1);
-     * list.add(student2);
-     * list.add(student3);
+     * list.add(s1);
+     * list.add(s2);
+     * list.add(s3);
      * table.insertAll(list);
      * </pre></blockquote>
      * @param rows rows to insert
@@ -763,9 +763,9 @@ public class Table<R> implements TypeTranslatorMap
      * <blockquote><pre>
      * Database database = ...
      * Table&lt;Student&gt; table = database.getTable(Student.class);
-     * Student student = table.select(id);
-     * student.setGraduationDate(...);
-     * table.update(student);
+     * Student s = table.select(id);
+     * s.setGraduationDate(...);
+     * table.update(s);
      * </pre></blockquote>
      * @param row row to update
      * @return count of rows affected
@@ -787,7 +787,7 @@ public class Table<R> implements TypeTranslatorMap
      * Table&lt;Student&gt; table = database.getTable(Student.class);
      * List&lt;Student&gt; list = table.selectAll();
      * for (Student s: list)
-     *     student.setGraduationDate(...);
+     *     s.setGraduationDate(...);
      *   
      * table.updateAll(list);
      * </pre></blockquote>
@@ -831,8 +831,8 @@ public class Table<R> implements TypeTranslatorMap
      * Database database = ...
      * Table&lt;Student&gt; table = database.getTable(Student.class);
      * // delete student with id of 1234
-     * Student student = table.select(1234);
-     * table.delete(student);
+     * Student s = table.select(1234);
+     * table.delete(s);
      * </pre></blockquote> 
      * @param row get primary key values from this row
      * @return count of rows affected

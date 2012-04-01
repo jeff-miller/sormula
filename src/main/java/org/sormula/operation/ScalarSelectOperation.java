@@ -197,6 +197,7 @@ public class ScalarSelectOperation<R> extends SqlOperation<R>
         try
         {
             log.debug("execute query");
+            if (maximumRowsRead < Integer.MAX_VALUE) preparedStatement.setMaxRows(maximumRowsRead);
             operationTime.startExecuteTime();
             resultSet = preparedStatement.executeQuery();
             operationTime.stop();
@@ -249,7 +250,7 @@ public class ScalarSelectOperation<R> extends SqlOperation<R>
             
             if (resultSet.next() && rowsReadCount < maximumRowsRead)
             {
-                row = rowTranslator.newInstance();
+                row = table.newRow();
                 operationTime.pause();
                 preReadCascade(row);
                 preRead(row);

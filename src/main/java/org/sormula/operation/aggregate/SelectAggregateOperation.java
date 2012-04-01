@@ -136,7 +136,7 @@ public class SelectAggregateOperation<R, T> extends ScalarSelectOperation<R>
                 if (columnTranslator != null)
                 {
                     // read result into a row using column translator of column for row
-                    R row = getTable().getRowTranslator().newInstance();
+                    R row = getTable().newRow();
                     columnTranslator.read(rs, 1, row);
                     
                     // get result from row

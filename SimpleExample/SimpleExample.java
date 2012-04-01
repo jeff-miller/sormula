@@ -31,7 +31,6 @@ public class SimpleExample
         SimpleExample simpleExample = new SimpleExample();
         simpleExample.removeInventory(1234, 1);
         simpleExample.clearInventory("xyz");
-        simpleExample.clearInventory2("xyz");
         simpleExample.selectByRange(1, 10);
         simpleExample.selectByRange2(1, 10);
         simpleExample.selectIn();
@@ -91,35 +90,6 @@ public class SimpleExample
         
         // select for a specific manufacturer ("manf" is name of where annotation in Inventory.java)
         ListSelectOperation<Inventory> operation = new ArrayListSelectOperation<>(inventoryTable, "manf");
-        
-        // for all inventory of manufacturer
-        List<Inventory> list = operation.selectAll(manufacturerId);
-        for (Inventory inventory: list)
-        {
-            inventory.setQuantity(0);
-        }
-        
-        // update
-        inventoryTable.updateAll(list);
-    }    
-    
-    
-    /**
-     * Clears inventory for a manufacturer. Uses {@link ArrayListSelectOperation#selectAll(Object...)}
-     * method for less Java.
-     *  
-     * @param manufacturerId affect all rows with this manufacturer id
-     */
-    public void clearInventory2(String manufacturerId) throws Exception
-    {
-        System.out.println("clearInventory2");
-    	
-        // set up
-        Database database = new Database(connection);
-        Table<Inventory> inventoryTable = database.getTable(Inventory.class);
-        
-        // select operation for a specific manufacturer ("manf" is name of where annotation in Inventory.java)
-        ArrayListSelectOperation<Inventory> operation = new ArrayListSelectOperation<>(inventoryTable, "manf");
         		
         // for all inventory of manufacturer
         List<Inventory> list = operation.selectAll(manufacturerId);
@@ -130,7 +100,7 @@ public class SimpleExample
         
         // update
         inventoryTable.updateAll(list);
-    }
+    }    
     
     
     /**

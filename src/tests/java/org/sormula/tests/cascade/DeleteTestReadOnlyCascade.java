@@ -37,7 +37,7 @@ public class DeleteTestReadOnlyCascade extends DatabaseTest<SormulaTestParentRea
     public void setUp() throws Exception
     {
         openDatabase();
-        createTable(SormulaTestParentReadOnlyCascade.class, null);
+        createTable(SormulaTestParentReadOnlyCascade.class);
     }
     
     

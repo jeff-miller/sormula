@@ -37,7 +37,7 @@ public class DeleteTest extends DatabaseTest<SormulaTestParent>
     public void setUp() throws Exception
     {
         openDatabase();
-        createTable(SormulaTestParent.class, null);
+        createTable(SormulaTestParent.class);
     }
     
     

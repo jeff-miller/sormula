@@ -74,31 +74,4 @@ public class SormulaTestChildM
     {
         this.description = description;
     }
-
-
-    @Override
-    public int hashCode()
-    {
-        return id;
-    }
-
-
-    @Override
-    public boolean equals(Object obj)
-    {
-        if (obj instanceof SormulaTestChildM)
-        {
-            SormulaTestChildM other = (SormulaTestChildM) obj;
-            return id == other.id;
-        }
-        
-        return false;
-    }
-
-
-	@Override
-	public String toString() 
-	{
-		return id + " " + description;
-	}
 }

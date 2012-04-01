@@ -17,8 +17,10 @@
 package org.sormula.translator;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
 
 import org.sormula.annotation.Column;
+import org.sormula.annotation.Transient;
 
 
 /**
@@ -43,26 +45,27 @@ public class PrimaryKeyWhereTranslator<R> extends AbstractWhereTranslator<R>
     {
         super(rowTranslator); 
         initColumnTranslatorList(4);
+        Field firstField = null;
         
         // for all fields
         for (Field f: rowTranslator.getRowClass().getDeclaredFields())
         {
+            if (Modifier.isStatic(f.getModifiers())) continue; // static are never primary keys
+            if (f.isAnnotationPresent(Transient.class)) continue; // transient are never primary keys
+            
+            if (firstField == null) firstField = f;
+            
             Column columnAnnotation = f.getAnnotation(Column.class);
-
             if (columnAnnotation != null && (columnAnnotation.primaryKey() || columnAnnotation.identity()))
             {
                 addColumnTranslator(f, "primary key");
             }
         }
         
-        if (getColumnTranslatorList().size() == 0)
+        if (getColumnTranslatorList().size() == 0 && firstField != null)
         {
-            // no primary key specificed, assume first declared field
-            Field[] fields = rowTranslator.getRowClass().getDeclaredFields();
-            if (fields.length > 0)
-            {
-                addColumnTranslator(fields[0], "default");
-            }
+            // no primary key specificed, assume first non-static, non-transient field
+            addColumnTranslator(firstField, "default");
         }
     }
     

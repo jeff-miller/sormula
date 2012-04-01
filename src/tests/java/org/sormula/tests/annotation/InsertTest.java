@@ -17,6 +17,7 @@
 package org.sormula.tests.annotation;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import org.sormula.Database;
 import org.sormula.SormulaException;
@@ -91,7 +92,9 @@ public class InsertTest extends DatabaseTest<SormulaTestA>
         assert getTable().insertAll(list) == list.size() : "insert collection failed";
         
         // verify test types are correct
-        for (SormulaTestA row : getTable().selectAll())
+        List<SormulaTestA> selected = getTable().selectAll();
+        assert list.size() == selected.size() : "inserted size not same as selected size";
+        for (SormulaTestA row : selected)
         {
             assert row.getTest1().intValue() == row.getId()%4 : "Test1 type is not correct";
             assert row.getTest2().intValue() == row.getId()%4 : "Test2 type is not correct";

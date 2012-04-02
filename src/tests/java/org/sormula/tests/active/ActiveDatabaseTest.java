@@ -50,7 +50,7 @@ public class ActiveDatabaseTest<R extends ActiveRecord> extends DatabaseTest<R>
     protected void createTable(Class<R> rowClass) throws Exception
     {
         super.createTable(rowClass);
-        activeTable = new ActiveTable<R>(activeDatabase, rowClass);
+        activeTable = new ActiveTable<>(activeDatabase, rowClass);
         assert activeTable != null : "active table creation error";
     }
 

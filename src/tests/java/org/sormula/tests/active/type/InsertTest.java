@@ -66,7 +66,7 @@ public class InsertTest extends ActiveDatabaseTest<SormulaTypeTestAR>
     @Test
     public void insertTypeTestAR() throws SormulaException
     {
-        ArrayList<SormulaTypeTestAR> list = new ArrayList<SormulaTypeTestAR>();
+        ArrayList<SormulaTypeTestAR> list = new ArrayList<>();
         
         for (int id = 101; id < 400; ++id)
         {
@@ -76,7 +76,7 @@ public class InsertTest extends ActiveDatabaseTest<SormulaTypeTestAR>
         }
         
         ActiveDatabase activeDatabase = new CustomActiveDatabase(getDataSource(), getSchema());
-        ActiveTable<SormulaTypeTestAR> table = new ActiveTable<SormulaTypeTestAR>(activeDatabase, SormulaTypeTestAR.class);
+        ActiveTable<SormulaTypeTestAR> table = new ActiveTable<>(activeDatabase, SormulaTypeTestAR.class);
         
         assert table.insertAll(list) == list.size() : "insert collection failed";
         

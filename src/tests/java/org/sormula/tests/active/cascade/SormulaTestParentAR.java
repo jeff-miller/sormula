@@ -49,7 +49,7 @@ public class SormulaTestParentAR extends ActiveRecord<SormulaTestParentAR>
     
     public SormulaTestParentAR()
     {
-        childList = new ArrayList<SormulaTestChildNAR>();
+        childList = new ArrayList<>();
     }
 
     

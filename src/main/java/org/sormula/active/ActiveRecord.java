@@ -101,7 +101,7 @@ public abstract class ActiveRecord<R extends ActiveRecord> implements Serializab
      */
     public static <R extends ActiveRecord> ActiveTable<R> table(Class<R> recordClass) throws ActiveException
     {
-        return new ActiveTable<R>(recordClass);
+        return new ActiveTable<>(recordClass);
     }
     
     
@@ -174,7 +174,7 @@ public abstract class ActiveRecord<R extends ActiveRecord> implements Serializab
     
     protected ActiveTable<R> createTable() throws ActiveException
     {
-        if (activeDatabase == null) return new ActiveTable<R>(recordClass);
-        else return new ActiveTable<R>(activeDatabase, recordClass);
+        if (activeDatabase == null) return new ActiveTable<>(recordClass);
+        else return new ActiveTable<>(activeDatabase, recordClass);
     }
 }

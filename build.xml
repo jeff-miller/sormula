@@ -233,7 +233,7 @@
 	    </target>
     
     <target name="active-record-example" description="Creates active-record-example.zip for distribution" depends="init">
-        <zip zipfile="active-record-example-${version}.zip" basedir="."
+        <zip zipfile="active-record-example-${version}${dist.suffix}.zip" basedir="."
                 includes="ActiveRecordExample/**/*"
                 excludes="ActiveRecordExample/simpleDB.tmp ActiveRecordExample/.classpath ActiveRecordExample/.project"/>
     </target>

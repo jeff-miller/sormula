@@ -61,7 +61,7 @@ public class ActiveDatabase implements Serializable
 
 
     /**
-     * Sets the default active database. See {@link #setDefault(ActiveDatabase)} for explanation.
+     * Sets the default active database. See {@link #getDefault()} for explanation.
      * 
      * @param activeDatabase default active databases or null to remove current default
      */

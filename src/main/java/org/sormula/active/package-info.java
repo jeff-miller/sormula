@@ -1,7 +1,7 @@
 /**
  * An implementation of the <a href="http://www.google.com/search?q=active+record+pattern&oq=active+record">
  * active record pattern</a> built on top of sormula. Classes in this package may be used as an independent
- * alternative to other class in sormula.
+ * alternative to other classes in sormula.
  * <p>
  * {@link org.sormula.active.ActiveRecord} objects know about their {@link org.sormula.active.ActiveDatabase} 
  * so they may be inserted, updated, deleted by simply calling the inherited methods 

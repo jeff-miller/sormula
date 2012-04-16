@@ -72,12 +72,14 @@ public class Transaction
 	
 	
 	/**
-	 * Starts the transaction.
+	 * Starts the transaction. 
 	 * 
 	 * @throws SormulaException if error
 	 */
 	public void begin() throws SormulaException
 	{
+	    if (active) throw new SormulaException("transaction is already active");
+	    
 		try
 		{
 			if (log.isDebugEnabled()) log.debug("begin");
@@ -100,9 +102,10 @@ public class Transaction
 	 */
 	public void commit() throws SormulaException
 	{
+	    if (log.isDebugEnabled()) log.debug("commit");
+	    
 		try
 		{
-			if (log.isDebugEnabled()) log.debug("commit");
 			connection.commit();
 		}
 		catch (SQLException e)
@@ -122,9 +125,10 @@ public class Transaction
 	 */
 	public void rollback() throws SormulaException
 	{
+	    if (log.isDebugEnabled()) log.debug("rollback");
+	    
 		try
 		{
-			if (log.isDebugEnabled()) log.debug("rollback");
 			connection.commit();
 		}
 		catch (SQLException e)

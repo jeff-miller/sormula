@@ -20,13 +20,12 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.Collection;
 
-import org.sormula.SormulaException;
 import org.sormula.Table;
-import org.sormula.Transaction;
 import org.sormula.active.ActiveDatabase;
 import org.sormula.active.ActiveException;
 import org.sormula.active.ActiveRecord;
 import org.sormula.active.ActiveTable;
+import org.sormula.active.ActiveTransaction;
 import org.sormula.log.ClassLogger;
 
 
@@ -47,8 +46,8 @@ public abstract class ActiveOperation<R extends ActiveRecord, T>
     ActiveTable<R> activeTable;
     String exceptionMessage;
     ActiveDatabase activeDatabase;
+    ActiveTransaction activeTransaction;
     OperationDatabase operationDatabase;
-    Transaction transaction;
     Table<R> table;
     
     
@@ -82,19 +81,64 @@ public abstract class ActiveOperation<R extends ActiveRecord, T>
     public T execute() throws ActiveException
     {
         T result;
+        activeTransaction = activeDatabase.getActiveTransaction();
+        boolean localTransaction = false;
         
         try
         {
-            begin();
-            result = operate();
-            commit();
+            if (activeTransaction == null)
+            {
+                // no active transaction, create one (creates operation transaction and operation db)
+                activeTransaction = new ActiveTransaction(activeDatabase);
+                localTransaction = true;
+            }
+             
+            // init based upon activeTransaction
+            operationDatabase = activeTransaction.getOperationTransaction().getOperationDatabase();
+            table = operationDatabase.getTable(activeTable.getRecordClass());
+                
+            if (localTransaction)
+            {
+                // transaction exists only for this method
+                if (operationDatabase.getConnection().getAutoCommit())
+                {
+                    // don't use transaction since autocommit is off
+                    if (log.isDebugEnabled()) log.debug("execute with no transaction");
+                    result = operate();
+                }
+                else
+                {
+                    // use transaction since autocommit is on
+                    if (log.isDebugEnabled()) log.debug("execute with auto transaction");
+                    try
+                    {
+                        activeTransaction.begin();
+                        result = operate();
+                        activeTransaction.commit();
+                    }
+                    catch (Exception e)
+                    {
+                        activeTransaction.rollback();
+                        throw e;
+                    }
+                }
+            }
+            else
+            {
+                // a transaction is already active
+                if (log.isDebugEnabled()) log.debug("execute using existing transaction");
+                result = operate();
+            }
         }
         catch (Exception e)
         {
-            rollback();
             throw new ActiveException(exceptionMessage, e);
         }
-        
+        finally
+        {
+            if (localTransaction) close(); // avoid connection leak
+        }
+    
         return result;
     }
 
@@ -120,83 +164,6 @@ public abstract class ActiveOperation<R extends ActiveRecord, T>
     }
 
     
-    protected void begin() throws ActiveException
-    {
-        if (log.isDebugEnabled()) log.debug("ActiveOperation.begin()");
-        try
-        {
-            operationDatabase = new OperationDatabase(activeDatabase);
-            table = operationDatabase.getTable(activeTable.getRecordClass());
-            
-            if (!operationDatabase.getConnection().getAutoCommit())
-            {
-                // use transaction for connections that don't have autocommit
-                if (log.isDebugEnabled()) log.debug("ActiveOperation start transaction");
-                transaction = operationDatabase.getTransaction();
-                transaction.begin();
-            }
-        }
-        catch (SormulaException e)
-        {
-            close(); // avoid connection leak
-            throw new ActiveException("error starting active record transaction", e);
-        }
-        catch (Exception e)
-        {
-            throw new ActiveException("error creating operation database", e);
-        }
-    }
-    
-    
-    protected void commit() throws ActiveException
-    {
-        if (log.isDebugEnabled()) log.debug("ActiveOperation.commit()");
-        
-        try
-        {
-            if (transaction != null)
-            {
-                if (log.isDebugEnabled()) log.debug("ActiveOperation commit transaction");
-                transaction.commit();
-                transaction = null;
-                if (operationDatabase.isTimings()) operationDatabase.logTimings();
-            }
-        }
-        catch (SormulaException e)
-        {
-            throw new ActiveException("error committing transaction", e);
-        }
-        finally
-        {
-            close();
-        }
-    }
-
-    
-    protected void rollback() throws ActiveException
-    {
-        if (log.isDebugEnabled()) log.debug("ActiveOperation.rollback()");
-        
-        try
-        {
-            if (transaction != null)
-            {
-                if (log.isDebugEnabled()) log.debug("ActiveOperation rollback transaction");
-                transaction.rollback();
-                transaction = null;
-            }
-        }
-        catch (SormulaException e)
-        {
-            throw new ActiveException("error rolling back transaction", e);
-        }
-        finally
-        {
-            close();
-        }
-    }
-    
-    
     protected void close() throws ActiveException
     {
         table = null;
@@ -205,7 +172,8 @@ public abstract class ActiveOperation<R extends ActiveRecord, T>
         {
             try
             {
-                operationDatabase.getConnection().close();
+                Connection connection = operationDatabase.getConnection();
+                if (connection != null) connection.close();
             }
             catch (SQLException e)
             {

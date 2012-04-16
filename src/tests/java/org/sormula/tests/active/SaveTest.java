@@ -96,6 +96,7 @@ public class SaveTest extends ActiveDatabaseTest<SormulaTestAR>
         record.setType(8);
         record.setDescription("Save one AR 4");
         assert record.save() == 1 : record.getDescription() + " failed";
+        ActiveDatabase.setDefault(null); // reset
     }
     
     

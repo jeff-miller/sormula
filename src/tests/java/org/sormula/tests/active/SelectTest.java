@@ -162,6 +162,8 @@ public class SelectTest extends ActiveDatabaseTest<SormulaTestAR>
         // select one (more than one record is possible, test first one found)
         SormulaTestAR rActual = SormulaTestAR.table.selectWhere("byType", rExpected.getType());
         assert rActual != null && rActual.getType() == rExpected.getType() : rActual.getId() + " row is incorrect type for where condition";
+        
+        ActiveDatabase.setDefault(null); // reset
     }
 
     

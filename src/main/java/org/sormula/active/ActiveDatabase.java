@@ -28,7 +28,8 @@ import org.sormula.translator.NameTranslator;
 
 /**
  * A lightweight class for defining the {@link DataSource} to be used by {@link ActiveRecord}
- * and related classes.
+ * and related classes. This class may be serialized but the active transaction will not
+ * be serialized.
  * 
  * @author Jeff Miller
  * @since 1.7
@@ -45,7 +46,10 @@ public class ActiveDatabase implements Serializable
     boolean timings;
     Class<? extends NameTranslator> nameTranslatorClass;
     
-    
+    // note: must be transient since can't serialize jdbc connection
+    transient ActiveTransaction activeTransaction;
+
+
     /**
      * Gets the active database to use when none is specified. Only one default active database
      * may be used per class loader. {@link ActiveTable#ActiveTable(Class)} and an {@link ActiveRecord}
@@ -114,6 +118,38 @@ public class ActiveDatabase implements Serializable
     public String getSchema()
     {
         return schema;
+    }
+    
+    
+    /**
+     * Gets the transaction in use by this active database.
+     * 
+     * @return transaction or null if no transaction is in use
+     * @since 1.7.1
+     */
+    public ActiveTransaction getActiveTransaction()
+    {
+        return activeTransaction;
+    }
+
+    
+    /**
+     * Sets the transaction in use. Set by {@link ActiveTransaction#begin()} when a transaction starts. Set
+     * to null by {@link ActiveTransaction#close()} and {@link ActiveTransaction#rollback()} when the transaction
+     * is over.
+     * <p>
+     * Only one active transaction may be in use at one time by the same instance of ActiveDatabase. Create an
+     * instance of ActiveDatabse for each possible active transaction that may be in use at the same time.
+     * 
+     * @param activeTransaction active transaction to use
+     * @throws ActiveException if a transaction is already in use
+     * @since 1.7.1
+     */
+    public void setActiveTransaction(ActiveTransaction activeTransaction) throws ActiveException
+    {
+        if (activeTransaction != null && this.activeTransaction != null) 
+            throw new ActiveException("an active transaction has already begun for this active database");
+        this.activeTransaction = activeTransaction;
     }
     
 

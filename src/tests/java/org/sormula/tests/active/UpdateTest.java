@@ -18,7 +18,10 @@ package org.sormula.tests.active;
 
 import java.util.Set;
 
+import org.sormula.active.ActiveDatabase;
+import org.sormula.active.ActiveException;
 import org.sormula.active.ActiveTable;
+import org.sormula.active.ActiveTransaction;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
@@ -50,46 +53,78 @@ public class UpdateTest extends ActiveDatabaseTest<SormulaTestAR>
     @Test
     public void updateOneAR() 
     {
-        ActiveTable<SormulaTestAR> table = getActiveTable();
-        selectTestRows(); // must perform each time since other tests are destructive
-        SormulaTestAR record = getRandom();
+        // test with one transaction for entire test
+        ActiveTransaction transaction = new ActiveTransaction(activeDatabase);
         
-        // new values
-        record.setType(99);
-        record.setDescription("AR update by primary key");
-        
-        assert record.update() == 1 : record.getDescription() + " failed";
-        
-        // read record to confirm that updates applied
-        SormulaTestAR record2 = table.select(record.getId());
-        assert record2 != null && record.getType() == record2.getType() && record.getDescription().equals(record2.getDescription()) :
-            record.getDescription() + " updated row not same";
+        try
+        {
+            transaction.begin();
+            
+            ActiveTable<SormulaTestAR> table = getActiveTable();
+            selectTestRows(); // must perform each time since other tests are destructive
+            SormulaTestAR record = getRandom();
+            
+            // new values
+            record.setType(99);
+            record.setDescription("AR update by primary key");
+            
+            assert record.update() == 1 : record.getDescription() + " failed";
+            
+            // read record to confirm that updates applied
+            SormulaTestAR record2 = table.select(record.getId());
+            assert record2 != null && record.getType() == record2.getType() && record.getDescription().equals(record2.getDescription()) :
+                record.getDescription() + " updated row not same";
+            
+            transaction.commit();
+        }
+        catch (ActiveException e)
+        {
+            transaction.rollback();
+        }
     }
     
 
     @Test
     public void updateCollectionAR() 
     {
-    	selectTestRows(); // must perform each time since other tests are destructive
-    	
-    	// choose random set
-        Set<SormulaTestAR> set = getRandomSet();
+        // test transaction with default active database
+        ActiveDatabase.setDefault(getActiveDatabase());
+        ActiveTransaction transaction = new ActiveTransaction();
         
-        // modify to update
-        for (SormulaTestAR r: set)
+        try
         {
-            r.setType(999);
+            transaction.begin();
+        	selectTestRows(); // must perform each time since other tests are destructive
+        	
+        	// choose random set
+            Set<SormulaTestAR> set = getRandomSet();
+            
+            // modify to update
+            for (SormulaTestAR r: set)
+            {
+                r.setType(999);
+            }
+    
+            // update
+            ActiveTable<SormulaTestAR> table = getActiveTable();
+            assert table.updateAll(set) == set.size() : "update count not same as collection size";
+            
+            // confirm each row was updated
+            for (SormulaTestAR r: set)
+            {
+                SormulaTestAR r2 = table.select(r.getId());
+                assert r2 != null && r2.getType() == r.getType() : "update collection failed";
+            }
+            
+            transaction.commit();
         }
-
-        // update
-        ActiveTable<SormulaTestAR> table = getActiveTable();
-        assert table.updateAll(set) == set.size() : "update count not same as collection size";
-        
-        // confirm each row was updated
-        for (SormulaTestAR r: set)
+        catch (ActiveException e)
         {
-            SormulaTestAR r2 = table.select(r.getId());
-            assert r2 != null && r2.getType() == r.getType() : "update collection failed";
+            transaction.rollback();
+        }
+        finally
+        {
+            ActiveDatabase.setDefault(null); // reset
         }
     }
 }

@@ -10,7 +10,9 @@ import java.util.logging.Logger;
 import javax.sql.DataSource;
 
 import org.sormula.active.ActiveDatabase;
+import org.sormula.active.ActiveException;
 import org.sormula.active.ActiveTable;
+import org.sormula.active.ActiveTransaction;
 
 
 /**
@@ -58,13 +60,27 @@ public class ActiveRecordExample
     public void removeInventory(int partNumber, int delta) 
     {
         System.out.println("removeInventory");
-    	
-        // get part by primary key
-        Inventory inventory = Inventory.table.select(partNumber);
         
-        // update
-        inventory.setQuantity(inventory.getQuantity() - delta);
-        inventory.update();
+        // perform within transaction for the default active database
+        ActiveTransaction transaction = new ActiveTransaction();
+
+        try
+        {
+            transaction.begin();
+            
+            // get part by primary key
+            Inventory inventory = Inventory.table.select(partNumber);
+            
+            // update
+            inventory.setQuantity(inventory.getQuantity() - delta);
+            inventory.update();
+            transaction.commit();
+        }
+        catch (ActiveException e)
+        {
+            transaction.rollback();
+            e.printStackTrace();
+        }
     }    
     
     
@@ -77,17 +93,32 @@ public class ActiveRecordExample
     {
         System.out.println("clearInventory");
     	
-        // select for a specific manufacturer ("manf" is name of where annotation in Inventory.java)
-        List<Inventory> list = Inventory.table.selectAllWhere("manf", manufacturerId);
+        // perform within transaction for an active database
+        ActiveTransaction transaction = new ActiveTransaction(new ActiveDatabase(dataSource));
         
-        // for all inventory of manufacturer
-        for (Inventory inventory: list)
+        try
         {
-            inventory.setQuantity(0);
+            transaction.begin();
+            
+            // select for a specific manufacturer ("manf" is name of where annotation in Inventory.java)
+            List<Inventory> list = Inventory.table.selectAllWhere("manf", manufacturerId);
+            
+            // for all inventory of manufacturer
+            for (Inventory inventory: list)
+            {
+                inventory.setQuantity(0);
+            }
+            
+            // update
+            Inventory.table.updateAll(list);
+            
+            transaction.commit();
         }
-        
-        // update
-        Inventory.table.updateAll(list);
+        catch (ActiveException e)
+        {
+            transaction.rollback();
+            e.printStackTrace();
+        }
     }    
     
     

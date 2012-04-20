@@ -15,6 +15,7 @@
 		<antcall target="CascadeUpdate"/>
 		<antcall target="ComplexDelete"/>
 		<antcall target="ComplexInsert"/>
+		<antcall target="IdentityInsert"/>
 		<antcall target="ComplexSelect"/>
 		<antcall target="ComplexUpdate"/>
 		<antcall target="NameDelete"/>
@@ -23,9 +24,6 @@
 		<antcall target="NameUpdate"/>
 		<antcall target="LocalDateExample"/>
 	</target>
-    <target name="BasicInsertZ" description="Runs example">
-        <antcall target="run-example"><param name="class" value="com.something.test.BasicInsertZ"/></antcall>
-    </target>
     <target name="BasicInsert" description="Runs example">
         <antcall target="run-example"><param name="class" value="org.sormula.examples.basic.BasicInsert"/></antcall>
     </target>
@@ -76,6 +74,10 @@
     </target>
     <target name="CascadeDelete" description="Runs example">
         <antcall target="run-example"><param name="class" value="org.sormula.examples.cascade.CascadeDelete"/></antcall>
+    </target>
+	
+    <target name="IdentityInsert" description="Runs example">
+        <antcall target="run-example"><param name="class" value="org.sormula.examples.identity.IdentityInsert"/></antcall>
     </target>
 
     <target name="BlobExample" description="Runs example">

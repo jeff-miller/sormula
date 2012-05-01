@@ -18,7 +18,9 @@ package org.sormula.tests.translator;
 
 import org.sormula.annotation.Column;
 import org.sormula.annotation.Row;
-import org.sormula.translator.StandardNameTranslator;
+import org.sormula.translator.ExpandedNameTranslator;
+import org.sormula.translator.Sql92KeywordNameTranslator;
+import org.sormula.translator.UpperCaseNameTranslator;
 import org.sormula.translator.standard.BooleanYNColumnTranslator;
 
 
@@ -26,12 +28,13 @@ import org.sormula.translator.standard.BooleanYNColumnTranslator;
  * Row class for {@link NameTranslatorTest}.
  * @author Jeff Miller
  */
-@Row(nameTranslator=StandardNameTranslator.class)
+@Row(nameTranslators={ExpandedNameTranslator.class, Sql92KeywordNameTranslator.class, UpperCaseNameTranslator.class})
 public class SormulaTest2
 {
     double testDouble;
     java.util.Date testDate;
-    String testString;
+    
+    String between; // tests keyword translator
     
     @Column(translator=BooleanYNColumnTranslator.class)
     boolean testBooleanYesNo;
@@ -71,12 +74,12 @@ public class SormulaTest2
     {
         this.testDate = testDate;
     }
-    public String getTestString()
+    public String getBetween()
     {
-        return testString;
+        return between;
     }
-    public void setTestString(String testString)
+    public void setBetween(String between)
     {
-        this.testString = testString;
+        this.between = between;
     }
 }

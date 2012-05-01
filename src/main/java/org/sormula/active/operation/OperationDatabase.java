@@ -24,6 +24,7 @@ import org.sormula.Table;
 import org.sormula.active.ActiveDatabase;
 import org.sormula.active.ActiveRecord;
 import org.sormula.annotation.ExplicitTypeAnnotationReader;
+import org.sormula.translator.NameTranslator;
 
 
 /**
@@ -56,7 +57,13 @@ public class OperationDatabase extends Database
         
         // initialized from active database
         setReadOnly(activeDatabase.isReadOnly());
-        setNameTranslatorClass(activeDatabase.getNameTranslatorClass());
+        
+        // copy all name translators 
+        for (Class<? extends NameTranslator> ntc: activeDatabase.getNameTranslatorClasses())
+        {
+            addNameTranslatorClass(ntc);
+        }
+        
         setTimings(activeDatabase.isTimings());
     }
     

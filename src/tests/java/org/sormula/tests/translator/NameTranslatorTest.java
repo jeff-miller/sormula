@@ -21,15 +21,18 @@ import java.util.List;
 import org.sormula.SormulaException;
 import org.sormula.annotation.Row;
 import org.sormula.tests.DatabaseTest;
+import org.sormula.translator.Sql92KeywordNameTranslator;
 import org.sormula.translator.StandardNameTranslator;
+import org.sormula.translator.UpperCaseNameTranslator;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 
 /**
- * Tests {@link StandardNameTranslator} for table and column names.  
- * {@link SormulaTest2} has name translator defined with {@link Row} annotation.
+ * Tests {@link StandardNameTranslator}, {@link Sql92KeywordNameTranslator}, and 
+ * {@link UpperCaseNameTranslator} for table and column names.  
+ * {@link SormulaTest2} has translators defined with {@link Row} annotation.
  * 
  * @author Jeff Miller
  */
@@ -49,7 +52,7 @@ public class NameTranslatorTest extends DatabaseTest<SormulaTest2>
             " test_double DECIMAL(8,3)," +
             " altname INTEGER," +
             " test_date TIMESTAMP," +
-            " test_string VARCHAR(10)" +
+            " \"BETWEEN\" VARCHAR(10)" + // tests translators when column name is sql keyword 
             ")"
         );
     }
@@ -70,7 +73,7 @@ public class NameTranslatorTest extends DatabaseTest<SormulaTest2>
         inserted.setTestBooleanYesNo(true);
         inserted.setTestDouble(12345.678);
         inserted.setTestInteger(1234567890);
-        inserted.setTestString("abcdef");
+        inserted.setBetween("abcdef");
         inserted.setTestDate(new java.util.Date(System.currentTimeMillis()));
         
         begin();
@@ -91,7 +94,7 @@ public class NameTranslatorTest extends DatabaseTest<SormulaTest2>
         assert inserted.isTestBooleanYesNo() == selected.isTestBooleanYesNo() : "testBooleanYN" + message;
         assert inserted.getTestInteger() == selected.getTestInteger() : "testInteger" + message;
         assert Math.abs(inserted.getTestDouble() - selected.getTestDouble()) < 0.001 : "testDouble" + message;
-        assert inserted.getTestString().equals(selected.getTestString()) : "testString" + message;
+        assert inserted.getBetween().equals(selected.getBetween()) : "between" + message;
         assert inserted.getTestDate().equals(selected.getTestDate()) : "testDate" + message;
         commit();
     }

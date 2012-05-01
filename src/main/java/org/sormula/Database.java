@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.sormula.annotation.Column;
@@ -73,7 +74,7 @@ public class Database implements TypeTranslatorMap, AutoCloseable
     String schema;
     Map<String, Table<?>> tableMap; // key is row class canonical name
     Transaction transaction;
-    Class<? extends NameTranslator> nameTranslatorClass;
+    List<Class<? extends NameTranslator>> nameTranslatorClasses;
     Map<String, OperationTime> operationTimeMap;
     OperationTime totalOperationTime;
     boolean timings;
@@ -107,6 +108,7 @@ public class Database implements TypeTranslatorMap, AutoCloseable
         this.schema = schema;
         tableMap = new HashMap<>();
         transaction = new Transaction(connection);
+        nameTranslatorClasses = new ArrayList<>(4);
         operationTimeMap = new HashMap<>();
         totalOperationTime = new OperationTime("Database totals");
         totalOperationTime.setDescription("All operations for database");
@@ -192,7 +194,7 @@ public class Database implements TypeTranslatorMap, AutoCloseable
         schema = null;
         tableMap = null;
         transaction = null;
-        nameTranslatorClass = null;
+        nameTranslatorClasses = null;
         operationTimeMap = null;
         totalOperationTime = null;
         typeTranslatorMap = null;
@@ -316,28 +318,74 @@ public class Database implements TypeTranslatorMap, AutoCloseable
 
     /**
      * Gets the default name translator class for tables when none is specified.
+     * Use {@link #getNameTranslatorClasses()} instead this method.
      * 
-     * @return default name translator class
+     * @return default name translator class; null if none
      */
+    @Deprecated
 	public Class<? extends NameTranslator> getNameTranslatorClass() 
 	{
-		return nameTranslatorClass;
+        if (nameTranslatorClasses.size() > 0) return nameTranslatorClasses.get(0);
+        else return null;
 	}
 
 
 	/**
 	 * Sets the name translator class to use for a table if no translator is specified by
 	 * {@link Column#translator()}. A new instance is created for each table.
+	 * Use {@link #addNameTranslatorClass(Class)} instead of this method.
 	 * 
-	 * @param nameTranslatorClass default name translator class
+	 * @param nameTranslatorClass default name translator class; null for none
 	 */
+    @Deprecated
 	public void setNameTranslatorClass(Class<? extends NameTranslator> nameTranslatorClass) 
 	{
-		this.nameTranslatorClass = nameTranslatorClass;
+        // replace all with new one
+		nameTranslatorClasses.clear();
+		addNameTranslatorClass(nameTranslatorClass);
 	}
 	
 	
+    /**
+     * Gets the default name translator classes for tables when none is specified for the table.
+     * 
+     * @return list of default name translator class; empty list if none
+     * @since 1.8
+     * @see Table#translateName(String)
+     */
+	public List<Class<? extends NameTranslator>> getNameTranslatorClasses()
+    {
+        return nameTranslatorClasses;
+    }
+
+
 	/**
+	 * Adds a default name translator class.
+	 * 
+	 * @param nameTranslatorClass class to use to translate table/column names
+	 * @since 1.8
+	 * @see Table#translateName(String)
+	 */
+    public void addNameTranslatorClass(Class<? extends NameTranslator> nameTranslatorClass)
+    {
+        nameTranslatorClasses.add(nameTranslatorClass);
+    }
+
+
+    /**
+     * Removes a name translator class.
+     * 
+     * @param nameTranslatorClass class to remove
+     * @since 1.8
+     * @see Table#translateName(String)
+     */
+    public void removeNameTranslatorClass(Class<? extends NameTranslator> nameTranslatorClass)
+    {
+        nameTranslatorClasses.remove(nameTranslatorClass);
+    }
+
+
+    /**
 	 * Gets status of timings.
 	 * 
 	 * @return true if operations are to record execution times

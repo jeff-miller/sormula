@@ -38,9 +38,9 @@ import java.lang.reflect.Modifier;
 
 import org.sormula.Table;
 import org.sormula.annotation.Column;
+import org.sormula.annotation.ImplicitType;
 import org.sormula.annotation.Row;
 import org.sormula.annotation.Transient;
-import org.sormula.annotation.ImplicitType;
 import org.sormula.annotation.UnusedColumn;
 import org.sormula.annotation.UnusedColumns;
 import org.sormula.annotation.cascade.Cascade;
@@ -63,7 +63,6 @@ public class RowTranslator<R> extends ColumnsTranslator<R>
 {
     private static final ClassLogger log = new ClassLogger();
     Table<R> table;
-    NameTranslator nameTranslator;
     PrimaryKeyWhereTranslator<R> primaryKeyWhereTranslator;
     String unusedColumnInsertNamesSql;
     String unusedColumnInsertValuesSql;
@@ -82,7 +81,6 @@ public class RowTranslator<R> extends ColumnsTranslator<R>
     {
         super(table.getRowClass());
         this.table = table;
-        nameTranslator = table.getNameTranslator();
         initColumnTranslators();
         initUnusedColumnSql(rowClass);
         primaryKeyWhereTranslator = new PrimaryKeyWhereTranslator<>(this);
@@ -173,10 +171,10 @@ public class RowTranslator<R> extends ColumnsTranslator<R>
                     columnTranslatorClass = (Class<? extends ColumnTranslator>)StandardColumnTranslator.class;
                 }
                 
-                if (columnName.equals(""))
+                if (columnName.length() == 0)
                 {
                     // column name not supplied or no annotation, default is field name
-                    columnName = nameTranslator.translate(f.getName(), rowClass);
+                    columnName = table.translateName(f.getName());
                 }
                 
                 // create column translator
@@ -292,14 +290,16 @@ public class RowTranslator<R> extends ColumnsTranslator<R>
     
     /**
      * Gets translator defined by {@link Row#nameTranslator()}.
+     * Use {@link Table#getNameTranslators()} instead of this method.
      * 
      * @return translator for converting java names to sql names
      */
+    @Deprecated
     public NameTranslator getNameTranslator()
     {
-        return nameTranslator;
+        return table.getNameTranslator();
     }
-
+    
 
     /**
      * Creates new instance of row object using zero-argument constructor. New instances

@@ -18,7 +18,7 @@ package org.sormula.translator;
 
 
 /**
- * Converts Java class or member name to the corresponding SQL table or column name.
+ * Converts a name to the corresponding SQL table or column name.
  * For example, class name of "UserProfile" may correspond to table name of "user_profile".
  * 
  * @since 1.0
@@ -27,11 +27,11 @@ package org.sormula.translator;
 public interface NameTranslator
 {
     /**
-     * Provides SQL name for corresponding Java class or member name
+     * Provides SQL name for corresponding name
      * 
-     * @param javaName Java class or member name
+     * @param name name to convert (for example, Java class or member name)
      * @param rowClass class for row objects (not parameterized so that {@link NameTranslator} may be used in annotations)
-     * @return SQL name that corresponds to Java name
+     * @return SQL name that is derived from name
      */
-    public String translate(String javaName, Class rowClass);
+    public String translate(String name, Class rowClass);
 }

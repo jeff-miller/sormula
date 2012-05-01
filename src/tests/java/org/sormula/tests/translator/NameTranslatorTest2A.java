@@ -21,15 +21,17 @@ import java.util.List;
 import org.sormula.Database;
 import org.sormula.SormulaException;
 import org.sormula.tests.DatabaseTest;
-import org.sormula.translator.StandardNameTranslator;
+import org.sormula.translator.ExpandedNameTranslator;
+import org.sormula.translator.LowerCaseNameTranslator;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 
 /**
- * Tests {@link StandardNameTranslator} for table and column names. StandardNameTranslator
- * is defined as default in {@link Database} instead of at row class as in {@link NameTranslatorTest}.
+ * Tests {@link ExpandedNameTranslator} and {@link LowerCaseNameTranslator} for table and column names. 
+ * The translators are added as default in {@link Database} instead of at row class as in 
+ * {@link NameTranslatorTest}.
  * 
  * @author Jeff Miller
  */
@@ -45,7 +47,8 @@ public class NameTranslatorTest2A extends DatabaseTest<SormulaTest2A>
         openDatabase();
         
         // name translator specified here instead of in row annotation
-        getDatabase().setNameTranslatorClass(StandardNameTranslator.class);
+        getDatabase().addNameTranslatorClass(ExpandedNameTranslator.class);
+        getDatabase().addNameTranslatorClass(LowerCaseNameTranslator.class);
         
         createTable(SormulaTest2A.class, 
             "CREATE TABLE " + getSchemaPrefix() + "sormula_test2_A (" +

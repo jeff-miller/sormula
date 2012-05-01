@@ -18,33 +18,27 @@ package org.sormula.translator;
 
 
 /**
- * Converts Java class or member name that is in mixed case to a SQL table or column name that
- * is case insensitive. For example:
+ * Converts name from CamelCase (mixed case) to a SQL name that is case insensitive with
+ * a delimiter between each word. For example:
  * <ul>
  * <li>ProductOrder to product_order</li> 
  * <li>orderStatus to order_status</li>
  * <li>WidgetInvoiceHistory to widget_invoice_history</li>
  * </ul>
  * 
- * This class has been replaced by {@link ExpandedNameTranslator}, {@link UpperCaseNameTranslator},
- * and {@link LowerCaseNameTranslator}.
- * 
- * @since 1.0
+ * @since 1.8
  * @author Jeff Miller
  */
-@Deprecated
-public class StandardNameTranslator implements NameTranslator
+public class ExpandedNameTranslator implements NameTranslator
 {
-    boolean upperCase;
     String wordDelimiter;
     
     
     /**
-     * Constructs for defaults of uppercase output is false and word delimiter of "_".
+     * Constructs for a default word delimiter of "_".
      */
-    public StandardNameTranslator()
+    public ExpandedNameTranslator()
     {
-        upperCase = false;
         wordDelimiter = "_";
     }
     
@@ -52,13 +46,13 @@ public class StandardNameTranslator implements NameTranslator
     /**
      * {@inheritDoc}
      */
-    public String translate(String javaName, Class rowClass)
+    public String translate(String camelCaseName, Class rowClass)
     {
-        StringBuilder result = new StringBuilder(javaName.length() + 20);
+        StringBuilder result = new StringBuilder(camelCaseName.length() + 20);
         
-        for (int i = 0; i < javaName.length(); ++i)
+        for (int i = 0; i < camelCaseName.length(); ++i)
         {
-            char c = javaName.charAt(i);
+            char c = camelCaseName.charAt(i);
             
             if (Character.isUpperCase(c) && i > 0)
             {
@@ -66,41 +60,10 @@ public class StandardNameTranslator implements NameTranslator
                 result.append(wordDelimiter);
             }
             
-            if (isUpperCase())
-            {
-                // result is all upper
-                result.append(Character.toUpperCase(c));
-            }
-            else
-            {
-                // result is all lower
-                result.append(Character.toLowerCase(c));
-            }
+            result.append(c);
         }
         
         return result.toString();
-    }
-    
-
-    /**
-     * Reports case of {@link #translate(String, Class)}.
-     * 
-     * @return true if sql result is all uppercase; default is false
-     */
-    public boolean isUpperCase()
-    {
-        return upperCase;
-    }
-    
-    
-    /**
-     * Sets desired case of {@link #translate(String, Class)}.
-     * 
-     * @param upperCase true for sql names in uppercase; false for all lowercase sql names
-     */
-    public void setUpperCase(boolean upperCase)
-    {
-        this.upperCase = upperCase;
     }
     
     

@@ -49,8 +49,19 @@ public @interface Row
     
     /**
      * Class for providing sql names in place of class and field names.
+     * Use {@link #nameTranslators()} instead of this method.
      * 
      * @return translator for mapping java names to sql names
      */
+    @Deprecated
     Class<? extends NameTranslator> nameTranslator() default NoNameTranslator.class;
+    
+    
+    /**
+     * Classes for providing sql names in place of class and field names. Each translator
+     * is applied in the order provided.
+     * 
+     * @return translators for mapping java names to sql names
+     */
+    Class<? extends NameTranslator>[] nameTranslators() default {};
 }

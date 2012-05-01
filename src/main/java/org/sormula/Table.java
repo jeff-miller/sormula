@@ -16,6 +16,7 @@
  */
 package org.sormula;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
@@ -99,7 +100,9 @@ public class Table<R> implements TypeTranslatorMap
     Class<R> rowClass;
     String tableName;
     RowTranslator<R> rowTranslator;
-    NameTranslator nameTranslator;
+    @Deprecated
+    NoNameTranslator noNameTranslator = new NoNameTranslator(); // remove when NoNameTranslator is removed
+    List<? extends NameTranslator> nameTranslators;
     Map<String, TypeTranslator<?>> typeTranslatorMap; // key is row class canonical name
     
     
@@ -132,60 +135,97 @@ public class Table<R> implements TypeTranslatorMap
         Row rowAnnotation = getClass().getAnnotation(Row.class); // look in table subclass first
         if (rowAnnotation == null) rowAnnotation = rowClass.getAnnotation(Row.class); // look in row class if none for table subclass
         
-        Class<? extends NameTranslator> nameTranslatorClass = null;
-        
-        if (rowAnnotation != null)
-        {
-            // row annotation was available
-            nameTranslatorClass = rowAnnotation.nameTranslator();
-            tableName = rowAnnotation.tableName();
-        }
-        else
-        {
-        	// no row annotation
-        	nameTranslatorClass = NoNameTranslator.class;
-        }
-        
-        // default name translator check
-        if (nameTranslatorClass.getName().equals(NoNameTranslator.class.getName()))
-        {
-        	// name translator is NoNameTranslator which does nothing
-        	Class<? extends NameTranslator> defaultNameTranslatorClass = database.getNameTranslatorClass();
-        	
-        	if (defaultNameTranslatorClass != null)
-        	{
-        		// default is available, use it
-        		nameTranslatorClass = defaultNameTranslatorClass;
-        	}
-        }
-        
-        // instantiate name translator
-        try
-        {
-            nameTranslator = nameTranslatorClass.newInstance();
-        }
-        catch (Exception e)
-        {
-            log.error("error creating name translator", e);
-            nameTranslator = new NoNameTranslator();
-        }
-        
-        if (tableName == null || tableName.length() == 0) 
-        {
-            // no table name is provided, get table name from class name
-            tableName = nameTranslator.translate(rowClass.getSimpleName(), rowClass);
-        }
-
+        nameTranslators = initNameTranslators(rowAnnotation);
         rowTranslator = initRowTranslator();
+        tableName = initTableName(rowAnnotation);
         
         if (log.isDebugEnabled())
         {
-            log.debug("nameTranslator=" + nameTranslator.getClass().getCanonicalName());
+            StringBuilder sb = new StringBuilder(nameTranslators.size() * 30);
+            for (NameTranslator nt: nameTranslators)
+            {
+                sb.append(nt.getClass().getCanonicalName());
+                sb.append(" ");
+            }
+            
+            log.debug("nameTranslators=" + sb);
             log.debug("table name = " + tableName);
             log.debug("number of columns=" + rowTranslator.getColumnTranslatorList().size());
         }
     }
 
+    
+    @SuppressWarnings("unchecked")
+    protected List<? extends NameTranslator> initNameTranslators(Row rowAnnotation) 
+    {
+        Class<? extends NameTranslator>[] nameTranslatorClasses;
+        
+        if (rowAnnotation != null)
+        {
+            // row annotation is available
+            // remove if statement when deprecated is removed
+            if (rowAnnotation.nameTranslator().getName().equals(NoNameTranslator.class.getName()))
+            {
+                // deprecated use is default, use replacement method
+                nameTranslatorClasses = rowAnnotation.nameTranslators(); // keep this when deprecated is removed
+            }
+            else
+            {
+                // deprecated method defines something other than default, use it
+                // remove this block when deprecated is removed
+                nameTranslatorClasses = new Class[1];
+                nameTranslatorClasses[0] = rowAnnotation.nameTranslator();
+            }
+        }
+        else
+        {
+            // no row annotation so no name translators (empty array)
+            nameTranslatorClasses = new Class[0]; 
+        }
+        
+        // default name translator check
+        if (nameTranslatorClasses.length == 0) 
+        {
+            // no name translators for row, use database translators as default
+            nameTranslatorClasses = database.getNameTranslatorClasses().toArray(nameTranslatorClasses);
+        }
+        
+        // instantiate name translators
+        List<NameTranslator> translators = new ArrayList<NameTranslator>(nameTranslatorClasses.length);
+        for (Class<? extends NameTranslator> ntc: nameTranslatorClasses)
+        {
+            try
+            {
+                translators.add(ntc.newInstance());
+            }
+            catch (Exception e)
+            {
+                log.error("error creating name translator", e);
+            }
+        }
+        
+        return translators;
+    }
+    
+    
+    protected String initTableName(Row rowAnnotation)
+    {
+        String name = null;
+        
+        if (rowAnnotation != null)
+        {
+            name = rowAnnotation.tableName();
+        }
+        
+        if (name == null || name.length() == 0) 
+        {
+            // no table name is provided, get table name from class name
+            name = translateName(rowClass.getSimpleName());
+        }
+        
+        return name;
+    }
+    
     
     protected RowTranslator<R> initRowTranslator() throws TranslatorException
     {
@@ -254,14 +294,52 @@ public class Table<R> implements TypeTranslatorMap
     
     /**
      * Gets translator defined by {@link Row#nameTranslator()}.
+     * Use {@link #getNameTranslators()} instead of this method.
      * 
      * @return translator for converting java names to sql table and column names
      */
+    @Deprecated
     public NameTranslator getNameTranslator()
     {
-        return nameTranslator;
+        if (nameTranslators.size() > 0) return nameTranslators.get(0);
+        else return noNameTranslator; // to be backward compatible can't return null
     }
-    
+
+
+    /**
+     * Gets the name translators used by {@link #translateName(String)}.
+     * 
+     * @return list of name translators; empty list if none
+     * @since 1.8
+     */
+    public List<? extends NameTranslator> getNameTranslators()
+    {
+        return nameTranslators;
+    }
+
+
+    /**
+     * Converts a Java class or field name to corresponding SQL name. Invokes 
+     * {@link NameTranslator#translate(String, Class)} for all name translators in
+     * the order that they are defined.
+     * 
+     * @return SQL name that corresponds to Java class or field name
+     * @since 1.8
+     * @see Row#nameTranslators()
+     * @see Database#addNameTranslatorClass(Class)
+     */
+    public String translateName(String javaName)
+    {
+        String translatedName = javaName;
+        
+        for (NameTranslator nt: nameTranslators)
+        {
+            translatedName = nt.translate(translatedName, rowClass);
+        }
+        
+        return translatedName;
+    }
+
 
     /**
      * Gets the row translator for converting row values to/from sql parameters.

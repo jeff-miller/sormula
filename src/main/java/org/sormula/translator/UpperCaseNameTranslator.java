@@ -16,29 +16,20 @@
  */
 package org.sormula.translator;
 
-import org.sormula.Database;
-import org.sormula.annotation.Row;
-
 
 /**
- * Default name translator that simply returns java name for all name translations. Used
- * as default for {@link Row#nameTranslator()} annotation. 
- * <p>
- * Use {@link Row#nameTranslators()} with an empty array of translators for no name translation.
- * Use this class to force no name translator because an empty array of translators 
- * specified with {@link Row#nameTranslators()} will cause sormula to use
- * {@link Database#getNameTranslatorClasses()}.
- *
- * @since 1.0
+ * Converts name to uppercase using {@link String#toUpperCase()}.
+ * 
+ * @since 1.8
  * @author Jeff Miller
  */
-public class NoNameTranslator implements NameTranslator
+public class UpperCaseNameTranslator implements NameTranslator
 {
     /**
-     * @return javaName
+     * {@inheritDoc}
      */
-    public String translate(String javaName, Class rowClass)
+    public String translate(String name, Class rowClass)
     {
-        return javaName;
+        return name.toUpperCase();
     }
 }

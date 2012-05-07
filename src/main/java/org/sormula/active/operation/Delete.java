@@ -43,6 +43,6 @@ public class Delete<R extends ActiveRecord> extends ActiveOperation<R, Integer>
     public Integer operate() throws Exception
     {
         attach(record);
-        return table.delete(record);
+        return getTable().delete(record);
     }
 }

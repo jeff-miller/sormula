@@ -52,7 +52,7 @@ public class SelectSum<R extends ActiveRecord, T> extends ActiveOperation<R, T>
     @Override
     public T operate() throws Exception
     {
-        if (whereConditionName == null) return table.<T>selectSum(expression);
-        return table.<T>selectSum(expression, whereConditionName, parameters);
+        if (whereConditionName == null) return getTable().<T>selectSum(expression);
+        return getTable().<T>selectSum(expression, whereConditionName, parameters);
     }
 }

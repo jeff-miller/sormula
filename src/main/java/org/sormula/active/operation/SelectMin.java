@@ -52,7 +52,7 @@ public class SelectMin<R extends ActiveRecord, T> extends ActiveOperation<R, T>
     @Override
     public T operate() throws Exception
     {
-        if (whereConditionName == null) return table.<T>selectMin(expression);
-        return table.<T>selectMin(expression, whereConditionName, parameters);
+        if (whereConditionName == null) return getTable().<T>selectMin(expression);
+        return getTable().<T>selectMin(expression, whereConditionName, parameters);
     }
 }

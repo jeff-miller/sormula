@@ -46,7 +46,7 @@ public class SelectAllWhere<R extends ActiveRecord> extends ActiveOperation<R, L
     @Override
     public List<R> operate() throws Exception
     {
-        List<R> records = table.selectAllWhere(whereConditionName, parameters);
+        List<R> records = getTable().selectAllWhere(whereConditionName, parameters);
         attach(records);
         return records;
     }

@@ -42,7 +42,7 @@ public class Select<R extends ActiveRecord> extends ActiveOperation<R, R>
     @Override
     public R operate() throws Exception
     {
-        R record = table.select(primaryKeys);
+        R record = getTable().select(primaryKeys);
         if (record != null) attach(record);
         return record;
     }

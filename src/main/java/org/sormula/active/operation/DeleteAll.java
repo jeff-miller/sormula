@@ -53,11 +53,11 @@ public class DeleteAll<R extends ActiveRecord> extends ActiveOperation<R, Intege
         if (records != null)
         {
             attach(records);
-            return table.deleteAll(records);
+            return getTable().deleteAll(records);
         }
         else
         {
-            return table.deleteAll();
+            return getTable().deleteAll();
         }
     }
 }

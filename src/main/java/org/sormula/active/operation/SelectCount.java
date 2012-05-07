@@ -58,8 +58,8 @@ public class SelectCount<R extends ActiveRecord, T> extends ActiveOperation<R, T
     @Override
     public T operate() throws Exception
     {
-        if (expression == null)         return table.<T>selectCount("*");
-        if (whereConditionName == null) return table.<T>selectCount(expression);
-        return table.<T>selectCount(expression, whereConditionName, parameters);
+        if (expression == null)         return getTable().<T>selectCount("*");
+        if (whereConditionName == null) return getTable().<T>selectCount(expression);
+        return getTable().<T>selectCount(expression, whereConditionName, parameters);
     }
 }

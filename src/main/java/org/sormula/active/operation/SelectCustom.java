@@ -44,7 +44,7 @@ public class SelectCustom<R extends ActiveRecord> extends ActiveOperation<R, R>
     @Override
     public R operate() throws Exception
     {
-        R record = table.selectCustom(customSql, parameters);
+        R record = getTable().selectCustom(customSql, parameters);
         if (record != null) attach(record);
         return record;
     }

@@ -48,7 +48,7 @@ public class SelectAllWhereOrdered<R extends ActiveRecord> extends ActiveOperati
     @Override
     public List<R> operate() throws Exception
     {
-        List<R> records = table.selectAllWhereOrdered(whereConditionName, orderByName, parameters);
+        List<R> records = getTable().selectAllWhereOrdered(whereConditionName, orderByName, parameters);
         attach(records);
         return records;
     }

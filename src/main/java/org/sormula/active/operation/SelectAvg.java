@@ -52,7 +52,7 @@ public class SelectAvg<R extends ActiveRecord, T> extends ActiveOperation<R, T>
     @Override
     public T operate() throws Exception
     {
-        if (whereConditionName == null) return table.<T>selectAvg(expression);
-        return table.<T>selectAvg(expression, whereConditionName, parameters);
+        if (whereConditionName == null) return getTable().<T>selectAvg(expression);
+        return getTable().<T>selectAvg(expression, whereConditionName, parameters);
     }
 }

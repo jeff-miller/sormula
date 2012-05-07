@@ -45,6 +45,6 @@ public class SaveAll<R extends ActiveRecord> extends ActiveOperation<R, Integer>
     public Integer operate() throws Exception
     {
         attach(records);
-        return table.saveAll(records);
+        return getTable().saveAll(records);
     }
 }

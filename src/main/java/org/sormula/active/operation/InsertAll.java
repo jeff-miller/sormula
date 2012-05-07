@@ -45,6 +45,6 @@ public class InsertAll<R extends ActiveRecord> extends ActiveOperation<R, Intege
     public Integer operate() throws Exception
     {
         attach(records);
-        return table.insertAll(records);
+        return getTable().insertAll(records);
     }
 }

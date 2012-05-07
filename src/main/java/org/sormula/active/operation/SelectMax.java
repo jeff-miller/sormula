@@ -52,7 +52,7 @@ public class SelectMax<R extends ActiveRecord, T> extends ActiveOperation<R, T>
     @Override
     public T operate() throws Exception
     {
-        if (whereConditionName == null) return table.<T>selectMax(expression);
-        return table.<T>selectMax(expression, whereConditionName, parameters);
+        if (whereConditionName == null) return getTable().<T>selectMax(expression);
+        return getTable().<T>selectMax(expression, whereConditionName, parameters);
     }
 }

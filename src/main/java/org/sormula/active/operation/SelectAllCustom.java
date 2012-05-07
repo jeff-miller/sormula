@@ -46,7 +46,7 @@ public class SelectAllCustom<R extends ActiveRecord> extends ActiveOperation<R, 
     @Override
     public List<R> operate() throws Exception
     {
-        List<R> records = table.selectAllCustom(customSql, parameters);
+        List<R> records = getTable().selectAllCustom(customSql, parameters);
         attach(records);
         return records;
     }

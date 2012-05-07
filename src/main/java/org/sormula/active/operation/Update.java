@@ -43,6 +43,6 @@ public class Update<R extends ActiveRecord> extends ActiveOperation<R, Integer>
     public Integer operate() throws Exception
     {
         attach(record);
-        return table.update(record);
+        return getTable().update(record);
     }
 }

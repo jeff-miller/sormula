@@ -45,6 +45,6 @@ public class UpdateAll<R extends ActiveRecord> extends ActiveOperation<R, Intege
     public Integer operate() throws Exception
     {
         attach(records);
-        return table.updateAll(records);
+        return getTable().updateAll(records);
     }
 }

@@ -48,7 +48,7 @@ public abstract class ActiveOperation<R extends ActiveRecord, T>
     ActiveDatabase activeDatabase;
     ActiveTransaction activeTransaction;
     OperationDatabase operationDatabase;
-    Table<R> table;
+    private Table<R> table;
     
     
     /**
@@ -152,6 +152,12 @@ public abstract class ActiveOperation<R extends ActiveRecord, T>
     protected abstract T operate() throws Exception;
 
     
+    protected Table<R> getTable()
+    {
+        return table;
+    }
+
+
     protected void attach(R record)
     {
         record.attach(activeDatabase);

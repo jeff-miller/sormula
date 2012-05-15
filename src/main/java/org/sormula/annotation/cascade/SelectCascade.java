@@ -22,6 +22,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 import java.util.List;
 
+import org.sormula.active.ActiveRecord;
 import org.sormula.annotation.OrderBy;
 import org.sormula.annotation.Where;
 import org.sormula.operation.ArrayListSelectOperation;
@@ -87,7 +88,8 @@ public @interface SelectCascade
 
     
     /**
-     * Specifies when the cascade is to occur.
+     * Specifies when the cascade is to occur. This value is ignored if {@link #lazy()}
+     * is true.
      * 
      * @return true to perform cascade after source row operation; false 
      * to perform cascade before source row operation
@@ -103,4 +105,16 @@ public @interface SelectCascade
      * @return name of method that gets key value from target row
      */
     String targetKeyMethodName() default "hashCode";
+    
+    
+    /**
+     * Marks a select cascade to be performed some later time after source row is selected.
+     * The target row is selected TODO ... or when {@link ActiveRecord#lazySelectCascade(String)}
+     * is invoked.
+     * 
+     * @return true to skip select when source row is selected; false to perform select cascade when
+     * source row is selected
+     * @since 1.8
+     */
+    boolean lazy() default false;
 }

@@ -28,8 +28,9 @@ import org.sormula.active.ActiveTable;
  * 
  * @author Jeff Miller
  * @since 1.7
+ * @param <R> record type
  */
-public class SelectAllWhere<R extends ActiveRecord> extends ActiveOperation<R, List<R>>
+public class SelectAllWhere<R extends ActiveRecord<R>> extends ActiveOperation<R, List<R>>
 {
     String whereConditionName;
     Object[] parameters;
@@ -47,7 +48,7 @@ public class SelectAllWhere<R extends ActiveRecord> extends ActiveOperation<R, L
     public List<R> operate() throws Exception
     {
         List<R> records = getTable().selectAllWhere(whereConditionName, parameters);
-        attach(records);
+        attachSelected(records);
         return records;
     }
 }

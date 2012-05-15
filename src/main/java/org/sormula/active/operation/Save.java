@@ -26,8 +26,9 @@ import org.sormula.active.ActiveTable;
  * 
  * @author Jeff Miller
  * @since 1.7
+ * @param <R> record type
  */
-public class Save<R extends ActiveRecord> extends ActiveOperation<R, Integer>
+public class Save<R extends ActiveRecord<R>> extends ActiveOperation<R, Integer>
 {
     R record;
     

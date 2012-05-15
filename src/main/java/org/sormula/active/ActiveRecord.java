@@ -17,6 +17,15 @@
 package org.sormula.active;
 
 import java.io.Serializable;
+import java.lang.reflect.Field;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
+import org.sormula.active.operation.LazySelectCascade;
+import org.sormula.annotation.cascade.SelectCascade;
+import org.sormula.annotation.cascade.SelectCascadeAnnotationReader;
+import org.sormula.log.ClassLogger;
 
 
 
@@ -26,12 +35,16 @@ import java.io.Serializable;
  * 
  * @author Jeff Miller
  * @since 1.7
+ * 
+ * @param <R> record type
  */
-public abstract class ActiveRecord<R extends ActiveRecord> implements Serializable
+public abstract class ActiveRecord<R extends ActiveRecord<R>> implements Serializable
 {
+    private static final ClassLogger log = new ClassLogger();
     private static final long serialVersionUID = 1L;
     ActiveDatabase activeDatabase;
     Class<R> recordClass;
+    Set<String> pendingLazySelectCascadeFieldNames;
     
     
     /**
@@ -77,7 +90,7 @@ public abstract class ActiveRecord<R extends ActiveRecord> implements Serializab
     {
         this.activeDatabase = null;
     }
-
+    
 
     /**
      * Creates a table that can be used to for records of type recordClass for the default
@@ -99,7 +112,7 @@ public abstract class ActiveRecord<R extends ActiveRecord> implements Serializab
      * @return ActiveTable instance for records of type R
      * @throws ActiveException if error
      */
-    public static <R extends ActiveRecord> ActiveTable<R> table(Class<R> recordClass) throws ActiveException
+    public static <R extends ActiveRecord<R>> ActiveTable<R> table(Class<R> recordClass) throws ActiveException
     {
         return new ActiveTable<R>(recordClass);
     }
@@ -170,8 +183,88 @@ public abstract class ActiveRecord<R extends ActiveRecord> implements Serializab
     {
         return (Class<R>)getClass();
     }
+
+
+    /**
+     * Sets the fields that have lazy select cascade annotations but that have not yet
+     * been selected. The fields are selected when {@link #lazySelectCascade(String)} is
+     * invoked.
+     * 
+     * @param lazySelectCascadeFields fields with lazy cascade annotation(s)
+     * @since 1.8
+     */
+    public void pendingLazySelectCascadeFields(List<Field> lazySelectCascadeFields)
+    {
+        if (lazySelectCascadeFields.size() > 0)
+        {
+            // init only if at least one
+            pendingLazySelectCascadeFieldNames = new HashSet<String>(lazySelectCascadeFields.size() * 2);
+            for (Field f: lazySelectCascadeFields)
+            {
+                pendingLazySelectCascadeFieldNames.add(f.getName());
+            }
+        }
+        else
+        {
+            // don't init if no fields
+            pendingLazySelectCascadeFieldNames = null;
+        }
+    }
     
     
+    /**
+     * Selects record(s) from database for field based upon definitions in select annotations of field
+     * where {@link SelectCascade#lazy()} is true. Typically this method is invoked by the "get" method
+     * associated with field. For example:
+     * <blockquote><pre>
+    public List&lt;SomeChild&gt; getChildList()
+    {
+        lazySelectCascade("childList");
+        return childList;
+    }
+    </pre></blockquote>
+     * <p>
+     * This method may be invoked more than once per field but the field will only be selected upon 
+     * the first invocation. Each time that an active record is selected, all lazy select cascaded
+     * fields are initialized by #pendingLazySelectCascadeFields(List). Invoking this method on an
+     * active record that has not been selected (created with new operator) has no affect.
+     * 
+     * @param fieldName field to select
+     * @throws ActiveException if error
+     * @since 1.8
+     */
+    public void lazySelectCascade(String fieldName) throws ActiveException
+    {
+        if (log.isDebugEnabled()) log.debug("lazySelectCascade check " + fieldName);
+        
+        if (pendingLazySelectCascadeFieldNames != null && pendingLazySelectCascadeFieldNames.contains(fieldName))
+        {
+            // perform only if pending and fieldName is in pending set
+            try
+            {
+                if (log.isDebugEnabled()) log.debug("lazy select " + fieldName);
+                Field field = getClass().getDeclaredField(fieldName);
+                SelectCascadeAnnotationReader scar = new SelectCascadeAnnotationReader(field);
+                new LazySelectCascade<R>(createTable(), recordClass.cast(this), scar).execute();
+                
+                // don't do field again
+                pendingLazySelectCascadeFieldNames.remove(fieldName);
+                
+                if (pendingLazySelectCascadeFieldNames.size() == 0)
+                {
+                    // don't check this record any more
+                    pendingLazySelectCascadeFieldNames = null;
+                }
+            }
+            catch (NoSuchFieldException e)
+            {
+                // not likely since pendingLazySelectCascadeFieldNames contains only valid names
+                throw new ActiveException("can't get field name " + fieldName + " in class " + getClass(), e);
+            }
+        }
+    }
+
+
     protected ActiveTable<R> createTable() throws ActiveException
     {
         if (activeDatabase == null) return new ActiveTable<R>(recordClass);

@@ -55,7 +55,7 @@ import org.sormula.annotation.OrderBy;
  * 
  * @param <R> record type
  */
-public class ActiveTable<R extends ActiveRecord>
+public class ActiveTable<R extends ActiveRecord<R>>
 {
     final ActiveDatabase activeDatabase;
     final Class<R> recordClass;

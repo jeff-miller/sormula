@@ -30,7 +30,7 @@ import org.sormula.tests.TestDataSource;
  * 
  * @author Jeff Miller
  */
-public class ActiveDatabaseTest<R extends ActiveRecord> extends DatabaseTest<R>
+public class ActiveDatabaseTest<R extends ActiveRecord<R>> extends DatabaseTest<R>
 {
     DataSource dataSource;
     ActiveDatabase activeDatabase;

@@ -16,9 +16,11 @@
  */
 package org.sormula.active.operation;
 
+import java.lang.reflect.Field;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.Collection;
+import java.util.List;
 
 import org.sormula.Table;
 import org.sormula.active.ActiveDatabase;
@@ -40,7 +42,7 @@ import org.sormula.log.ClassLogger;
  * @param <R> record type
  * @param <T> execute return type
  */
-public abstract class ActiveOperation<R extends ActiveRecord, T>
+public abstract class ActiveOperation<R extends ActiveRecord<R>, T>
 {
     private static final ClassLogger log = new ClassLogger();
     ActiveTable<R> activeTable;
@@ -48,7 +50,7 @@ public abstract class ActiveOperation<R extends ActiveRecord, T>
     ActiveDatabase activeDatabase;
     ActiveTransaction activeTransaction;
     OperationDatabase operationDatabase;
-    private Table<R> table;
+    Table<R> table;
     
     
     /**
@@ -152,6 +154,12 @@ public abstract class ActiveOperation<R extends ActiveRecord, T>
     protected abstract T operate() throws Exception;
 
     
+    protected OperationDatabase getOperationDatabase()
+    {
+        return operationDatabase;
+    }
+    
+
     protected Table<R> getTable()
     {
         return table;
@@ -167,6 +175,24 @@ public abstract class ActiveOperation<R extends ActiveRecord, T>
     protected void attach(Collection<R> records)
     {
         for (R r: records) r.attach(activeDatabase);
+    }
+
+
+    protected void attachSelected(R record)
+    {
+        record.attach(activeDatabase);
+        record.pendingLazySelectCascadeFields(getTable().getLazySelectCascadeFields()); 
+    }
+
+    
+    protected void attachSelected(Collection<R> records)
+    {
+        List<Field> lazySelectCascadeFields = getTable().getLazySelectCascadeFields();
+        for (R r: records)
+        {
+            r.attach(activeDatabase);
+            r.pendingLazySelectCascadeFields(lazySelectCascadeFields);
+        }
     }
 
     

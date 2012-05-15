@@ -26,8 +26,9 @@ import org.sormula.active.ActiveTable;
  * 
  * @author Jeff Miller
  * @since 1.7
+ * @param <R> record type
  */
-public class SelectWhere<R extends ActiveRecord> extends ActiveOperation<R, R>
+public class SelectWhere<R extends ActiveRecord<R>> extends ActiveOperation<R, R>
 {
     String whereConditionName;
     Object[] parameters;
@@ -45,7 +46,7 @@ public class SelectWhere<R extends ActiveRecord> extends ActiveOperation<R, R>
     public R operate() throws Exception
     {
         R record = getTable().selectWhere(whereConditionName, parameters);
-        if (record != null) attach(record);
+        if (record != null) attachSelected(record);
         return record;
     }
 }

@@ -30,7 +30,6 @@ import org.sormula.Table;
 import org.sormula.annotation.Column;
 import org.sormula.annotation.Where;
 import org.sormula.annotation.WhereAnnotationReader;
-import org.sormula.annotation.cascade.Cascade;
 import org.sormula.annotation.cascade.OneToManyCascade;
 import org.sormula.annotation.cascade.OneToOneCascade;
 import org.sormula.log.ClassLogger;
@@ -40,9 +39,9 @@ import org.sormula.operation.monitor.OperationTime;
 import org.sormula.reflect.ReflectException;
 import org.sormula.reflect.SormulaField;
 import org.sormula.translator.AbstractWhereTranslator;
-import org.sormula.translator.TypeTranslator;
 import org.sormula.translator.RowTranslator;
 import org.sormula.translator.TranslatorException;
+import org.sormula.translator.TypeTranslator;
 import org.sormula.translator.WhereTranslator;
 
 
@@ -535,20 +534,18 @@ public abstract class SqlOperation<R>
         // for all fields
         for (Field f: getTable().getRowTranslator().getRowClass().getDeclaredFields())
         {
-            if (f.isAnnotationPresent(OneToManyCascade.class) ||
-                f.isAnnotationPresent(OneToOneCascade.class) ||
-                f.isAnnotationPresent(Cascade.class))
+            List<CascadeOperation<R, ?>> fieldCascades = prepareCascades(f);
+            
+            if (fieldCascades.size() > 0)
             {
-                // prepare cascades
-                if (log.isDebugEnabled()) log.debug("prepareCascades() for " + f.getName());
-                
+                // at least one for the field
                 if (cascadeOperations == null)
                 {
                     // create only if needed so that no penalty for pre/postExecuteCascade and no memory usage
                     cascadeOperations = new ArrayList<CascadeOperation<R,?>>();
                 }
-                
-                cascadeOperations.addAll(prepareCascades(f));
+            
+                cascadeOperations.addAll(fieldCascades);
             }
         }
         
@@ -593,7 +590,7 @@ public abstract class SqlOperation<R>
      * Gets a table object from database associated with this operation.
      * 
      * @param targetClass class that cascade is to affect
-     * @param targetField target of cascade (obtain target field type if not specified by annotation)
+     * @param targetField target of cascade 
      * @return table for target class of annotation
      * @throws OperationException if error
      */
@@ -603,13 +600,6 @@ public abstract class SqlOperation<R>
         
         try
         {
-            if (targetClass.getName().equals("java.lang.Object"))
-            {
-                // get target class based upon field type
-                // if field is parameterized, then getTable will not obtain correct table
-                targetClass = targetField.getType();
-            }
-            
             targetTable = getTable().getDatabase().getTable(targetClass);
         }
         catch (SormulaException e)

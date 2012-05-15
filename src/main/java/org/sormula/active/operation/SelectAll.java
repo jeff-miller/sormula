@@ -28,8 +28,9 @@ import org.sormula.active.ActiveTable;
  * 
  * @author Jeff Miller
  * @since 1.7
+ * @param <R> record type
  */
-public class SelectAll<R extends ActiveRecord> extends ActiveOperation<R, List<R>>
+public class SelectAll<R extends ActiveRecord<R>> extends ActiveOperation<R, List<R>>
 {
     public SelectAll(ActiveTable<R> activeTable)
     {
@@ -41,7 +42,7 @@ public class SelectAll<R extends ActiveRecord> extends ActiveOperation<R, List<R
     public List<R> operate() throws Exception
     {
         List<R> records = getTable().selectAll();
-        attach(records);
+        attachSelected(records);
         return records;
     }
 }

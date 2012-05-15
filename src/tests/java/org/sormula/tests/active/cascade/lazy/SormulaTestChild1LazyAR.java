@@ -14,41 +14,51 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.sormula.active.operation;
+package org.sormula.tests.active.cascade.lazy;
 
-import java.util.List;
-
-import org.sormula.Table;
 import org.sormula.active.ActiveRecord;
-import org.sormula.active.ActiveTable;
 
 
 /**
- * Delegate for {@link Table#selectAllCustom(String, Object...)}.
+ * Child of {@link SormulaTestParentLazyAR}. Child may occur 0 or 1 times for 1 parent.
  * 
  * @author Jeff Miller
- * @since 1.7
- * @param <R> record type
  */
-public class SelectAllCustom<R extends ActiveRecord<R>> extends ActiveOperation<R, List<R>>
+public class SormulaTestChild1LazyAR extends ActiveRecord<SormulaTestChild1LazyAR>
 {
-    String customSql;
-    Object[] parameters;
+    private static final long serialVersionUID = 1L;
+    int id;
+    String description;
     
     
-    public SelectAllCustom(ActiveTable<R> activeTable, String customSql, Object... parameters)
+    public SormulaTestChild1LazyAR()
     {
-        super(activeTable, "error selecting active record collection");
-        this.customSql = customSql;
-        this.parameters = parameters;
     }
 
     
-    @Override
-    public List<R> operate() throws Exception
+    public SormulaTestChild1LazyAR(int id, String description)
     {
-        List<R> records = getTable().selectAllCustom(customSql, parameters);
-        attachSelected(records);
-        return records;
+        this.id = id;
+        this.description = description;
+    }
+    
+    
+    public int getId()
+    {
+        return id;
+    }
+    public void setId(int id)
+    {
+        this.id = id;
+    }
+    
+    
+    public String getDescription()
+    {
+        return description;
+    }
+    public void setDescription(String description)
+    {
+        this.description = description;
     }
 }

@@ -23,10 +23,9 @@ import java.util.Collections;
 import java.util.List;
 
 import org.sormula.Table;
-import org.sormula.annotation.cascade.Cascade;
 import org.sormula.annotation.cascade.DeleteCascade;
-import org.sormula.annotation.cascade.OneToManyCascade;
-import org.sormula.annotation.cascade.OneToOneCascade;
+import org.sormula.annotation.cascade.DeleteCascadeAnnotationReader;
+import org.sormula.log.ClassLogger;
 import org.sormula.operation.cascade.CascadeOperation;
 import org.sormula.operation.cascade.DeleteCascadeOperation;
 import org.sormula.reflect.SormulaField;
@@ -41,6 +40,9 @@ import org.sormula.reflect.SormulaField;
  */
 public class DeleteOperation<R> extends ModifyOperation<R>
 {
+    private static final ClassLogger log = new ClassLogger();
+    
+    
     /**
      * Constructs standard sql delete for primary key as:<br>
      * DELETE FROM table WHERE primary key clause
@@ -153,38 +155,14 @@ public class DeleteOperation<R> extends ModifyOperation<R>
     protected List<CascadeOperation<R, ?>> prepareCascades(Field field) throws OperationException
     {
         List<CascadeOperation<R, ?>> co = null;
-        Table<?> targetTable = null;
-        DeleteCascade[] deleteCascades = null;
+        DeleteCascadeAnnotationReader dcar = new DeleteCascadeAnnotationReader(field);
+        DeleteCascade[] deleteCascades = dcar.getDeleteCascades();
         
-        if (field.isAnnotationPresent(OneToManyCascade.class))
+        if (deleteCascades.length > 0)
         {
-            OneToManyCascade cascadesAnnotation = field.getAnnotation(OneToManyCascade.class);
-            
-            if (!cascadesAnnotation.readOnly())
-            {
-                targetTable = getTargetTable(cascadesAnnotation.targetClass(), field);
-                deleteCascades = cascadesAnnotation.deletes();
-            }
-        }
-        else if (field.isAnnotationPresent(OneToOneCascade.class))
-        {
-            OneToOneCascade cascadesAnnotation = field.getAnnotation(OneToOneCascade.class);
-            
-            if (!cascadesAnnotation.readOnly())
-            {
-                targetTable = getTargetTable(field.getType(), field);
-                deleteCascades = cascadesAnnotation.deletes();
-            }
-        }
-        else if (field.isAnnotationPresent(Cascade.class))
-        {
-            Cascade cascadesAnnotation = field.getAnnotation(Cascade.class);
-            targetTable = getTargetTable(cascadesAnnotation.targetClass(), field);
-            deleteCascades = cascadesAnnotation.deletes();
-        }
-        
-        if (targetTable != null && deleteCascades != null)
-        {
+            // at least one delete cascade
+            if (log.isDebugEnabled()) log.debug("prepareCascades() for " + field.getName());
+            Table<?> targetTable = getTargetTable(dcar.getTargetClass(), field);
             SormulaField<R, ?> targetField = createTargetField(field);
             co = new ArrayList<CascadeOperation<R, ?>>(deleteCascades.length);
             

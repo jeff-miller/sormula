@@ -28,8 +28,9 @@ import org.sormula.active.ActiveTable;
  * 
  * @author Jeff Miller
  * @since 1.7
+ * @param <R> record type
  */
-public class UpdateAll<R extends ActiveRecord> extends ActiveOperation<R, Integer>
+public class UpdateAll<R extends ActiveRecord<R>> extends ActiveOperation<R, Integer>
 {
     Collection<R> records;
     

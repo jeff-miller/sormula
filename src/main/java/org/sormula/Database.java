@@ -262,6 +262,8 @@ public class Database implements TypeTranslatorMap
      * 
      * @param <R> row class type
      * @param rowClass annotations on this class determine mapping from row objects to/from database 
+     * @param create true to create new instance of {@link Table} if {@link #Database(Connection)} does not have one yet;
+     * false to return null if no {@link Table} instance is found for rowClass
      * @return table object for reading/writing row objects of type R from/to database; null if table
      * does not exist and create is false
      * @throws SormulaException if error

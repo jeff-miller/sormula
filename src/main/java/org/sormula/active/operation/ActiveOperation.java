@@ -16,11 +16,9 @@
  */
 package org.sormula.active.operation;
 
-import java.lang.reflect.Field;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.Collection;
-import java.util.List;
 
 import org.sormula.Table;
 import org.sormula.active.ActiveDatabase;
@@ -181,20 +179,19 @@ public abstract class ActiveOperation<R extends ActiveRecord<R>, T>
     protected void attachSelected(R record)
     {
         record.attach(activeDatabase);
-        record.pendingLazySelectCascadeFields(getTable().getLazySelectCascadeFields()); 
+        record.setSelected(true); 
     }
 
     
     protected void attachSelected(Collection<R> records)
     {
-        List<Field> lazySelectCascadeFields = getTable().getLazySelectCascadeFields();
         for (R r: records)
         {
             r.attach(activeDatabase);
-            r.pendingLazySelectCascadeFields(lazySelectCascadeFields);
+            r.setSelected(true);
         }
     }
-
+    
     
     protected void close() throws ActiveException
     {

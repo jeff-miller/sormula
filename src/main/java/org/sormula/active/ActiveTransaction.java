@@ -195,7 +195,9 @@ public class ActiveTransaction
         
         try
         {
-            Connection connection = operationTransaction.getOperationDatabase().getConnection();
+            OperationDatabase od = operationTransaction.getOperationDatabase();
+            od.logTimings();
+            Connection connection = od.getConnection();
             if (connection != null) connection.close();
         }
         catch (SQLException e)

@@ -1,1 +1,1 @@
-java -cp .;sormula-1.7.1.jar;hsqldb.jar SimpleExample
+java -cp .;sormula-1.8.jar;hsqldb.jar SimpleExample

@@ -168,6 +168,7 @@ public class UpdateOperation<R> extends ModifyOperation<R>
             // for each cascade operation
             for (UpdateCascade c: updateCascades)
             {
+                if (log.isDebugEnabled()) log.debug("prepare cascade " + c.operation());
                 @SuppressWarnings("unchecked") // target field type is not known at compile time
                 CascadeOperation<R, ?> operation = new UpdateCascadeOperation(targetField, targetTable, c);
                 operation.prepare();

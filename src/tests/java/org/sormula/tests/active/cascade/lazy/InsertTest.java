@@ -100,8 +100,8 @@ public class InsertTest extends ActiveDatabaseTest<SormulaTestParentLazyAR>
         
         // verify that child was inserted
         ActiveTable<SormulaTestChild1LazyAR> child1Table = new ActiveTable<SormulaTestChild1LazyAR>(activeDatabase, SormulaTestChild1LazyAR.class);
-        SormulaTestChild1LazyAR c1 = child1Table.select(child1.getId());
-        assert c1 != null : "child " + child1.getId() + " was not inserted";
+        SormulaTestChild1LazyAR c1 = child1Table.select(childId);
+        assert c1 != null : "child " + childId + " was not inserted";
     }
     
     

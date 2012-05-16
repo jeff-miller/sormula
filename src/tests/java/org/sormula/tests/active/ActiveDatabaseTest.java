@@ -43,6 +43,7 @@ public class ActiveDatabaseTest<R extends ActiveRecord<R>> extends DatabaseTest<
         super.openDatabase();
         dataSource = new TestDataSource(this);
         activeDatabase = new ActiveDatabase(dataSource, getSchema());
+        activeDatabase.setTimings(Boolean.parseBoolean(System.getProperty("timings")));
     }
     
     

@@ -169,6 +169,7 @@ public class DeleteOperation<R> extends ModifyOperation<R>
             // for each cascade operation
             for (DeleteCascade c: deleteCascades)
             {
+                if (log.isDebugEnabled()) log.debug("prepare cascade " + c.operation());
                 @SuppressWarnings("unchecked") // target field type is not known at compile time
                 CascadeOperation<R, ?> operation = new DeleteCascadeOperation(targetField, targetTable, c);
                 operation.prepare();

@@ -166,6 +166,7 @@ public class InsertOperation<R> extends ModifyOperation<R>
             // for each cascade operation
             for (InsertCascade c: insertCascades)
             {
+                if (log.isDebugEnabled()) log.debug("prepare cascade " + c.operation());
                 @SuppressWarnings("unchecked") // target field type is not known at compile time
                 CascadeOperation<R, ?> operation = new InsertCascadeOperation(targetField, targetTable, c);
                 operation.prepare();

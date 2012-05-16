@@ -19,9 +19,9 @@ package org.sormula.active;
 import java.io.Serializable;
 import java.lang.reflect.Field;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
+import org.sormula.active.operation.ActiveOperation;
 import org.sormula.active.operation.LazySelectCascade;
 import org.sormula.annotation.cascade.SelectCascade;
 import org.sormula.annotation.cascade.SelectCascadeAnnotationReader;
@@ -44,6 +44,7 @@ public abstract class ActiveRecord<R extends ActiveRecord<R>> implements Seriali
     private static final long serialVersionUID = 1L;
     ActiveDatabase activeDatabase;
     Class<R> recordClass;
+    boolean selected;
     Set<String> pendingLazySelectCascadeFieldNames;
     
     
@@ -186,33 +187,6 @@ public abstract class ActiveRecord<R extends ActiveRecord<R>> implements Seriali
 
 
     /**
-     * Sets the fields that have lazy select cascade annotations but that have not yet
-     * been selected. The fields are selected when {@link #lazySelectCascade(String)} is
-     * invoked.
-     * 
-     * @param lazySelectCascadeFields fields with lazy cascade annotation(s)
-     * @since 1.8
-     */
-    public void pendingLazySelectCascadeFields(List<Field> lazySelectCascadeFields)
-    {
-        if (lazySelectCascadeFields.size() > 0)
-        {
-            // init only if at least one
-            pendingLazySelectCascadeFieldNames = new HashSet<String>(lazySelectCascadeFields.size() * 2);
-            for (Field f: lazySelectCascadeFields)
-            {
-                pendingLazySelectCascadeFieldNames.add(f.getName());
-            }
-        }
-        else
-        {
-            // don't init if no fields
-            pendingLazySelectCascadeFieldNames = null;
-        }
-    }
-    
-    
-    /**
      * Selects record(s) from database for field based upon definitions in select annotations of field
      * where {@link SelectCascade#lazy()} is true. Typically this method is invoked by the "get" method
      * associated with field. For example:
@@ -237,31 +211,83 @@ public abstract class ActiveRecord<R extends ActiveRecord<R>> implements Seriali
     {
         if (log.isDebugEnabled()) log.debug("lazySelectCascade check " + fieldName);
         
-        if (pendingLazySelectCascadeFieldNames != null && pendingLazySelectCascadeFieldNames.contains(fieldName))
+        if (selected)
         {
-            // perform only if pending and fieldName is in pending set
-            try
+            // perform the following test only if record was selected (not created some other way)
+            // select cascades are only performed on records that have been selected
+            if (pendingLazySelectCascadeFieldNames == null)
             {
-                if (log.isDebugEnabled()) log.debug("lazy select " + fieldName);
-                Field field = getClass().getDeclaredField(fieldName);
-                SelectCascadeAnnotationReader scar = new SelectCascadeAnnotationReader(field);
-                new LazySelectCascade<R>(createTable(), recordClass.cast(this), scar).execute();
+                // initialize upon first request
+                if (log.isDebugEnabled()) log.debug("lazySelectCascade determine lazy fields");
+                pendingLazySelectCascadeFieldNames = new HashSet<String>();
                 
-                // don't do field again
-                pendingLazySelectCascadeFieldNames.remove(fieldName);
-                
-                if (pendingLazySelectCascadeFieldNames.size() == 0)
+                // for all fields
+                for (Field field: getClass().getDeclaredFields())
                 {
-                    // don't check this record any more
-                    pendingLazySelectCascadeFieldNames = null;
+                    SelectCascadeAnnotationReader scar = new SelectCascadeAnnotationReader(field);
+                    SelectCascade[] selectCascades = scar.getSelectCascades();
+                    
+                    for (SelectCascade c: selectCascades)
+                    {
+                        if (c.lazy()) pendingLazySelectCascadeFieldNames.add(field.getName());
+                    }
                 }
             }
-            catch (NoSuchFieldException e)
+            
+            if (pendingLazySelectCascadeFieldNames.contains(fieldName))
             {
-                // not likely since pendingLazySelectCascadeFieldNames contains only valid names
-                throw new ActiveException("can't get field name " + fieldName + " in class " + getClass(), e);
+                // perform only if pending and fieldName is in pending set
+                try
+                {
+                    if (log.isDebugEnabled()) log.debug("lazy select " + fieldName);
+                    Field field = getClass().getDeclaredField(fieldName);
+                    SelectCascadeAnnotationReader scar = new SelectCascadeAnnotationReader(field);
+                    new LazySelectCascade<R>(createTable(), recordClass.cast(this), scar).execute();
+                    
+                    // don't do field again
+                    pendingLazySelectCascadeFieldNames.remove(fieldName);
+                    
+                    if (pendingLazySelectCascadeFieldNames.size() == 0)
+                    {
+                        // don't check this record any more
+                        pendingLazySelectCascadeFieldNames = null;
+                    }
+                }
+                catch (NoSuchFieldException e)
+                {
+                    // not likely since pendingLazySelectCascadeFieldNames contains only valid names
+                    throw new ActiveException("can't get field name " + fieldName + " in class " + getClass(), e);
+                }
             }
         }
+    }
+
+
+    /**
+     * Indicates that record has been selected. {@link #lazySelectCascade(String)} uses this
+     * value to know when to perform lazy select cascades. Select cascades are only performed when
+     * {@link #isSelected()} is true.
+     * 
+     * @return true if this record was selected from database
+     * @since 1.8
+     */
+    public boolean isSelected()
+    {
+        return selected;
+    }
+
+
+    /**
+     * Sets select status of the record. Used by {@link #lazySelectCascade(String)}
+     * to know when to perform lazy select cascades. Invoked by select subclasses of
+     * {@link ActiveOperation}. 
+     *  
+     * @param selected true if this record was selected from database
+     * @since 1.8
+     */
+    public void setSelected(boolean selected)
+    {
+        this.selected = selected;
     }
 
 

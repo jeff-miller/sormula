@@ -525,7 +525,7 @@ public abstract class SqlOperation<R>
     
     /**
      * Prepares cascades for all cascade annotations on row class. Cascade annotations
-     * are {@link OneToManyCascade}, {@link OneToOneCascade}, and {linkplain Cascade}.
+     * are {@link OneToManyCascade}, {@link OneToOneCascade}, and {@link Cascade}.
      *  
      * @throws OperationException if error
      */

@@ -14,39 +14,41 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.sormula.active.operation;
+package org.sormula.operation.cascade.lazy;
 
-import org.sormula.Table;
-import org.sormula.active.ActiveRecord;
-import org.sormula.active.ActiveTable;
 
 
 /**
- * Delegate for {@link Table#selectCustom(String, Object...)}.
+ * Exception that originates with lazy cascade operations. Since it is a runtime
+ * exception, try/catch/finally blocks are optional.
  * 
+ * @since 1.8
  * @author Jeff Miller
- * @since 1.7
- * @param <R> record type
  */
-public class SelectCustom<R extends ActiveRecord<R>> extends ActiveOperation<R, R>
+public class LazyCascadeException extends RuntimeException
 {
-    String customSql;
-    Object[] parameters;
-    
-    
-    public SelectCustom(ActiveTable<R> activeTable, String customSql, Object... parameters)
+    private static final long serialVersionUID = 1L;
+
+
+    /**
+     * Constructs for a message.
+     * 
+     * @param message expection message
+     */
+    public LazyCascadeException(String message)
     {
-        super(activeTable, "error selecting active record");
-        this.customSql = customSql;
-        this.parameters = parameters;
+        super(message);
     }
 
     
-    @Override
-    public R operate() throws Exception
+    /**
+     * Constructs for a message and cause.
+     * 
+     * @param message expection message
+     * @param cause cause of exception
+     */
+    public LazyCascadeException(String message, Throwable cause)
     {
-        R record = getTable().selectCustom(customSql, parameters);
-        if (record != null) attach(record);
-        return record;
+        super(message, cause);
     }
 }

@@ -33,6 +33,7 @@ import org.sormula.annotation.cascade.SelectCascadeAnnotationReader;
 import org.sormula.log.ClassLogger;
 import org.sormula.operation.cascade.CascadeOperation;
 import org.sormula.operation.cascade.SelectCascadeOperation;
+import org.sormula.operation.cascade.lazy.LazySelectable;
 import org.sormula.operation.monitor.OperationTime;
 import org.sormula.reflect.SormulaField;
 import org.sormula.translator.OrderByTranslator;
@@ -59,6 +60,8 @@ public class ScalarSelectOperation<R> extends SqlOperation<R>
     RowTranslator<R> rowTranslator;
     int maximumRowsRead = Integer.MAX_VALUE;
     int rowsReadCount;
+    boolean lazySelectsCascades;
+    boolean notifyLazySelects;
     
     
     /**
@@ -249,6 +252,14 @@ public class ScalarSelectOperation<R> extends SqlOperation<R>
             if (resultSet.next() && rowsReadCount < maximumRowsRead)
             {
                 row = table.newRow();
+                
+                if (notifyLazySelects) 
+                {
+                    // inform row of pending select cascades
+                    LazySelectable lazySelectCascadeRow = (LazySelectable)row;
+                    lazySelectCascadeRow.pendingLazySelects(table.getDatabase());
+                }
+                
                 operationTime.pause();
                 preReadCascade(row);
                 preRead(row);
@@ -367,6 +378,33 @@ public class ScalarSelectOperation<R> extends SqlOperation<R>
     }
     
     
+    /**
+     * Reports that operation has at least one field with {@link SelectCascade#lazy()} true. This
+     * status is set during {@link #prepare()}.
+     * 
+     * @return true if there are lazy select cascades annotated
+     * @since 1.8
+     */
+    public boolean isLazySelectsCascades()
+    {
+        return lazySelectsCascades;
+    }
+
+
+    /**
+     * Reports that {@link #isLazySelectsCascades()} is true and row is instanceof {@link LazySelectable}. This is
+     * set as an optimization so the {@link #readNext()} only tests a boolean to when to invoke 
+     * {@link LazySelectable#pendingLazySelects(org.sormula.Database)}.
+     * 
+     * @return true if {@link LazySelectable#pendingLazySelects(org.sormula.Database)} will be inovked for each row selected
+     * @since 1.8
+     */
+    public boolean isNotifyLazySelects()
+    {
+        return notifyLazySelects;
+    }
+
+
     protected OrderByTranslator<R> getOrderByTranslator()
     {
         return orderByTranslator;
@@ -496,7 +534,11 @@ public class ScalarSelectOperation<R> extends SqlOperation<R>
             // for each cascade operation
             for (SelectCascade c: selectCascades)
             {
-                if (!c.lazy())
+                if (c.lazy())
+                {
+                    lazySelectsCascades = true;
+                }
+                else
                 {
                     // prepare non lazy cascade for execution
                     if (log.isDebugEnabled()) log.debug("prepare cascade " + c.operation());
@@ -504,6 +546,18 @@ public class ScalarSelectOperation<R> extends SqlOperation<R>
                     SelectCascadeOperation<R, ?> operation = new SelectCascadeOperation(targetField, targetTable, c);
                     operation.prepare();
                     co.add(operation);
+                }
+            }
+            
+            if (lazySelectsCascades)
+            {
+                // test if row class instance of LazySelectable
+                notifyLazySelects = LazySelectable.class.isAssignableFrom(getTable().getRowClass());
+                
+                if (!notifyLazySelects)
+                {
+                    throw new OperationException(getTable().getRowClass() + " must implement " + LazySelectable.class + 
+                            " when SelectCascade#lazy() is true");
                 }
             }
         }

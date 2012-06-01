@@ -29,6 +29,8 @@ import java.util.Properties;
 import java.util.Random;
 import java.util.Set;
 
+import javax.sql.DataSource;
+
 import org.sormula.Database;
 import org.sormula.SormulaException;
 import org.sormula.Table;
@@ -77,6 +79,7 @@ public class DatabaseTest<R>
     String url;
     String user;
     String password;
+    DataSource dataSource;
     Database database;
     Table<R> table;
     String qualifiedTableName;
@@ -85,6 +88,7 @@ public class DatabaseTest<R>
     String sqlShutdown;
     String driverShutdown;
     List<R> all;
+    boolean dataSourceDatabase;
     
     
     public DatabaseTest() 
@@ -126,6 +130,10 @@ public class DatabaseTest<R>
 
     public void openDatabase() throws Exception
     {
+        openDatabase(false);
+    }
+    public void openDatabase(boolean useDataSource) throws Exception
+    {
         // get connection
         Class.forName(jdbcProperties.getString("jdbc.driver"));
         schema = jdbcProperties.getString("jdbc.schema");
@@ -137,10 +145,22 @@ public class DatabaseTest<R>
         // shutdown commands
         sqlShutdown = jdbcProperties.getString("jdbc.shutdown.sql");
         driverShutdown = jdbcProperties.getString("jdbc.shutdown.driver");
+
+        // simulated data source
+        dataSource = new TestDataSource(this);
         
         // create sormula database
-        Connection connection = getConnection();
-        database = new Database(connection, schema);
+        if (useDataSource)
+        {
+            dataSourceDatabase = true;
+            database = new Database(dataSource, schema);
+        }
+        else
+        {
+            dataSourceDatabase = false;
+            Connection connection = getConnection();
+            database = new Database(connection, schema);
+        }
         database.setTimings(Boolean.parseBoolean(System.getProperty("timings")));
     }
     
@@ -226,7 +246,13 @@ public class DatabaseTest<R>
         
         try
         {
-            database.getConnection().close();
+            if (!dataSourceDatabase) 
+            {
+                // database instance created without data source 
+                // database.close() only closes connection if data source used
+                database.getConnection().close();
+            }
+            
             database.close();
             
             if (sqlShutdown.length() > 0)
@@ -266,6 +292,12 @@ public class DatabaseTest<R>
         {
             getDatabase().getTransaction().commit();
         }
+    }
+
+
+    public DataSource getDataSource()
+    {
+        return dataSource;
     }
 
 

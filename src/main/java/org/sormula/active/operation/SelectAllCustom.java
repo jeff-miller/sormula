@@ -48,7 +48,7 @@ public class SelectAllCustom<R extends ActiveRecord<R>> extends ActiveOperation<
     public List<R> operate() throws Exception
     {
         List<R> records = getTable().selectAllCustom(customSql, parameters);
-        attachSelected(records);
+        attach(records);
         return records;
     }
 }

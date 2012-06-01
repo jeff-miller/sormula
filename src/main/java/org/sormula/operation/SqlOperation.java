@@ -30,6 +30,7 @@ import org.sormula.Table;
 import org.sormula.annotation.Column;
 import org.sormula.annotation.Where;
 import org.sormula.annotation.WhereAnnotationReader;
+import org.sormula.annotation.cascade.Cascade;
 import org.sormula.annotation.cascade.OneToManyCascade;
 import org.sormula.annotation.cascade.OneToOneCascade;
 import org.sormula.log.ClassLogger;

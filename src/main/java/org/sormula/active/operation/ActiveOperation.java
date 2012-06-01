@@ -70,7 +70,7 @@ public abstract class ActiveOperation<R extends ActiveRecord<R>, T>
         }
     }
 
-    
+
     /**
      * Executes {@link #operate()} within a try/catch and transaction. If {@link #operate()}
      * throws an exception, then transaction is rolled back.
@@ -176,23 +176,6 @@ public abstract class ActiveOperation<R extends ActiveRecord<R>, T>
     }
 
 
-    protected void attachSelected(R record)
-    {
-        record.attach(activeDatabase);
-        record.setSelected(true); 
-    }
-
-    
-    protected void attachSelected(Collection<R> records)
-    {
-        for (R r: records)
-        {
-            r.attach(activeDatabase);
-            r.setSelected(true);
-        }
-    }
-    
-    
     protected void close() throws ActiveException
     {
         table = null;

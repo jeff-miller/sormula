@@ -20,7 +20,7 @@ import org.sormula.SormulaException;
 
 
 /**
- * Exception that orgininates in the operation package.
+ * Exception that originates in the operation package.
  * 
  * @since 1.0
  * @author Jeff Miller

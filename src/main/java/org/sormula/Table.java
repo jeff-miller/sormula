@@ -27,6 +27,8 @@ import org.sormula.annotation.Column;
 import org.sormula.annotation.ExplicitTypeAnnotationReader;
 import org.sormula.annotation.OrderBy;
 import org.sormula.annotation.Row;
+import org.sormula.annotation.cascade.SelectCascade;
+import org.sormula.annotation.cascade.SelectCascadeAnnotationReader;
 import org.sormula.log.ClassLogger;
 import org.sormula.operation.ArrayListSelectOperation;
 import org.sormula.operation.DeleteOperation;
@@ -354,13 +356,13 @@ public class Table<R> implements TypeTranslatorMap
     }
     
     
-    /** TODO remove
+    /** 
      * Gets fields for table that record class that are annotated with {@link SelectCascade} and
      * {@link SelectCascade#lazy()} is true.
      * 
      * @return list of fields
      * @since 1.8
-     *
+     */
     public List<Field> getLazySelectCascadeFields()
     {
         if (lazySelectCascadeFields == null)
@@ -383,7 +385,6 @@ public class Table<R> implements TypeTranslatorMap
         
         return lazySelectCascadeFields;
     }
-    */
 
 
     /**

@@ -50,7 +50,7 @@ public class SelectAllWhereOrdered<R extends ActiveRecord<R>> extends ActiveOper
     public List<R> operate() throws Exception
     {
         List<R> records = getTable().selectAllWhereOrdered(whereConditionName, orderByName, parameters);
-        attachSelected(records);
+        attach(records);
         return records;
     }
 }

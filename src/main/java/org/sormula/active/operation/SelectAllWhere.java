@@ -48,7 +48,7 @@ public class SelectAllWhere<R extends ActiveRecord<R>> extends ActiveOperation<R
     public List<R> operate() throws Exception
     {
         List<R> records = getTable().selectAllWhere(whereConditionName, parameters);
-        attachSelected(records);
+        attach(records);
         return records;
     }
 }

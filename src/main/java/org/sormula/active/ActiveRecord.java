@@ -21,11 +21,12 @@ import java.lang.reflect.Field;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.sormula.active.operation.ActiveOperation;
-import org.sormula.active.operation.LazySelectCascade;
+import org.sormula.Database;
+import org.sormula.active.operation.ActiveLazySelector;
 import org.sormula.annotation.cascade.SelectCascade;
 import org.sormula.annotation.cascade.SelectCascadeAnnotationReader;
 import org.sormula.log.ClassLogger;
+import org.sormula.operation.cascade.lazy.LazySelectable;
 
 
 
@@ -38,14 +39,14 @@ import org.sormula.log.ClassLogger;
  * 
  * @param <R> record type
  */
-public abstract class ActiveRecord<R extends ActiveRecord<R>> implements Serializable
+public abstract class ActiveRecord<R extends ActiveRecord<R>> implements LazySelectable, Serializable
 {
     private static final ClassLogger log = new ClassLogger();
     private static final long serialVersionUID = 1L;
     ActiveDatabase activeDatabase;
     Class<R> recordClass;
-    boolean selected;
-    Set<String> pendingLazySelectCascadeFieldNames;
+    boolean pendingLazySelects;  
+    Set<String> pendingLazySelectFieldNames;
     
     
     /**
@@ -207,19 +208,19 @@ public abstract class ActiveRecord<R extends ActiveRecord<R>> implements Seriali
      * @throws ActiveException if error
      * @since 1.8
      */
-    public void lazySelectCascade(String fieldName) throws ActiveException
+    public void checkLazySelects(String fieldName) throws ActiveException
     {
         if (log.isDebugEnabled()) log.debug("lazySelectCascade check " + fieldName);
         
-        if (selected)
+        if (pendingLazySelects)
         {
             // perform the following test only if record was selected (not created some other way)
             // select cascades are only performed on records that have been selected
-            if (pendingLazySelectCascadeFieldNames == null)
+            if (pendingLazySelectFieldNames == null)
             {
                 // initialize upon first request
                 if (log.isDebugEnabled()) log.debug("lazySelectCascade determine lazy fields");
-                pendingLazySelectCascadeFieldNames = new HashSet<String>();
+                pendingLazySelectFieldNames = new HashSet<String>();
                 
                 // for all fields
                 for (Field field: getClass().getDeclaredFields())
@@ -229,28 +230,29 @@ public abstract class ActiveRecord<R extends ActiveRecord<R>> implements Seriali
                     
                     for (SelectCascade c: selectCascades)
                     {
-                        if (c.lazy()) pendingLazySelectCascadeFieldNames.add(field.getName());
+                        if (c.lazy()) pendingLazySelectFieldNames.add(field.getName());
                     }
                 }
             }
             
-            if (pendingLazySelectCascadeFieldNames.contains(fieldName))
+            if (pendingLazySelectFieldNames.contains(fieldName))
             {
                 // perform only if pending and fieldName is in pending set
                 try
                 {
+                    // cascade
                     if (log.isDebugEnabled()) log.debug("lazy select " + fieldName);
                     Field field = getClass().getDeclaredField(fieldName);
                     SelectCascadeAnnotationReader scar = new SelectCascadeAnnotationReader(field);
-                    new LazySelectCascade<R>(createTable(), recordClass.cast(this), scar).execute();
+                    new ActiveLazySelector<R>(createTable(), recordClass.cast(this), scar).execute();
                     
                     // don't do field again
-                    pendingLazySelectCascadeFieldNames.remove(fieldName);
+                    pendingLazySelectFieldNames.remove(fieldName);
                     
-                    if (pendingLazySelectCascadeFieldNames.size() == 0)
+                    if (pendingLazySelectFieldNames.size() == 0)
                     {
-                        // don't check this record any more
-                        pendingLazySelectCascadeFieldNames = null;
+                        // don't check this record again
+                        pendingLazySelects = false;
                     }
                 }
                 catch (NoSuchFieldException e)
@@ -262,32 +264,13 @@ public abstract class ActiveRecord<R extends ActiveRecord<R>> implements Seriali
         }
     }
 
-
+    
     /**
-     * Indicates that record has been selected. {@link #lazySelectCascade(String)} uses this
-     * value to know when to perform lazy select cascades. Select cascades are only performed when
-     * {@link #isSelected()} is true.
-     * 
-     * @return true if this record was selected from database
-     * @since 1.8
+     * {@inheritDoc}
      */
-    public boolean isSelected()
+    public void pendingLazySelects(Database database) 
     {
-        return selected;
-    }
-
-
-    /**
-     * Sets select status of the record. Used by {@link #lazySelectCascade(String)}
-     * to know when to perform lazy select cascades. Invoked by select subclasses of
-     * {@link ActiveOperation}. 
-     *  
-     * @param selected true if this record was selected from database
-     * @since 1.8
-     */
-    public void setSelected(boolean selected)
-    {
-        this.selected = selected;
+        pendingLazySelects = true;
     }
 
 

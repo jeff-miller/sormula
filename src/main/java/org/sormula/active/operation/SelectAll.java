@@ -42,7 +42,7 @@ public class SelectAll<R extends ActiveRecord<R>> extends ActiveOperation<R, Lis
     public List<R> operate() throws Exception
     {
         List<R> records = getTable().selectAll();
-        attachSelected(records);
+        attach(records);
         return records;
     }
 }

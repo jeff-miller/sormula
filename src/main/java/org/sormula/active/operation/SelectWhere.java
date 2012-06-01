@@ -46,7 +46,7 @@ public class SelectWhere<R extends ActiveRecord<R>> extends ActiveOperation<R, R
     public R operate() throws Exception
     {
         R record = getTable().selectWhere(whereConditionName, parameters);
-        if (record != null) attachSelected(record);
+        if (record != null) attach(record);
         return record;
     }
 }

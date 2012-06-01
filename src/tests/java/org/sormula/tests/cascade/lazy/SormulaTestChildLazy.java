@@ -14,34 +14,32 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.sormula.tests.active.type;
+package org.sormula.tests.cascade.lazy;
 
-import org.sormula.active.ActiveRecord;
+import org.sormula.annotation.Where;
 
 
 /**
- * Row class for {@link InsertTest} and {@link SelectTest1}.
+ * Child of {@link SormulaTestParentLazy1} from a map. Child may occur 0 to n times for 1 parent.
  * 
  * @author Jeff Miller
  */
-public class SormulaTypeTestAR extends ActiveRecord<SormulaTypeTestAR>
+@Where(name="byParent", fieldNames="parentId")
+public class SormulaTestChildLazy
 {
-    private static final long serialVersionUID = 1L;
     int id;
-    int type;
+    int parentId;
     String description;
-    Test1 test1;
     
     
-    public SormulaTypeTestAR()
+    public SormulaTestChildLazy()
     {
     }
 
     
-    public SormulaTypeTestAR(int id, int type, String description)
+    public SormulaTestChildLazy(int id, String description)
     {
         this.id = id;
-        this.type = type;
         this.description = description;
     }
     
@@ -56,6 +54,16 @@ public class SormulaTypeTestAR extends ActiveRecord<SormulaTypeTestAR>
     }
     
     
+    public int getParentId()
+    {
+        return parentId;
+    }
+    public void setParentId(int parentId)
+    {
+        this.parentId = parentId;
+    }
+
+
     public String getDescription()
     {
         return description;
@@ -63,25 +71,5 @@ public class SormulaTypeTestAR extends ActiveRecord<SormulaTypeTestAR>
     public void setDescription(String description)
     {
         this.description = description;
-    }
-
-
-    public int getType()
-    {
-        return type;
-    }
-    public void setType(int type)
-    {
-        this.type = type;
-    }
-
-
-    public Test1 getTest1()
-    {
-        return test1;
-    }
-    public void setTest1(Test1 type1)
-    {
-        this.test1 = type1;
     }
 }

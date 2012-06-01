@@ -68,7 +68,8 @@ public class SelectTest extends ActiveDatabaseTest<SormulaTestParentLazyAR>
             if (child != null)
             {
                 assert !childSelectedEarly : "LazyAR child was selected prematurely";
-                
+                assert child == parent.getChild() : "LazyAR child was selected twice";
+            
                 // verify child was selected
                 assert child.getId() == parent.getChild1Id() : "LazyAR 1:1 child id != parent child1 id";
                 assert child1Table.select(parent.getChild1Id()) != null : "LazyAR 1:1 child cacasade error";
@@ -83,6 +84,7 @@ public class SelectTest extends ActiveDatabaseTest<SormulaTestParentLazyAR>
             // verify 1 to many
             assert parent.childList.size() == 0 : "LazyAR 1:n children were selected prematurely";
             List<SormulaTestChildNLazyAR> children = parent.getChildList();
+            assert children == parent.getChildList() : "LazyAR children were selected twice";
             int countN = childNTable.<Integer>selectCount("id", "byParent", parent.getId());
             if (children.size() > 0)
             {

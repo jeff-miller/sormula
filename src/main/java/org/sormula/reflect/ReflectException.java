@@ -20,7 +20,7 @@ import org.sormula.SormulaException;
 
 
 /**
- * Exception that orgininates in the reflect package.
+ * Exception that originates in the reflect package.
  * 
  * @since 1.0
  * @author Jeff Miller

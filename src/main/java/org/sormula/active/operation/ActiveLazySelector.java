@@ -17,7 +17,6 @@
 package org.sormula.active.operation;
 
 import org.sormula.Table;
-import org.sormula.active.ActiveException;
 import org.sormula.active.ActiveRecord;
 import org.sormula.active.ActiveTable;
 import org.sormula.annotation.cascade.SelectCascade;
@@ -27,13 +26,13 @@ import org.sormula.reflect.SormulaField;
 
 
 /**
- * Performs lazy loading of active records. Used by {@link ActiveRecord#lazySelectCascade(String)}.
+ * Performs lazy loading of active records. Used by {@link ActiveRecord#checkLazySelects(String)}.
  * 
  * @author Jeff Miller
  * @since 1.8
  * @param <R> record type
  */
-public class LazySelectCascade<R extends ActiveRecord<R>> extends ActiveOperation<R, Void>
+public class ActiveLazySelector<R extends ActiveRecord<R>> extends ActiveOperation<R, Void>
 {
     R sourceActiveRecord;    
     SelectCascadeAnnotationReader scar;
@@ -46,7 +45,7 @@ public class LazySelectCascade<R extends ActiveRecord<R>> extends ActiveOperatio
      * @param sourceActiveRecord parent record that gets modified with selected child(ren)
      * @param scar annotation reader for field within parent that has lazy cascade defined
      */
-    public LazySelectCascade(ActiveTable<R> sourceActiveTable, R sourceActiveRecord, SelectCascadeAnnotationReader scar)
+    public ActiveLazySelector(ActiveTable<R> sourceActiveTable, R sourceActiveRecord, SelectCascadeAnnotationReader scar)
     {
         super(sourceActiveTable, "error performing select cascade for active record");
         this.sourceActiveRecord = sourceActiveRecord;
@@ -59,34 +58,26 @@ public class LazySelectCascade<R extends ActiveRecord<R>> extends ActiveOperatio
     {
         // note: target table is table for field NOT same as getTable() which is for source record
         Table<?> targetTable = getOperationDatabase().getTable(scar.getTargetClass());
+        SormulaField<R, ?> targetField = new SormulaField<R, Object>(scar.getSource());
+        SelectCascade[] selectCascades = scar.getSelectCascades();
         
-        if (targetTable != null)
+        // field has select cascade annotation(s)
+        for (SelectCascade c: selectCascades)
         {
-            SormulaField<R, ?> targetField = new SormulaField<R, Object>(scar.getSource());
-            SelectCascade[] selectCascades = scar.getSelectCascades();
-            
-            // field has select cascade annotation(s)
-            for (SelectCascade c: selectCascades)
+            if (c.lazy())
             {
-                if (c.lazy())
+                @SuppressWarnings("unchecked") // target field type is not known at compile time
+                SelectCascadeOperation<R, ?> operation = new SelectCascadeOperation(targetField, targetTable, c);
+                try
                 {
-                    @SuppressWarnings("unchecked") // target field type is not known at compile time
-                    SelectCascadeOperation<R, ?> operation = new SelectCascadeOperation(targetField, targetTable, c);
-                    try
-                    {
-                        operation.prepare();
-                        operation.cascade(sourceActiveRecord);
-                    }
-                    finally
-                    {
-                        operation.close();
-                    }
+                    operation.prepare();
+                    operation.cascade(sourceActiveRecord);
+                }
+                finally
+                {
+                    operation.close();
                 }
             }
-        }                
-        else
-        {
-            throw new ActiveException("no table for target class " + scar.getTargetClass());
         }
         
         return null;

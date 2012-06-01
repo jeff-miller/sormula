@@ -19,7 +19,7 @@ package org.sormula.active;
 
 
 /**
- * Exception that orgininates in the activerecord package. Since it is a runtime
+ * Exception that originates in the activerecord package. Since it is a runtime
  * exception, try/catch/finally blocks are optional when using active record pacakge.
  * 
  * @since 1.7

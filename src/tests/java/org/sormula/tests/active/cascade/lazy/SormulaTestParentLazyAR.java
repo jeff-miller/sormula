@@ -101,7 +101,7 @@ public class SormulaTestParentLazyAR extends ActiveRecord<SormulaTestParentLazyA
 
     public SormulaTestChild1LazyAR getChild()
     {
-        lazySelectCascade("child");
+        checkLazySelects("child");
         return child;
     }
     public void setChild(SormulaTestChild1LazyAR child)
@@ -112,7 +112,7 @@ public class SormulaTestParentLazyAR extends ActiveRecord<SormulaTestParentLazyA
 
     public List<SormulaTestChildNLazyAR> getChildList()
     {
-        lazySelectCascade("childList");
+        checkLazySelects("childList");
         return childList;
     }
     public void setChildList(List<SormulaTestChildNLazyAR> childList)

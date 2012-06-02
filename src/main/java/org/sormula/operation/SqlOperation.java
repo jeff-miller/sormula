@@ -353,10 +353,13 @@ public abstract class SqlOperation<R>
     }
 
     
+    /**
+     * Initializes {@link OperationTime} object that will record elapsed times for this operation.
+     * This method can't be invoked until timing id and/or sql is known so it is invoked by
+     * {@link #execute()}.
+     */
     protected void initOperationTime()
     {
-        // NOTE: initOperationTime() can't occur until timing id and/or sql is known
-        // which is why it is invoked from execute method
         if (timings)
         {
             // timings are enabled 
@@ -423,6 +426,11 @@ public abstract class SqlOperation<R>
     }
     
     
+    /**
+     * Closes the prepared statement for this operation.
+     * 
+     * @throws OperationException if error
+     */
     protected void closeStatement() throws OperationException
     {
         // close statements
@@ -441,6 +449,11 @@ public abstract class SqlOperation<R>
     }
     
     
+    /**
+     * Closes the {@link CascadeOperation} objects for this operation.
+     * 
+     * @throws OperationException if error
+     */
     protected void closeCascades() throws OperationException
     {
         // close cascades
@@ -903,6 +916,13 @@ public abstract class SqlOperation<R>
     {
         return baseSql;
     }
+    
+    
+    /**
+     * Sets the base sql used by this operation. See {@link #getBaseSql()} for details.
+     * 
+     * @param sql base sql used by this operation
+     */
     protected void setBaseSql(String sql)
     {
         this.baseSql = sql;
@@ -929,6 +949,13 @@ public abstract class SqlOperation<R>
     {
         return whereTranslator;
     }
+    
+    
+    /**
+     * Sets the translator to map row object values into where condition.
+     * 
+     * @param whereTranslator where translator or null if none
+     */
     protected void setWhereTranslator(AbstractWhereTranslator<R> whereTranslator)
     {
         this.whereTranslator = whereTranslator;
@@ -937,14 +964,24 @@ public abstract class SqlOperation<R>
 
     /**
      * Gets the next JDBC parameter number used by {@link PreparedStatement} to set parameters.
-     * Parameter number changes as column and where conditions are prepared.
+     * Parameter number changes as column and where conditions are prepared. Parameter numbers
+     * start at 1 and occur for every "?" in the SQL statement. The parameter numbers are used
+     * as the first parameter in the various {@link PreparedStatement} set methods.
      *  
-     * @return the next {@link PreparedStatement} parameter to use 
+     * @return the next {@link PreparedStatement} parameter to use  
      */
     protected int getNextParameter()
     {
         return nextParameter;
     }
+    
+    
+    /**
+     * Sets the next column index to use in {@link PreparedStatement}. See {@link #getNextParameter()}
+     * for details.
+     * 
+     * @param nextParameter the next {@link PreparedStatement} parameter to use
+     */
     protected void setNextParameter(int nextParameter)
     {
         this.nextParameter = nextParameter;

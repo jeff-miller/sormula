@@ -201,7 +201,7 @@ public abstract class ActiveRecord<R extends ActiveRecord<R>> implements LazySel
      * <p>
      * This method may be invoked more than once per field but the field will only be selected upon 
      * the first invocation. Each time that an active record is selected, all lazy select cascaded
-     * fields are initialized by #pendingLazySelectCascadeFields(List). Invoking this method on an
+     * fields are initialized by {@link #pendingLazySelects(Database)}. Invoking this method on an
      * active record that has not been selected (created with new operator) has no affect.
      * 
      * @param fieldName field to select
@@ -274,6 +274,13 @@ public abstract class ActiveRecord<R extends ActiveRecord<R>> implements LazySel
     }
 
 
+    /**
+     * Creates an {@link ActiveTable} for record class returned by {@link #getRecordClass()}.
+     * Default active database is used if none is available for this record.
+     * 
+     * @return active table for performing database operations on this record
+     * @throws ActiveException if error
+     */
     protected ActiveTable<R> createTable() throws ActiveException
     {
         if (activeDatabase == null) return new ActiveTable<R>(recordClass);

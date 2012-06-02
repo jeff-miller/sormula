@@ -137,7 +137,7 @@ abstract public class AbstractLazySelector<R> implements LazySelectable, Seriali
 
     /**
      * Sets transaction use. If true and {@link Database#getTransaction()} reports false from {@link Transaction#isActive()},
-     * meaning no transaction is active, then this class will create a transaction with {#begin()} prior to performing the lazy
+     * meaning no transaction is active, then this class will create a transaction with {@link #begin()} prior to performing the lazy
      * selects.
      * 
      * @param useTransaction true to create a transaction for lazy select if none is active; false to never

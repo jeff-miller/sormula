@@ -182,6 +182,11 @@ public class SaveOperation<R> extends ModifyOperation<R>
     }
 
 
+    /**
+     * Does nothing since cascades are handled by insert and update operation.
+     * 
+     * @param field not used
+     */
     @Override
     protected List<CascadeOperation<R, ?>> prepareCascades(Field field) throws OperationException
     {

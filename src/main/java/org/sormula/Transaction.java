@@ -142,6 +142,9 @@ public class Transaction
 	}
 	
 	
+	/**
+	 * Sets {@link #isActive()} to false and restores auto commit to the original state.
+	 */
 	protected void cleanUp()
 	{
 		try

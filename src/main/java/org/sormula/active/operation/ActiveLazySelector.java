@@ -56,7 +56,7 @@ public class ActiveLazySelector<R extends ActiveRecord<R>> extends ActiveOperati
     @Override
     public Void operate() throws Exception
     {
-        // note: target table is table for field NOT same as getTable() which is for source record
+        // note: target table is table for field which is NOT same as getTable() which is for source record
         Table<?> targetTable = getOperationDatabase().getTable(scar.getTargetClass());
         SormulaField<R, ?> targetField = new SormulaField<R, Object>(scar.getSource());
         SelectCascade[] selectCascades = scar.getSelectCascades();

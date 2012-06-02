@@ -23,8 +23,7 @@ import org.sormula.operation.ScalarSelectOperation;
 
 
 /**
- * Interface for notifying and performing lazy select cascades. Used by {@link ScalarSelectOperation#readNext()}
- * when a least one field has a {@link SelectCascade#lazy()} set to true.
+ * Interface for notifying and performing lazy select cascades. 
  * 
  * @author Jeff Miller
  * @since 1.8
@@ -32,7 +31,8 @@ import org.sormula.operation.ScalarSelectOperation;
 public interface LazySelectable
 {
     /**
-     * Informs a lazy selector that there are lazy selects to be performed. Use {@link Table#getLazySelectCascadeFields()}
+     * Informs a lazy selector that there are lazy selects to be performed. Invoked by {@link ScalarSelectOperation#readNext()}
+     * when a least one field has a {@link SelectCascade#lazy()} set to true. Use {@link Table#getLazySelectCascadeFields()}
      * to know which fields are to be lazily selected.
      * 
      * @param database the database where lazy select fields are to be read
@@ -42,7 +42,7 @@ public interface LazySelectable
     
     
     /**
-     * Checks if lazy select needs to be performed. Perform the select for field if it has not yet been selected.
+     * Checks if lazy select needs to be performed. Perform the select for the field if it has not yet been selected.
      * Otherwise do nothing.
      * 
      * @param fieldName check field with this name

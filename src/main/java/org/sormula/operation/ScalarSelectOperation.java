@@ -393,7 +393,7 @@ public class ScalarSelectOperation<R> extends SqlOperation<R>
 
     /**
      * Reports that {@link #isLazySelectsCascades()} is true and row is instanceof {@link LazySelectable}. This is
-     * set as an optimization so the {@link #readNext()} only tests a boolean to when to invoke 
+     * set as an optimization so the {@link #readNext()} only tests a boolean to know when to invoke 
      * {@link LazySelectable#pendingLazySelects(org.sormula.Database)}.
      * 
      * @return true if {@link LazySelectable#pendingLazySelects(org.sormula.Database)} will be inovked for each row selected
@@ -405,12 +405,23 @@ public class ScalarSelectOperation<R> extends SqlOperation<R>
     }
 
 
+    /**
+     * Gets the {@link OrderByTranslator}. See {@link #setOrderByTranslator(OrderByTranslator)} for details.
+     * 
+     * @return order translator or null if no ordering desired
+     */
     protected OrderByTranslator<R> getOrderByTranslator()
     {
         return orderByTranslator;
     }
 
 
+    /**
+     * Sets the {@link OrderByTranslator} that creates the sql "order by" phrase based upon
+     * the {@link OrderBy} annotations. Default is null. Set by {@link #setOrderBy(String)}.
+     * 
+     * @param orderByTranslator order translator or null if no ordering desired
+     */
     protected void setOrderByTranslator(OrderByTranslator<R> orderByTranslator)
     {
         this.orderByTranslator = orderByTranslator;

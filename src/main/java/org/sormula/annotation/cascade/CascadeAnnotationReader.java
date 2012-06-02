@@ -39,17 +39,42 @@ abstract public class CascadeAnnotationReader
     }
     
     
+    /**
+     * Initializes when {@link OneToManyCascade} is annotated on source field.
+     */
     abstract protected void initOneToManyCascade();
+    
+    
+    /**
+     * Initializes when {@link OneToOneCascade} is annotated on source field.
+     */
     abstract protected void initOneToOneCascade();
+    
+    
+    /**
+     * Initializes when {@link Cascade} is annotated on source field.
+     */
     abstract protected void initCascade();
 
 
+    /**
+     * Sets the class type for target field that will be affected by cascade. For scalar fields, the
+     * target type is the field type. For non-scalar, the type must be specified by
+     * {@link OneToManyCascade#targetClass()} or {@link Cascade#targetClass()}.
+     * 
+     * @param targetClass class of target field
+     */
     protected void initTargetClass(Class<?> targetClass)
     {
         this.targetClass = targetClass;
     }
 
     
+    /**
+     * Initializes target class as {@link Field#getType()} if target class is the default 
+     * value of Object.class. {@link OneToManyCascade#targetClass()} and {@link Cascade#targetClass()}
+     * have a default of Object.class.
+     */
     protected void checkDefaultTargetClass()
     {
         if (targetClass != null && targetClass.getName().equals("java.lang.Object"))
@@ -61,12 +86,23 @@ abstract public class CascadeAnnotationReader
     }
     
     
+    /**
+     * Gets the source field supplied in constructor.
+     * 
+     * @return source field with cascade annotation(s)
+     */
     public Field getSource()
     {
         return source;
     }
 
 
+    /**
+     * Gets the class of the field that will be affected by cascade.
+     *  
+     * @return {@link OneToManyCascade#targetClass()} or {@link Cascade#targetClass()}; 
+     * the source type if field is scalar and target class was defined as Object.class
+     */
     public Class<?> getTargetClass()
     {
         return targetClass;

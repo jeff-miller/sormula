@@ -20,6 +20,7 @@ import javax.sql.DataSource;
 
 import org.sormula.Database;
 import org.sormula.SormulaException;
+import org.sormula.Table;
 import org.sormula.annotation.Transient;
 import org.sormula.annotation.cascade.SelectCascade;
 
@@ -30,10 +31,10 @@ import org.sormula.annotation.cascade.SelectCascade;
  * a database created with {@link Database#Database(DataSource)} or 
  * {@link Database#Database(DataSource, String)}.
  * <p>
- * This class is slightly less efficient because a database and table are created when selector 
- * needs to be used but selector can be used any time even when original connection has been closed.
+ * This class is slightly less efficient because a {@link Database} and {@link Table} are created when selector 
+ * needs to be used. It is more flexible since it can be used any time even when original connection has been closed.
  * <p>
- * DurableLazySelector is good for scenario's when source row may be serialzed to disk as found in
+ * DurableLazySelector is good for scenario's when source row may be serialzed to disk, for example, in
  * web application where source row is stored in web session. 
  * 
  * @author Jeff Miller
@@ -54,7 +55,7 @@ public class DurableLazySelector<R> extends AbstractLazySelector<R>
     
     /**
      * Constructs for use when DurableLazySelector is base class of row that will contain lazy select fields. Typically 
-     * the derived class is the one side of a one-to-many relationship or subclass has a reference to the 
+     * the derived class is the one side of a one-to-many relationship or derived class has a reference to the 
      * other class in a one-to-one relationship. {@link #setUseTransaction(boolean)} is true by default.
      */
     public DurableLazySelector()

@@ -60,6 +60,11 @@ public class LinkedHashMapSelectOperation<K, R> extends MapSelectOperation<K, R>
     }
 
 
+    /**
+     * Creates an {@link LinkedHashMap} to contain selected rows.
+     * 
+     * @return new {@link LinkedHashMap} 
+     */
     @Override
     protected Map<K, R> createReadAllCollection()
     {

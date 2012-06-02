@@ -70,6 +70,13 @@ public class WhereTranslator<R> extends AbstractWhereTranslator<R>
     }
     
     
+    /**
+     * Initializes. Invoked by constructors.
+     * 
+     * @param rowTranslator row translator for where condition
+     * @param whereAnnotation annotation with where information
+     * @throws TranslatorException if error
+     */
     protected void init(RowTranslator<R> rowTranslator, Where whereAnnotation) throws TranslatorException
     {
         // add translators for each column in where condition

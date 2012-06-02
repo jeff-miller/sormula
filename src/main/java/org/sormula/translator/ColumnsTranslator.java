@@ -79,6 +79,11 @@ public class ColumnsTranslator<R>
     }
     
     
+    /**
+     * Initializes objects to hold all column information.
+     * 
+     * @param columns approximatenumber of columns that will be in translator (used as initial capacity)
+     */
     protected void initColumnTranslatorList(int columns)
     {
         columnTranslatorList = new ArrayList<ColumnTranslator<R>>(columns);

@@ -22,8 +22,7 @@ import org.sormula.annotation.cascade.SelectCascade;
 
 
 /**
- * A lazy cascade selector that uses the same {@link Database} as source row select operation to
- * perform the lazy select.
+ * A lazy cascade selector that uses the same {@link Database} that was used to select source row.
  * <p>
  * SimpleLazySelector is good for scenario's when source row is maintained in memory
  * and database/connection used to select the source row remains open. Scenario's like this
@@ -44,7 +43,7 @@ public class SimpleLazySelector<R> extends AbstractLazySelector<R>
     
     /**
      * Constructs for use when SimpleLazySelector is base class of row that will contain lazy select fields. Typically 
-     * the derived class is the one side of a one-to-many relationship or subclass has a reference to the 
+     * the derived class is the one side of a one-to-many relationship or derived class has a reference to the 
      * other class in a one-to-one relationship. {@link #setUseTransaction(boolean)} is true by default.
      */
     public SimpleLazySelector()
@@ -66,6 +65,11 @@ public class SimpleLazySelector<R> extends AbstractLazySelector<R>
     }
     
     
+    /**
+     * Saves reference to database for use in future lazy selects.
+     * 
+     * @param database perform lazy selects from this database
+     */
     @Override
     public void pendingLazySelects(Database database) throws LazyCascadeException
     {
@@ -74,6 +78,9 @@ public class SimpleLazySelector<R> extends AbstractLazySelector<R>
     }
     
     
+    /**
+     * @return database provided in {@link #pendingLazySelects(Database)}
+     */
     @Override
     protected Database initDatabase() throws LazyCascadeException
     {

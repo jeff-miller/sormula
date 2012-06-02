@@ -49,6 +49,7 @@ public abstract class ActiveOperation<R extends ActiveRecord<R>, T>
     ActiveTransaction activeTransaction;
     OperationDatabase operationDatabase;
     Table<R> table;
+    boolean localTransaction;
     
     
     /**
@@ -82,7 +83,7 @@ public abstract class ActiveOperation<R extends ActiveRecord<R>, T>
     {
         T result;
         activeTransaction = activeDatabase.getActiveTransaction();
-        boolean localTransaction = false;
+        localTransaction = false;
         
         try
         {
@@ -136,10 +137,22 @@ public abstract class ActiveOperation<R extends ActiveRecord<R>, T>
         }
         finally
         {
-            if (localTransaction) close(); // avoid connection leak
+            close();
         }
     
         return result;
+    }
+
+
+    /**
+     * Reports type of transaction used. If true, then the transaction is valid only 
+     * while {@link #execute()} is in progress.
+     * 
+     * @return true if transaction is for use only by {@link #execute()}
+     */
+    public boolean isLocalTransaction()
+    {
+        return localTransaction;
     }
 
 
@@ -152,36 +165,66 @@ public abstract class ActiveOperation<R extends ActiveRecord<R>, T>
     protected abstract T operate() throws Exception;
 
     
+    /**
+     * Gets the database used in {@link #execute()}. Database is closed when
+     * the transaction is closed.
+     * 
+     * @return database used to by this operation
+     */
     protected OperationDatabase getOperationDatabase()
     {
         return operationDatabase;
     }
     
 
+    /**
+     * Gets the table used in {@link #execute()}. Table is obtained with
+     * {@link OperationDatabase#getTable(Class)}.
+     * 
+     * @return table used to by this operation
+     */
     protected Table<R> getTable()
     {
         return table;
     }
 
 
+    /**
+     * Attaches an active record to the active database used by this operation with
+     * {@link ActiveRecord#attach(ActiveDatabase)}.
+     * 
+     * @param record active record to be attached
+     */
     protected void attach(R record)
     {
         record.attach(activeDatabase);
     }
 
     
+    /**
+     * Attaches a collection of active record to the active database used by this operation with
+     * {@link ActiveRecord#attach(ActiveDatabase)}.
+     * 
+     * @param records active records to be attached
+     */
     protected void attach(Collection<R> records)
     {
         for (R r: records) r.attach(activeDatabase);
     }
 
 
+    /**
+     * Cleans up any used resources. The most important clean up is closing the JDBC 
+     * connection if {@link #isLocalTransaction()} is true. Otherwise JDBC connection will
+     * be closed when transaction completes.
+     * 
+     * @throws ActiveException if error
+     */
     protected void close() throws ActiveException
     {
-        table = null;
-        
-        if (operationDatabase != null)
+        if (localTransaction && operationDatabase != null)
         {
+            // avoid connection leak
             try
             {
                 Connection connection = operationDatabase.getConnection();
@@ -191,8 +234,10 @@ public abstract class ActiveOperation<R extends ActiveRecord<R>, T>
             {
                 throw new ActiveException("error closing connection", e);
             }
-            
-            operationDatabase = null;
         }
+        
+        // repeated close has no affect
+        operationDatabase = null;
+        table = null;
     }
 }

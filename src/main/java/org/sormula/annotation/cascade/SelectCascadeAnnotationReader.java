@@ -32,6 +32,9 @@ public class SelectCascadeAnnotationReader extends CascadeAnnotationReader
     }
     
     
+    /**
+     * {@inheritDoc}
+     */
     protected void initOneToManyCascade()
     {
         OneToManyCascade cascadesAnnotation = source.getAnnotation(OneToManyCascade.class);
@@ -40,6 +43,9 @@ public class SelectCascadeAnnotationReader extends CascadeAnnotationReader
     }
     
     
+    /**
+     * {@inheritDoc}
+     */
     protected void initOneToOneCascade()
     {
         OneToOneCascade cascadesAnnotation = source.getAnnotation(OneToOneCascade.class);
@@ -48,6 +54,9 @@ public class SelectCascadeAnnotationReader extends CascadeAnnotationReader
     }
     
     
+    /**
+     * {@inheritDoc}
+     */
     protected void initCascade()
     {
         Cascade cascadesAnnotation = source.getAnnotation(Cascade.class);

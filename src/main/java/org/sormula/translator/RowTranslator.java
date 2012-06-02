@@ -213,7 +213,27 @@ public class RowTranslator<R> extends ColumnsTranslator<R>
     }
     
     
+    /**
+     * Use {@link #readImplicitType(AnnotatedElement...)}.
+     * @since 1.6
+     */
+    @Deprecated
     protected TypeTranslator<?> readimplicitType(AnnotatedElement... annotatedElements) throws TranslatorException
+    {
+        return readImplicitType(annotatedElements);
+    }
+    
+    
+    /**
+     * Searches any {@link ImplicitType} annotations and returns new instance of {@link ImplicitType#translator()}
+     * for the first one found.
+     * 
+     * @param annotatedElements objects that may contain an {@link ImplicitType} annotation
+     * @return new {@link TypeTranslator} or null if no {@link ImplicitType} annotations
+     * @throws TranslatorException if error creating new instance of type translator
+     * @since 1.8
+     */
+    protected TypeTranslator<?> readImplicitType(AnnotatedElement... annotatedElements) throws TranslatorException
     {
         for (AnnotatedElement ae : annotatedElements)
         {

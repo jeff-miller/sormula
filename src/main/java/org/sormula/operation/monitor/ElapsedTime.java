@@ -297,6 +297,12 @@ public class ElapsedTime
     }
     
     
+    /**
+     * Formats the elapsed time using the current time format.
+     * 
+     * @param nanoseconds time in nanoseconds 
+     * @return nanoseconds formatted into String 
+     */
     protected String format(long nanoseconds)
     {
         long remaining = nanoseconds;

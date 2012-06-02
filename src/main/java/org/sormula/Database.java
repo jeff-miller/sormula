@@ -116,7 +116,8 @@ public class Database implements TypeTranslatorMap
     
 
     /**
-     * Constructs for no schema. All sql table names will not include a schema prefix.
+     * Constructs for schema. All sql table names will be prefixed with schema name
+     * in form of "schema.table".
      * <p>
      * Connection will be obtained with {@link DataSource#getConnection()} and connection will be 
      * closed when {@link #close()} is invoked.

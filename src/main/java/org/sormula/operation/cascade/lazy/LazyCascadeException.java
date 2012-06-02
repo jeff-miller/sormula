@@ -17,7 +17,6 @@
 package org.sormula.operation.cascade.lazy;
 
 
-
 /**
  * Exception that originates with lazy cascade operations. Since it is a runtime
  * exception, try/catch/finally blocks are optional.

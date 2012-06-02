@@ -126,6 +126,9 @@ public class DeleteOperation<R> extends ModifyOperation<R>
     }
 
 
+    /**
+     * Does nothing since delete statements have no columns.
+     */
     @Override
     protected void writeColumns(R row) throws OperationException
     {

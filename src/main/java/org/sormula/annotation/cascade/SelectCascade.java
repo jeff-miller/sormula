@@ -118,8 +118,8 @@ public @interface SelectCascade
      * The target row is selected when {@link LazySelectable#checkLazySelects(String)} is invoked 
      * or when {@link ActiveRecord#checkLazySelects(String)} is invoked.
      * 
-     * @return true to skip select when source row is selected; false to perform select cascade when
-     * source row is selected
+     * @return true to skip select when source row is selected and add it to list of pending lazy select
+     * fields; false to perform select cascade when source row is selected
      * @since 1.8
      * @see AbstractLazySelector
      * @see SimpleLazySelector

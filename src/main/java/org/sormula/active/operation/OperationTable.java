@@ -42,6 +42,12 @@ public class OperationTable<R extends ActiveRecord> extends Table<R>
     }
     
     
+    /**
+     * {@inheritDoc}
+     * Creates a {@link RowTranslator} where {@link RowTranslator#read(ResultSet, int, Object)}
+     * and {@link RowTranslator#write(PreparedStatement, int, Object)} attach the active
+     * database to the row using {@link ActiveRecord#attach(ActiveDatabase)}.
+     */
     @Override
     protected RowTranslator<R> initRowTranslator() throws TranslatorException
     {

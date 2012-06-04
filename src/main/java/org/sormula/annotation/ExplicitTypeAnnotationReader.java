@@ -82,6 +82,13 @@ public class ExplicitTypeAnnotationReader
     }
     
     
+    /**
+     * Adds a new instance of {@link TypeTranslator} to type translator map if none are already 
+     * defined for {@link ExplicitType#type()}.
+     * 
+     * @param typeAnnotation definition of type to add
+     * @throws Exception if error creating new instance of {@link TypeTranslator}
+     */
     protected void updateMap(ExplicitType typeAnnotation) throws Exception
     {
         Class<?> typeClass = typeAnnotation.type();

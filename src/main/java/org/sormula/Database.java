@@ -18,6 +18,7 @@ package org.sormula;
 
 import java.math.BigDecimal;
 import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.GregorianCalendar;
@@ -25,12 +26,16 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.sql.DataSource;
+
 import org.sormula.annotation.Column;
 import org.sormula.annotation.ExplicitTypeAnnotationReader;
 import org.sormula.annotation.ImplicitType;
 import org.sormula.log.ClassLogger;
 import org.sormula.operation.ModifyOperation;
 import org.sormula.operation.SqlOperation;
+import org.sormula.operation.cascade.lazy.AbstractLazySelector;
+import org.sormula.operation.cascade.lazy.DurableLazySelector;
 import org.sormula.operation.monitor.OperationTime;
 import org.sormula.translator.NameTranslator;
 import org.sormula.translator.TypeTranslator;
@@ -70,6 +75,7 @@ import org.sormula.translator.standard.StringTranslator;
 public class Database implements TypeTranslatorMap, AutoCloseable
 {
     private static final ClassLogger log = new ClassLogger();
+    DataSource dataSource;
     Connection connection;
     String schema;
     Map<String, Table<?>> tableMap; // key is row class canonical name
@@ -80,8 +86,78 @@ public class Database implements TypeTranslatorMap, AutoCloseable
     boolean timings;
     boolean readOnly;
     Map<String, TypeTranslator<?>> typeTranslatorMap; // key is row class canonical name
+
     
+    /**
+     * Constructs for no schema. All sql table names will not include a schema prefix.
+     * <p>
+     * Connection will be obtained with {@link DataSource#getConnection()} and connection will be 
+     * closed when {@link #close()} is invoked.
+     * <p>
+     * Use this constructor when a {@link DataSource} is required, for example when
+     * {@link DurableLazySelector} is used.
+     * 
+     * @param dataSource obtain JDBC connection from this data source
+     * @throws SormulaException if error
+     * @since 1.8
+     */
+    public Database(DataSource dataSource) throws SormulaException
+    {
+        this.dataSource = dataSource;
+        try
+        {
+            init(dataSource.getConnection(), "");
+        }
+        catch (SQLException e)
+        {
+            throw new SormulaException("erroring getting connection from data source", e);
+        }
+    }
     
+
+    /**
+     * Constructs for schema. All sql table names will be prefixed with schema name
+     * in form of "schema.table".
+     * <p>
+     * Connection will be obtained with {@link DataSource#getConnection()} and connection will be 
+     * closed when {@link #close()} is invoked.
+     * <p>
+     * Use this constructor when a {@link DataSource} is required, for example when
+     * {@link DurableLazySelector} is used.
+     * 
+     * @param dataSource obtain JDBC connection from this data source
+     * @param schema name of schema to be prefixed to table name in all table names in sql statements;
+     * {@link Connection#getCatalog()} is typically the schema name but catalog methods are inconsistently
+     * supported by jdbc drivers
+     * @throws SormulaException if error
+     * @since 1.8
+     */
+    public Database(DataSource dataSource, String schema) throws SormulaException
+    {
+        this.dataSource = dataSource;
+        try
+        {
+            init(dataSource.getConnection(), schema);
+        }
+        catch (SQLException e)
+        {
+            throw new SormulaException("erroring getting connection from data source", e);
+        }
+    }
+
+    
+    /**
+     * Gets data source supplied in constructors, {@link #Database(DataSource)} and
+     * {@link #Database(DataSource, String)}.
+     * 
+     * @return data source or null if none was supplied during construction
+     */
+    public DataSource getDataSource()
+    {
+        return dataSource;
+    }
+
+
     /**
      * Constructs for no schema. All sql table names will not include a schema prefix.
      * 
@@ -104,18 +180,9 @@ public class Database implements TypeTranslatorMap, AutoCloseable
      */
     public Database(Connection connection, String schema)
     {
-        this.connection = connection;
-        this.schema = schema;
-        tableMap = new HashMap<>();
-        transaction = new Transaction(connection);
-        nameTranslatorClasses = new ArrayList<>(4);
-        operationTimeMap = new HashMap<>();
-        totalOperationTime = new OperationTime("Database totals");
-        totalOperationTime.setDescription("All operations for database");
-        
         try
         {
-            initTypeTranslatorMap();
+            init(connection, schema);
         }
         catch (SormulaException e)
         {
@@ -124,6 +191,20 @@ public class Database implements TypeTranslatorMap, AutoCloseable
             // if error creating a TypeTranslator, then it will be apparent with first use
             log.error("error initializing types", e);
         }
+    }
+    
+    
+    void init(Connection connection, String schema) throws SormulaException
+    {
+        this.connection = connection;
+        this.schema = schema;
+        tableMap = new HashMap<String, Table<?>>();
+        transaction = initTransaction(connection);
+        nameTranslatorClasses = new ArrayList<Class<? extends NameTranslator>>(4);
+        operationTimeMap = new HashMap<String, OperationTime>();
+        totalOperationTime = new OperationTime("Database totals");
+        totalOperationTime.setDescription("All operations for database");
+        initTypeTranslatorMap();
     }
 
     
@@ -172,9 +253,27 @@ public class Database implements TypeTranslatorMap, AutoCloseable
     
     
     /**
-     * Gets transaction for connection. A {@link Transaction} is not required. {@link Transaction}
+     * Contructs a transaction to use. Default is {@link Transaction}. Subclasses can
+     * override to use transaction other than the default.
+     * 
+     * @param connection JDBC connection to database
+     * @return transaction for all operations using this database
+     * @throws SormulaException if error
+     */
+    protected Transaction initTransaction(Connection connection) throws SormulaException
+    {
+        return new Transaction(connection);
+    }
+    
+    
+    /**
+     * Gets transaction for connection. A {@link Transaction} is optional for most situations. {@link Transaction}
      * is provided for basic JDBC transaction support if desired. Since {@link Database} is
      * single threaded, only one {@link Transaction} object exists per instance of {@link Database}.
+     * <p>
+     * {@link AbstractLazySelector} and subclasses start a new transaction if {@link Transaction#isActive()} is 
+     * false. Use a custom subclass of {@link AbstractLazySelector} and override begin, commit, and rollback 
+     * methods to avoid this default behavior. 
      * 
      * @return transaction for this database
      */
@@ -190,6 +289,20 @@ public class Database implements TypeTranslatorMap, AutoCloseable
      */
     public void close()
     {
+        if (dataSource != null && connection != null)
+        {
+            // assume connection was obtained from data source
+            try
+            {
+                connection.close();
+            }
+            catch (SQLException e)
+            {
+                // prior to v1.8, close did not use throws in signature, keep backward compatible
+                log.error("error closing connection", e);
+            }
+        }
+        
         connection = null;
         schema = null;
         tableMap = null;
@@ -262,6 +375,8 @@ public class Database implements TypeTranslatorMap, AutoCloseable
      * 
      * @param <R> row class type
      * @param rowClass annotations on this class determine mapping from row objects to/from database 
+     * @param create true to create new instance of {@link Table} if {@link #Database(Connection)} does not have one yet;
+     * false to return null if no {@link Table} instance is found for rowClass
      * @return table object for reading/writing row objects of type R from/to database; null if table
      * does not exist and create is false
      * @throws SormulaException if error

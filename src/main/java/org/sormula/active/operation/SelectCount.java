@@ -26,8 +26,10 @@ import org.sormula.active.ActiveTable;
  * 
  * @author Jeff Miller
  * @since 1.7
+ * @param <R> record type
+ * @param <T> aggregate type
  */
-public class SelectCount<R extends ActiveRecord, T> extends ActiveOperation<R, T>
+public class SelectCount<R extends ActiveRecord<R>, T> extends ActiveOperation<R, T>
 {
     String expression;
     String whereConditionName;
@@ -58,8 +60,8 @@ public class SelectCount<R extends ActiveRecord, T> extends ActiveOperation<R, T
     @Override
     public T operate() throws Exception
     {
-        if (expression == null)         return table.<T>selectCount("*");
-        if (whereConditionName == null) return table.<T>selectCount(expression);
-        return table.<T>selectCount(expression, whereConditionName, parameters);
+        if (expression == null)         return getTable().<T>selectCount("*");
+        if (whereConditionName == null) return getTable().<T>selectCount(expression);
+        return getTable().<T>selectCount(expression, whereConditionName, parameters);
     }
 }

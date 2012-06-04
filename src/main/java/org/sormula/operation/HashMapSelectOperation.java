@@ -58,6 +58,11 @@ public class HashMapSelectOperation<K, R> extends MapSelectOperation<K, R>
     }
 
 
+    /**
+     * Creates an {@link HashMap} to contain selected rows.
+     * 
+     * @return new {@link HashMap} 
+     */
     @Override
     protected Map<K, R> createReadAllCollection()
     {

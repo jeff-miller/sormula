@@ -28,8 +28,9 @@ import org.sormula.active.ActiveTable;
  * 
  * @author Jeff Miller
  * @since 1.7
+ * @param <R> record type
  */
-public class InsertAll<R extends ActiveRecord> extends ActiveOperation<R, Integer>
+public class InsertAll<R extends ActiveRecord<R>> extends ActiveOperation<R, Integer>
 {
     Collection<R> records;
     
@@ -45,6 +46,6 @@ public class InsertAll<R extends ActiveRecord> extends ActiveOperation<R, Intege
     public Integer operate() throws Exception
     {
         attach(records);
-        return table.insertAll(records);
+        return getTable().insertAll(records);
     }
 }

@@ -28,13 +28,12 @@ import org.sormula.annotation.Column;
 import org.sormula.annotation.OrderBy;
 import org.sormula.annotation.OrderByAnnotationReader;
 import org.sormula.annotation.Where;
-import org.sormula.annotation.cascade.Cascade;
-import org.sormula.annotation.cascade.OneToManyCascade;
-import org.sormula.annotation.cascade.OneToOneCascade;
 import org.sormula.annotation.cascade.SelectCascade;
+import org.sormula.annotation.cascade.SelectCascadeAnnotationReader;
 import org.sormula.log.ClassLogger;
 import org.sormula.operation.cascade.CascadeOperation;
 import org.sormula.operation.cascade.SelectCascadeOperation;
+import org.sormula.operation.cascade.lazy.LazySelectable;
 import org.sormula.operation.monitor.OperationTime;
 import org.sormula.reflect.SormulaField;
 import org.sormula.translator.OrderByTranslator;
@@ -61,6 +60,8 @@ public class ScalarSelectOperation<R> extends SqlOperation<R>
     RowTranslator<R> rowTranslator;
     int maximumRowsRead = Integer.MAX_VALUE;
     int rowsReadCount;
+    boolean lazySelectsCascades;
+    boolean notifyLazySelects;
     
     
     /**
@@ -251,6 +252,14 @@ public class ScalarSelectOperation<R> extends SqlOperation<R>
             if (resultSet.next() && rowsReadCount < maximumRowsRead)
             {
                 row = table.newRow();
+                
+                if (notifyLazySelects) 
+                {
+                    // inform row of pending select cascades
+                    LazySelectable lazySelectCascadeRow = (LazySelectable)row;
+                    lazySelectCascadeRow.pendingLazySelects(table.getDatabase());
+                }
+                
                 operationTime.pause();
                 preReadCascade(row);
                 preRead(row);
@@ -369,10 +378,50 @@ public class ScalarSelectOperation<R> extends SqlOperation<R>
     }
     
     
+    /**
+     * Reports that operation has at least one field with {@link SelectCascade#lazy()} true. This
+     * status is set during {@link #prepare()}.
+     * 
+     * @return true if there are lazy select cascades annotated
+     * @since 1.8
+     */
+    public boolean isLazySelectsCascades()
+    {
+        return lazySelectsCascades;
+    }
+
+
+    /**
+     * Reports that {@link #isLazySelectsCascades()} is true and row is instanceof {@link LazySelectable}. This is
+     * set as an optimization so the {@link #readNext()} only tests a boolean to know when to invoke 
+     * {@link LazySelectable#pendingLazySelects(org.sormula.Database)}.
+     * 
+     * @return true if {@link LazySelectable#pendingLazySelects(org.sormula.Database)} will be inovked for each row selected
+     * @since 1.8
+     */
+    public boolean isNotifyLazySelects()
+    {
+        return notifyLazySelects;
+    }
+
+
+    /**
+     * Gets the {@link OrderByTranslator}. See {@link #setOrderByTranslator(OrderByTranslator)} for details.
+     * 
+     * @return order translator or null if no ordering desired
+     */
     protected OrderByTranslator<R> getOrderByTranslator()
     {
         return orderByTranslator;
     }
+
+
+    /**
+     * Sets the {@link OrderByTranslator} that creates the sql "order by" phrase based upon
+     * the {@link OrderBy} annotations. Default is null. Set by {@link #setOrderBy(String)}.
+     * 
+     * @param orderByTranslator order translator or null if no ordering desired
+     */
     protected void setOrderByTranslator(OrderByTranslator<R> orderByTranslator)
     {
         this.orderByTranslator = orderByTranslator;
@@ -482,40 +531,45 @@ public class ScalarSelectOperation<R> extends SqlOperation<R>
     protected List<CascadeOperation<R, ?>> prepareCascades(Field field) throws OperationException
     {
         List<CascadeOperation<R, ?>> co = null;
-        Table<?> targetTable = null;
-        SelectCascade[] selectCascades = null;
+        SelectCascadeAnnotationReader scar = new SelectCascadeAnnotationReader(field);
+        SelectCascade[] selectCascades = scar.getSelectCascades();
         
-        if (field.isAnnotationPresent(OneToManyCascade.class))
+        if (selectCascades.length > 0)
         {
-            OneToManyCascade cascadesAnnotation = field.getAnnotation(OneToManyCascade.class);
-            targetTable = getTargetTable(cascadesAnnotation.targetClass(), field);
-            selectCascades = cascadesAnnotation.selects();            
-        }
-        else if (field.isAnnotationPresent(OneToOneCascade.class))
-        {
-            OneToOneCascade cascadesAnnotation = field.getAnnotation(OneToOneCascade.class);
-            targetTable = getTargetTable(field.getType(), field);
-            selectCascades = cascadesAnnotation.selects();            
-        }
-        else if (field.isAnnotationPresent(Cascade.class))
-        {
-            Cascade cascadesAnnotation = field.getAnnotation(Cascade.class);
-            targetTable = getTargetTable(cascadesAnnotation.targetClass(), field);
-            selectCascades = cascadesAnnotation.selects();
-        }
-        
-        if (targetTable != null && selectCascades != null)
-        {
+            // at least one select cascade defined in annotation
+            if (log.isDebugEnabled()) log.debug("prepareCascades() for " + field.getName());
+            Table<?> targetTable = getTargetTable(scar.getTargetClass(), field);
             SormulaField<R, ?> targetField = createTargetField(field);
             co = new ArrayList<>(selectCascades.length);
             
             // for each cascade operation
             for (SelectCascade c: selectCascades)
             {
-                @SuppressWarnings("unchecked") // target field type is not known at compile time
-                CascadeOperation<R, ?> operation = new SelectCascadeOperation(targetField, targetTable, c);
-                operation.prepare();
-                co.add(operation);
+                if (c.lazy())
+                {
+                    lazySelectsCascades = true;
+                }
+                else
+                {
+                    // prepare non lazy cascade for execution
+                    if (log.isDebugEnabled()) log.debug("prepare cascade " + c.operation());
+                    @SuppressWarnings("unchecked") // target field type is not known at compile time
+                    SelectCascadeOperation<R, ?> operation = new SelectCascadeOperation(targetField, targetTable, c);
+                    operation.prepare();
+                    co.add(operation);
+                }
+            }
+            
+            if (lazySelectsCascades)
+            {
+                // test if row class instance of LazySelectable
+                notifyLazySelects = LazySelectable.class.isAssignableFrom(getTable().getRowClass());
+                
+                if (!notifyLazySelects)
+                {
+                    throw new OperationException(getTable().getRowClass() + " must implement " + LazySelectable.class + 
+                            " when SelectCascade#lazy() is true");
+                }
             }
         }
         else

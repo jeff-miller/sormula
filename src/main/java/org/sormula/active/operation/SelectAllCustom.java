@@ -28,8 +28,9 @@ import org.sormula.active.ActiveTable;
  * 
  * @author Jeff Miller
  * @since 1.7
+ * @param <R> record type
  */
-public class SelectAllCustom<R extends ActiveRecord> extends ActiveOperation<R, List<R>>
+public class SelectAllCustom<R extends ActiveRecord<R>> extends ActiveOperation<R, List<R>>
 {
     String customSql;
     Object[] parameters;
@@ -46,7 +47,7 @@ public class SelectAllCustom<R extends ActiveRecord> extends ActiveOperation<R, 
     @Override
     public List<R> operate() throws Exception
     {
-        List<R> records = table.selectAllCustom(customSql, parameters);
+        List<R> records = getTable().selectAllCustom(customSql, parameters);
         attach(records);
         return records;
     }

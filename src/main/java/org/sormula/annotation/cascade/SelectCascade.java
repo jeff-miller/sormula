@@ -22,12 +22,17 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 import java.util.List;
 
+import org.sormula.active.ActiveRecord;
 import org.sormula.annotation.OrderBy;
 import org.sormula.annotation.Where;
 import org.sormula.operation.ArrayListSelectOperation;
 import org.sormula.operation.HashMapSelectOperation;
 import org.sormula.operation.MapSelectOperation;
 import org.sormula.operation.ScalarSelectOperation;
+import org.sormula.operation.cascade.lazy.AbstractLazySelector;
+import org.sormula.operation.cascade.lazy.DurableLazySelector;
+import org.sormula.operation.cascade.lazy.LazySelectable;
+import org.sormula.operation.cascade.lazy.SimpleLazySelector;
 
 
 /**
@@ -69,9 +74,11 @@ public @interface SelectCascade
      * Specifies the where condition to use in cascade. Name is one of names
      * specified on target class by {@link Where#name()} or "primaryKey"
      * for primary key. An empty string indicates no where condition (select all).
+     * Typically is the name of the where condition that uses foreign key(s) in
+     * target row that correspond to primary key(s) in source row.
      * 
      * @return where condition name of target row; "primaryKey" to select by
-     * primary key
+     * primary key; empty string will select all rows
      */
     String targetWhereName() default "primaryKey"; 
     
@@ -87,7 +94,8 @@ public @interface SelectCascade
 
     
     /**
-     * Specifies when the cascade is to occur.
+     * Specifies when the cascade is to occur. This value is ignored if {@link #lazy()}
+     * is true.
      * 
      * @return true to perform cascade after source row operation; false 
      * to perform cascade before source row operation
@@ -103,4 +111,19 @@ public @interface SelectCascade
      * @return name of method that gets key value from target row
      */
     String targetKeyMethodName() default "hashCode";
+    
+    
+    /**
+     * Marks a select cascade to be performed some later time after source row is selected.
+     * The target row is selected when {@link LazySelectable#checkLazySelects(String)} is invoked 
+     * or when {@link ActiveRecord#checkLazySelects(String)} is invoked.
+     * 
+     * @return true to skip select when source row is selected and add it to list of pending lazy select
+     * fields; false to perform select cascade when source row is selected
+     * @since 1.8
+     * @see AbstractLazySelector
+     * @see SimpleLazySelector
+     * @see DurableLazySelector
+     */
+    boolean lazy() default false;
 }

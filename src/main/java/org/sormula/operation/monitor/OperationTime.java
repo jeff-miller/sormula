@@ -174,6 +174,13 @@ public class OperationTime
     }
     
     
+    /**
+     * Starts recording an elapsed time. et will be set as the active time. Methods
+     * {@link #cancel()}, {@link #stop()}, {@link #pause()}, and {@link #resume()}
+     * act upon the active time.
+     * 
+     * @param et elapsed time to start
+     */
     protected void start(ElapsedTime et) 
     {
         if (active != null)
@@ -351,6 +358,12 @@ public class OperationTime
     }
     
     
+    /**
+     * Formats an {@link ElapsedTime} into a standard format.
+     * 
+     * @param et elapsed time to format
+     * @return et formatted into a String
+     */
     protected String format(ElapsedTime et)
     {
         int percent = (int)Math.round(100d * et.getTime() / totalTime.getTime());

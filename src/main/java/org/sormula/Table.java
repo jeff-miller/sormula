@@ -16,6 +16,7 @@
  */
 package org.sormula;
 
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -26,6 +27,8 @@ import org.sormula.annotation.Column;
 import org.sormula.annotation.ExplicitTypeAnnotationReader;
 import org.sormula.annotation.OrderBy;
 import org.sormula.annotation.Row;
+import org.sormula.annotation.cascade.SelectCascade;
+import org.sormula.annotation.cascade.SelectCascadeAnnotationReader;
 import org.sormula.log.ClassLogger;
 import org.sormula.operation.ArrayListSelectOperation;
 import org.sormula.operation.DeleteOperation;
@@ -104,6 +107,7 @@ public class Table<R> implements TypeTranslatorMap
     NoNameTranslator noNameTranslator = new NoNameTranslator(); // remove when NoNameTranslator is removed
     List<? extends NameTranslator> nameTranslators;
     Map<String, TypeTranslator<?>> typeTranslatorMap; // key is row class canonical name
+    List<Field> lazySelectCascadeFields;
     
     
     /**
@@ -155,7 +159,15 @@ public class Table<R> implements TypeTranslatorMap
     }
 
     
-    @SuppressWarnings("unchecked")
+    /**
+     * Initialize all name translators annotated on table. Subclasses of {@link Table} may
+     * contain {@link NameTranslator} annotations instead of annotating row class.
+     * 
+     * @param rowAnnotation the annotation that defines name translator(s)
+     * @return list of name translators; empty list if none
+     * @since 1.8
+     */
+    @SuppressWarnings("unchecked") // type of name translator is not known until runtime
     protected List<? extends NameTranslator> initNameTranslators(Row rowAnnotation) 
     {
         Class<? extends NameTranslator>[] nameTranslatorClasses;
@@ -208,6 +220,14 @@ public class Table<R> implements TypeTranslatorMap
     }
     
     
+    /**
+     * Initializes table name from row annotation. If rowAnnotation is not null, then
+     * Table name is {@link Row#tableName()}. If no name is supplied, then table name will
+     * be row class simple name, {@link Class#getSimpleName()}.
+     * 
+     * @param rowAnnotation row annotation on table or null if none
+     * @return name to use in SQL statements for table
+     */
     protected String initTableName(Row rowAnnotation)
     {
         String name = null;
@@ -227,6 +247,12 @@ public class Table<R> implements TypeTranslatorMap
     }
     
     
+    /**
+     * Creates a {@link RowTranslator} for use by this table. Invoked by constructor.
+     * 
+     * @return row translator
+     * @throws TranslatorException if error
+     */
     protected RowTranslator<R> initRowTranslator() throws TranslatorException
     {
         // default
@@ -352,6 +378,36 @@ public class Table<R> implements TypeTranslatorMap
     }
     
     
+    /** 
+     * Gets fields for table record class that are annotated with {@link SelectCascade#lazy()} true.
+     * 
+     * @return list of fields
+     * @since 1.8
+     */
+    public List<Field> getLazySelectCascadeFields()
+    {
+        if (lazySelectCascadeFields == null)
+        {
+            // create only when first asked
+            lazySelectCascadeFields = new ArrayList<Field>();
+            
+            // for all fields
+            for (Field field: getRowClass().getDeclaredFields())
+            {
+                SelectCascadeAnnotationReader scar = new SelectCascadeAnnotationReader(field);
+                SelectCascade[] selectCascades = scar.getSelectCascades();
+                
+                for (SelectCascade c: selectCascades)
+                {
+                    if (c.lazy()) lazySelectCascadeFields.add(field);
+                }
+            }
+        }
+        
+        return lazySelectCascadeFields;
+    }
+
+
     /**
      * Creates new instance of row. Typically used by select operations for
      * each row that is read from result set.

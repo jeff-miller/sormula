@@ -28,8 +28,9 @@ import org.sormula.active.ActiveTable;
  * 
  * @author Jeff Miller
  * @since 1.7
+ * @param <R> record type
  */
-public class DeleteAll<R extends ActiveRecord> extends ActiveOperation<R, Integer>
+public class DeleteAll<R extends ActiveRecord<R>> extends ActiveOperation<R, Integer>
 {
     Collection<R> records;
     
@@ -53,11 +54,11 @@ public class DeleteAll<R extends ActiveRecord> extends ActiveOperation<R, Intege
         if (records != null)
         {
             attach(records);
-            return table.deleteAll(records);
+            return getTable().deleteAll(records);
         }
         else
         {
-            return table.deleteAll();
+            return getTable().deleteAll();
         }
     }
 }

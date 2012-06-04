@@ -17,6 +17,16 @@
 package org.sormula.active;
 
 import java.io.Serializable;
+import java.lang.reflect.Field;
+import java.util.HashSet;
+import java.util.Set;
+
+import org.sormula.Database;
+import org.sormula.active.operation.ActiveLazySelector;
+import org.sormula.annotation.cascade.SelectCascade;
+import org.sormula.annotation.cascade.SelectCascadeAnnotationReader;
+import org.sormula.log.ClassLogger;
+import org.sormula.operation.cascade.lazy.LazySelectable;
 
 
 
@@ -26,12 +36,17 @@ import java.io.Serializable;
  * 
  * @author Jeff Miller
  * @since 1.7
+ * 
+ * @param <R> record type
  */
-public abstract class ActiveRecord<R extends ActiveRecord> implements Serializable
+public abstract class ActiveRecord<R extends ActiveRecord<R>> implements LazySelectable, Serializable
 {
+    private static final ClassLogger log = new ClassLogger();
     private static final long serialVersionUID = 1L;
     ActiveDatabase activeDatabase;
     Class<R> recordClass;
+    boolean pendingLazySelects;  
+    Set<String> pendingLazySelectFieldNames;
     
     
     /**
@@ -77,7 +92,7 @@ public abstract class ActiveRecord<R extends ActiveRecord> implements Serializab
     {
         this.activeDatabase = null;
     }
-
+    
 
     /**
      * Creates a table that can be used to for records of type recordClass for the default
@@ -99,7 +114,7 @@ public abstract class ActiveRecord<R extends ActiveRecord> implements Serializab
      * @return ActiveTable instance for records of type R
      * @throws ActiveException if error
      */
-    public static <R extends ActiveRecord> ActiveTable<R> table(Class<R> recordClass) throws ActiveException
+    public static <R extends ActiveRecord<R>> ActiveTable<R> table(Class<R> recordClass) throws ActiveException
     {
         return new ActiveTable<>(recordClass);
     }
@@ -170,8 +185,102 @@ public abstract class ActiveRecord<R extends ActiveRecord> implements Serializab
     {
         return (Class<R>)getClass();
     }
+
+
+    /**
+     * Selects record(s) from database for field based upon definitions in select annotations of field
+     * where {@link SelectCascade#lazy()} is true. Typically this method is invoked by the "get" method
+     * associated with field. For example:
+     * <blockquote><pre>
+    public List&lt;SomeChild&gt; getChildList()
+    {
+        lazySelectCascade("childList");
+        return childList;
+    }
+    </pre></blockquote>
+     * <p>
+     * This method may be invoked more than once per field but the field will only be selected upon 
+     * the first invocation. Each time that an active record is selected, all lazy select cascaded
+     * fields are initialized by {@link #pendingLazySelects(Database)}. Invoking this method on an
+     * active record that has not been selected (created with new operator) has no affect.
+     * 
+     * @param fieldName field to select
+     * @throws ActiveException if error
+     * @since 1.8
+     */
+    public void checkLazySelects(String fieldName) throws ActiveException
+    {
+        if (log.isDebugEnabled()) log.debug("lazySelectCascade check " + fieldName);
+        
+        if (pendingLazySelects)
+        {
+            // perform the following test only if record was selected (not created some other way)
+            // select cascades are only performed on records that have been selected
+            if (pendingLazySelectFieldNames == null)
+            {
+                // initialize upon first request
+                if (log.isDebugEnabled()) log.debug("lazySelectCascade determine lazy fields");
+                pendingLazySelectFieldNames = new HashSet<String>();
+                
+                // for all fields
+                for (Field field: getClass().getDeclaredFields())
+                {
+                    SelectCascadeAnnotationReader scar = new SelectCascadeAnnotationReader(field);
+                    SelectCascade[] selectCascades = scar.getSelectCascades();
+                    
+                    for (SelectCascade c: selectCascades)
+                    {
+                        if (c.lazy()) pendingLazySelectFieldNames.add(field.getName());
+                    }
+                }
+            }
+            
+            if (pendingLazySelectFieldNames.contains(fieldName))
+            {
+                // perform only if pending and fieldName is in pending set
+                try
+                {
+                    // cascade
+                    if (log.isDebugEnabled()) log.debug("lazy select " + fieldName);
+                    Field field = getClass().getDeclaredField(fieldName);
+                    SelectCascadeAnnotationReader scar = new SelectCascadeAnnotationReader(field);
+                    new ActiveLazySelector<R>(createTable(), recordClass.cast(this), scar).execute();
+                    
+                    // don't do field again
+                    pendingLazySelectFieldNames.remove(fieldName);
+                    
+                    if (pendingLazySelectFieldNames.size() == 0)
+                    {
+                        // don't check this record again
+                        pendingLazySelects = false;
+                    }
+                }
+                catch (NoSuchFieldException e)
+                {
+                    // not likely since pendingLazySelectCascadeFieldNames contains only valid names
+                    throw new ActiveException("can't get field name " + fieldName + " in class " + getClass(), e);
+                }
+            }
+        }
+    }
+
     
-    
+    /**
+     * {@inheritDoc}
+     */
+    public void pendingLazySelects(Database database) 
+    {
+        pendingLazySelects = true;
+    }
+
+
+    /**
+     * Creates an {@link ActiveTable} for record class returned by {@link #getRecordClass()}.
+     * Default active database is used if none is available for this record.
+     * 
+     * @return active table for performing database operations on this record
+     * @throws ActiveException if error
+     */
     protected ActiveTable<R> createTable() throws ActiveException
     {
         if (activeDatabase == null) return new ActiveTable<>(recordClass);

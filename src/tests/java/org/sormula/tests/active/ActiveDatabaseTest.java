@@ -16,13 +16,10 @@
  */
 package org.sormula.tests.active;
 
-import javax.sql.DataSource;
-
 import org.sormula.active.ActiveDatabase;
 import org.sormula.active.ActiveRecord;
 import org.sormula.active.ActiveTable;
 import org.sormula.tests.DatabaseTest;
-import org.sormula.tests.TestDataSource;
 
 
 /** 
@@ -30,9 +27,8 @@ import org.sormula.tests.TestDataSource;
  * 
  * @author Jeff Miller
  */
-public class ActiveDatabaseTest<R extends ActiveRecord> extends DatabaseTest<R>
+public class ActiveDatabaseTest<R extends ActiveRecord<R>> extends DatabaseTest<R>
 {
-    DataSource dataSource;
     ActiveDatabase activeDatabase;
     ActiveTable<R> activeTable;
     
@@ -41,8 +37,8 @@ public class ActiveDatabaseTest<R extends ActiveRecord> extends DatabaseTest<R>
     public void openDatabase() throws Exception
     {
         super.openDatabase();
-        dataSource = new TestDataSource(this);
-        activeDatabase = new ActiveDatabase(dataSource, getSchema());
+        activeDatabase = new ActiveDatabase(getDataSource(), getSchema());
+        activeDatabase.setTimings(Boolean.parseBoolean(System.getProperty("timings")));
     }
     
     
@@ -52,12 +48,6 @@ public class ActiveDatabaseTest<R extends ActiveRecord> extends DatabaseTest<R>
         super.createTable(rowClass);
         activeTable = new ActiveTable<>(activeDatabase, rowClass);
         assert activeTable != null : "active table creation error";
-    }
-
-
-    public DataSource getDataSource()
-    {
-        return dataSource;
     }
 
 

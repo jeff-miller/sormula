@@ -26,8 +26,10 @@ import org.sormula.active.ActiveTable;
  * 
  * @author Jeff Miller
  * @since 1.7
+ * @param <R> record type
+ * @param <T> aggregate type
  */
-public class SelectAvg<R extends ActiveRecord, T> extends ActiveOperation<R, T>
+public class SelectAvg<R extends ActiveRecord<R>, T> extends ActiveOperation<R, T>
 {
     String expression;
     String whereConditionName;
@@ -52,7 +54,7 @@ public class SelectAvg<R extends ActiveRecord, T> extends ActiveOperation<R, T>
     @Override
     public T operate() throws Exception
     {
-        if (whereConditionName == null) return table.<T>selectAvg(expression);
-        return table.<T>selectAvg(expression, whereConditionName, parameters);
+        if (whereConditionName == null) return getTable().<T>selectAvg(expression);
+        return getTable().<T>selectAvg(expression, whereConditionName, parameters);
     }
 }

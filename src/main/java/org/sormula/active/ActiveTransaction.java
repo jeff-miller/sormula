@@ -189,13 +189,21 @@ public class ActiveTransaction
     }
 
     
+    /**
+     * Cleans up resources that are used by this transaction. Specifically, the active transaction
+     * is removed from active database and the JDBC connection is closed.
+     * 
+     * @throws ActiveException if error
+     */
     protected void close() throws ActiveException
     {
         activeDatabase.setActiveTransaction(null);
         
         try
         {
-            Connection connection = operationTransaction.getOperationDatabase().getConnection();
+            OperationDatabase od = operationTransaction.getOperationDatabase();
+            od.logTimings();
+            Connection connection = od.getConnection();
             if (connection != null) connection.close();
         }
         catch (SQLException e)

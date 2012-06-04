@@ -23,10 +23,9 @@ import java.util.Collections;
 import java.util.List;
 
 import org.sormula.Table;
-import org.sormula.annotation.cascade.Cascade;
-import org.sormula.annotation.cascade.OneToManyCascade;
-import org.sormula.annotation.cascade.OneToOneCascade;
 import org.sormula.annotation.cascade.UpdateCascade;
+import org.sormula.annotation.cascade.UpdateCascadeAnnotationReader;
+import org.sormula.log.ClassLogger;
 import org.sormula.operation.cascade.CascadeOperation;
 import org.sormula.operation.cascade.UpdateCascadeOperation;
 import org.sormula.reflect.SormulaField;
@@ -43,6 +42,9 @@ import org.sormula.translator.RowTranslator;
  */
 public class UpdateOperation<R> extends ModifyOperation<R>
 {
+    private static final ClassLogger log = new ClassLogger();
+    
+    
     /**
      * Constructs standard sql update for primary key as:<br>
      * UPDATE table SET c1=?, c2=?, c3... WHERE primary key clause
@@ -152,44 +154,21 @@ public class UpdateOperation<R> extends ModifyOperation<R>
     protected List<CascadeOperation<R, ?>> prepareCascades(Field field) throws OperationException
     {
         List<CascadeOperation<R, ?>> co = null;
-        Table<?> targetTable = null;
-        UpdateCascade[] updateCascades = null;
+        UpdateCascadeAnnotationReader ucar = new UpdateCascadeAnnotationReader(field);
+        UpdateCascade[] updateCascades = ucar.getUpdateCascades();
         
-        if (field.isAnnotationPresent(OneToManyCascade.class))
+        if (updateCascades.length > 0)
         {
-            OneToManyCascade cascadesAnnotation = field.getAnnotation(OneToManyCascade.class);
-            
-            if (!cascadesAnnotation.readOnly())
-            {
-                targetTable = getTargetTable(cascadesAnnotation.targetClass(), field);
-                updateCascades = cascadesAnnotation.updates();
-            }
-        }
-        else if (field.isAnnotationPresent(OneToOneCascade.class))
-        {
-            OneToOneCascade cascadesAnnotation = field.getAnnotation(OneToOneCascade.class);
-            
-            if (!cascadesAnnotation.readOnly())
-            {
-                targetTable = getTargetTable(field.getType(), field);
-                updateCascades = cascadesAnnotation.updates();
-            }
-        }
-        else if (field.isAnnotationPresent(Cascade.class))
-        {
-            Cascade cascadesAnnotation = field.getAnnotation(Cascade.class);
-            targetTable = getTargetTable(cascadesAnnotation.targetClass(), field);
-            updateCascades = cascadesAnnotation.updates();
-        }
-        
-        if (targetTable != null && updateCascades != null)
-        {
+            // at least one update cascade
+            if (log.isDebugEnabled()) log.debug("prepareCascades() for " + field.getName());
+            Table<?> targetTable = getTargetTable(ucar.getTargetClass(), field);
             SormulaField<R, ?> targetField = createTargetField(field);
             co = new ArrayList<>(updateCascades.length);
             
             // for each cascade operation
             for (UpdateCascade c: updateCascades)
             {
+                if (log.isDebugEnabled()) log.debug("prepare cascade " + c.operation());
                 @SuppressWarnings("unchecked") // target field type is not known at compile time
                 CascadeOperation<R, ?> operation = new UpdateCascadeOperation(targetField, targetTable, c);
                 operation.prepare();

@@ -56,6 +56,11 @@ public class ArrayListSelectOperation<R> extends ListSelectOperation<R>
     }
     
     
+    /**
+     * Creates an {@link ArrayList} to contain selected rows.
+     * 
+     * @return new {@link ArrayList} 
+     */
     @Override
     protected ArrayList<R> createReadAllCollection()
     {

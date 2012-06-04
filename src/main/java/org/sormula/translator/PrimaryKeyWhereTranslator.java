@@ -69,7 +69,14 @@ public class PrimaryKeyWhereTranslator<R> extends AbstractWhereTranslator<R>
         }
     }
     
-    
+
+    /**
+     * Adds a {@link ColumnTranslator} for a field. Invoked by constructor.
+     * 
+     * @param f add translator for this field
+     * @param annotationName annotation name to display in exception message
+     * @throws TranslatorException if no column translator exists for field
+     */
     protected void addColumnTranslator(Field f, String annotationName) throws TranslatorException
     {
         ColumnTranslator<R> columnTranslator = rowTranslator.getColumnTranslator(f.getName());

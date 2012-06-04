@@ -20,7 +20,7 @@ import org.sormula.active.ActiveRecord;
 
 
 /**
- * Row class for {@link InsertTest} and {@link SelectTest}.
+ * Row class for {@link InsertTest} and {@link SelectTest1}.
  * 
  * @author Jeff Miller
  */

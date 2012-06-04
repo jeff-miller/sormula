@@ -40,9 +40,9 @@ import org.sormula.operation.monitor.OperationTime;
 import org.sormula.reflect.ReflectException;
 import org.sormula.reflect.SormulaField;
 import org.sormula.translator.AbstractWhereTranslator;
-import org.sormula.translator.TypeTranslator;
 import org.sormula.translator.RowTranslator;
 import org.sormula.translator.TranslatorException;
+import org.sormula.translator.TypeTranslator;
 import org.sormula.translator.WhereTranslator;
 
 
@@ -343,10 +343,13 @@ public abstract class SqlOperation<R> implements AutoCloseable
     }
 
     
+    /**
+     * Initializes {@link OperationTime} object that will record elapsed times for this operation.
+     * This method can't be invoked until timing id and/or sql is known so it is invoked by
+     * {@link #execute()}.
+     */
     protected void initOperationTime()
     {
-        // NOTE: initOperationTime() can't occur until timing id and/or sql is known
-        // which is why it is invoked from execute method
         if (timings)
         {
             // timings are enabled 
@@ -413,6 +416,11 @@ public abstract class SqlOperation<R> implements AutoCloseable
     }
     
     
+    /**
+     * Closes the prepared statement for this operation.
+     * 
+     * @throws OperationException if error
+     */
     protected void closeStatement() throws OperationException
     {
         // close statements
@@ -431,6 +439,11 @@ public abstract class SqlOperation<R> implements AutoCloseable
     }
     
     
+    /**
+     * Closes the {@link CascadeOperation} objects for this operation.
+     * 
+     * @throws OperationException if error
+     */
     protected void closeCascades() throws OperationException
     {
         // close cascades
@@ -516,7 +529,7 @@ public abstract class SqlOperation<R> implements AutoCloseable
     
     /**
      * Prepares cascades for all cascade annotations on row class. Cascade annotations
-     * are {@link OneToManyCascade}, {@link OneToOneCascade}, and {linkplain Cascade}.
+     * are {@link OneToManyCascade}, {@link OneToOneCascade}, and {@link Cascade}.
      *  
      * @throws OperationException if error
      */
@@ -525,20 +538,18 @@ public abstract class SqlOperation<R> implements AutoCloseable
         // for all fields
         for (Field f: getTable().getRowTranslator().getRowClass().getDeclaredFields())
         {
-            if (f.isAnnotationPresent(OneToManyCascade.class) ||
-                f.isAnnotationPresent(OneToOneCascade.class) ||
-                f.isAnnotationPresent(Cascade.class))
+            List<CascadeOperation<R, ?>> fieldCascades = prepareCascades(f);
+            
+            if (fieldCascades.size() > 0)
             {
-                // prepare cascades
-                if (log.isDebugEnabled()) log.debug("prepareCascades() for " + f.getName());
-                
+                // at least one for the field
                 if (cascadeOperations == null)
                 {
                     // create only if needed so that no penalty for pre/postExecuteCascade and no memory usage
                     cascadeOperations = new ArrayList<>();
                 }
-                
-                cascadeOperations.addAll(prepareCascades(f));
+            
+                cascadeOperations.addAll(fieldCascades);
             }
         }
         
@@ -583,7 +594,7 @@ public abstract class SqlOperation<R> implements AutoCloseable
      * Gets a table object from database associated with this operation.
      * 
      * @param targetClass class that cascade is to affect
-     * @param targetField target of cascade (obtain target field type if not specified by annotation)
+     * @param targetField target of cascade 
      * @return table for target class of annotation
      * @throws OperationException if error
      */
@@ -593,13 +604,6 @@ public abstract class SqlOperation<R> implements AutoCloseable
         
         try
         {
-            if (targetClass.getName().equals("java.lang.Object"))
-            {
-                // get target class based upon field type
-                // if field is parameterized, then getTable will not obtain correct table
-                targetClass = targetField.getType();
-            }
-            
             targetTable = getTable().getDatabase().getTable(targetClass);
         }
         catch (SormulaException e)
@@ -882,6 +886,13 @@ public abstract class SqlOperation<R> implements AutoCloseable
     {
         return baseSql;
     }
+    
+    
+    /**
+     * Sets the base sql used by this operation. See {@link #getBaseSql()} for details.
+     * 
+     * @param sql base sql used by this operation
+     */
     protected void setBaseSql(String sql)
     {
         this.baseSql = sql;
@@ -908,6 +919,13 @@ public abstract class SqlOperation<R> implements AutoCloseable
     {
         return whereTranslator;
     }
+    
+    
+    /**
+     * Sets the translator to map row object values into where condition.
+     * 
+     * @param whereTranslator where translator or null if none
+     */
     protected void setWhereTranslator(AbstractWhereTranslator<R> whereTranslator)
     {
         this.whereTranslator = whereTranslator;
@@ -916,14 +934,24 @@ public abstract class SqlOperation<R> implements AutoCloseable
 
     /**
      * Gets the next JDBC parameter number used by {@link PreparedStatement} to set parameters.
-     * Parameter number changes as column and where conditions are prepared.
+     * Parameter number changes as column and where conditions are prepared. Parameter numbers
+     * start at 1 and occur for every "?" in the SQL statement. The parameter numbers are used
+     * as the first parameter in the various {@link PreparedStatement} set methods.
      *  
-     * @return the next {@link PreparedStatement} parameter to use 
+     * @return the next {@link PreparedStatement} parameter to use  
      */
     protected int getNextParameter()
     {
         return nextParameter;
     }
+    
+    
+    /**
+     * Sets the next column index to use in {@link PreparedStatement}. See {@link #getNextParameter()}
+     * for details.
+     * 
+     * @param nextParameter the next {@link PreparedStatement} parameter to use
+     */
     protected void setNextParameter(int nextParameter)
     {
         this.nextParameter = nextParameter;

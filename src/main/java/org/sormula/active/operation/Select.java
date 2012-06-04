@@ -26,8 +26,9 @@ import org.sormula.active.ActiveTable;
  * 
  * @author Jeff Miller
  * @since 1.7
+ * @param <R> record type
  */
-public class Select<R extends ActiveRecord> extends ActiveOperation<R, R>
+public class Select<R extends ActiveRecord<R>> extends ActiveOperation<R, R>
 {
     Object[] primaryKeys;
     
@@ -42,8 +43,8 @@ public class Select<R extends ActiveRecord> extends ActiveOperation<R, R>
     @Override
     public R operate() throws Exception
     {
-        R record = table.select(primaryKeys);
-        if (record != null) attach(record);
+        R record = getTable().select(primaryKeys);
+        if (record != null) attach(record); 
         return record;
     }
 }

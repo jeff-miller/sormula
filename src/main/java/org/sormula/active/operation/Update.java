@@ -26,8 +26,9 @@ import org.sormula.active.ActiveTable;
  * 
  * @author Jeff Miller
  * @since 1.7
+ * @param <R> record type
  */
-public class Update<R extends ActiveRecord> extends ActiveOperation<R, Integer>
+public class Update<R extends ActiveRecord<R>> extends ActiveOperation<R, Integer>
 {
     R record;
     
@@ -43,6 +44,6 @@ public class Update<R extends ActiveRecord> extends ActiveOperation<R, Integer>
     public Integer operate() throws Exception
     {
         attach(record);
-        return table.update(record);
+        return getTable().update(record);
     }
 }

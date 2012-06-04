@@ -94,6 +94,14 @@ public class OrderByTranslator<R> extends ColumnsTranslator<R>
     }
     
     
+    /**
+     * Initializes when all columns used the same qualifier.
+     * 
+     * @param rowTranslator row translator for row
+     * @param fieldNames names of fields used in ordering
+     * @param qualifier empty String, "ASC", "DESC"
+     * @throws NoColumnTranslatorException if no {@link ColumnTranslator} exists for a field name
+     */
     protected void initSimpleOrderByColumns(RowTranslator<R> rowTranslator, String[] fieldNames, String qualifier) throws NoColumnTranslatorException
     {
         initColumnTranslatorList(fieldNames.length);
@@ -139,6 +147,9 @@ public class OrderByTranslator<R> extends ColumnsTranslator<R>
     }
     
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     protected void initColumnTranslatorList(int columns)
     {

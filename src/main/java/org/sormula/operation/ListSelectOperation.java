@@ -56,6 +56,9 @@ public abstract class ListSelectOperation<R> extends SelectOperation<R, List<R>>
     }
 
 
+    /**
+     * {@inheritDoc}
+     */
 	@Override
 	protected boolean add(R row) 
 	{

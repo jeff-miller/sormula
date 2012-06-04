@@ -28,8 +28,9 @@ import org.sormula.active.ActiveTable;
  * 
  * @author Jeff Miller
  * @since 1.7
+ * @param <R> record type
  */
-public class SelectAllWhereOrdered<R extends ActiveRecord> extends ActiveOperation<R, List<R>>
+public class SelectAllWhereOrdered<R extends ActiveRecord<R>> extends ActiveOperation<R, List<R>>
 {
     String whereConditionName;
     String orderByName;
@@ -48,7 +49,7 @@ public class SelectAllWhereOrdered<R extends ActiveRecord> extends ActiveOperati
     @Override
     public List<R> operate() throws Exception
     {
-        List<R> records = table.selectAllWhereOrdered(whereConditionName, orderByName, parameters);
+        List<R> records = getTable().selectAllWhereOrdered(whereConditionName, orderByName, parameters);
         attach(records);
         return records;
     }

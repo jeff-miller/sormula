@@ -220,7 +220,7 @@ public abstract class ActiveRecord<R extends ActiveRecord<R>> implements LazySel
             {
                 // initialize upon first request
                 if (log.isDebugEnabled()) log.debug("lazySelectCascade determine lazy fields");
-                pendingLazySelectFieldNames = new HashSet<String>();
+                pendingLazySelectFieldNames = new HashSet<>();
                 
                 // for all fields
                 for (Field field: getClass().getDeclaredFields())

@@ -46,7 +46,7 @@ public class SormulaTestParentLazy3 implements LazySelectable
     String description;
     
     @Transient
-    SimpleLazySelector<SormulaTestParentLazy3> lazySelector = new SimpleLazySelector<SormulaTestParentLazy3>(this);
+    SimpleLazySelector<SormulaTestParentLazy3> lazySelector = new SimpleLazySelector<>(this);
     
     
     // tests general cascade and map type

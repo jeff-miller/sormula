@@ -389,7 +389,7 @@ public class Table<R> implements TypeTranslatorMap
         if (lazySelectCascadeFields == null)
         {
             // create only when first asked
-            lazySelectCascadeFields = new ArrayList<Field>();
+            lazySelectCascadeFields = new ArrayList<>();
             
             // for all fields
             for (Field field: getRowClass().getDeclaredFields())

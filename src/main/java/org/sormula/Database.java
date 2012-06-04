@@ -198,10 +198,10 @@ public class Database implements TypeTranslatorMap, AutoCloseable
     {
         this.connection = connection;
         this.schema = schema;
-        tableMap = new HashMap<String, Table<?>>();
+        tableMap = new HashMap<>();
         transaction = initTransaction(connection);
-        nameTranslatorClasses = new ArrayList<Class<? extends NameTranslator>>(4);
-        operationTimeMap = new HashMap<String, OperationTime>();
+        nameTranslatorClasses = new ArrayList<>(4);
+        operationTimeMap = new HashMap<>();
         totalOperationTime = new OperationTime("Database totals");
         totalOperationTime.setDescription("All operations for database");
         initTypeTranslatorMap();

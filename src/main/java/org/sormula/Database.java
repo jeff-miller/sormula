@@ -26,6 +26,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.naming.Context;
+import javax.naming.InitialContext;
+import javax.naming.NamingException;
 import javax.sql.DataSource;
 
 import org.sormula.annotation.Column;
@@ -75,6 +78,7 @@ import org.sormula.translator.standard.StringTranslator;
 public class Database implements TypeTranslatorMap
 {
     private static final ClassLogger log = new ClassLogger();
+    String dataSourceName;
     DataSource dataSource;
     Connection connection;
     String schema;
@@ -86,6 +90,74 @@ public class Database implements TypeTranslatorMap
     boolean timings;
     boolean readOnly;
     Map<String, TypeTranslator<?>> typeTranslatorMap; // key is row class canonical name
+    
+    
+    /**
+     * Constructs for JNDI name and no schema. All sql table names will not include a schema prefix.
+     * <p>
+     * {@link DataSource} will be obtained from JNDI look up of dataSourceName. Typically web containers
+     * require data source to be configured with a name like "someds" but the full path to the
+     * data source contains an implied context of "java:comp/env". So the constructor parameter, 
+     * datasourceName, would be "java:comp/env/someds".
+     * <p>
+     * Connection will be obtained with {@link DataSource#getConnection()} and connection will be 
+     * closed when {@link #close()} is invoked.
+     * <p>
+     * Use this constructor when a {@link DataSource} is required, for example when
+     * {@link DurableLazySelector} is used.
+     * 
+     * @param dataSourceName JNDI full path to data source definition; example "java:comp/env/someds"
+     * @throws SormulaException if error
+     * @since 1.81
+     */
+    public Database(String dataSourceName) throws SormulaException
+    {
+        this(dataSourceName, "");
+    }
+    
+
+    /**
+     * Constructs for JNDI name and schema. All sql table names will be prefixed with schema name
+     * in form of "schema.table".
+     * <p>
+     * {@link DataSource} will be obtained from JNDI look up of dataSourceName. Typically web containers
+     * require data source to be configured with a name like "someds" but the full path to the
+     * data source contains an implied context of "java:comp/env". So the constructor parameter, 
+     * datasourceName, would be "java:comp/env/someds".
+     * <p>
+     * Connection will be obtained with {@link DataSource#getConnection()} and connection will be 
+     * closed when {@link #close()} is invoked.
+     * <p>
+     * Use this constructor when a {@link DataSource} is required, for example when
+     * {@link DurableLazySelector} is used.
+     * 
+     * @param dataSourceName JNDI full path to data source definition; example "java:comp/env/someds"
+     * @param schema name of schema to be prefixed to table name in all table names in sql statements;
+     * {@link Connection#getCatalog()} is typically the schema name but catalog methods are inconsistently
+     * supported by jdbc drivers
+     * @throws SormulaException if error
+     * @since 1.81
+     */
+    public Database(String dataSourceName, String schema) throws SormulaException
+    {
+        this.dataSourceName = dataSourceName;
+        
+        try
+        {
+            Context context = new InitialContext();
+            dataSource = (DataSource)context.lookup(dataSourceName);
+            if (dataSource != null) init(dataSource.getConnection(), schema);
+            else throw new SormulaException("no data source found for dataSourceName=" + dataSourceName);
+        }
+        catch (NamingException e)
+        {
+            throw new SormulaException("erroring getting data source", e);
+        }
+        catch (SQLException e)
+        {
+            throw new SormulaException("erroring getting connection from data source", e);
+        }
+    }
 
     
     /**
@@ -103,15 +175,7 @@ public class Database implements TypeTranslatorMap
      */
     public Database(DataSource dataSource) throws SormulaException
     {
-        this.dataSource = dataSource;
-        try
-        {
-            init(dataSource.getConnection(), "");
-        }
-        catch (SQLException e)
-        {
-            throw new SormulaException("erroring getting connection from data source", e);
-        }
+        this(dataSource, "");
     }
     
 
@@ -146,6 +210,19 @@ public class Database implements TypeTranslatorMap
     }
 
     
+    /**
+     * Gets the JNDI name to use to look up {@link DataSource}. This name was supplied in constructors:
+     * {@link #Database(String)} and {@link #Database(String, String)}.
+     * 
+     * @return data source JNDI name or null if none
+     * @since 1.8.1
+     */
+    public String getDataSourceName()
+    {
+        return dataSourceName;
+    }
+
+
     /**
      * Gets data source supplied in constructors, {@link #Database(DataSource)} and
      * {@link #Database(DataSource, String)}.
@@ -284,8 +361,13 @@ public class Database implements TypeTranslatorMap
 
 
 	/**
-     * Dereferences all objects used. Does not close connection. This method is not required. Use
-     * to accelerate memory clean up.
+     * Dereferences all objects used. Does not close connection if these constructors were used:
+     * {@link #Database(Connection)} or {@link #Database(Connection, String)}.
+     * <p>
+     * Closes connection if this class created the connection. Connection is created by this class
+     * when any of the data source constructors are used. This method is required when any of these
+     * data source constructors are used: {@link #Database(DataSource)}, {@link #Database(DataSource, String)},
+     * {@link #Database(String)}, {@link #Database(String, String)}.
      */
     public void close()
     {
@@ -303,6 +385,8 @@ public class Database implements TypeTranslatorMap
             }
         }
         
+        dataSourceName = null;
+        dataSource = null;
         connection = null;
         schema = null;
         tableMap = null;

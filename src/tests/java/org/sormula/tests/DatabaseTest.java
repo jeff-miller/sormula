@@ -29,6 +29,9 @@ import java.util.Properties;
 import java.util.Random;
 import java.util.Set;
 
+import javax.naming.InitialContext;
+import javax.naming.NamingException;
+import javax.naming.spi.NamingManager;
 import javax.sql.DataSource;
 
 import org.sormula.Database;
@@ -71,6 +74,16 @@ public class DatabaseTest<R>
     	{
     		testSeed = Long.parseLong(seed);
     		log.info("using property seed=" + testSeed);
+    	}
+    	
+    	// simulated JNDI context
+    	try
+    	{
+    	    NamingManager.setInitialContextFactoryBuilder(new TestContextFactoryBuilder());
+    	}
+    	catch (NamingException e)
+    	{
+    	    log.error("error setting initial context", e);
     	}
     }
     
@@ -134,6 +147,10 @@ public class DatabaseTest<R>
     }
     public void openDatabase(boolean useDataSource) throws Exception
     {
+        openDatabase("");
+    }
+    public void openDatabase(String dataSourceName) throws Exception
+    {
         // get connection
         Class.forName(jdbcProperties.getString("jdbc.driver"));
         schema = jdbcProperties.getString("jdbc.schema");
@@ -150,16 +167,25 @@ public class DatabaseTest<R>
         dataSource = new TestDataSource(this);
         
         // create sormula database
-        if (useDataSource)
-        {
-            dataSourceDatabase = true;
-            database = new Database(dataSource, schema);
-        }
-        else
+        if (dataSourceName == null)
         {
             dataSourceDatabase = false;
             Connection connection = getConnection();
             database = new Database(connection, schema);
+        }
+        else if (dataSourceName.equals(""))
+        {
+            // use directly not through JNDI
+            dataSourceDatabase = true;
+            database = new Database(dataSource, schema);
+        }
+        else 
+        {
+            // use JNDI
+            InitialContext ic = new InitialContext();
+            ic.bind(dataSourceName, dataSource);
+            dataSourceDatabase = true;
+            database = new Database(dataSourceName, schema);
         }
         database.setTimings(Boolean.parseBoolean(System.getProperty("timings")));
     }

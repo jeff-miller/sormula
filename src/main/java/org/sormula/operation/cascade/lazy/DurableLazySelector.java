@@ -26,13 +26,13 @@ import org.sormula.annotation.cascade.SelectCascade;
 
 
 /**
- * A lazy cascade selector that uses a {@link DataSource} to create the {@link Database} when
- * performing the lazy select. Source rows must be selected with an operation that uses
- * a database created with {@link Database#Database(DataSource)} or 
- * {@link Database#Database(DataSource, String)}.
+ * A lazy cascade selector that uses a {@link DataSource} or data source name to create the 
+ * {@link Database} when performing the lazy select. Source rows must be selected with an operation that uses
+ * a database created with {@link Database#Database(DataSource)},  
+ * {@link Database#Database(DataSource, String)}, {@link Database#Database(String)}, or {@link Database#Database(String, String)}
  * <p>
- * This class is slightly less efficient because a {@link Database} and {@link Table} are created when selector 
- * needs to be used. It is more flexible since it can be used any time even when original connection has been closed.
+ * This class is slightly less efficient than {@link SimpleLazySelector} because a {@link Database} and {@link Table} are created
+ * when selector needs to be used. It is more flexible since it can be used any time even when original connection has been closed.
  * <p>
  * DurableLazySelector is good for scenario's when source row may be serialzed to disk, for example, in
  * web application where source row is stored in web session. 
@@ -46,6 +46,9 @@ public class DurableLazySelector<R> extends AbstractLazySelector<R>
 {
     private static final long serialVersionUID = 1L;
 
+    @Transient
+    String dataSourceName;
+    
     @Transient
     DataSource dataSource;
     
@@ -87,13 +90,27 @@ public class DurableLazySelector<R> extends AbstractLazySelector<R>
     public void pendingLazySelects(Database database) throws LazyCascadeException
     {
         super.pendingLazySelects(database);
+        dataSourceName = database.getDataSourceName();
         dataSource = database.getDataSource();
         schema = database.getSchema();
         
-        if (dataSource == null)
+        if (dataSourceName == null && dataSource == null)
         {
-            throw new LazyCascadeException("data source is null for database; Use Database(DataSource) or Database(DataSource, String)");
+            throw new LazyCascadeException("data source cannot be obtained for database; construct Database with constructor that contains a DataSource or dataSourceName");
         }
+    }
+
+    
+    /**
+     * Gets the JNDI name to use to look up {@link DataSource}. This name was obtained from database by
+     * {@link #pendingLazySelects(Database)}.
+     * 
+     * @return data source JNDI name or null if none
+     * @since 1.8.1
+     */
+    public String getDataSourceName()
+    {
+        return dataSourceName;
     }
     
     
@@ -120,22 +137,50 @@ public class DurableLazySelector<R> extends AbstractLazySelector<R>
 
 
     /**
-     * Creates a new instance of database from datasource and schema obtained in 
-     * {@link #pendingLazySelects(Database)}.
+     * Creates a new instance of a {@link Database} from data source name or data source obtained in 
+     * {@link #pendingLazySelects(Database)}.  Data source will be looked up in JNDI if data source 
+     * name is known and data source is not known.
      * 
-     * @return database to use for lazy select
+     * @throws LazyCascadeException if error
+     * @since 1.8.1
      */
     @Override
-    protected Database initDatabase() throws LazyCascadeException
+    protected void openDatabase() throws LazyCascadeException
     {
         try
         {
-            // create from data source
-            return new Database(dataSource, schema);
+            if (dataSourceName != null)
+            {
+                // construct from JNDI name
+                setDatabase(new Database(dataSourceName, schema));
+            }
+            else
+            {
+                // create from data source
+                setDatabase(new Database(dataSource, schema));
+            }
         }
         catch (SormulaException e)
         {
             throw new LazyCascadeException("error creating database", e);
+        }
+    }
+    
+    
+    /**
+     * Closes {@link Database} created with {@link #openDatabase()}.
+     * 
+     * @throws LazyCascadeException if error
+     * @since 1.8.1
+     */
+    @Override
+    protected void closeDatabase() throws LazyCascadeException
+    {
+        Database database = getDatabase();
+        if (database != null)
+        {
+            setDatabase(null);
+            database.close();
         }
     }
 }

@@ -17,7 +17,6 @@
 package org.sormula.operation.cascade.lazy;
 
 import org.sormula.Database;
-import org.sormula.annotation.Transient;
 import org.sormula.annotation.cascade.SelectCascade;
 
 
@@ -37,9 +36,6 @@ public class SimpleLazySelector<R> extends AbstractLazySelector<R>
 {
     private static final long serialVersionUID = 1L;
 
-    @Transient
-    Database database;
-    
     
     /**
      * Constructs for use when SimpleLazySelector is base class of row that will contain lazy select fields. Typically 
@@ -74,16 +70,28 @@ public class SimpleLazySelector<R> extends AbstractLazySelector<R>
     public void pendingLazySelects(Database database) throws LazyCascadeException
     {
         super.pendingLazySelects(database);
-        this.database = database;
+        setDatabase(database);
     }
     
     
     /**
-     * @return database provided in {@link #pendingLazySelects(Database)}
+     * Does nothing since {@link Database} is from {@link #pendingLazySelects(Database)}
+     * is resued.
+     * @since 1.8.1 
      */
     @Override
-    protected Database initDatabase() throws LazyCascadeException
+    protected void openDatabase() throws LazyCascadeException
     {
-        return database;
+    }
+    
+    
+    /**
+     * Does nothing since {@link Database} is from {@link #pendingLazySelects(Database)}
+     * is resued.
+     * @since 1.8.1 
+     */
+    @Override
+    protected void closeDatabase() throws LazyCascadeException
+    {
     }
 }

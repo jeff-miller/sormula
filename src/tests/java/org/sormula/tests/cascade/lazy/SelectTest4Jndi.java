@@ -27,17 +27,18 @@ import org.testng.annotations.Test;
 
 
 /**
- * Tests lazy cascade select annotations for {@link SormulaTestParentLazy4}.
+ * Tests lazy cascade select annotations for {@link SormulaTestParentLazy4}using
+ * a JNDI name for data source.
  * 
  * @author Jeff Miller
  */
 @Test(singleThreaded=true, groups="cascade.select", dependsOnGroups="cascade.insert")
-public class SelectTest4 extends DatabaseTest<SormulaTestParentLazy4>
+public class SelectTest4Jndi extends DatabaseTest<SormulaTestParentLazy4>
 {
     @BeforeClass
     public void setUp() throws Exception
     {
-        openDatabase(true);
+        openDatabase("testDataSource");
         createTable(SormulaTestParentLazy4.class);
     }
     
@@ -50,16 +51,14 @@ public class SelectTest4 extends DatabaseTest<SormulaTestParentLazy4>
 
     
     @Test
-    public void cascadeSelectLazy4() throws Exception
+    public void cascadeSelectLazy4Jndi() throws Exception
     {
         begin();
-        List<SormulaTestParentLazy4> parentList = getTable().selectAll();
-        commit();
         
-        // verify that children can be selected with different instance of database 
-        closeDatabase();
-        openDatabase(true); // creates new DataSource but parent uses refence to old DataSource
-        begin();
+        // parent records to test
+        List<SormulaTestParentLazy4> parentList = getTable().selectAll();
+        
+        // verify that children can be selected with datasource from jndi name 
         
         // for comparing children selected directly instead of lazily
         Table<SormulaTestChildLazy> childTable = getDatabase().getTable(SormulaTestChildLazy.class);

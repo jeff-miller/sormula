@@ -109,7 +109,32 @@ abstract public class AbstractLazySelector<R> implements LazySelectable, Seriali
      * @return a sormula database from which to select rows
      * @throws LazyCascadeException if error
      */
-    abstract protected Database initDatabase() throws LazyCascadeException;
+    @Deprecated // replaced by openDatabase()
+    protected Database initDatabase() throws LazyCascadeException
+    {
+        openDatabase();
+        return database;
+    }
+    
+    
+    /**
+     * Invoked by {@link #checkLazySelects(String)} to create a {@link Database} instance that will be used to 
+     * perform the lazy selects.
+     * 
+     * @throws LazyCascadeException if error
+     * @since 1.8.1
+     */
+    abstract protected void openDatabase() throws LazyCascadeException;
+    
+    
+    /**
+     * Invoked by {@link #checkLazySelects(String)} to close the {@link Database} instance that 
+     * was used to perform the lazy selects.
+     * 
+     * @throws LazyCascadeException
+     * @since 1.8.1
+     */
+    abstract protected void closeDatabase() throws LazyCascadeException;
     
     
     /**
@@ -164,20 +189,25 @@ abstract public class AbstractLazySelector<R> implements LazySelectable, Seriali
 
 
     /**
-     * Gets the database to use for lazy select. If no database exists yet, then {@link #initDatabase()}
-     * is invoked.
+     * Gets the database to use for lazy select. 
      * 
      * @return database to use for lazy select
      */
     public Database getDatabase() 
     {
-        if (database == null)
-        {
-            if (log.isDebugEnabled()) log.debug("init database");
-            database = initDatabase();
-        }
-        
         return database;
+    }
+    
+    
+    /**
+     * Sets the database to use for lazy selects.
+     * 
+     * @param database lazy select database (typically created in {@link #openDatabase()}
+     * @since 1.8.1
+     */
+    public void setDatabase(Database database)
+    {
+        this.database = database;
     }
     
     
@@ -235,6 +265,8 @@ abstract public class AbstractLazySelector<R> implements LazySelectable, Seriali
         if (pendingLazySelects)
         {
             // row has been identified with lazy selects
+            openDatabase();
+            
             if (pendingLazySelectFields == null)
             {
                 // init first time
@@ -254,6 +286,8 @@ abstract public class AbstractLazySelector<R> implements LazySelectable, Seriali
                 // more to do?
                 pendingLazySelects = pendingLazySelectFields.size() > 0;
             }
+            
+            closeDatabase();
         }
     }
     

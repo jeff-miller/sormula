@@ -20,6 +20,9 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.naming.Context;
+import javax.naming.InitialContext;
+import javax.naming.NamingException;
 import javax.sql.DataSource;
 
 import org.sormula.Database;
@@ -43,7 +46,8 @@ public class ActiveDatabase implements Serializable
 {
     private static final long serialVersionUID = 1L;
     static ActiveDatabase defaultActiveDatabase; 
-    
+
+    String dataSourceName;
     DataSource dataSource;
     String schema;
     boolean readOnly;
@@ -76,6 +80,56 @@ public class ActiveDatabase implements Serializable
     public static void setDefault(ActiveDatabase activeDatabase)
     {
         ActiveDatabase.defaultActiveDatabase = activeDatabase;
+    }
+
+
+    /**
+     * Constructs for a data source name and empty schema.     
+     * <p>
+     * {@link DataSource} will be obtained from JNDI look up of dataSourceName. Typically web containers
+     * require data source to be configured with a name like "someds" but the full path to the
+     * data source contains an implied context of "java:comp/env". So the constructor parameter, 
+     * dataSourceName, would be "java:comp/env/someds".
+     * 
+     * @param dataSourceName name to use in JNDI look up of data source
+     * @throws ActiveException if error looking up data source
+     * @since 1.8.1
+     */
+    public ActiveDatabase(String dataSourceName) throws ActiveException
+    {
+        this(dataSourceName, "");
+    }
+    
+    
+    /**
+     * Constructs for a data source name and schema.
+     * <p>
+     * {@link DataSource} will be obtained from JNDI look up of dataSourceName. Typically web containers
+     * require data source to be configured with a name like "someds" but the full path to the
+     * data source contains an implied context of "java:comp/env". So the constructor parameter, 
+     * dataSourceName, would be "java:comp/env/someds".
+     * 
+     * @param dataSourceName name to use in JNDI look up of data source
+     * @param schema schema prefix for table names in sql
+     * @throws ActiveException if error looking up data source
+     * @since 1.8.1
+     */
+    public ActiveDatabase(String dataSourceName, String schema) throws ActiveException
+    {
+        this.dataSourceName = dataSourceName;
+        this.schema = schema;
+        nameTranslatorClasses = new ArrayList<Class<? extends NameTranslator>>(4);
+        
+        try
+        {
+            Context context = new InitialContext();
+            dataSource = (DataSource)context.lookup(dataSourceName);
+            if (dataSource == null) throw new ActiveException("no data source found for dataSourceName=" + dataSourceName);
+        }
+        catch (NamingException e)
+        {
+            throw new ActiveException("erroring getting data source", e);
+        }
     }
 
 

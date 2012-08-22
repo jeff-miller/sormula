@@ -98,7 +98,7 @@ public class Database implements TypeTranslatorMap
      * {@link DataSource} will be obtained from JNDI look up of dataSourceName. Typically web containers
      * require data source to be configured with a name like "someds" but the full path to the
      * data source contains an implied context of "java:comp/env". So the constructor parameter, 
-     * datasourceName, would be "java:comp/env/someds".
+     * dataSourceName, would be "java:comp/env/someds".
      * <p>
      * Connection will be obtained with {@link DataSource#getConnection()} and connection will be 
      * closed when {@link #close()} is invoked.
@@ -123,7 +123,7 @@ public class Database implements TypeTranslatorMap
      * {@link DataSource} will be obtained from JNDI look up of dataSourceName. Typically web containers
      * require data source to be configured with a name like "someds" but the full path to the
      * data source contains an implied context of "java:comp/env". So the constructor parameter, 
-     * datasourceName, would be "java:comp/env/someds".
+     * dataSourceName, would be "java:comp/env/someds".
      * <p>
      * Connection will be obtained with {@link DataSource#getConnection()} and connection will be 
      * closed when {@link #close()} is invoked.

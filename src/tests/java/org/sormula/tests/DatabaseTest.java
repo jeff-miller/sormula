@@ -147,7 +147,8 @@ public class DatabaseTest<R>
     }
     public void openDatabase(boolean useDataSource) throws Exception
     {
-        openDatabase("");
+        if (useDataSource) openDatabase("");
+        else openDatabase(null);
     }
     public void openDatabase(String dataSourceName) throws Exception
     {
@@ -163,28 +164,28 @@ public class DatabaseTest<R>
         sqlShutdown = jdbcProperties.getString("jdbc.shutdown.sql");
         driverShutdown = jdbcProperties.getString("jdbc.shutdown.driver");
 
-        // simulated data source
-        dataSource = new TestDataSource(this);
-        
         // create sormula database
         if (dataSourceName == null)
         {
+            // use connection
             dataSourceDatabase = false;
             Connection connection = getConnection();
             database = new Database(connection, schema);
         }
         else if (dataSourceName.equals(""))
         {
-            // use directly not through JNDI
+            // use data source directly (not through JNDI)
             dataSourceDatabase = true;
+            dataSource = new TestDataSource(this); // simulated data source
             database = new Database(dataSource, schema);
         }
         else 
         {
-            // use JNDI
-            InitialContext ic = new InitialContext();
-            ic.bind(dataSourceName, dataSource);
+            // use data source from JNDI
             dataSourceDatabase = true;
+            dataSource = new TestDataSource(this); // simulated data source
+            InitialContext ic = new InitialContext();
+            ic.bind(dataSourceName, dataSource); // put data source in context for JNDI lookups
             database = new Database(dataSourceName, schema);
         }
         database.setTimings(Boolean.parseBoolean(System.getProperty("timings")));

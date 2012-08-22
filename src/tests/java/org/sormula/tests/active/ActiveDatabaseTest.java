@@ -33,10 +33,18 @@ public class ActiveDatabaseTest<R extends ActiveRecord<R>> extends DatabaseTest<
     ActiveTable<R> activeTable;
     
     
+    public void openDatabase(String dataSourceName) throws Exception
+    {
+        super.openDatabase(dataSourceName);
+        activeDatabase = new ActiveDatabase(dataSourceName, getSchema());
+        activeDatabase.setTimings(Boolean.parseBoolean(System.getProperty("timings")));
+    }
+    
+    
     @Override
     public void openDatabase() throws Exception
     {
-        super.openDatabase();
+        super.openDatabase("");
         activeDatabase = new ActiveDatabase(getDataSource(), getSchema());
         activeDatabase.setTimings(Boolean.parseBoolean(System.getProperty("timings")));
     }

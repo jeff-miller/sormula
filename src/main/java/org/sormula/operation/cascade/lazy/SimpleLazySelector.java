@@ -75,9 +75,9 @@ public class SimpleLazySelector<R> extends AbstractLazySelector<R>
     
     
     /**
-     * Does nothing since {@link Database} is from {@link #pendingLazySelects(Database)}
+     * Does nothing since {@link Database} from {@link #pendingLazySelects(Database)}
      * is resued.
-     * @since 1.8.1 
+     * @since 1.9
      */
     @Override
     protected void openDatabase() throws LazyCascadeException
@@ -86,9 +86,9 @@ public class SimpleLazySelector<R> extends AbstractLazySelector<R>
     
     
     /**
-     * Does nothing since {@link Database} is from {@link #pendingLazySelects(Database)}
+     * Does nothing since {@link Database} from {@link #pendingLazySelects(Database)}
      * is resued.
-     * @since 1.8.1 
+     * @since 1.9
      */
     @Override
     protected void closeDatabase() throws LazyCascadeException

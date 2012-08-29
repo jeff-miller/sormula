@@ -106,7 +106,7 @@ public class DurableLazySelector<R> extends AbstractLazySelector<R>
      * {@link #pendingLazySelects(Database)}.
      * 
      * @return data source JNDI name or null if none
-     * @since 1.8.1
+     * @since 1.9
      */
     public String getDataSourceName()
     {
@@ -138,11 +138,11 @@ public class DurableLazySelector<R> extends AbstractLazySelector<R>
 
     /**
      * Creates a new instance of a {@link Database} from data source name or data source obtained in 
-     * {@link #pendingLazySelects(Database)}.  Data source will be looked up in JNDI if data source 
+     * {@link #pendingLazySelects(Database)}. Data source will be looked up in JNDI if data source 
      * name is known and data source is not known.
      * 
      * @throws LazyCascadeException if error
-     * @since 1.8.1
+     * @since 1.9
      */
     @Override
     protected void openDatabase() throws LazyCascadeException
@@ -171,7 +171,7 @@ public class DurableLazySelector<R> extends AbstractLazySelector<R>
      * Closes {@link Database} created with {@link #openDatabase()}.
      * 
      * @throws LazyCascadeException if error
-     * @since 1.8.1
+     * @since 1.9
      */
     @Override
     protected void closeDatabase() throws LazyCascadeException

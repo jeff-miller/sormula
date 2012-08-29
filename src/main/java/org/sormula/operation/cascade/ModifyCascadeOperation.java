@@ -77,14 +77,21 @@ public abstract class ModifyCascadeOperation<S, T> extends CascadeOperation<S, T
                     T row = (T)value;
                     modifyOperation.setRow(row);
                 }
-                else if (targetField.isClass(Collection.class))
+                else if (targetField.isArray())
+                {
+                    // array
+                    @SuppressWarnings("unchecked") // target field type is not known at compile time
+                    T[] array = (T[])value;
+                    modifyOperation.setRows(array);
+                }
+                else if (targetField.isCollection())
                 {
                     // collection
                     @SuppressWarnings("unchecked") // target field type is not known at compile time
                     Collection<T> collection = (Collection<T>)value;
                     modifyOperation.setRows(collection);
                 }
-                else if (targetField.isClass(Map.class))
+                else if (targetField.isMap())
                 {
                     // collection
                     @SuppressWarnings("unchecked") // target field type is not known at compile time

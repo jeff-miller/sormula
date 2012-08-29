@@ -122,7 +122,7 @@ abstract public class AbstractLazySelector<R> implements LazySelectable, Seriali
      * perform the lazy selects.
      * 
      * @throws LazyCascadeException if error
-     * @since 1.8.1
+     * @since 1.9
      */
     abstract protected void openDatabase() throws LazyCascadeException;
     
@@ -132,7 +132,7 @@ abstract public class AbstractLazySelector<R> implements LazySelectable, Seriali
      * was used to perform the lazy selects.
      * 
      * @throws LazyCascadeException
-     * @since 1.8.1
+     * @since 1.9
      */
     abstract protected void closeDatabase() throws LazyCascadeException;
     
@@ -203,7 +203,7 @@ abstract public class AbstractLazySelector<R> implements LazySelectable, Seriali
      * Sets the database to use for lazy selects.
      * 
      * @param database lazy select database (typically created in {@link #openDatabase()}
-     * @since 1.8.1
+     * @since 1.9
      */
     public void setDatabase(Database database)
     {

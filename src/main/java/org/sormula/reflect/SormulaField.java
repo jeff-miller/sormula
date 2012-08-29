@@ -40,6 +40,9 @@ public class SormulaField<C, T>
     Method getMethod;
     Method setMethod;
     boolean scalar;
+    boolean array;
+    boolean collection;
+    boolean map;
     
     
     /**
@@ -78,7 +81,10 @@ public class SormulaField<C, T>
                     field.getDeclaringClass().getCanonicalName());
         }
         
-        scalar = !(isClass(Collection.class) || isClass(Map.class));
+        array = field.getType().isArray();
+        collection = isClass(Collection.class);
+        map = isClass(Map.class);
+        scalar = !(array || collection || map);
     }
     
     
@@ -90,6 +96,42 @@ public class SormulaField<C, T>
     public Field getField()
     {
         return field;
+    }
+
+    
+    /**
+     * Gets field array type.
+     * 
+     * @return if field is an array
+     * @since 1.9
+     */
+    public boolean isArray()
+    {
+        return array;
+    }
+
+
+    /**
+     * Gets field {@link Collection} inheritance.
+     * 
+     * @return true if field is a {@link #collection}
+     * @since 1.9
+     */
+    public boolean isCollection()
+    {
+        return collection;
+    }
+
+
+    /**
+     * Gets field {@link Map} inheritance.
+     * 
+     * @return true if field is a {@link Map}
+     * @since 1.9
+     */
+    public boolean isMap()
+    {
+        return map;
     }
 
 

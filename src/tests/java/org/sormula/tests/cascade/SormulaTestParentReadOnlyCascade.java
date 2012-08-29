@@ -41,7 +41,7 @@ public class SormulaTestParentReadOnlyCascade
     int child1Id;
     
     // tests 1 to many relationship
-    @OneToManyCascade(readOnly=true, targetClass=SormulaTestChildN.class,
+    @OneToManyCascade(readOnly=true, // optional in v1.9 targetClass=SormulaTestChildN.class,
           selects=@SelectCascade(sourceParameterFieldNames="id", targetWhereName="byParent"))
     // equivalent
     //@OneToManyCascade(targetClass=SormulaTestChildNReadOnlyCascade.class,

@@ -39,7 +39,7 @@ public class SormulaTestParentLazyAR extends ActiveRecord<SormulaTestParentLazyA
     int child1Id;
     
     // tests 1 to many relationship
-    @OneToManyCascade(targetClass=SormulaTestChildNLazyAR.class, 
+    @OneToManyCascade(// optional in v1.9 targetClass=SormulaTestChildNLazyAR.class, 
             selects=@SelectCascade(sourceParameterFieldNames="id", targetWhereName="byParent", lazy=true))
     List<SormulaTestChildNLazyAR> childList;
     

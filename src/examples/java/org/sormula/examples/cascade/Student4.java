@@ -36,7 +36,7 @@ public class Student4
     String lastName;
     Date graduationDate;
     
-    @OneToManyCascade(targetClass=Enrolled.class, 
+    @OneToManyCascade(targetClass=Enrolled.class, // targetClass is optional in v1.9 
             selects=@SelectCascade(sourceParameterFieldNames="id", targetWhereName="studentSearch"))
     List<Enrolled> enrollment;
     

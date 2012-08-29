@@ -19,6 +19,7 @@ package org.sormula.operation;
 import java.lang.reflect.Field;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -76,6 +77,7 @@ public abstract class SqlOperation<R>
     OperationTime operationTime;
     boolean timings;
     boolean readOnly;
+    int queryTimeout;
     
 
     /**
@@ -152,6 +154,33 @@ public abstract class SqlOperation<R>
     public void setReadOnly(boolean readOnly)
     {
         this.readOnly = readOnly;
+    }
+
+
+    /**
+     * Gets the number of seconds the driver will wait for a Statement object to execute.
+     *   
+     * @return the current query timeout limit in seconds; zero means there is no limit
+     * @since 1.9
+     * @see Statement#getQueryTimeout()
+     */
+    public int getQueryTimeout()
+    {
+        return queryTimeout;
+    }
+
+
+    /**
+     * Sets the number of seconds the driver will wait for a Statement object to execute.
+     * This value is set when statement is prepared in {@link #prepare()}.
+     * 
+     * @param queryTimeout the new query timeout limit in seconds; zero means there is no limit
+     * @since 1.9
+     * @see Statement#setQueryTimeout(int)
+     */
+    public void setQueryTimeout(int queryTimeout)
+    {
+        this.queryTimeout = queryTimeout;
     }
 
 
@@ -251,6 +280,30 @@ public abstract class SqlOperation<R>
      * @throws OperationException if error
      */
     public abstract void execute() throws OperationException;
+    
+    
+    /**
+     * Requests cancel for currently executing statement. No synchronization is performed between the
+     * thread that invokes this method and other threads that may be modifying this object.
+     * 
+     * @throws OperationException if error
+     * @since 1.9
+     * @see Statement#cancel()
+     */
+    public void cancel() throws OperationException
+    {
+        if (preparedStatement != null) 
+        {
+            try
+            {
+                preparedStatement.cancel();
+            }
+            catch (SQLException e)
+            {
+                throw new OperationException("cancel error", e);
+            }
+        }
+    }
     
     
     /**
@@ -521,6 +574,8 @@ public abstract class SqlOperation<R>
                 // jdbc drivers that don't support identity columns
                 preparedStatement = connection.prepareStatement(preparedSql);
             }
+            
+            preparedStatement.setQueryTimeout(queryTimeout);
         }
         catch (Exception e)
         {

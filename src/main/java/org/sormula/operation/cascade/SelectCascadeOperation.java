@@ -16,9 +16,12 @@
  */
 package org.sormula.operation.cascade;
 
+import java.lang.reflect.Array;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 
 import org.sormula.Table;
 import org.sormula.annotation.cascade.SelectCascade;
@@ -85,7 +88,36 @@ public class SelectCascadeOperation<S, T> extends CascadeOperation<S, T>
                 // collection or map, set target field to all rows in results
                 @SuppressWarnings("unchecked") // collection fields must use SelectOperation
                 SelectOperation<T, Object> o = (SelectOperation<T, Object>)selectOperation;
-                targetField.invokeSetMethod(sourceRow, o.readAll());
+                
+                if (targetField.isArray())
+                {
+                    Object rows = o.readAll();
+                    
+                    if (rows instanceof Collection)
+                    {
+                        // select operation returned a Collection
+                        @SuppressWarnings("unchecked") // target field type is not known at compile time
+                        Collection<T> c = (Collection<T>)rows;
+                        targetField.invokeSetMethod(sourceRow, toTargetArray(c));
+                    }
+                    else if (rows instanceof Map)
+                    {
+                        // select operation returned a Map
+                        @SuppressWarnings("unchecked") // target field type is not known at compile time
+                        Map<?, T> m = (Map<?, T>)rows;
+                        targetField.invokeSetMethod(sourceRow, toTargetArray(m.values()));
+                    }
+                    else
+                    {
+                        throw new OperationException("can't convert result " + o.getClass() +
+                            " for " + targetField.getCanonicalSetMethodName());
+                    }
+                }
+                else
+                {
+                    // collection or map
+                    targetField.invokeSetMethod(sourceRow, o.readAll());
+                }
             }
         }
         catch (ReflectException e)
@@ -210,5 +242,26 @@ public class SelectCascadeOperation<S, T> extends CascadeOperation<S, T>
     public void close() throws OperationException
     {
         selectOperation.close();
+    }
+    
+    
+    protected T[] toTargetArray(Collection<T> c) throws OperationException
+    {
+        try
+        {
+            // create array to hold all elements of collection
+            @SuppressWarnings("unchecked") // target not known at compile time
+            T[] array = (T[])Array.newInstance(targetField.getField().getType().getComponentType(), c.size());
+            
+            // copy elements into array
+            c.toArray(array);
+            
+            // return array
+            return array;  
+        }
+        catch (Exception e)
+        {
+            throw new OperationException("error creating new array for target field " + targetField.getField(), e);
+        }
     }
 }

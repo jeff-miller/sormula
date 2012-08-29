@@ -215,7 +215,7 @@ public class Database implements TypeTranslatorMap
      * {@link #Database(String)} and {@link #Database(String, String)}.
      * 
      * @return data source JNDI name or null if none
-     * @since 1.8.1
+     * @since 1.9
      */
     public String getDataSourceName()
     {

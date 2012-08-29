@@ -78,7 +78,7 @@ public class SelectTest extends DatabaseTest<SormulaTestParent>
             
             
             // verify 1 to many
-            List<SormulaTestChildN> children = parent.getChildList();
+            List<? extends SormulaTestChildN> children = parent.getChildList();
             int countN = childNTable.selectCount("byParent", parent.getId());
             if (children.size() > 0)
             {

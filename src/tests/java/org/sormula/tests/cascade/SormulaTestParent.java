@@ -44,7 +44,7 @@ public class SormulaTestParent
     int child1Id;
     
     // tests 1 to many relationship
-    @OneToManyCascade(targetClass=SormulaTestChildN.class, 
+    @OneToManyCascade(// test when targetClass is omitted targetClass=SormulaTestChildN.class, 
             selects=@SelectCascade(sourceParameterFieldNames="id", targetWhereName="byParent"))
     List<SormulaTestChildN> childList;
     
@@ -53,7 +53,7 @@ public class SormulaTestParent
     SormulaTestChild1 child;
     
     // tests general cascade and map type
-    @Cascade(targetClass=SormulaTestChildM.class,
+    @Cascade(targetClass=SormulaTestChildM.class, // targetClass is optional in v1.9 
     		selects=@SelectCascade(operation=HashMapSelectOperation.class, sourceParameterFieldNames="id", targetWhereName="byParent", targetKeyMethodName="getId"),
 			inserts=@InsertCascade(),
             updates=@UpdateCascade(),

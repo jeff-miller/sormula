@@ -20,7 +20,9 @@ import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
+import java.lang.reflect.Field;
 import java.util.Collection;
+import java.util.Map;
 
 import org.sormula.Database;
 
@@ -54,8 +56,22 @@ public @interface OneToManyCascade
     /**
      * Class type of target field to affect. Used as parameter to {@link Database#getTable(Class)} to
      * get table for cascade operation. {@link #targetClass()} is optional for scalar fields since
-     * target class can be obtained from target field at runtime. For nonscalar target field types, 
-     * like {@link Collection} types, {@link #targetClass()} must be specified.
+     * target class can be obtained from target field at runtime.
+     * <p>
+     * For nonscalar target field types, like arrays, {@link Collection} types, and
+     * {@link Map} types, targetClass can be determined from the field. Array types can be determined
+     * through {@link Class#getComponentType()}. For collections and maps, target class can be determined
+     * through the parameterized type with {@link Field#getGenericType()} if the generic type is not 
+     * parameterized. For complex parameterized types, target class must be specified.
+     * <p>
+     * The following are examples of fields where targetClass=Something.class is optional in
+     * cascade annotations because it can be determined through reflection:
+     * <blockquote><pre>
+     * Something scalar;
+     * Something[] array;
+     * List&lt;Something&gt; list;
+     * Map&lt;String, Something&gt; map;
+     * </pre></blockquote>
      * 
      * @return class of field that is involved in cascade; Object.class to indicate that class is
      * to be obtained from scalar field at runtime by relfection

@@ -38,7 +38,7 @@ public class SormulaTestParentAR extends ActiveRecord<SormulaTestParentAR>
     int child1Id;
     
     // tests 1 to many relationship
-    @OneToManyCascade(targetClass=SormulaTestChildNAR.class, 
+    @OneToManyCascade(// optional in v1.9 targetClass=SormulaTestChildNAR.class, 
             selects=@SelectCascade(sourceParameterFieldNames="id", targetWhereName="byParent"))
     List<SormulaTestChildNAR> childList;
     

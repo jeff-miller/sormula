@@ -93,7 +93,7 @@ public class ActiveDatabase implements Serializable
      * 
      * @param dataSourceName name to use in JNDI look up of data source
      * @throws ActiveException if error looking up data source
-     * @since 1.8.1
+     * @since 1.9
      */
     public ActiveDatabase(String dataSourceName) throws ActiveException
     {
@@ -112,7 +112,7 @@ public class ActiveDatabase implements Serializable
      * @param dataSourceName name to use in JNDI look up of data source
      * @param schema schema prefix for table names in sql
      * @throws ActiveException if error looking up data source
-     * @since 1.8.1
+     * @since 1.9
      */
     public ActiveDatabase(String dataSourceName, String schema) throws ActiveException
     {

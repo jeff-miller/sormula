@@ -174,7 +174,7 @@ public class SimpleExample
         Database database = new Database(connection);
         Table<Inventory> inventoryTable = database.getTable(Inventory.class);
         
-        // select operation for list 
+        // select operation for list of part numbers
         // SELECT PARTNUMBER, QUANTITY, MANFID FROM INVENTORY WHERE PARTNUMBER IN (?, ?, ?)
         ArrayListSelectOperation<Inventory> operation =
             new ArrayListSelectOperation<Inventory>(inventoryTable, "partNumberIn");

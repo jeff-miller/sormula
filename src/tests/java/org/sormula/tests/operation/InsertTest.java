@@ -88,7 +88,7 @@ public class InsertTest extends DatabaseTest<SormulaTest4>
     @Test
     public void insertBatch() throws SormulaException
     {
-        ArrayList<SormulaTest4> list = new ArrayList<SormulaTest4>();
+        ArrayList<SormulaTest4> list = new ArrayList<>();
         
         int type = 7000;
         for (int i = 1; i < 200; ++i)
@@ -110,7 +110,7 @@ public class InsertTest extends DatabaseTest<SormulaTest4>
     @Test
     public void insertBatchByOperation() throws SormulaException
     {
-        ArrayList<SormulaTest4> list = new ArrayList<SormulaTest4>();
+        ArrayList<SormulaTest4> list = new ArrayList<>();
         
         int type = 8000;
         for (int i = 1; i < 200; ++i)
@@ -119,7 +119,7 @@ public class InsertTest extends DatabaseTest<SormulaTest4>
         }
         
         begin();
-        InsertOperation<SormulaTest4> operation = new InsertOperation<SormulaTest4>(getTable());
+        InsertOperation<SormulaTest4> operation = new InsertOperation<>(getTable());
         operation.setBatch(true);
         operation.insertAll(list);
         

@@ -118,7 +118,7 @@ public class ActiveDatabase implements Serializable
     {
         this.dataSourceName = dataSourceName;
         this.schema = schema;
-        nameTranslatorClasses = new ArrayList<Class<? extends NameTranslator>>(4);
+        nameTranslatorClasses = new ArrayList<>(4);
         
         try
         {

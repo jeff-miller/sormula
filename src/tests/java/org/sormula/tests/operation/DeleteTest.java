@@ -93,6 +93,30 @@ public class DeleteTest extends DatabaseTest<SormulaTest4>
     
     
     @Test
+    public void deleteBatch() throws SormulaException
+    {
+        begin();
+        selectTestRows(); // must perform each time since other tests are destructive
+        
+        // choose random set
+        Set<SormulaTest4> set = getRandomSet();
+        
+        // delete
+        Table<SormulaTest4> table = getTable();
+        table.deleteAllBatch(set);
+        
+        // confirm each row was deleted
+        for (SormulaTest4 r: set)
+        {
+            SormulaTest4 r2 = table.select(r.getId());
+            assert r2 == null : r.getId() + " was not deleted";
+        }
+        
+        commit();
+    }
+    
+    
+    @Test
     public void deleteByOperation() throws SormulaException
     {
     	begin();

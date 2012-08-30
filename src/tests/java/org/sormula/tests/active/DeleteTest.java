@@ -62,7 +62,7 @@ public class DeleteTest extends ActiveDatabaseTest<SormulaTestAR>
     
     
     @Test
-    public void deleteCollection() 
+    public void deleteCollectionAR() 
     {
         selectTestRows(); // must perform each time since other tests are destructive
         
@@ -72,6 +72,27 @@ public class DeleteTest extends ActiveDatabaseTest<SormulaTestAR>
         // delete
         ActiveTable<SormulaTestAR> table = getActiveTable();
         assert table.deleteAll(set) == set.size() : "AR delete count not same as collection size";
+        
+        // confirm each row was deleted
+        for (SormulaTestAR r: set)
+        {
+            SormulaTestAR r2 = table.select(r.getId());
+            assert r2 == null : r.getId() + " was not deleted";
+        }
+    }
+    
+    
+    @Test
+    public void deleteCollectionARBatch() 
+    {
+        selectTestRows(); // must perform each time since other tests are destructive
+        
+        // choose random set
+        Set<SormulaTestAR> set = getRandomSet();
+        
+        // delete
+        ActiveTable<SormulaTestAR> table = getActiveTable();
+        table.deleteAllBatch(set);
         
         // confirm each row was deleted
         for (SormulaTestAR r: set)

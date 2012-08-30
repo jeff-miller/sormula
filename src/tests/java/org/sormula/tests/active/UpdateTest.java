@@ -107,13 +107,58 @@ public class UpdateTest extends ActiveDatabaseTest<SormulaTestAR>
     
             // update
             ActiveTable<SormulaTestAR> table = getActiveTable();
-            assert table.updateAll(set) == set.size() : "update count not same as collection size";
+            assert table.updateAll(set) == set.size() : "update AR count not same as collection size";
             
             // confirm each row was updated
             for (SormulaTestAR r: set)
             {
                 SormulaTestAR r2 = table.select(r.getId());
-                assert r2 != null && r2.getType() == r.getType() : "update collection failed";
+                assert r2 != null && r2.getType() == r.getType() : "update collection AR failed";
+            }
+            
+            transaction.commit();
+        }
+        catch (ActiveException e)
+        {
+            transaction.rollback();
+        }
+        finally
+        {
+            ActiveDatabase.setDefault(null); // reset
+        }
+    }
+    
+
+    @Test
+    public void updateCollectionARBatch() 
+    {
+        // test transaction with default active database
+        ActiveDatabase.setDefault(getActiveDatabase());
+        ActiveTransaction transaction = new ActiveTransaction();
+        
+        try
+        {
+            transaction.begin();
+            selectTestRows(); // must perform each time since other tests are destructive
+            
+            // choose random set
+            Set<SormulaTestAR> set = getRandomSet();
+            
+            // modify to update
+            for (SormulaTestAR r: set)
+            {
+                r.setType(888);
+            }
+    
+            // update
+            ActiveTable<SormulaTestAR> table = getActiveTable();
+            table.updateAllBatch(set);
+            
+            // confirm each row was updated
+            for (SormulaTestAR r: set)
+            {
+                SormulaTestAR r2 = table.select(r.getId());
+                assert r2 != null && r2.getType() == r.getType() : "update collection AR batch failed";
             }
             
             transaction.commit();

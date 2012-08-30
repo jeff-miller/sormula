@@ -105,4 +105,21 @@ public class InsertTest extends ActiveDatabaseTest<SormulaTestAR>
         ActiveTable<SormulaTestAR> table = getActiveTable();
         assert table.insertAll(list) == list.size() : "insert collection AR failed";
     }
+    
+    
+    @Test
+    public void insertCollectionARBatch() 
+    {
+        ArrayList<SormulaTestAR> list = new ArrayList<SormulaTestAR>();
+        
+        int type = 9600;
+        for (int i = 1; i < 20; ++i)
+        {
+            list.add(new SormulaTestAR(type + i, type, "Insert collection AR batch " + i));
+        }
+        
+        ActiveTable<SormulaTestAR> table = getActiveTable();
+        table.insertAllBatch(list); // don't rely on return value to verify since Oracle returns 0
+        assert table.selectAllWhere("byType", type).size() == list.size() : "insert collection AR batch failed";
+    }
 }

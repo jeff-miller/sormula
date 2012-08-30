@@ -105,6 +105,36 @@ public class UpdateTest extends DatabaseTest<SormulaTest4>
     
     
     @Test
+    public void updateBatch() throws SormulaException
+    {
+        begin();
+        selectTestRows(); // must perform each time since other tests are destructive
+        
+        // choose random set
+        Set<SormulaTest4> set = getRandomSet();
+        
+        // modify to update
+        for (SormulaTest4 row: set)
+        {
+            row.setType(888);
+        }
+
+        // update
+        Table<SormulaTest4> table = getTable();
+        table.updateAllBatch(set);
+        
+        // confirm each row was updated
+        for (SormulaTest4 r: set)
+        {
+            SormulaTest4 r2 = table.select(r.getId());
+            assert r2 != null && r2.getType() == r.getType() : "update batch failed";
+        }
+        
+        commit();
+    }
+    
+    
+    @Test
     public void updateByOperation() throws SormulaException
     {
     	begin();

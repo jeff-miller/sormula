@@ -33,6 +33,7 @@ import org.sormula.log.ClassLogger;
 import org.sormula.operation.ArrayListSelectOperation;
 import org.sormula.operation.DeleteOperation;
 import org.sormula.operation.InsertOperation;
+import org.sormula.operation.ModifyOperation;
 import org.sormula.operation.SaveOperation;
 import org.sormula.operation.ScalarSelectOperation;
 import org.sormula.operation.SelectCountOperation;
@@ -890,6 +891,23 @@ public class Table<R> implements TypeTranslatorMap
     
     
     /**
+     * Inserts a collection of rows in batch mode. See limitations about batch inserts
+     * in {@link ModifyOperation#setBatch(boolean)}.
+     * 
+     * @param rows rows to insert
+     * @return count of rows affected
+     * @throws SormulaException if error
+     * @since 1.9
+     */
+    public int insertAllBatch(Collection<R> rows) throws SormulaException
+    {
+        InsertOperation<R> operation = new InsertOperation<R>(this);
+        operation.setBatch(true);
+        return operation.insertAll(rows);
+    }
+    
+    
+    /**
      * Updates one row in table by primary key. Primary key must be defined by one
      * or more {@link Column#primaryKey()} annotations.
      * <p>
@@ -932,6 +950,24 @@ public class Table<R> implements TypeTranslatorMap
     public int updateAll(Collection<R> rows) throws SormulaException
     {
         return new UpdateOperation<R>(this).updateAll(rows);
+    }
+    
+    
+    /**
+     * Updates collection of rows using primary key in batch mode. Primary key must be defined by one
+     * or more {@link Column#primaryKey()} annotations. See limitations about batch updates
+     * in {@link ModifyOperation#setBatch(boolean)}.
+     * 
+     * @param rows rows to update
+     * @return count of rows affected
+     * @throws SormulaException if error
+     * @since 1.9
+     */
+    public int updateAllBatch(Collection<R> rows) throws SormulaException
+    {
+        UpdateOperation<R> operation = new UpdateOperation<R>(this);
+        operation.setBatch(true);
+        return operation.updateAll(rows);
     }
     
     
@@ -996,6 +1032,24 @@ public class Table<R> implements TypeTranslatorMap
     public int deleteAll(Collection<R> rows) throws SormulaException
     {
         return new DeleteOperation<R>(this).deleteAll(rows);
+    }
+    
+    
+    /**
+     * Deletes many rows by primary key in batch mode. Primary key must be defined by one
+     * or more {@link Column#primaryKey()} annotations.  See limitations about batch deletes
+     * in {@link ModifyOperation#setBatch(boolean)}.
+     * 
+     * @param rows get primary key values from each row in this collection
+     * @return count of rows affected
+     * @throws SormulaException if error
+     * @since 1.9
+     */
+    public int deleteAllBatch(Collection<R> rows) throws SormulaException
+    {
+        DeleteOperation<R> operation = new DeleteOperation<R>(this);
+        operation.setBatch(true);
+        return operation.deleteAll(rows);
     }
     
     

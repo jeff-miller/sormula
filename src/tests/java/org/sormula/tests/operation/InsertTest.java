@@ -90,10 +90,32 @@ public class InsertTest extends DatabaseTest<SormulaTest4>
     {
         ArrayList<SormulaTest4> list = new ArrayList<SormulaTest4>();
         
-        int type = 7777;
+        int type = 7000;
         for (int i = 1; i < 200; ++i)
         {
-            list.add(new SormulaTest4(7000 + i, type, "Insert batch " + i));
+            list.add(new SormulaTest4(type + i, type, "Insert batch " + i));
+        }
+        
+        begin();
+        getTable().insertAllBatch(list);
+        
+        // success if selected is same as list size
+        // NOTE: oracle returns 0 for rows affected instead of list size
+        assert getTable().selectAllWhere("byType", type).size() == list.size() : "insert batch failed";
+        
+        commit();
+    }
+    
+    
+    @Test
+    public void insertBatchByOperation() throws SormulaException
+    {
+        ArrayList<SormulaTest4> list = new ArrayList<SormulaTest4>();
+        
+        int type = 8000;
+        for (int i = 1; i < 200; ++i)
+        {
+            list.add(new SormulaTest4(type + i, type, "Insert batch " + i));
         }
         
         begin();

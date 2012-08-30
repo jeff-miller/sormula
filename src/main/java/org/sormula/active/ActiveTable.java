@@ -21,8 +21,10 @@ import java.util.List;
 
 import org.sormula.active.operation.Delete;
 import org.sormula.active.operation.DeleteAll;
+import org.sormula.active.operation.DeleteAllBatch;
 import org.sormula.active.operation.Insert;
 import org.sormula.active.operation.InsertAll;
+import org.sormula.active.operation.InsertAllBatch;
 import org.sormula.active.operation.Save;
 import org.sormula.active.operation.SaveAll;
 import org.sormula.active.operation.Select;
@@ -39,8 +41,10 @@ import org.sormula.active.operation.SelectSum;
 import org.sormula.active.operation.SelectWhere;
 import org.sormula.active.operation.Update;
 import org.sormula.active.operation.UpdateAll;
+import org.sormula.active.operation.UpdateAllBatch;
 import org.sormula.annotation.Column;
 import org.sormula.annotation.OrderBy;
+import org.sormula.operation.ModifyOperation;
 
 
 /**
@@ -534,6 +538,23 @@ public class ActiveTable<R extends ActiveRecord<R>>
         return new InsertAll<R>(this, records).execute();
     }
     
+
+    /**
+     * Inserts collection of records in batch mode.
+     * {@link ActiveRecord#attach(ActiveDatabase)} is invoked on records to
+     * attach them to the active database of this table prior to insert.
+     * See limitations about batch inserts in {@link ModifyOperation#setBatch(boolean)}.
+     * 
+     * @param records records to insert
+     * @return count of records affected
+     * @throws ActiveException if error
+     * @since 1.9
+     */
+    public int insertAllBatch(Collection<R> records) throws ActiveException
+    {
+        return new InsertAllBatch<R>(this, records).execute();
+    }
+    
     
     /**
      * Updates one record in table by primary key. Primary key must be defined by one
@@ -583,6 +604,24 @@ public class ActiveTable<R extends ActiveRecord<R>>
     public int updateAll(Collection<R> records) throws ActiveException
     {
         return new UpdateAll<R>(this, records).execute();
+    }
+    
+    
+    /**
+     * Updates collection of records using primary key in batch mode. Primary key must be defined by one
+     * or more {@link Column#primaryKey()} annotations.
+     * {@link ActiveRecord#attach(ActiveDatabase)} is invoked on records to
+     * attach them to the active database of this table prior to update.
+     * See limitations about batch updates in {@link ModifyOperation#setBatch(boolean)}.
+     * 
+     * @param records records to update
+     * @return count of records affected
+     * @throws ActiveException if error
+     * @since 1.9
+     */
+    public int updateAllBatch(Collection<R> records) throws ActiveException
+    {
+        return new UpdateAllBatch<R>(this, records).execute();
     }
     
     
@@ -652,6 +691,29 @@ public class ActiveTable<R extends ActiveRecord<R>>
         if (records != null)
         {
             return new DeleteAll<R>(this, records).execute();
+        }
+        
+        return 0;
+    }
+
+    
+    /**
+     * Deletes many records by primary key in batch mode. Primary key must be defined by one
+     * or more {@link Column#primaryKey()} annotations.
+     * {@link ActiveRecord#attach(ActiveDatabase)} is invoked on records to
+     * attach them to the active database of this table prior to delete.
+     * 
+     * @param records get primary key values from each record in this collection
+     * @return count of records affected
+     * @throws ActiveException if error
+     * @since 1.9
+     */
+    public int deleteAllBatch(Collection<R> records) throws ActiveException
+    {
+        // if records == null, don't execute since all records will be deleted
+        if (records != null)
+        {
+            return new DeleteAllBatch<R>(this, records).execute();
         }
         
         return 0;

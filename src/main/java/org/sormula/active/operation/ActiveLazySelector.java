@@ -58,7 +58,7 @@ public class ActiveLazySelector<R extends ActiveRecord<R>> extends ActiveOperati
     {
         // note: target table is table for field which is NOT same as getTable() which is for source record
         Table<?> targetTable = getOperationDatabase().getTable(scar.getTargetClass());
-        SormulaField<R, ?> targetField = new SormulaField<R, Object>(scar.getSource());
+        SormulaField<R, ?> targetField = new SormulaField<>(scar.getSource());
         SelectCascade[] selectCascades = scar.getSelectCascades();
         
         // field has select cascade annotation(s)
@@ -66,16 +66,12 @@ public class ActiveLazySelector<R extends ActiveRecord<R>> extends ActiveOperati
         {
             if (c.lazy())
             {
-                @SuppressWarnings("unchecked") // target field type is not known at compile time
-                SelectCascadeOperation<R, ?> operation = new SelectCascadeOperation(targetField, targetTable, c);
-                try
+                try (@SuppressWarnings("unchecked") // target field type is not known at compile time
+                    SelectCascadeOperation<R, ?> operation = 
+                        new SelectCascadeOperation(targetField, targetTable, c))
                 {
                     operation.prepare();
                     operation.cascade(sourceActiveRecord);
-                }
-                finally
-                {
-                    operation.close();
                 }
             }
         }

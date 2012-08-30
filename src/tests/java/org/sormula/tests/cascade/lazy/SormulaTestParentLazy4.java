@@ -46,7 +46,7 @@ public class SormulaTestParentLazy4 implements LazySelectable
     String description;
     
     @Transient
-    DurableLazySelector<SormulaTestParentLazy4> lazySelector = new DurableLazySelector<SormulaTestParentLazy4>(this);
+    DurableLazySelector<SormulaTestParentLazy4> lazySelector = new DurableLazySelector<>(this);
     
     
     // tests general cascade and map type

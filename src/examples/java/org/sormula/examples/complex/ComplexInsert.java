@@ -83,7 +83,7 @@ public class ComplexInsert extends ExampleBase
     
     void insertRows() throws SormulaException
     {
-        ArrayList<Student3> list = new ArrayList<Student3>();
+        ArrayList<Student3> list = new ArrayList<>();
         Student3 student;
         
         student = new Student3();

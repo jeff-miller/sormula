@@ -72,7 +72,7 @@ public class InsertTest extends DatabaseTest<SormulaTest4>
     @Test
     public void insertCollection() throws SormulaException
     {
-        ArrayList<SormulaTest4> list = new ArrayList<SormulaTest4>();
+        ArrayList<SormulaTest4> list = new ArrayList<>();
         
         for (int i = 101; i < 200; ++i)
         {
@@ -135,17 +135,17 @@ public class InsertTest extends DatabaseTest<SormulaTest4>
     public void insertByOperation() throws SormulaException
     {
         begin();
-        InsertOperation<SormulaTest4> operation = new InsertOperation<SormulaTest4>(getTable());
-        
-        // reverse order so that rows are natuarlly in order for order by tests
-        for (int i = 1010; i > 1000; --i)
+        try (InsertOperation<SormulaTest4> operation = new InsertOperation<>(getTable()))
         {
-            operation.setRow(new SormulaTest4(i, 3, "Insert operation " + i));
-            operation.execute();
-            assert operation.getRowsAffected() == 1 : "insert by operation failed";
+            // reverse order so that rows are natuarlly in order for order by tests
+            for (int i = 1010; i > 1000; --i)
+            {
+                operation.setRow(new SormulaTest4(i, 3, "Insert operation " + i));
+                operation.execute();
+                assert operation.getRowsAffected() == 1 : "insert by operation failed";
+            }
         }
         
-        operation.close();
         commit();
     }
     

@@ -116,7 +116,7 @@ public abstract class ActiveRecord<R extends ActiveRecord<R>> implements LazySel
      */
     public static <R extends ActiveRecord<R>> ActiveTable<R> table(Class<R> recordClass) throws ActiveException
     {
-        return new ActiveTable<R>(recordClass);
+        return new ActiveTable<>(recordClass);
     }
     
     
@@ -220,7 +220,7 @@ public abstract class ActiveRecord<R extends ActiveRecord<R>> implements LazySel
             {
                 // initialize upon first request
                 if (log.isDebugEnabled()) log.debug("lazySelectCascade determine lazy fields");
-                pendingLazySelectFieldNames = new HashSet<String>();
+                pendingLazySelectFieldNames = new HashSet<>();
                 
                 // for all fields
                 for (Field field: getClass().getDeclaredFields())
@@ -283,7 +283,7 @@ public abstract class ActiveRecord<R extends ActiveRecord<R>> implements LazySel
      */
     protected ActiveTable<R> createTable() throws ActiveException
     {
-        if (activeDatabase == null) return new ActiveTable<R>(recordClass);
-        else return new ActiveTable<R>(activeDatabase, recordClass);
+        if (activeDatabase == null) return new ActiveTable<>(recordClass);
+        else return new ActiveTable<>(activeDatabase, recordClass);
     }
 }

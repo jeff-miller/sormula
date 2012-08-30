@@ -3,9 +3,9 @@
 	<classpathentry kind="src" path="src/main/java"/>
 	<classpathentry kind="src" path="src/tests/java"/>
 	<classpathentry kind="src" path="src/examples/java"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="lib" path="src/main/resources/slf4j-api-1.6.1.jar"/>
 	<classpathentry kind="lib" path="src/tests/resources/testng-6.3.1.jar"/>
 	<classpathentry kind="lib" path="src/examples/resources/joda-time-2.0.jar"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.7"/>
 	<classpathentry kind="output" path="target"/>
 </classpath>

@@ -83,7 +83,7 @@ public class RowTranslator<R> extends ColumnsTranslator<R>
         this.table = table;
         initColumnTranslators();
         initUnusedColumnSql(rowClass);
-        primaryKeyWhereTranslator = new PrimaryKeyWhereTranslator<R>(this);
+        primaryKeyWhereTranslator = new PrimaryKeyWhereTranslator<>(this);
         
         if (log.isDebugEnabled())
         {
@@ -182,8 +182,7 @@ public class RowTranslator<R> extends ColumnsTranslator<R>
                     AbstractColumnTranslator.newInstance(columnTranslatorClass, f, columnName);
                 addColumnTranslator(translator);
 
-                // remove table!=null check when deprecated constructor is removed
-                if (translator instanceof AbstractColumnTranslator && table != null) 
+                if (translator instanceof AbstractColumnTranslator) 
                 {
                     TypeTranslator<?> typeTranslator = table.getTypeTranslator(fieldClass);
                     
@@ -274,7 +273,6 @@ public class RowTranslator<R> extends ColumnsTranslator<R>
         {
             // at least one unused column
             UnusedColumn[] unusedColumnAnnotations = unusedColumnsAnnotation.value();
-            if (unusedColumnAnnotations.length == 0) unusedColumnAnnotations = unusedColumnsAnnotation.unusedColumns(); // remove when deprecated removed
             
             // allocate typical space needed
             StringBuilder insertNames = new StringBuilder(unusedColumnAnnotations.length * 20);

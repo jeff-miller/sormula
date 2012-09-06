@@ -1,1 +1,1 @@
-java -cp .;sormula-1.9.jar;hsqldb.jar ZeroConfigExample
+java -cp .;sormula-1.9.1.jar;hsqldb.jar ZeroConfigExample

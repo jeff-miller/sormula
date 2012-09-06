@@ -30,7 +30,7 @@ import org.sormula.annotation.cascade.SelectCascade;
  */
 public class Student4
 {
-    @Column(primaryKey=true)
+    @Column(primaryKey=true) // optional
     int id;
     String firstName;
     String lastName;

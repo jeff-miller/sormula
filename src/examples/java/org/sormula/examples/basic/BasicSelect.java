@@ -104,10 +104,7 @@ public class BasicSelect extends ExampleBase
         System.out.println("select where id in = " + idList);
         ListSelectOperation<Student> operation = new ArrayListSelectOperation<Student>(table, "idin");
         operation.setTimings(true);
-        
-        for (Student s: operation.selectAll(idList))
-            System.out.println(s);
-        
+        printAll(operation.selectAll(idList));
         operation.logTimings();
     }
     
@@ -115,8 +112,7 @@ public class BasicSelect extends ExampleBase
     void selectWhere2() throws SormulaException
     {
         System.out.println("select using SelectJohns class");
-        for (Student s: new SelectJohns(table).selectAll())
-            System.out.println(s);
+        printAll(new SelectJohns(table).selectAll());
     }
 }
 

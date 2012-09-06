@@ -110,6 +110,7 @@ public class SimpleExample
         Database database = new Database(connection);
         Table<Inventory> inventoryTable = database.getTable(Inventory.class);
         
+        		
         // for all inventory of manufacturer 
         // "manf" is name of where annotation in Inventory.java
         List<Inventory> list = inventoryTable.selectAllWhere("manf", manufacturerId);
@@ -184,7 +185,7 @@ public class SimpleExample
      */
     public void selectIn() throws Exception
     {
-        ArrayList<Integer> partNumbers = new ArrayList<Integer>();
+        ArrayList<Integer> partNumbers = new ArrayList<>();
         partNumbers.add(999);
         partNumbers.add(777);
         partNumbers.add(1234);

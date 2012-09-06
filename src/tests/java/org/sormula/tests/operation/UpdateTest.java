@@ -139,21 +139,22 @@ public class UpdateTest extends DatabaseTest<SormulaTest4>
     {
     	begin();
     	selectTestRows(); // must perform each time since other tests are destructive
-        UpdateOperation<SormulaTest4> operation = new UpdateOperation<SormulaTest4>(getTable());
         
-        for (int i = 0; i < 10; ++i)
-        {
-            // choose random to update
-            SormulaTest4 row = getRandom();
-
-            // update
-            row.setType(9999);
-            operation.setRow(row);
-            operation.execute();
-            assert operation.getRowsAffected() == 1 : "update by operation failed";
-        }
+    	try (UpdateOperation<SormulaTest4> operation = new UpdateOperation<>(getTable()))
+    	{
+            for (int i = 0; i < 10; ++i)
+            {
+                // choose random to update
+                SormulaTest4 row = getRandom();
+    
+                // update
+                row.setType(9999);
+                operation.setRow(row);
+                operation.execute();
+                assert operation.getRowsAffected() == 1 : "update by operation failed";
+            }
+    	}        
         
-        operation.close();
         commit();
     }
 }

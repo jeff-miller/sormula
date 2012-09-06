@@ -95,7 +95,7 @@ public class InsertTest extends ActiveDatabaseTest<SormulaTestAR>
     @Test
     public void insertCollectionAR() 
     {
-        ArrayList<SormulaTestAR> list = new ArrayList<SormulaTestAR>();
+        ArrayList<SormulaTestAR> list = new ArrayList<>();
         
         for (int i = 9501; i < 9599; ++i)
         {
@@ -110,7 +110,7 @@ public class InsertTest extends ActiveDatabaseTest<SormulaTestAR>
     @Test
     public void insertCollectionARBatch() 
     {
-        ArrayList<SormulaTestAR> list = new ArrayList<SormulaTestAR>();
+        ArrayList<SormulaTestAR> list = new ArrayList<>();
         
         int type = 9600;
         for (int i = 1; i < 20; ++i)

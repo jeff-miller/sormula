@@ -1,1 +1,1 @@
-javac -cp sormula-2.3.jar *.java
+javac -cp sormula-2.3.1.jar *.java

@@ -39,6 +39,7 @@ import java.lang.reflect.Modifier;
 import org.sormula.Table;
 import org.sormula.annotation.Column;
 import org.sormula.annotation.ImplicitType;
+import org.sormula.annotation.ImplicitTypeAnnotationReader;
 import org.sormula.annotation.Row;
 import org.sormula.annotation.Transient;
 import org.sormula.annotation.UnusedColumn;
@@ -113,6 +114,10 @@ public class RowTranslator<R> extends ColumnsTranslator<R>
     
     /**
      * Process {@link Transient} and {@link Cascade} annotations.
+     * <p>
+     * Versions prior to 1.9.2 did not allow type translators to be replaced. Starting with
+     * version 1.9.2 and 2.3.2, this method will replace existing type translator with new
+     * one {@link ImplicitType#translator()} is different from existing.
      * 
      * @throws TranslatorException if error
      */
@@ -141,17 +146,14 @@ public class RowTranslator<R> extends ColumnsTranslator<R>
             }
             else 
             {
-                // check for Type annotation on field type and field 
-                Class fieldClass = f.getType();
-                if (table.getTypeTranslator(fieldClass) == null)
+                try
                 {
-                    TypeTranslator typeTranslator = readimplicitType(fieldClass, f);
-                    if (typeTranslator != null)
-                    {
-                        if (log.isDebugEnabled()) log.debug("add type translator=" + typeTranslator.getClass().getCanonicalName() + 
-                                " to row table =" + rowClass.getCanonicalName() + " field="+fieldClass.getCanonicalName());
-                        table.putTypeTranslator(fieldClass, typeTranslator);
-                    }
+                    // check for Type annotation on field type and field 
+                    new ImplicitTypeAnnotationReader(table, f).install();
+                }
+                catch (Exception e)
+                {
+                    throw new TranslatorException("error installing ImplicitType", e);
                 }
                 
                 // determine column translator to use
@@ -185,7 +187,7 @@ public class RowTranslator<R> extends ColumnsTranslator<R>
                 // remove table!=null check when deprecated constructor is removed
                 if (translator instanceof AbstractColumnTranslator && table != null) 
                 {
-                    TypeTranslator<?> typeTranslator = table.getTypeTranslator(fieldClass);
+                    TypeTranslator<?> typeTranslator = table.getTypeTranslator(f.getType());
                     
                     if (typeTranslator != null)
                     {
@@ -214,7 +216,7 @@ public class RowTranslator<R> extends ColumnsTranslator<R>
     
     
     /**
-     * Use {@link #readImplicitType(AnnotatedElement...)}.
+     * Do not use. Replaced with {@link ImplicitTypeAnnotationReader}.
      * @since 1.6
      */
     @Deprecated
@@ -225,6 +227,7 @@ public class RowTranslator<R> extends ColumnsTranslator<R>
     
     
     /**
+     * Do not use. Replaced with {@link ImplicitTypeAnnotationReader}.
      * Searches any {@link ImplicitType} annotations and returns new instance of {@link ImplicitType#translator()}
      * for the first one found.
      * 
@@ -233,6 +236,7 @@ public class RowTranslator<R> extends ColumnsTranslator<R>
      * @throws TranslatorException if error creating new instance of type translator
      * @since 1.8
      */
+    @Deprecated 
     protected TypeTranslator<?> readImplicitType(AnnotatedElement... annotatedElements) throws TranslatorException
     {
         for (AnnotatedElement ae : annotatedElements)
@@ -244,7 +248,7 @@ public class RowTranslator<R> extends ColumnsTranslator<R>
                 // create type translator
                 try
                 {
-                    return typeAnnotation.translator().newInstance();
+                    return typeAnnotation.translator().newInstance(); // deprecated since creates new instance even when not needed
                 }
                 catch (Exception e)
                 {

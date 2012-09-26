@@ -271,7 +271,15 @@ public class Database implements TypeTranslatorMap
     }
     
     
-    void init(Connection connection, String schema) throws SormulaException
+    /**
+     * Invoked by constructor to initialize.
+     * 
+     * @param connection JDBC connection
+     * @param schema name of schema to be prefixed to table name in all table names in sql statements;
+     * {@link Connection#getCatalog()} is typically the schema name but catalog methods are inconsistently
+     * @throws SormulaException if error
+     */
+    protected void init(Connection connection, String schema) throws SormulaException
     {
         this.connection = connection;
         this.schema = schema;
@@ -285,7 +293,14 @@ public class Database implements TypeTranslatorMap
     }
 
     
-    void initTypeTranslatorMap() throws SormulaException
+    /**
+     * Invoked by constructor to initialize default type translators and type translators
+     * annotated on {@link Database} class.
+     * 
+     * {@link Connection#getCatalog()} is typically the schema name but catalog methods are inconsistently
+     * @throws SormulaException if error
+     */
+    protected void initTypeTranslatorMap() throws SormulaException
     {
         typeTranslatorMap = new HashMap<String, TypeTranslator<?>>(50);
         
@@ -325,7 +340,6 @@ public class Database implements TypeTranslatorMap
             throw new SormulaException("error getting ExplicitType from database " + 
                     getClass().getCanonicalName(), e);
         }
-        
     }
     
     
@@ -696,7 +710,7 @@ public class Database implements TypeTranslatorMap
 	 * a value from a result set. This method is needed only for type translators that are not
 	 * defined with {@link ImplicitType} annotation. 
 	 * <p>
-	 * By default, all primative types and all subclasses of {@link TypeTranslator} in 
+	 * By default, all primative types and most subclasses of {@link TypeTranslator} in 
 	 * org.sormula.translator.standard package are added during initialization of this class.
 	 * Use this method to override default translators or to add a new translator.
 	 * <p>
@@ -722,6 +736,7 @@ public class Database implements TypeTranslatorMap
      */
     public void putTypeTranslator(String typeClassName, TypeTranslator<?> typeTranslator)
     {
+        if (log.isDebugEnabled()) log.debug("adding " + typeTranslator + " for " + typeClassName);
         typeTranslatorMap.put(typeClassName, typeTranslator);
     }
 

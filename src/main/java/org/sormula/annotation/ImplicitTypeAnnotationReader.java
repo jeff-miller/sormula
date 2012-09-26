@@ -17,6 +17,7 @@
 package org.sormula.annotation;
 
 import java.lang.reflect.AnnotatedElement;
+import java.lang.reflect.Field;
 
 import org.sormula.Database;
 import org.sormula.Table;
@@ -26,18 +27,19 @@ import org.sormula.translator.TypeTranslatorMap;
 
 
 /**
- * Reads {@link ExplicitType} annotations from classes. The first ExplicitType
- * annotation found for a class is used. If ExplicitType is already defined for
+ * Reads {@link ImplicitType} annotations from classes. The first ImplicitType
+ * annotation found for a class is used. If ImplicitType is already defined for
  * a class type, then it is ignored.
  * 
  * @author Jeff Miller
- * @since 1.6
+ * @since 1.9.2
  */
-public class ExplicitTypeAnnotationReader
+public class ImplicitTypeAnnotationReader
 {
     private static final ClassLogger log = new ClassLogger();
     TypeTranslatorMap typeTranslatorMap;
-    Class<?>[] sources;
+    Field field;
+    AnnotatedElement[] sources;
     
 
     /**
@@ -45,17 +47,20 @@ public class ExplicitTypeAnnotationReader
      * 
      * @param typeTranslatorMap a class that implements {@link TypeTranslatorMap}; typically
      * {@link Database} and {@link Table}
-     * @param sources classes that contain {@link ExplicitType} or {@link ExplicitTypes} annotations
+     * @param field field that contains {@link ImplicitType} annotation
      */
-    public ExplicitTypeAnnotationReader(TypeTranslatorMap typeTranslatorMap, Class<?>... sources)  
+    public ImplicitTypeAnnotationReader(TypeTranslatorMap typeTranslatorMap, Field field)  
     {
         this.typeTranslatorMap = typeTranslatorMap;
-        this.sources = sources;
+        this.field = field;
+        sources = new AnnotatedElement[2];
+        sources[0] = field.getType();
+        sources[1] = field;
     }
     
 
     /**
-     * Reads {@link ExplicitType} annotations from sources and adds them to
+     * Reads {@link ImplicitType} annotations from sources and adds them to
      * type map if they are not already defined.
      * 
      * @throws Exception if error creating {@link TypeTranslator}
@@ -64,23 +69,11 @@ public class ExplicitTypeAnnotationReader
     {
         for (AnnotatedElement ae : sources)
         {
-            ExplicitType typeAnnotation = ae.getAnnotation(ExplicitType.class);
+            ImplicitType typeAnnotation = ae.getAnnotation(ImplicitType.class);
             if (typeAnnotation != null) 
             {
-                if (log.isDebugEnabled()) log.debug("read ExplicitType for " + ae);
+                if (log.isDebugEnabled()) log.debug("read ImplicitType for " + ae);
                 updateMap(typeAnnotation);
-            }
-
-            // look in Types in all sources
-            ExplicitTypes typesAnnotation = ae.getAnnotation(ExplicitTypes.class);
-            
-            if (typesAnnotation != null)
-            {
-                if (log.isDebugEnabled()) log.debug("read ExplicitTypes for " + ae);
-                for (ExplicitType t: typesAnnotation.value())
-                {
-                    updateMap(t);    
-                }
             }
         }
     }
@@ -88,19 +81,15 @@ public class ExplicitTypeAnnotationReader
     
     /**
      * Adds a new instance of {@link TypeTranslator} to type translator map if not already 
-     * defined for {@link ExplicitType#type()}.
-     * <p>
-     * Versions prior to 1.9.2 did not allow type translators to be replaced. Starting with
-     * version 1.9.2 and 2.3.2, this method will replace existing type translator with new
-     * one {@link ExplicitType#translator()} is different from existing.
+     * defined for Field type.
      * 
      * @param typeAnnotation definition of type to add
      * @throws Exception if error creating new instance of {@link TypeTranslator}
      */
-    protected void updateMap(ExplicitType typeAnnotation) throws Exception
+    protected void updateMap(ImplicitType typeAnnotation) throws Exception
     {
         if (log.isDebugEnabled()) log.debug("check " + typeAnnotation);
-        Class<?> typeClass = typeAnnotation.type();
+        Class<?> typeClass = field.getType();
         Class<? extends TypeTranslator> newTranslatorClass = typeAnnotation.translator();
         TypeTranslator<?> oldTranslator = typeTranslatorMap.getTypeTranslator(typeClass);
         

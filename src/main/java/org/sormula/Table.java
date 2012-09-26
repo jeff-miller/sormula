@@ -123,18 +123,8 @@ public class Table<R> implements TypeTranslatorMap
     {
         this.database = database;
         this.rowClass = rowClass;
-        typeTranslatorMap = new HashMap<String, TypeTranslator<?>>();
         
-        // process any type annotations
-        try
-        {
-            new ExplicitTypeAnnotationReader(this, this.getClass(), rowClass).install();
-        }
-        catch (Exception e)
-        {
-            throw new SormulaException("error getting ExplicitType from table " + 
-                    getClass().getCanonicalName(), e);
-        }
+        initTypeTranslatorMap();
         
         // process row annotation
         Row rowAnnotation = getClass().getAnnotation(Row.class); // look in table subclass first
@@ -158,7 +148,31 @@ public class Table<R> implements TypeTranslatorMap
             log.debug("number of columns=" + rowTranslator.getColumnTranslatorList().size());
         }
     }
-
+    
+    
+    /**
+     * Initializes type translators for table. Invoked by the constructor. Override to add 
+     * custom types via {@link #putTypeTranslator(Class, TypeTranslator)}.
+     * 
+     * @throws SormulaException if error
+     * @since 1.9.2
+     */
+    protected void initTypeTranslatorMap() throws SormulaException
+    {
+        typeTranslatorMap = new HashMap<String, TypeTranslator<?>>();
+        
+        // process any type annotations
+        try
+        {
+            new ExplicitTypeAnnotationReader(this, this.getClass(), rowClass).install();
+        }
+        catch (Exception e)
+        {
+            throw new SormulaException("error getting ExplicitType from table " + 
+                    getClass().getCanonicalName(), e);
+        }
+    }
+    
     
     /**
      * Initialize all name translators annotated on table. Subclasses of {@link Table} may
@@ -446,7 +460,22 @@ public class Table<R> implements TypeTranslatorMap
      */
     public void putTypeTranslator(Class<?> typeClass, TypeTranslator<?> typeTranslator)
     {
-        typeTranslatorMap.put(typeClass.getCanonicalName(), typeTranslator);
+        putTypeTranslator(typeClass.getCanonicalName(), typeTranslator);
+    }
+
+    
+    /**
+     * Same as {@link #putTypeTranslator(Class, TypeTranslator)} but uses class name. Usefull for adding
+     * primative types like "int", "boolean", "float", etc.
+     * 
+     * @param typeClassName class name that translator operates upon
+     * @param typeTranslator translator to use for typeClass
+     * @since 1.9.2
+     */
+    public void putTypeTranslator(String typeClassName, TypeTranslator<?> typeTranslator)
+    {
+        if (log.isDebugEnabled()) log.debug("adding " + typeTranslator + " for " + typeClassName);
+        typeTranslatorMap.put(typeClassName, typeTranslator);
     }
     
     

@@ -40,6 +40,17 @@ public interface TypeTranslatorMap
      * @param typeTranslator translator to use for typeClass
      */
     public void putTypeTranslator(Class<?> typeClass, TypeTranslator<?> typeTranslator);
+    
+    
+    /**
+     * Same as {@link #putTypeTranslator(Class, TypeTranslator)} but uses class name. Usefull for adding
+     * primative types like "int", "boolean", "float", etc.
+     * 
+     * @param typeClassName class name that translator operates upon
+     * @param typeTranslator translator to use for typeClass
+     * @since 1.9.2
+     */
+    public void putTypeTranslator(String typeClassName, TypeTranslator<?> typeTranslator);
 
     
     /**

@@ -15,6 +15,7 @@
 		<antcall target="CascadeUpdate"/>
 		<antcall target="ComplexDelete"/>
 		<antcall target="ComplexInsert"/>
+		<antcall target="IdentityInsert"/>
 		<antcall target="ComplexSelect"/>
 		<antcall target="ComplexUpdate"/>
 		<antcall target="NameDelete"/>
@@ -23,9 +24,6 @@
 		<antcall target="NameUpdate"/>
 		<antcall target="LocalDateExample"/>
 	</target>
-    <target name="BasicInsertZ" description="Runs example">
-        <antcall target="run-example"><param name="class" value="com.something.test.BasicInsertZ"/></antcall>
-    </target>
     <target name="BasicInsert" description="Runs example">
         <antcall target="run-example"><param name="class" value="org.sormula.examples.basic.BasicInsert"/></antcall>
     </target>
@@ -76,6 +74,10 @@
     </target>
     <target name="CascadeDelete" description="Runs example">
         <antcall target="run-example"><param name="class" value="org.sormula.examples.cascade.CascadeDelete"/></antcall>
+    </target>
+	
+    <target name="IdentityInsert" description="Runs example">
+        <antcall target="run-example"><param name="class" value="org.sormula.examples.identity.IdentityInsert"/></antcall>
     </target>
 
     <target name="BlobExample" description="Runs example">
@@ -206,9 +208,10 @@
 	
     <target name="dist" description="Creates sormula.zip for distribution" depends="lib, javadoc">
         <property name="p" value="sormula"/>
-	    <zip zipfile="sormula-${version}.zip" basedir=".."
+    	<property name="d" value="sormula-${version}${dist.suffix}.zip"/>
+	    <zip destfile="${d}" basedir=".."
 	            includes="${p}/**/*"
-	            excludes="${p}/sormula-${version}.zip
+	            excludes="${p}/${d}
 	    	              ${p}/.hg/**/* 
 	    	              ${p}/target/**
 	    	              ${p}/test-output/**
@@ -232,19 +235,19 @@
 	    </target>
     
     <target name="active-record-example" description="Creates active-record-example.zip for distribution" depends="init">
-        <zip zipfile="active-record-example-${version}.zip" basedir="."
+        <zip zipfile="active-record-example-${version}${dist.suffix}.zip" basedir="."
                 includes="ActiveRecordExample/**/*"
                 excludes="ActiveRecordExample/simpleDB.tmp ActiveRecordExample/.classpath ActiveRecordExample/.project"/>
     </target>
     
     <target name="example" description="Creates example.zip for distribution" depends="init">
-        <zip zipfile="example-${version}.zip" basedir="."
+        <zip zipfile="example-${version}${dist.suffix}.zip" basedir="."
         	    includes="SimpleExample/**/*"
                 excludes="SimpleExample/simpleDB.tmp SimpleExample/.classpath SimpleExample/.project"/>
     </target>
     
     <target name="zero-config-example" description="Creates zero-config-example.zip for distribution" depends="init">
-        <zip zipfile="zero-config-example-${version}.zip" basedir="."
+        <zip zipfile="zero-config-example-${version}${dist.suffix}.zip" basedir="."
     	        includes="ZeroConfigExample/**/*"
                 excludes="ZeroConfigExample/exampleDB.tmp ZeroConfigExample/.classpath ZeroConfigExample/.project"/>
     </target>

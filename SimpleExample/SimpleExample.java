@@ -5,8 +5,6 @@ import java.util.List;
 
 import org.sormula.Database;
 import org.sormula.Table;
-import org.sormula.operation.ArrayListSelectOperation;
-import org.sormula.operation.ListSelectOperation;
 
 
 /**
@@ -30,9 +28,10 @@ public class SimpleExample
         System.out.println("begin");
         SimpleExample simpleExample = new SimpleExample();
         simpleExample.removeInventory(1234, 1);
-        simpleExample.clearInventory("xyz");
+        simpleExample.removeInventoryDAO(999, 9);
         simpleExample.selectByRange(1, 10);
         simpleExample.selectByRange2(1, 10);
+        simpleExample.clearInventory("xyz");
         simpleExample.selectIn();
         simpleExample.close();
         System.out.println("end");
@@ -76,6 +75,29 @@ public class SimpleExample
     
     
     /**
+     * Reduces inventory quantity for a part.
+     * 
+     * @param partNumber id of part to affect 
+     * @param delta reduce inventory quantity by this amount
+     */
+    public void removeInventoryDAO(int partNumber, int delta) throws Exception
+    {
+        System.out.println("removeInventoryDAO");
+        
+        // set up
+        Database database = new Database(connection);
+        InventoryDAO inventoryDAO = new InventoryDAO(database);
+        
+        // get part by primary key
+        Inventory inventory = inventoryDAO.select(partNumber);
+        
+        // update
+        inventory.setQuantity(inventory.getQuantity() - delta);
+        inventoryDAO.update(inventory);
+    }    
+    
+    
+    /**
      * Clears inventory for a manufacturer.
      *  
      * @param manufacturerId affect all rows with this manufacturer id
@@ -88,11 +110,10 @@ public class SimpleExample
         Database database = new Database(connection);
         Table<Inventory> inventoryTable = database.getTable(Inventory.class);
         
-        // select for a specific manufacturer ("manf" is name of where annotation in Inventory.java)
-        ListSelectOperation<Inventory> operation = new ArrayListSelectOperation<Inventory>(inventoryTable, "manf");
-        
-        // for all inventory of manufacturer
-        List<Inventory> list = operation.selectAll(manufacturerId);
+        		
+        // for all inventory of manufacturer 
+        // "manf" is name of where annotation in Inventory.java
+        List<Inventory> list = inventoryTable.selectAllWhere("manf", manufacturerId);
         for (Inventory inventory: list)
         {
             inventory.setQuantity(0);
@@ -164,7 +185,7 @@ public class SimpleExample
      */
     public void selectIn() throws Exception
     {
-        ArrayList<Integer> partNumbers = new ArrayList<Integer>();
+        ArrayList<Integer> partNumbers = new ArrayList<>();
         partNumbers.add(999);
         partNumbers.add(777);
         partNumbers.add(1234);
@@ -176,11 +197,7 @@ public class SimpleExample
         
         // select operation for list of part numbers
         // SELECT PARTNUMBER, QUANTITY, MANFID FROM INVENTORY WHERE PARTNUMBER IN (?, ?, ?)
-        ArrayListSelectOperation<Inventory> operation =
-            new ArrayListSelectOperation<Inventory>(inventoryTable, "partNumberIn");
-
-        // show results
-        for (Inventory inventory: operation.selectAll(partNumbers))
+        for (Inventory inventory: inventoryTable.selectAllWhere("partNumberIn", partNumbers))
         {
             System.out.println(inventory.getPartNumber());
         }

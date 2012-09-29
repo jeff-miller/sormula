@@ -83,10 +83,12 @@ public class ExampleBase
         if (dbdir != null)
         {
             // read db properties
-            InputStream is = new FileInputStream("jdbc/" + dbdir + "/jdbc.properties");
-            Properties properties = new Properties();
-            properties.load(is);
-            is.close();
+            Properties properties;
+            try (InputStream is = new FileInputStream("jdbc/" + dbdir + "/jdbc.properties"))
+            {
+                properties = new Properties();
+                properties.load(is);
+            }
             properties.list(System.out);
             
             // get connection
@@ -133,9 +135,10 @@ public class ExampleBase
         {
             if (sqlShutdown.length() > 0)
             {
-                Statement statement = connection.createStatement();
-                statement.execute(sqlShutdown);
-                statement.close();
+                try (Statement statement = connection.createStatement())
+                {
+                    statement.execute(sqlShutdown);
+                }
             }
             
             connection.close();
@@ -161,9 +164,10 @@ public class ExampleBase
     protected void createTable(String ddl) throws Exception
     {
         System.out.println(ddl);
-        Statement statement = connection.createStatement();
-        statement.execute(ddl);
-        statement.close();
+        try (Statement statement = connection.createStatement())
+        {
+            statement.execute(ddl);
+        }
     }
     
     

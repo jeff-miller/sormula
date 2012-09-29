@@ -62,8 +62,8 @@ public class SaveOperation<R> extends ModifyOperation<R>
     public SaveOperation(Table<R> table, String whereConditionName) throws OperationException
     {
         super(table);
-        insertOperation = new InsertOperation<R>(table);
-        updateOperation = new UpdateOperation<R>(table);
+        insertOperation = new InsertOperation<>(table);
+        updateOperation = new UpdateOperation<>(table);
         updateOperation.setWhere(whereConditionName);
     }
 

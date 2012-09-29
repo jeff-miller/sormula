@@ -51,7 +51,7 @@ public class InsertTest extends ActiveDatabaseTest<SormulaTestParentAR>
         );
         
         // create child table for 1 to 1 relationship
-        DatabaseTest<SormulaTestChild1AR> child1 = new DatabaseTest<SormulaTestChild1AR>();
+        DatabaseTest<SormulaTestChild1AR> child1 = new DatabaseTest<>();
         child1.openDatabase();
         child1.createTable(SormulaTestChild1AR.class, 
                 "CREATE TABLE " + getSchemaPrefix() + SormulaTestChild1AR.class.getSimpleName() + " (" +
@@ -62,7 +62,7 @@ public class InsertTest extends ActiveDatabaseTest<SormulaTestParentAR>
         child1.closeDatabase();
         
         // create child table for 1 to n relationship
-        DatabaseTest<SormulaTestChildNAR> childN = new DatabaseTest<SormulaTestChildNAR>();
+        DatabaseTest<SormulaTestChildNAR> childN = new DatabaseTest<>();
         childN.openDatabase();
         childN.createTable(SormulaTestChildNAR.class, 
                 "CREATE TABLE " + getSchemaPrefix() + SormulaTestChildNAR.class.getSimpleName() + " (" +
@@ -102,7 +102,7 @@ public class InsertTest extends ActiveDatabaseTest<SormulaTestParentAR>
         assert parent.insert() == 1 : "insertOneToOne AR did not insert parent";
         
         // verify that child was inserted
-        ActiveTable<SormulaTestChild1AR> child1Table = new ActiveTable<SormulaTestChild1AR>(activeDatabase, SormulaTestChild1AR.class);
+        ActiveTable<SormulaTestChild1AR> child1Table = new ActiveTable<>(activeDatabase, SormulaTestChild1AR.class);
         SormulaTestChild1AR c1 = child1Table.select(child1.getId());
         assert c1 != null : "child " + child1.getId() + " was not inserted";
         
@@ -135,7 +135,7 @@ public class InsertTest extends ActiveDatabaseTest<SormulaTestParentAR>
         assert parent.insert() == 1 : "insertOneToManyListAR did not insert parent";
         
         // verify that all children were inserted
-        ActiveTable<SormulaTestChildNAR> childTable = new ActiveTable<SormulaTestChildNAR>(activeDatabase, SormulaTestChildNAR.class);
+        ActiveTable<SormulaTestChildNAR> childTable = new ActiveTable<>(activeDatabase, SormulaTestChildNAR.class);
         for (SormulaTestChildNAR c: parent.getChildList())
         {
             // verify that child was attached

@@ -6,9 +6,6 @@
  * {@link org.sormula.operation.SelectOperation}. Insert, update, and, delete 
  * operations are derived from {@link org.sormula.operation.ModifyOperation}. 
  * <p>
- * Classes with names begining with "Full" are deprecated. There are methods in
- * the other operations that are preferred alternatives to "Full" operations. 
- * 
  * For example:
  * <p>
  * Select all students by type 3 ("byType" is name of Where annotation on Student):

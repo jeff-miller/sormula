@@ -218,7 +218,7 @@ public class Table<R> implements TypeTranslatorMap
         }
         
         // instantiate name translators
-        List<NameTranslator> translators = new ArrayList<NameTranslator>(nameTranslatorClasses.length);
+        List<NameTranslator> translators = new ArrayList<>(nameTranslatorClasses.length);
         for (Class<? extends NameTranslator> ntc: nameTranslatorClasses)
         {
             try
@@ -404,7 +404,7 @@ public class Table<R> implements TypeTranslatorMap
         if (lazySelectCascadeFields == null)
         {
             // create only when first asked
-            lazySelectCascadeFields = new ArrayList<Field>();
+            lazySelectCascadeFields = new ArrayList<>();
             
             // for all fields
             for (Field field: getRowClass().getDeclaredFields())
@@ -572,7 +572,7 @@ public class Table<R> implements TypeTranslatorMap
      */
     public List<R> selectAllWhere(String whereConditionName, Object...parameters) throws SormulaException
     {
-        ArrayListSelectOperation<R> operation = new ArrayListSelectOperation<R>(this, whereConditionName);
+        ArrayListSelectOperation<R> operation = new ArrayListSelectOperation<>(this, whereConditionName);
         return operation.selectAll(parameters);
     }
     
@@ -589,7 +589,7 @@ public class Table<R> implements TypeTranslatorMap
      */
     public List<R> selectAllWhereOrdered(String whereConditionName, String orderByName, Object...parameters) throws SormulaException
     {
-        ArrayListSelectOperation<R> operation = new ArrayListSelectOperation<R>(this, whereConditionName);
+        ArrayListSelectOperation<R> operation = new ArrayListSelectOperation<>(this, whereConditionName);
         operation.setOrderBy(orderByName);
         return operation.selectAll(parameters);
     }
@@ -611,7 +611,7 @@ public class Table<R> implements TypeTranslatorMap
      */
     public List<R> selectAllCustom(String customSql, Object... parameters) throws SormulaException
     {
-    	ArrayListSelectOperation<R> operation = new ArrayListSelectOperation<R>(this, "");
+    	ArrayListSelectOperation<R> operation = new ArrayListSelectOperation<>(this, "");
     	operation.setCustomSql(customSql);
     	return operation.selectAll(parameters);
     }
@@ -633,7 +633,7 @@ public class Table<R> implements TypeTranslatorMap
      */
     public R selectCustom(String customSql, Object... parameters) throws SormulaException
     {
-    	ScalarSelectOperation<R> operation = new ScalarSelectOperation<R>(this, "");
+    	ScalarSelectOperation<R> operation = new ScalarSelectOperation<>(this, "");
     	operation.setCustomSql(customSql);
     	return operation.select(parameters);
     }
@@ -671,7 +671,7 @@ public class Table<R> implements TypeTranslatorMap
      */
     public int selectCount(String whereConditionName, Object...parameters) throws SormulaException
     {
-        org.sormula.operation.SelectCountOperation<R> selectCountOperation = new SelectCountOperation<R>(this);
+        org.sormula.operation.SelectCountOperation<R> selectCountOperation = new SelectCountOperation<>(this);
         selectCountOperation.setWhere(whereConditionName);
         selectCountOperation.setParameters(parameters);
         selectCountOperation.execute();
@@ -716,7 +716,7 @@ public class Table<R> implements TypeTranslatorMap
     public <T> T selectCount(String expression, String whereConditionName, Object...parameters) throws SormulaException
     {
         org.sormula.operation.aggregate.SelectCountOperation<R, T> selectOperation = 
-            new org.sormula.operation.aggregate.SelectCountOperation<R, T>(this, expression);
+            new org.sormula.operation.aggregate.SelectCountOperation<>(this, expression);
         selectOperation.setWhere(whereConditionName);
         selectOperation.setParameters(parameters);
         selectOperation.execute();
@@ -752,7 +752,7 @@ public class Table<R> implements TypeTranslatorMap
      */
     public <T> T selectMin(String expression, String whereConditionName, Object...parameters) throws SormulaException
     {
-        SelectAggregateOperation<R, T> selectOperation = new SelectMinOperation<R, T>(this, expression);
+        SelectAggregateOperation<R, T> selectOperation = new SelectMinOperation<>(this, expression);
         selectOperation.setWhere(whereConditionName);
         selectOperation.setParameters(parameters);
         selectOperation.execute();
@@ -788,7 +788,7 @@ public class Table<R> implements TypeTranslatorMap
      */
     public <T> T selectMax(String expression, String whereConditionName, Object...parameters) throws SormulaException
     {
-        SelectAggregateOperation<R, T> selectOperation = new SelectMaxOperation<R, T>(this, expression);
+        SelectAggregateOperation<R, T> selectOperation = new SelectMaxOperation<>(this, expression);
         selectOperation.setWhere(whereConditionName);
         selectOperation.setParameters(parameters);
         selectOperation.execute();
@@ -824,7 +824,7 @@ public class Table<R> implements TypeTranslatorMap
      */
     public <T> T selectAvg(String expression, String whereConditionName, Object...parameters) throws SormulaException
     {
-        SelectAggregateOperation<R, T> selectOperation = new SelectAvgOperation<R, T>(this, expression);
+        SelectAggregateOperation<R, T> selectOperation = new SelectAvgOperation<>(this, expression);
         selectOperation.setWhere(whereConditionName);
         selectOperation.setParameters(parameters);
         selectOperation.execute();
@@ -862,7 +862,7 @@ public class Table<R> implements TypeTranslatorMap
      */
     public <T> T selectSum(String expression, String whereConditionName, Object...parameters) throws SormulaException
     {
-        SelectAggregateOperation<R, T> selectOperation = new SelectSumOperation<R, T>(this, expression);
+        SelectAggregateOperation<R, T> selectOperation = new SelectSumOperation<>(this, expression);
         selectOperation.setWhere(whereConditionName);
         selectOperation.setParameters(parameters);
         selectOperation.execute();

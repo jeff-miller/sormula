@@ -187,7 +187,7 @@ public class SelectCascadeOperation<S, T> extends CascadeOperation<S, T>
         try
         {
             String[] parameterFieldNames = selectCascadeAnnotation.sourceParameterFieldNames();
-            parameterFields = new ArrayList<SormulaField<S,?>>(parameterFieldNames.length);
+            parameterFields = new ArrayList<>(parameterFieldNames.length);
             
             for (int i = 0; i < parameterFieldNames.length; ++i)
             {

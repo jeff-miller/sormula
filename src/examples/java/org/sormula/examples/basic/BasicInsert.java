@@ -78,7 +78,7 @@ public class BasicInsert extends ExampleBase
     
     void insertRows() throws SormulaException
     {
-        ArrayList<Student> list = new ArrayList<Student>();
+        ArrayList<Student> list = new ArrayList<>();
         Student student;
         
         student = new Student();

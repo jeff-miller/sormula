@@ -56,7 +56,7 @@ class TestContextFactory implements InitialContextFactory
 class TestInitialContext extends InitialContext
 {
     private static final ClassLogger log = new ClassLogger();
-    Map<String, Object> bindings = new HashMap<String, Object>();
+    Map<String, Object> bindings = new HashMap<>();
 
     public TestInitialContext() throws NamingException
     {

@@ -71,6 +71,13 @@ import org.sormula.translator.standard.StringTranslator;
  * Table&lt;MyRow&gt; table = database.getTable(MyRow.class);
  * table.selectAll();
  * <pre></blockquote>
+ * <p>
+ * Example - Construct database from JNDI:
+ * <blockquote><pre>
+ * Database database = new Database("java:comp/env/mydatasource");
+ * Table&lt;MyRow&gt; table = database.getTable(MyRow.class);
+ * table.selectAll();
+ * <pre></blockquote>
  * 
  * @since 1.0
  * @author Jeff Miller

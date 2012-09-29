@@ -159,7 +159,7 @@ public class Table<R> implements TypeTranslatorMap
      */
     protected void initTypeTranslatorMap() throws SormulaException
     {
-        typeTranslatorMap = new HashMap<String, TypeTranslator<?>>();
+        typeTranslatorMap = new HashMap<>();
         
         // process any type annotations
         try
@@ -671,12 +671,16 @@ public class Table<R> implements TypeTranslatorMap
      */
     public int selectCount(String whereConditionName, Object...parameters) throws SormulaException
     {
-        org.sormula.operation.SelectCountOperation<R> selectCountOperation = new SelectCountOperation<>(this);
-        selectCountOperation.setWhere(whereConditionName);
-        selectCountOperation.setParameters(parameters);
-        selectCountOperation.execute();
-        int count = selectCountOperation.readCount();
-        selectCountOperation.close();
+        int count;
+        
+        try (org.sormula.operation.SelectCountOperation<R> selectCountOperation = new SelectCountOperation<>(this))
+        {
+            selectCountOperation.setWhere(whereConditionName);
+            selectCountOperation.setParameters(parameters);
+            selectCountOperation.execute();
+            count = selectCountOperation.readCount();
+        }
+        
         return count;
     }
     
@@ -715,13 +719,17 @@ public class Table<R> implements TypeTranslatorMap
      */
     public <T> T selectCount(String expression, String whereConditionName, Object...parameters) throws SormulaException
     {
-        org.sormula.operation.aggregate.SelectCountOperation<R, T> selectOperation = 
-            new org.sormula.operation.aggregate.SelectCountOperation<>(this, expression);
-        selectOperation.setWhere(whereConditionName);
-        selectOperation.setParameters(parameters);
-        selectOperation.execute();
-        T result = selectOperation.readAggregate();
-        selectOperation.close();
+        T result;
+        
+        try (org.sormula.operation.aggregate.SelectCountOperation<R, T> selectOperation = 
+            new org.sormula.operation.aggregate.SelectCountOperation<>(this, expression))
+        {
+            selectOperation.setWhere(whereConditionName);
+            selectOperation.setParameters(parameters);
+            selectOperation.execute();
+            result = selectOperation.readAggregate();
+        }
+
         return result;
     }
     
@@ -752,12 +760,16 @@ public class Table<R> implements TypeTranslatorMap
      */
     public <T> T selectMin(String expression, String whereConditionName, Object...parameters) throws SormulaException
     {
-        SelectAggregateOperation<R, T> selectOperation = new SelectMinOperation<>(this, expression);
-        selectOperation.setWhere(whereConditionName);
-        selectOperation.setParameters(parameters);
-        selectOperation.execute();
-        T result = selectOperation.readAggregate();
-        selectOperation.close();
+        T result;
+        
+        try (SelectAggregateOperation<R, T> selectOperation = new SelectMinOperation<>(this, expression))
+        {
+            selectOperation.setWhere(whereConditionName);
+            selectOperation.setParameters(parameters);
+            selectOperation.execute();
+            result = selectOperation.readAggregate();
+        }
+        
         return result;
     }
     
@@ -788,12 +800,16 @@ public class Table<R> implements TypeTranslatorMap
      */
     public <T> T selectMax(String expression, String whereConditionName, Object...parameters) throws SormulaException
     {
-        SelectAggregateOperation<R, T> selectOperation = new SelectMaxOperation<>(this, expression);
-        selectOperation.setWhere(whereConditionName);
-        selectOperation.setParameters(parameters);
-        selectOperation.execute();
-        T result = selectOperation.readAggregate();
-        selectOperation.close();
+        T result;
+        
+        try (SelectAggregateOperation<R, T> selectOperation = new SelectMaxOperation<>(this, expression))
+        {
+            selectOperation.setWhere(whereConditionName);
+            selectOperation.setParameters(parameters);
+            selectOperation.execute();
+            result = selectOperation.readAggregate();
+        }
+        
         return result;
     }
     
@@ -824,12 +840,16 @@ public class Table<R> implements TypeTranslatorMap
      */
     public <T> T selectAvg(String expression, String whereConditionName, Object...parameters) throws SormulaException
     {
-        SelectAggregateOperation<R, T> selectOperation = new SelectAvgOperation<>(this, expression);
-        selectOperation.setWhere(whereConditionName);
-        selectOperation.setParameters(parameters);
-        selectOperation.execute();
-        T result = selectOperation.readAggregate();
-        selectOperation.close();
+        T result;
+        
+        try (SelectAggregateOperation<R, T> selectOperation = new SelectAvgOperation<>(this, expression))
+        {
+            selectOperation.setWhere(whereConditionName);
+            selectOperation.setParameters(parameters);
+            selectOperation.execute();
+            result = selectOperation.readAggregate();
+        }
+        
         return result;
     }
     
@@ -862,12 +882,16 @@ public class Table<R> implements TypeTranslatorMap
      */
     public <T> T selectSum(String expression, String whereConditionName, Object...parameters) throws SormulaException
     {
-        SelectAggregateOperation<R, T> selectOperation = new SelectSumOperation<>(this, expression);
-        selectOperation.setWhere(whereConditionName);
-        selectOperation.setParameters(parameters);
-        selectOperation.execute();
-        T result = selectOperation.readAggregate();
-        selectOperation.close();
+        T result;
+        
+        try (SelectAggregateOperation<R, T> selectOperation = new SelectSumOperation<>(this, expression))
+        {
+            selectOperation.setWhere(whereConditionName);
+            selectOperation.setParameters(parameters);
+            selectOperation.execute();
+            result = selectOperation.readAggregate();
+        }
+        
         return result;
     }
     

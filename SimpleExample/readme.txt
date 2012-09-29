@@ -20,4 +20,4 @@ simpleDB.properties           Example database
 simpleDB.script               Example database 
 SimpleExample.class           Example compiled class
 SimpleExample.java            Example source class
-sormula-n.nn.jar              Sormumla api
+sormula-n.n.n.jar             Sormumla api

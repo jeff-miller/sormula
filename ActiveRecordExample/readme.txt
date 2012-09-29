@@ -18,4 +18,4 @@ simpleDB.properties           Example database
 simpleDB.script               Example database 
 ActiveRecordExample.class     Example compiled class
 ActiveRecordExample.java      Example source class
-sormula-n.nn.jar              Sormumla api
+sormula-n.n.n.jar             Sormumla api

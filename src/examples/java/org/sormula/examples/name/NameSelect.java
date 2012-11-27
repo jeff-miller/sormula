@@ -56,6 +56,7 @@ public class NameSelect extends ExampleBase
         selectWhere();
         
         // clean up
+        database.close();
         closeDatabase();
     }
     

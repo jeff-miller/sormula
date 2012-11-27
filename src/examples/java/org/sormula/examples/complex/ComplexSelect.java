@@ -55,6 +55,7 @@ public class ComplexSelect extends ExampleBase
         selectWhere();
         
         // clean up
+        database.close();
         closeDatabase();
     }
     

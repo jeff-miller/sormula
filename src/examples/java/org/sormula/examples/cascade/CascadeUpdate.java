@@ -51,6 +51,7 @@ public class CascadeUpdate extends ExampleBase
         database.logTimings();  // log all timings
         
         // clean up
+        database.close();
         closeDatabase();
     }
     

@@ -56,6 +56,7 @@ public class NameUpdate extends ExampleBase
         printAll(table.selectAll());
         
         // clean up
+        database.close();
         closeDatabase();
     }
     

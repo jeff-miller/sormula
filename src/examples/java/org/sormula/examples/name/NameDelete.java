@@ -55,6 +55,7 @@ public class NameDelete extends ExampleBase
         deleteRows();
         
         // clean up
+        database.close();
         closeDatabase();
     }
     

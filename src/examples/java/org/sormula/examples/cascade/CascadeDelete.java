@@ -48,6 +48,7 @@ public class CascadeDelete extends ExampleBase
         deleteRow();
         
         // clean up
+        database.close();
         closeDatabase();
     }
     

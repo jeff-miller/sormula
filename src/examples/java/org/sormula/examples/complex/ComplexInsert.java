@@ -66,6 +66,7 @@ public class ComplexInsert extends ExampleBase
         insertRows();
         
         // clean up
+        database.close();
         closeDatabase();
     }
     

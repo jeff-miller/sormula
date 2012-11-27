@@ -54,6 +54,7 @@ public class ComplexDelete extends ExampleBase
         deleteRows();
         
         // clean up
+        database.close();
         closeDatabase();
     }
     

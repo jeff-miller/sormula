@@ -62,6 +62,7 @@ public class BlobExample extends ExampleBase
         select2();
         
         // clean up
+        database.close();
         closeDatabase();
     }
     

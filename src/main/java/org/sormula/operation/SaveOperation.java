@@ -17,17 +17,34 @@
 package org.sormula.operation;
 
 import java.lang.reflect.Field;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 import org.sormula.Table;
+import org.sormula.annotation.cascade.Cascade;
+import org.sormula.annotation.cascade.OneToManyCascade;
+import org.sormula.annotation.cascade.OneToOneCascade;
+import org.sormula.annotation.cascade.SaveCascade;
+import org.sormula.annotation.cascade.SaveCascadeAnnotationReader;
+import org.sormula.log.ClassLogger;
 import org.sormula.operation.cascade.CascadeOperation;
+import org.sormula.operation.cascade.SaveCascadeOperation;
+import org.sormula.reflect.SormulaField;
 
 
 /**
  * SQL update or insert operation for row of type R. Rows are updated if they exist
- * in the database or inserted if they are new rows.
- *
+ * in the database or inserted if they are new rows. Cascades are performed based upon
+ * {@link Cascade#saves()}, {@link OneToManyCascade#saves()}, or {@link OneToOneCascade#saves()}.
+ * <p>
+ * Inserts and updates are performed by class members of type {@link InsertOperation} 
+ * and {@link UpdateOperation}. Since most of the work is delegated to {@link InsertOperation} 
+ * and {@link UpdateOperation}, not all methods of base class {@link ModifyOperation} are
+ * used. All of the methods in SaveOperation may be safely overridden but some subclass methods
+ * may not be used. 
+ *  
  * @param <R> class type which contains members for columns of a row in a table
  * 
  * @since 1.1
@@ -35,8 +52,10 @@ import org.sormula.operation.cascade.CascadeOperation;
  */
 public class SaveOperation<R> extends ModifyOperation<R>
 {
+	private static ClassLogger log = new ClassLogger();
     InsertOperation<R> insertOperation;
     UpdateOperation<R> updateOperation;
+    boolean invokeSuper;
     
     
     /**
@@ -62,8 +81,98 @@ public class SaveOperation<R> extends ModifyOperation<R>
     public SaveOperation(Table<R> table, String whereConditionName) throws OperationException
     {
         super(table);
-        insertOperation = new InsertOperation<R>(table);
-        updateOperation = new UpdateOperation<R>(table);
+        
+        insertOperation = new InsertOperation<R>(table)
+		{
+			@Override
+			protected List<CascadeOperation<R, ?>> prepareCascades(Field field) throws OperationException 
+			{
+				// delegate to SaveOperation so that cascades are save operations instead of insert operations
+				return SaveOperation.this.prepareCascades(field);
+			}
+			
+			@Override
+			protected void preExecute(R row) throws OperationException 
+			{
+				// delegate to SaveOperation so that it may be overriden by subclass of SaveOperation
+				invokeSuper = false;
+				SaveOperation.this.preExecute(row); // if subclass overrides then invokeSuper remains false
+				if (invokeSuper) super.preExecute(row);
+			}
+
+			@Override
+			protected void postExecute(R row) throws OperationException 
+			{
+				// delegate to SaveOperation so that it may be overriden by subclass of SaveOperation
+				invokeSuper = false;
+				SaveOperation.this.postExecute(row); // if subclass overrides then invokeSuper remains false
+				if (invokeSuper) super.postExecute(row);
+			}
+
+			@Override
+			protected void preExecuteCascade(R row) throws OperationException 
+			{
+				// delegate to SaveOperation so that it may be overriden by subclass of SaveOperation
+				invokeSuper = false;
+				SaveOperation.this.preExecuteCascade(row); // if subclass overrides then invokeSuper remains false
+				if (invokeSuper) super.preExecuteCascade(row);			
+			}
+
+			@Override
+			protected void postExecuteCascade(R row) throws OperationException 
+			{
+				// delegate to SaveOperation so that it may be overriden by subclass of SaveOperation
+				invokeSuper = false;
+				SaveOperation.this.postExecuteCascade(row); // if subclass overrides then invokeSuper remains false
+				if (invokeSuper) super.postExecuteCascade(row);
+			}
+		};
+        
+		updateOperation = new UpdateOperation<R>(table)
+		{
+			@Override
+			protected List<CascadeOperation<R, ?>> prepareCascades(Field field) throws OperationException 
+			{
+				// delegate to SaveOperation so that cascades are save operations instead of update operations
+				return SaveOperation.this.prepareCascades(field);
+			}
+
+			@Override
+			protected void preExecute(R row) throws OperationException 
+			{
+				// delegate to SaveOperation so that it may be overriden by subclass of SaveOperation
+				invokeSuper = false;
+				SaveOperation.this.preExecute(row); // if subclass overrides then invokeSuper remains false
+				if (invokeSuper) super.preExecute(row);
+			}
+
+			@Override
+			protected void postExecute(R row) throws OperationException 
+			{
+				// delegate to SaveOperation so that it may be overriden by subclass of SaveOperation
+				invokeSuper = false;
+				SaveOperation.this.postExecute(row); // if subclass overrides then invokeSuper remains false
+				if (invokeSuper) super.postExecute(row);
+			}
+
+			@Override
+			protected void preExecuteCascade(R row) throws OperationException 
+			{
+				// delegate to SaveOperation so that it may be overriden by subclass of SaveOperation
+				invokeSuper = false;
+				SaveOperation.this.preExecuteCascade(row); // if subclass overrides then invokeSuper remains false
+				if (invokeSuper) super.preExecuteCascade(row);
+			}
+
+			@Override
+			protected void postExecuteCascade(R row) throws OperationException 
+			{
+				// delegate to SaveOperation so that it may be overriden by subclass of SaveOperation
+				invokeSuper = false;
+				SaveOperation.this.postExecuteCascade(row); // if subclass overrides then invokeSuper remains false
+				if (invokeSuper) super.postExecuteCascade(row);
+			}
+		};
         updateOperation.setWhere(whereConditionName);
     }
 
@@ -183,14 +292,88 @@ public class SaveOperation<R> extends ModifyOperation<R>
 
 
     /**
-     * Does nothing since cascades are handled by insert and update operation.
-     * 
-     * @param field not used
+     * Creates save cascade operations based upon the save annotations for field.
+     *
+     * @param field annotation is for this field of row class R
+     * @return list of save cascade operations; empty list for none
+     * @throws OperationException if error
+     * @since 1.9.3
      */
     @Override
     protected List<CascadeOperation<R, ?>> prepareCascades(Field field) throws OperationException
     {
-        // cascades are handled by insert and update operation
-        return null;
+        List<CascadeOperation<R, ?>> co = null;
+        SaveCascadeAnnotationReader scar = new SaveCascadeAnnotationReader(field);
+        SaveCascade[] saveCascades = scar.getSaveCascades();
+        
+        if (saveCascades.length > 0)
+        {
+            // at least one save cascade
+            if (log.isDebugEnabled()) log.debug("prepareCascades() for " + field.getName());
+            Table<?> targetTable = getTargetTable(scar.getTargetClass(), field);
+            SormulaField<R, ?> targetField = createTargetField(field);
+            co = new ArrayList<CascadeOperation<R, ?>>(saveCascades.length);
+            
+            // for each cascade operation
+            for (SaveCascade c: saveCascades)
+            {
+                if (log.isDebugEnabled()) log.debug("prepare cascade " + c.operation());
+                @SuppressWarnings("unchecked") // target field type is not known at compile time
+                CascadeOperation<R, ?> operation = new SaveCascadeOperation(targetField, targetTable, c);
+                operation.prepare();
+                co.add(operation);
+            }
+        }
+        else
+        {
+            // no cascades
+            co = Collections.emptyList();
+        }
+        
+        return co;
     }
+	
+    
+    /**
+     * {@inheritDoc}
+     */
+	@Override
+	protected void preExecute(R row) throws OperationException 
+	{
+		// indicate to invoke InsertOperation/UpdateOperation equivalent method
+		invokeSuper = true;
+	}
+
+	
+    /**
+     * {@inheritDoc}
+     */
+	@Override
+	protected void postExecute(R row) throws OperationException 
+	{
+		// indicate to invoke InsertOperation/UpdateOperation equivalent method
+		invokeSuper = true;
+	}
+
+	
+    /**
+     * {@inheritDoc}
+     */
+	@Override
+	protected void preExecuteCascade(R row) throws OperationException 
+	{
+		// indicate to invoke InsertOperation/UpdateOperation equivalent method
+		invokeSuper = true;
+	}
+
+
+    /**
+     * {@inheritDoc}
+     */
+	@Override
+	protected void postExecuteCascade(R row) throws OperationException 
+	{
+		// indicate to invoke InsertOperation/UpdateOperation equivalent method
+		invokeSuper = true;
+	}
 }

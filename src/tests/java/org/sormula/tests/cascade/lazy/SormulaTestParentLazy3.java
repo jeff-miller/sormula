@@ -24,6 +24,7 @@ import org.sormula.annotation.Transient;
 import org.sormula.annotation.cascade.Cascade;
 import org.sormula.annotation.cascade.DeleteCascade;
 import org.sormula.annotation.cascade.InsertCascade;
+import org.sormula.annotation.cascade.SaveCascade;
 import org.sormula.annotation.cascade.SelectCascade;
 import org.sormula.annotation.cascade.UpdateCascade;
 import org.sormula.operation.HashMapSelectOperation;
@@ -54,6 +55,7 @@ public class SormulaTestParentLazy3 implements LazySelectable
     		selects=@SelectCascade(operation=HashMapSelectOperation.class, sourceParameterFieldNames="id", targetWhereName="byParent", targetKeyMethodName="getId", lazy=true),
 			inserts=@InsertCascade(),
             updates=@UpdateCascade(),
+    		saves=@SaveCascade(),
             deletes=@DeleteCascade()
 	)
     Map<Integer, SormulaTestChildLazy> childMap;

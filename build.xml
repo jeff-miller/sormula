@@ -142,6 +142,7 @@
             destdir="${target}" 
             source="${javac.version}" 
             target="${javac.version}"
+        	bootclasspath="${javac.bootclasspath}"
             optimize="${optimize}"
             debug="${debug}"
             listfiles="true"

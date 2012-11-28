@@ -26,6 +26,7 @@ import org.sormula.annotation.cascade.DeleteCascade;
 import org.sormula.annotation.cascade.InsertCascade;
 import org.sormula.annotation.cascade.OneToManyCascade;
 import org.sormula.annotation.cascade.OneToOneCascade;
+import org.sormula.annotation.cascade.SaveCascade;
 import org.sormula.annotation.cascade.SelectCascade;
 import org.sormula.annotation.cascade.UpdateCascade;
 import org.sormula.operation.HashMapSelectOperation;
@@ -57,6 +58,7 @@ public class SormulaTestParent
     		selects=@SelectCascade(operation=HashMapSelectOperation.class, sourceParameterFieldNames="id", targetWhereName="byParent", targetKeyMethodName="getId"),
 			inserts=@InsertCascade(),
             updates=@UpdateCascade(),
+            saves=@SaveCascade(),
             deletes=@DeleteCascade()
 	)
     Map<Integer, SormulaTestChildM> childMap;

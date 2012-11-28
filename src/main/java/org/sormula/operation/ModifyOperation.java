@@ -376,6 +376,7 @@ public abstract class ModifyOperation<R> extends SqlOperation<R>
      * where post flag is false. 
      * @see InsertCascade#post()
      * @see UpdateCascade#post()
+     * @see SaveeCascade#post()
      * @see DeleteCascade#post()
      * 
      * @param row row for JDBC execute 
@@ -391,6 +392,7 @@ public abstract class ModifyOperation<R> extends SqlOperation<R>
      * where post flag is true. 
      * @see InsertCascade#post()
      * @see UpdateCascade#post()
+     * @see SaveeCascade#post()
      * @see DeleteCascade#post()
      * 
      * @param row row for JDBC execute 

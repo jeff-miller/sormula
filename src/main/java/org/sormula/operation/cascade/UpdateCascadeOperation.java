@@ -18,9 +18,9 @@ package org.sormula.operation.cascade;
 
 import org.sormula.Table;
 import org.sormula.annotation.cascade.UpdateCascade;
-import org.sormula.operation.InsertOperation;
 import org.sormula.operation.OperationException;
 import org.sormula.operation.SqlOperation;
+import org.sormula.operation.UpdateOperation;
 import org.sormula.reflect.SormulaField;
 
 
@@ -35,7 +35,7 @@ import org.sormula.reflect.SormulaField;
 public class UpdateCascadeOperation<S, T> extends ModifyCascadeOperation<S, T>
 {
     /**
-     * Constructor used by {@link InsertOperation}.
+     * Constructor used by {@link UpdateOperation}.
      *  
      * @param targetField cascade update operation uses row(s) from this field
      * @param targetTable cascade update operation is performed on this table 

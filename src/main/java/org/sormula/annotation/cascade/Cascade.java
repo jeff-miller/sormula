@@ -96,6 +96,16 @@ public @interface Cascade
     
     
     /**
+     * Save cascade operations for target fields. Use empty array
+     * to perform no update cascades.
+     * 
+     * @return update annotations for cascade
+     * @since 1.9.3
+     */
+    SaveCascade[] saves() default {};
+    
+    
+    /**
      * Delete cascade operations for target fields. Use empty array
      * to perform no delete cascades.
      * 

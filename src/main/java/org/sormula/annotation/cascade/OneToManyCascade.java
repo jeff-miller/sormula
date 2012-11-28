@@ -108,6 +108,15 @@ public @interface OneToManyCascade
     
     
     /**
+     * The cascade operations to perform when source row is saved.
+     * 
+     * @return save annotations for cascade; use empty array for no save cascade
+     * @since 1.9.3
+     */
+    SaveCascade[] saves() default @SaveCascade();
+    
+    
+    /**
      * The cascade operations to perform when source row is deleted.
      * 
      * @return delete annotations for cascade; use empty array for no delete cascade

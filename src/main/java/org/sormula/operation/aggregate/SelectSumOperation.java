@@ -23,7 +23,7 @@ import org.sormula.operation.OperationException;
 /**
  * SQL SUM aggregate operation. See base class for details about use.
  * 
- * @since 1.7
+ * @since 1.7 and 2.1
  * @author Jeff Miller
  * @param <R> class type which contains members for columns of a row in a table
  * @param <T> class type of aggregate result

@@ -122,7 +122,7 @@ public abstract class AbstractColumnTranslator<R, T> implements ColumnTranslator
     
     /**
      * @return translator to read result sets and write to prepared statements
-     * @since 1.6
+     * @since 1.6 and 2.0
      */
     public TypeTranslator<T> getTypeTranslator()
     {
@@ -134,7 +134,7 @@ public abstract class AbstractColumnTranslator<R, T> implements ColumnTranslator
      * Sets the translator to read result sets and write to prepared statements.
      * 
      * @param typeTranslator type translator to use for this column
-     * @since 1.6
+     * @since 1.6 and 2.0
      */
     public void setTypeTranslator(TypeTranslator<T> typeTranslator)
     {

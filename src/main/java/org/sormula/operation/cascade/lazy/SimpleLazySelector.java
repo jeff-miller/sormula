@@ -28,7 +28,7 @@ import org.sormula.annotation.cascade.SelectCascade;
  * occur in stand-alone applications and web applications where source is never stored in web session.  
  *  
  * @author Jeff Miller
- * @since 1.8
+ * @since 1.8 and 2.2
  * 
  * @param <R> type of source row class
  */
@@ -77,7 +77,7 @@ public class SimpleLazySelector<R> extends AbstractLazySelector<R>
     /**
      * Does nothing since {@link Database} from {@link #pendingLazySelects(Database)}
      * is resued.
-     * @since 1.9
+     * @since 1.9 and 2.3
      */
     @Override
     protected void openDatabase() throws LazyCascadeException
@@ -88,7 +88,7 @@ public class SimpleLazySelector<R> extends AbstractLazySelector<R>
     /**
      * Does nothing since {@link Database} from {@link #pendingLazySelects(Database)}
      * is resued.
-     * @since 1.9
+     * @since 1.9 and 2.3
      */
     @Override
     protected void closeDatabase() throws LazyCascadeException

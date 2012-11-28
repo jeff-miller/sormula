@@ -19,7 +19,7 @@ import org.sormula.translator.TranslatorException;
  * Intended for use by {@link ActiveOperation} only.
  * 
  * @author Jeff Miller
- * @since 1.7
+ * @since 1.7 and 2.1
  * 
  * @param <R> record type of table
  */

@@ -115,7 +115,7 @@ public class Database implements TypeTranslatorMap
      * 
      * @param dataSourceName JNDI full path to data source definition; example "java:comp/env/someds"
      * @throws SormulaException if error
-     * @since 1.81
+     * @since 1.9 and 2.3
      */
     public Database(String dataSourceName) throws SormulaException
     {
@@ -143,7 +143,7 @@ public class Database implements TypeTranslatorMap
      * {@link Connection#getCatalog()} is typically the schema name but catalog methods are inconsistently
      * supported by jdbc drivers
      * @throws SormulaException if error
-     * @since 1.81
+     * @since 1.9 and 2.3
      */
     public Database(String dataSourceName, String schema) throws SormulaException
     {
@@ -178,7 +178,7 @@ public class Database implements TypeTranslatorMap
      * 
      * @param dataSource obtain JDBC connection from this data source
      * @throws SormulaException if error
-     * @since 1.8
+     * @since 1.8 and 2.2
      */
     public Database(DataSource dataSource) throws SormulaException
     {
@@ -201,7 +201,7 @@ public class Database implements TypeTranslatorMap
      * {@link Connection#getCatalog()} is typically the schema name but catalog methods are inconsistently
      * supported by jdbc drivers
      * @throws SormulaException if error
-     * @since 1.8
+     * @since 1.8 and 2.2
      */
     public Database(DataSource dataSource, String schema) throws SormulaException
     {
@@ -222,7 +222,7 @@ public class Database implements TypeTranslatorMap
      * {@link #Database(String)} and {@link #Database(String, String)}.
      * 
      * @return data source JNDI name or null if none
-     * @since 1.9
+     * @since 1.9 and 2.3
      */
     public String getDataSourceName()
     {
@@ -446,7 +446,7 @@ public class Database implements TypeTranslatorMap
      * Gets read-only indicator.
      * 
      * @return true if modify operations are not permitted
-     * @since 1.6
+     * @since 1.6 and 2.0
      * @see SqlOperation#isReadOnly()
      */
     public boolean isReadOnly()
@@ -462,7 +462,7 @@ public class Database implements TypeTranslatorMap
      * modification of database.
      * 
      * @param readOnly true to prevent modify operations
-     * @since 1.6
+     * @since 1.6 and 2.0
      * @see SqlOperation#setReadOnly(boolean)
      */
     public void setReadOnly(boolean readOnly)
@@ -485,7 +485,7 @@ public class Database implements TypeTranslatorMap
      * @return table object for reading/writing row objects of type R from/to database; null if table
      * does not exist and create is false
      * @throws SormulaException if error
-     * @since 1.7
+     * @since 1.7 and 2.1
      */
     public <R> Table<R> getTable(Class<R> rowClass, boolean create) throws SormulaException
     {
@@ -570,7 +570,7 @@ public class Database implements TypeTranslatorMap
      * Gets the default name translator classes for tables when none is specified for the table.
      * 
      * @return list of default name translator class; empty list if none
-     * @since 1.8
+     * @since 1.8 and 2.2
      * @see Table#translateName(String)
      */
 	public List<Class<? extends NameTranslator>> getNameTranslatorClasses()
@@ -583,7 +583,7 @@ public class Database implements TypeTranslatorMap
 	 * Adds a default name translator class.
 	 * 
 	 * @param nameTranslatorClass class to use to translate table/column names
-	 * @since 1.8
+	 * @since 1.8 and 2.2
 	 * @see Table#translateName(String)
 	 */
     public void addNameTranslatorClass(Class<? extends NameTranslator> nameTranslatorClass)
@@ -596,7 +596,7 @@ public class Database implements TypeTranslatorMap
      * Removes a name translator class.
      * 
      * @param nameTranslatorClass class to remove
-     * @since 1.8
+     * @since 1.8 and 2.2
      * @see Table#translateName(String)
      */
     public void removeNameTranslatorClass(Class<? extends NameTranslator> nameTranslatorClass)
@@ -725,7 +725,7 @@ public class Database implements TypeTranslatorMap
 	 * 
      * @param typeClass class that translator operates upon
      * @param typeTranslator translator to use for typeClass
-	 * @since 1.6
+	 * @since 1.6 and 2.0
 	 */
     public void putTypeTranslator(Class<?> typeClass, TypeTranslator<?> typeTranslator)
     {
@@ -739,7 +739,7 @@ public class Database implements TypeTranslatorMap
      * 
      * @param typeClassName class name that translator operates upon
      * @param typeTranslator translator to use for typeClass
-     * @since 1.6
+     * @since 1.6 and 2.0
      */
     public void putTypeTranslator(String typeClassName, TypeTranslator<?> typeTranslator)
     {
@@ -754,7 +754,7 @@ public class Database implements TypeTranslatorMap
      * 
      * @param typeClass class that translator operates upon
      * @return translator to use for typeClass
-     * @since 1.6
+     * @since 1.6 and 2.0
      */
     public TypeTranslator<?> getTypeTranslator(Class<?> typeClass)
     {
@@ -767,7 +767,7 @@ public class Database implements TypeTranslatorMap
      * 
      * @param typeClassName class name that translator operates upon
      * @return translator to use for typeClass
-     * @since 1.6
+     * @since 1.6 and 2.0
      */
     public TypeTranslator<?> getTypeTranslator(String typeClassName)
     {

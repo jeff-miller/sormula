@@ -76,7 +76,7 @@ public class RowTranslator<R> extends ColumnsTranslator<R>
      * 
      * @param table table associated with this row translator
      * @throws TranslatorException if error
-     * @since 1.6
+     * @since 1.6 and 2.0
      */
     public RowTranslator(Table<R> table) throws TranslatorException
     {
@@ -217,7 +217,7 @@ public class RowTranslator<R> extends ColumnsTranslator<R>
     
     /**
      * Do not use. Replaced with {@link ImplicitTypeAnnotationReader}.
-     * @since 1.6
+     * @since 1.6 and 2.0
      */
     @Deprecated
     protected TypeTranslator<?> readimplicitType(AnnotatedElement... annotatedElements) throws TranslatorException
@@ -234,7 +234,7 @@ public class RowTranslator<R> extends ColumnsTranslator<R>
      * @param annotatedElements objects that may contain an {@link ImplicitType} annotation
      * @return new {@link TypeTranslator} or null if no {@link ImplicitType} annotations
      * @throws TranslatorException if error creating new instance of type translator
-     * @since 1.8
+     * @since 1.8 and 2.2
      */
     @Deprecated 
     protected TypeTranslator<?> readImplicitType(AnnotatedElement... annotatedElements) throws TranslatorException

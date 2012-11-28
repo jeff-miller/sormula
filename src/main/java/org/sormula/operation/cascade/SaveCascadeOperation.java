@@ -31,7 +31,7 @@ import org.sormula.reflect.SormulaField;
  *
  * @param <S> row class of table that is source of cascade
  * @param <T> row class of table that is target of cascade
- * @since 1.9.2
+ * @since 1.9.2 and 2.3.2
  */
 public class SaveCascadeOperation<S, T> extends ModifyCascadeOperation<S, T>
 {

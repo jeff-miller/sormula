@@ -131,7 +131,7 @@ public abstract class SqlOperation<R>
      * Gets read-only indicator.
      * 
      * @return true if modify operations are not permitted
-     * @since 1.6
+     * @since 1.6 and 2.0
      * @see Database#isReadOnly()
      */
     public boolean isReadOnly()
@@ -148,7 +148,7 @@ public abstract class SqlOperation<R>
      * to prevent accidental modification of database.
      * 
      * @param readOnly true to prevent modify operations
-     * @since 1.6
+     * @since 1.6 and 2.0
      * @see Database#setReadOnly(boolean)
      */
     public void setReadOnly(boolean readOnly)
@@ -161,7 +161,7 @@ public abstract class SqlOperation<R>
      * Gets the number of seconds the driver will wait for a Statement object to execute.
      *   
      * @return the current query timeout limit in seconds; zero means there is no limit
-     * @since 1.9
+     * @since 1.9 and 2.3
      * @see Statement#getQueryTimeout()
      */
     public int getQueryTimeout()
@@ -175,7 +175,7 @@ public abstract class SqlOperation<R>
      * This value is set when statement is prepared in {@link #prepare()}.
      * 
      * @param queryTimeout the new query timeout limit in seconds; zero means there is no limit
-     * @since 1.9
+     * @since 1.9 and 2.3
      * @see Statement#setQueryTimeout(int)
      */
     public void setQueryTimeout(int queryTimeout)
@@ -287,7 +287,7 @@ public abstract class SqlOperation<R>
      * thread that invokes this method and other threads that may be modifying this object.
      * 
      * @throws OperationException if error
-     * @since 1.9
+     * @since 1.9 and 2.3
      * @see Statement#cancel()
      */
     public void cancel() throws OperationException

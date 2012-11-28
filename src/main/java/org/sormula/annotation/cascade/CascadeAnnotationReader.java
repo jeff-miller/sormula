@@ -11,7 +11,7 @@ import org.sormula.log.ClassLogger;
  * Base class for cascade annotation readers.
  * 
  * @author Jeff Miller
- * @since 1.8
+ * @since 1.8 and 2.2
  */
 abstract public class CascadeAnnotationReader
 {
@@ -79,7 +79,7 @@ abstract public class CascadeAnnotationReader
      * Initializes target class based upon {@link Field#getGenericType()} and {@link Field#getType()} when target class 
      * is not specified (the default value of Object.class). {@link OneToManyCascade#targetClass()} 
      * and {@link Cascade#targetClass()} have a default of Object.class.
-     * @since 1.9
+     * @since 1.9 and 2.3
      */
     protected void checkDefaultTargetClass()
     {

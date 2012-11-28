@@ -35,7 +35,7 @@ import org.sormula.log.ClassLogger;
  * A database transaction will only be used if {@link Connection#getAutoCommit()} returns false.
  * 
  * @author Jeff Miller
- * @since 1.7
+ * @since 1.7 and 2.1
  *
  * @param <R> record type
  * @param <T> execute return type

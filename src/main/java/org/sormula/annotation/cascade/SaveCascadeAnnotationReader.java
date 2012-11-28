@@ -7,7 +7,7 @@ import java.lang.reflect.Field;
  * Reads save cascade annotation information for a field.
  * 
  * @author Jeff Miller
- * @since 1.9.3
+ * @since 1.9.3 and 2.3.3
  */
 public class SaveCascadeAnnotationReader extends CascadeAnnotationReader
 {

@@ -7,7 +7,7 @@ import java.lang.reflect.Field;
  * Reads delete cascade annotation information for a field.
  * 
  * @author Jeff Miller
- * @since 1.8
+ * @since 1.8 and 2.2
  */
 public class DeleteCascadeAnnotationReader extends CascadeAnnotationReader
 {

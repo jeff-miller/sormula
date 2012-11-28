@@ -155,7 +155,7 @@ public class Table<R> implements TypeTranslatorMap
      * custom types via {@link #putTypeTranslator(Class, TypeTranslator)}.
      * 
      * @throws SormulaException if error
-     * @since 1.9.2
+     * @since 1.9.2 and 2.3.2
      */
     protected void initTypeTranslatorMap() throws SormulaException
     {
@@ -180,7 +180,7 @@ public class Table<R> implements TypeTranslatorMap
      * 
      * @param rowAnnotation the annotation that defines name translator(s)
      * @return list of name translators; empty list if none
-     * @since 1.8
+     * @since 1.8 and 2.2
      */
     @SuppressWarnings("unchecked") // type of name translator is not known until runtime
     protected List<? extends NameTranslator> initNameTranslators(Row rowAnnotation) 
@@ -288,7 +288,7 @@ public class Table<R> implements TypeTranslatorMap
 
     /**
      * @return row class supplied in constructor
-     * @since 1.6
+     * @since 1.6 and 2.0
      */
     public Class<R> getRowClass()
     {
@@ -351,7 +351,7 @@ public class Table<R> implements TypeTranslatorMap
      * Gets the name translators used by {@link #translateName(String)}.
      * 
      * @return list of name translators; empty list if none
-     * @since 1.8
+     * @since 1.8 and 2.2
      */
     public List<? extends NameTranslator> getNameTranslators()
     {
@@ -365,7 +365,7 @@ public class Table<R> implements TypeTranslatorMap
      * the order that they are defined.
      * 
      * @return SQL name that corresponds to Java class or field name
-     * @since 1.8
+     * @since 1.8 and 2.2
      * @see Row#nameTranslators()
      * @see Database#addNameTranslatorClass(Class)
      */
@@ -397,7 +397,7 @@ public class Table<R> implements TypeTranslatorMap
      * Gets fields for table record class that are annotated with {@link SelectCascade#lazy()} true.
      * 
      * @return list of fields
-     * @since 1.8
+     * @since 1.8 and 2.2
      */
     public List<Field> getLazySelectCascadeFields()
     {
@@ -429,7 +429,7 @@ public class Table<R> implements TypeTranslatorMap
      * 
      * @return new instance of row created with zero-arg constructor
      * @throws SormulaException if error
-     * @since 1.7
+     * @since 1.7 and 2.1
      */
     public R newRow() throws SormulaException
     {
@@ -456,7 +456,7 @@ public class Table<R> implements TypeTranslatorMap
      * 
      * @param typeClass class that translator operates upon
      * @param typeTranslator to use for typeClass
-     * @since 1.6
+     * @since 1.6 and 2.0
      */
     public void putTypeTranslator(Class<?> typeClass, TypeTranslator<?> typeTranslator)
     {
@@ -470,7 +470,7 @@ public class Table<R> implements TypeTranslatorMap
      * 
      * @param typeClassName class name that translator operates upon
      * @param typeTranslator translator to use for typeClass
-     * @since 1.9.2
+     * @since 1.9.2 and 2.3.2
      */
     public void putTypeTranslator(String typeClassName, TypeTranslator<?> typeTranslator)
     {
@@ -487,7 +487,7 @@ public class Table<R> implements TypeTranslatorMap
      * 
      * @param typeClass class that translator operates upon
      * @return translator to use for typeClass
-     * @since 1.6
+     * @since 1.6 and 2.0
      */
     public TypeTranslator<?> getTypeTranslator(Class<?> typeClass)
     {
@@ -553,7 +553,7 @@ public class Table<R> implements TypeTranslatorMap
      * @param parameters parameter values for where condition
      * @return row for where condition and parameters; null if none found
      * @throws SormulaException if error
-     * @since 1.7
+     * @since 1.7 and 2.1
      */
     public R selectWhere(String whereConditionName, Object...parameters) throws SormulaException
     {
@@ -568,7 +568,7 @@ public class Table<R> implements TypeTranslatorMap
      * @param parameters parameter values for where condition
      * @return rows for where condition and parameters; empty list if none found
      * @throws SormulaException if error
-     * @since 1.7
+     * @since 1.7 and 2.1
      */
     public List<R> selectAllWhere(String whereConditionName, Object...parameters) throws SormulaException
     {
@@ -585,7 +585,7 @@ public class Table<R> implements TypeTranslatorMap
      * @param parameters parameter values for where condition
      * @return rows for where condition and parameters; empty list if none found
      * @throws SormulaException if error
-     * @since 1.7
+     * @since 1.7 and 2.1
      */
     public List<R> selectAllWhereOrdered(String whereConditionName, String orderByName, Object...parameters) throws SormulaException
     {
@@ -841,7 +841,7 @@ public class Table<R> implements TypeTranslatorMap
      * @param expression expression to use as parameter to function; typically it is the name of a column
      * @return sum for expression  
      * @throws SormulaException if error
-     * @since 1.7
+     * @since 1.7 and 2.1
      */
     public <T> T selectSum(String expression) throws SormulaException
     {
@@ -858,7 +858,7 @@ public class Table<R> implements TypeTranslatorMap
      * @param parameters parameter values for where condition
      * @return sum for expression and where condition 
      * @throws SormulaException if error
-     * @since 1.7
+     * @since 1.7 and 2.1
      */
     public <T> T selectSum(String expression, String whereConditionName, Object...parameters) throws SormulaException
     {
@@ -926,7 +926,7 @@ public class Table<R> implements TypeTranslatorMap
      * @param rows rows to insert
      * @return count of rows affected
      * @throws SormulaException if error
-     * @since 1.9
+     * @since 1.9 and 2.3
      */
     public int insertAllBatch(Collection<R> rows) throws SormulaException
     {
@@ -990,7 +990,7 @@ public class Table<R> implements TypeTranslatorMap
      * @param rows rows to update
      * @return count of rows affected
      * @throws SormulaException if error
-     * @since 1.9
+     * @since 1.9 and 2.3
      */
     public int updateAllBatch(Collection<R> rows) throws SormulaException
     {
@@ -1072,7 +1072,7 @@ public class Table<R> implements TypeTranslatorMap
      * @param rows get primary key values from each row in this collection
      * @return count of rows affected
      * @throws SormulaException if error
-     * @since 1.9
+     * @since 1.9 and 2.3
      */
     public int deleteAllBatch(Collection<R> rows) throws SormulaException
     {

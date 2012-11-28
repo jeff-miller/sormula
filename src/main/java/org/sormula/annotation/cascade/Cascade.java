@@ -100,7 +100,7 @@ public @interface Cascade
      * to perform no update cascades.
      * 
      * @return update annotations for cascade
-     * @since 1.9.3
+     * @since 1.9.3 and 2.3.3
      */
     SaveCascade[] saves() default {};
     

@@ -34,7 +34,7 @@ import org.sormula.log.ClassLogger;
  * at that same time.
  * 
  * @author Jeff Miller
- * @since 1.7.1
+ * @since 1.7.1 and 2.1.1
  */
 public class ActiveTransaction 
 {

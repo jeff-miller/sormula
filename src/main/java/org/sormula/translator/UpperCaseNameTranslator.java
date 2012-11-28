@@ -20,7 +20,7 @@ package org.sormula.translator;
 /**
  * Converts name to uppercase using {@link String#toUpperCase()}.
  * 
- * @since 1.8
+ * @since 1.8 and 2.2
  * @author Jeff Miller
  */
 public class UpperCaseNameTranslator implements NameTranslator

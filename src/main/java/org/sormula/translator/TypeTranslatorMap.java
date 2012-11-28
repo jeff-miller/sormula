@@ -28,7 +28,7 @@ import org.sormula.annotation.ImplicitType;
  * {@link ImplicitType}. 
  * 
  * @author Jeff Miller
- * @since 1.6
+ * @since 1.6 and 2.0
  */
 public interface TypeTranslatorMap
 {
@@ -48,7 +48,7 @@ public interface TypeTranslatorMap
      * 
      * @param typeClassName class name that translator operates upon
      * @param typeTranslator translator to use for typeClass
-     * @since 1.9.2
+     * @since 1.9.2 and 2.3.2
      */
     public void putTypeTranslator(String typeClassName, TypeTranslator<?> typeTranslator);
 

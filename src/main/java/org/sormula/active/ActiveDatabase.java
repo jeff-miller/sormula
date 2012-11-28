@@ -39,7 +39,7 @@ import org.sormula.translator.NameTranslator;
  * be serialized.
  * 
  * @author Jeff Miller
- * @since 1.7
+ * @since 1.7 and 2.1
  */
 //don't implement TypeTranslatorMap to keep class simple
 public class ActiveDatabase implements Serializable
@@ -93,7 +93,7 @@ public class ActiveDatabase implements Serializable
      * 
      * @param dataSourceName name to use in JNDI look up of data source
      * @throws ActiveException if error looking up data source
-     * @since 1.9
+     * @since 1.9 and 2.3
      */
     public ActiveDatabase(String dataSourceName) throws ActiveException
     {
@@ -112,7 +112,7 @@ public class ActiveDatabase implements Serializable
      * @param dataSourceName name to use in JNDI look up of data source
      * @param schema schema prefix for table names in sql
      * @throws ActiveException if error looking up data source
-     * @since 1.9
+     * @since 1.9 and 2.3
      */
     public ActiveDatabase(String dataSourceName, String schema) throws ActiveException
     {
@@ -184,7 +184,7 @@ public class ActiveDatabase implements Serializable
      * Gets the transaction in use by this active database.
      * 
      * @return transaction or null if no transaction is in use
-     * @since 1.7.1
+     * @since 1.7.1 and 2.1.1
      */
     public ActiveTransaction getActiveTransaction()
     {
@@ -202,7 +202,7 @@ public class ActiveDatabase implements Serializable
      * 
      * @param activeTransaction active transaction to use
      * @throws ActiveException if a transaction is already in use
-     * @since 1.7.1
+     * @since 1.7.1 and 2.1.1
      */
     public void setActiveTransaction(ActiveTransaction activeTransaction) throws ActiveException
     {
@@ -273,7 +273,7 @@ public class ActiveDatabase implements Serializable
      * Gets the default name translators to be used when none are defined for the table.
      * 
      * @return list of name translator classes; empty list if none 
-     * @since 1.8
+     * @since 1.8 and 2.2
      * @see Database#getNameTranslatorClasses()
      * @see Table#translateName(String)
      */
@@ -288,7 +288,7 @@ public class ActiveDatabase implements Serializable
      * translators are applied in order they are added.
      *  
      * @param nameTranslatorClass class that will be used to translate table/column names
-     * @since 1.8
+     * @since 1.8 and 2.2
      * @see Database#addNameTranslatorClass(Class)
      * @see Table#translateName(String)
      */
@@ -302,7 +302,7 @@ public class ActiveDatabase implements Serializable
      * Removes a default name translator.
      * 
      * @param nameTranslatorClass class to remove
-     * @since 1.8
+     * @since 1.8 and 2.2
      * @see Database#removeNameTranslatorClass(Class)
      * @see Table#translateName(String)
      */

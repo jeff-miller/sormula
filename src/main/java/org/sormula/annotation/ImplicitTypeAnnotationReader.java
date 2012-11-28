@@ -32,7 +32,7 @@ import org.sormula.translator.TypeTranslatorMap;
  * a class type, then it is ignored.
  * 
  * @author Jeff Miller
- * @since 1.9.2
+ * @since 1.9.2 and 2.3.2
  */
 public class ImplicitTypeAnnotationReader
 {

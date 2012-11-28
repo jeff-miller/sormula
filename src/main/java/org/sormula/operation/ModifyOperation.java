@@ -75,7 +75,7 @@ public abstract class ModifyOperation<R> extends SqlOperation<R>
      * Sets parameters from rows in an array. For operations that use array of rows.
      *     
      * @param rows row objects to modify
-     * @since 1.9
+     * @since 1.9 and 2.3
      */
     public void setRows(R[] rows)
     {
@@ -134,7 +134,7 @@ public abstract class ModifyOperation<R> extends SqlOperation<R>
      * Gets batch mode.
      * 
      * @return true if rows are to be inserted/updated/deleted in batch 
-     * @since 1.9
+     * @since 1.9 and 2.3
      * @see PreparedStatement#executeBatch()
      */
     public boolean isBatch()
@@ -150,7 +150,7 @@ public abstract class ModifyOperation<R> extends SqlOperation<R>
      * {@link #postExecute(Object)} is invoked after batch execute.
      *  
      * @param batch true to use JDBC batching for {@link #execute()}
-     * @since 1.9
+     * @since 1.9 and 2.3
      * @see PreparedStatement#executeBatch()
      */
     public void setBatch(boolean batch)

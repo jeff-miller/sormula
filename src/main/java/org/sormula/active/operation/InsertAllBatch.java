@@ -27,7 +27,7 @@ import org.sormula.active.ActiveTable;
  * Delegate for {@link Table#insertAllBatch(Collection)}.
  * 
  * @author Jeff Miller
- * @since 1.9
+ * @since 1.9 and 2.3
  * @param <R> record type
  */
 public class InsertAllBatch<R extends ActiveRecord<R>> extends ActiveOperation<R, Integer>

@@ -24,7 +24,7 @@ import java.sql.ResultSet;
  * Interface for getting a value from a result set and setting a value
  * to a prepared statement.
  *
- * @since 1.6
+ * @since 1.6 and 2.0
  * @author Jeff Miller
  * @param <T> type of Java field or Java parameter (not column type)
  */

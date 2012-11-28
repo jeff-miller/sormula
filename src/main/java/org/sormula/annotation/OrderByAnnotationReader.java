@@ -37,7 +37,7 @@ public class OrderByAnnotationReader
      * Constructs for classes that may contain the annotation.
      * 
      * @param sources classes that contain {@link OrderBy} or {@link OrderBys} annotations
-     * @since 1.6
+     * @since 1.6 and 2.0
      */
     public OrderByAnnotationReader(Class<?>... sources)  
     {

@@ -38,7 +38,7 @@ import org.sormula.annotation.cascade.SelectCascade;
  * web application where source row is stored in web session. 
  * 
  * @author Jeff Miller
- * @since 1.8
+ * @since 1.8 and 2.2
  * 
  * @param <R> type of source row class
  */
@@ -106,7 +106,7 @@ public class DurableLazySelector<R> extends AbstractLazySelector<R>
      * {@link #pendingLazySelects(Database)}.
      * 
      * @return data source JNDI name or null if none
-     * @since 1.9
+     * @since 1.9 and 2.3
      */
     public String getDataSourceName()
     {
@@ -142,7 +142,7 @@ public class DurableLazySelector<R> extends AbstractLazySelector<R>
      * name is known and data source is not known.
      * 
      * @throws LazyCascadeException if error
-     * @since 1.9
+     * @since 1.9 and 2.3
      */
     @Override
     protected void openDatabase() throws LazyCascadeException
@@ -171,7 +171,7 @@ public class DurableLazySelector<R> extends AbstractLazySelector<R>
      * Closes {@link Database} created with {@link #openDatabase()}.
      * 
      * @throws LazyCascadeException if error
-     * @since 1.9
+     * @since 1.9 and 2.3
      */
     @Override
     protected void closeDatabase() throws LazyCascadeException

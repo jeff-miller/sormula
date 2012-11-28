@@ -25,7 +25,7 @@ import org.sormula.active.ActiveTable;
  * Delegate for selectAvg methods in {@link Table}.
  * 
  * @author Jeff Miller
- * @since 1.7
+ * @since 1.7 and 2.1
  * @param <R> record type
  * @param <T> aggregate type
  */

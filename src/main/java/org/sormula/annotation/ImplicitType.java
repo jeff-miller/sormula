@@ -32,7 +32,7 @@ import org.sormula.translator.TypeTranslator;
  * {@link TypeTranslator} for a type only needs to be annotated once for a table. 
  * Types are added to table with {@link Table#putTypeTranslator(Class, TypeTranslator)}.
  * 
- * @since 1.6
+ * @since 1.6 and 2.0
  * @author Jeff Miller
  */
 @Retention(RetentionPolicy.RUNTIME)

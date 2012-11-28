@@ -26,7 +26,7 @@ package org.sormula.translator;
  * <li>WidgetInvoiceHistory to widget_invoice_history</li>
  * </ul>
  * 
- * @since 1.8
+ * @since 1.8 and 2.2
  * @author Jeff Miller
  */
 public class ExpandedNameTranslator implements NameTranslator

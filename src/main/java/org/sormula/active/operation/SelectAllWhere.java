@@ -27,7 +27,7 @@ import org.sormula.active.ActiveTable;
  * Delegate for {@link Table#selectAllWhere(String, Object...)}.
  * 
  * @author Jeff Miller
- * @since 1.7
+ * @since 1.7 and 2.1
  * @param <R> record type
  */
 public class SelectAllWhere<R extends ActiveRecord<R>> extends ActiveOperation<R, List<R>>

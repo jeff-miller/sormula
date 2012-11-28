@@ -26,7 +26,7 @@ import org.sormula.operation.ScalarSelectOperation;
  * Interface for notifying and performing lazy select cascades. 
  * 
  * @author Jeff Miller
- * @since 1.8
+ * @since 1.8 and 2.2
  */
 public interface LazySelectable
 {

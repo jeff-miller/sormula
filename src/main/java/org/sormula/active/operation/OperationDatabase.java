@@ -34,7 +34,7 @@ import org.sormula.translator.NameTranslator;
  * Intended for use by {@link ActiveOperation} only.
  * 
  * @author Jeff Miller
- * @since 1.7
+ * @since 1.7 and 2.1
  */
 public class OperationDatabase extends Database
 {

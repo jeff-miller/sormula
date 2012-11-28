@@ -34,7 +34,7 @@ import java.util.Set;
  * in addition to this class to force a specific case. With most datatabases a delimited identifier
  * is case-sensitive.
  * 
- * @since 1.8
+ * @since 1.8 and 2.2
  * @author Jeff Miller
  */
 public class Sql92KeywordNameTranslator extends DelimitedNameTranslator

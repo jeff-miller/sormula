@@ -297,7 +297,7 @@ public class SaveOperation<R> extends ModifyOperation<R>
      * @param field annotation is for this field of row class R
      * @return list of save cascade operations; empty list for none
      * @throws OperationException if error
-     * @since 1.9.3
+     * @since 1.9.3 and 2.3.3
      */
     @Override
     protected List<CascadeOperation<R, ?>> prepareCascades(Field field) throws OperationException

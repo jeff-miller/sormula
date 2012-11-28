@@ -35,7 +35,7 @@ import org.sormula.operation.cascade.lazy.LazySelectable;
  * a static member named table to the sublcass that extends ActiveRecord.  
  * 
  * @author Jeff Miller
- * @since 1.7
+ * @since 1.7 and 2.1
  * 
  * @param <R> record type
  */
@@ -206,7 +206,7 @@ public abstract class ActiveRecord<R extends ActiveRecord<R>> implements LazySel
      * 
      * @param fieldName field to select
      * @throws ActiveException if error
-     * @since 1.8
+     * @since 1.8 and 2.2
      */
     public void checkLazySelects(String fieldName) throws ActiveException
     {

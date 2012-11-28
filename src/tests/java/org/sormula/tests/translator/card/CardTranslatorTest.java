@@ -30,7 +30,7 @@ import org.testng.annotations.Test;
  * {@link Suit}.
  * 
  * @author Jeff Miller
- * @since 1.6
+ * @since 1.6 and 2.0
  */
 @Test(singleThreaded=true, groups="translator")
 public class CardTranslatorTest extends DatabaseTest<SormulaTestCard>

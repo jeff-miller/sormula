@@ -27,7 +27,7 @@ import org.sormula.translator.TypeTranslator;
  * {@link PreparedStatement#setString(int, String)} and {@link ResultSet#getString(int)}.
  * "Y" is used for true and "N" is used for false.
  * 
- * @since 1.9.2
+ * @since 1.9.2 and 2.3.2
  * @author Jeff Miller
  */
 public class BooleanYNTranslator implements TypeTranslator<Boolean>

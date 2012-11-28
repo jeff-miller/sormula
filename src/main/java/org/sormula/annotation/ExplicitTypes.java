@@ -35,7 +35,7 @@ import org.sormula.translator.TypeTranslator;
  * a database, then type is added with 
  * {@link Database#putTypeTranslator(Class, TypeTranslator)}.
  * 
- * @since 1.6
+ * @since 1.6 and 2.0
  * @author Jeff Miller
  */
 @Retention(RetentionPolicy.RUNTIME)

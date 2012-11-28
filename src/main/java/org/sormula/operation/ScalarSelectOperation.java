@@ -383,7 +383,7 @@ public class ScalarSelectOperation<R> extends SqlOperation<R>
      * status is set during {@link #prepare()}.
      * 
      * @return true if there are lazy select cascades annotated
-     * @since 1.8
+     * @since 1.8 and 2.2
      */
     public boolean isLazySelectsCascades()
     {
@@ -397,7 +397,7 @@ public class ScalarSelectOperation<R> extends SqlOperation<R>
      * {@link LazySelectable#pendingLazySelects(org.sormula.Database)}.
      * 
      * @return true if {@link LazySelectable#pendingLazySelects(org.sormula.Database)} will be inovked for each row selected
-     * @since 1.8
+     * @since 1.8 and 2.2
      */
     public boolean isNotifyLazySelects()
     {

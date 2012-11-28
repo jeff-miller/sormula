@@ -28,7 +28,7 @@ import org.sormula.translator.TypeTranslator;
  * Translates using {@link PreparedStatement#setBigDecimal(int, java.math.BigDecimal)} and {@link ResultSet#getBigDecimal(int)}.
  * This translator is available by default for all tables when {@link Database} is created.
  * 
- * @since 1.6
+ * @since 1.6 and 2.0
  * @author Jeff Miller
  */
 public class BigDecimalTranslator implements TypeTranslator<BigDecimal>

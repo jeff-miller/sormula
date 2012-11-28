@@ -7,7 +7,7 @@ import org.sormula.Transaction;
  * A {@link Transaction} for use by classes in org.sormula.active.operation package.
  * 
  * @author Jeff Miller
- * @since 1.7.1
+ * @since 1.7.1 and 2.1.1
  */
 public class OperationTransaction extends Transaction
 {

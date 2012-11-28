@@ -27,7 +27,7 @@ import org.sormula.translator.TypeTranslator;
  * Translates using {@link PreparedStatement#setString(int, String)} and {@link ResultSet#getString(int)}.
  * This translator is available by default for all tables when {@link Database} is created.
  * 
- * @since 1.6
+ * @since 1.6 and 2.0
  * @author Jeff Miller
  */
 public class StringTranslator implements TypeTranslator<String>

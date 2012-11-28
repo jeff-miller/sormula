@@ -27,7 +27,7 @@ import org.sormula.active.ActiveTable;
  * Delegate for {@link Table#deleteAll(Collection)} and {@link Table#deleteAll()}.
  * 
  * @author Jeff Miller
- * @since 1.7
+ * @since 1.7 and 2.1
  * @param <R> record type
  */
 public class DeleteAll<R extends ActiveRecord<R>> extends ActiveOperation<R, Integer>

@@ -103,7 +103,7 @@ public class SormulaField<C, T>
      * Gets field array type.
      * 
      * @return if field is an array
-     * @since 1.9
+     * @since 1.9 and 2.3
      */
     public boolean isArray()
     {
@@ -115,7 +115,7 @@ public class SormulaField<C, T>
      * Gets field {@link Collection} inheritance.
      * 
      * @return true if field is a {@link #collection}
-     * @since 1.9
+     * @since 1.9 and 2.3
      */
     public boolean isCollection()
     {
@@ -127,7 +127,7 @@ public class SormulaField<C, T>
      * Gets field {@link Map} inheritance.
      * 
      * @return true if field is a {@link Map}
-     * @since 1.9
+     * @since 1.9 and 2.3
      */
     public boolean isMap()
     {

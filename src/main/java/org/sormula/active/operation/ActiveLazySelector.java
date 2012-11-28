@@ -29,7 +29,7 @@ import org.sormula.reflect.SormulaField;
  * Performs lazy loading of active records. Used by {@link ActiveRecord#checkLazySelects(String)}.
  * 
  * @author Jeff Miller
- * @since 1.8
+ * @since 1.8 and 2.2
  * @param <R> record type
  */
 public class ActiveLazySelector<R extends ActiveRecord<R>> extends ActiveOperation<R, Void>

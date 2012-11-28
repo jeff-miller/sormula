@@ -120,7 +120,7 @@ public @interface SelectCascade
      * 
      * @return true to skip select when source row is selected and add it to list of pending lazy select
      * fields; false to perform select cascade when source row is selected
-     * @since 1.8
+     * @since 1.8 and 2.2
      * @see AbstractLazySelector
      * @see SimpleLazySelector
      * @see DurableLazySelector

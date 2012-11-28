@@ -55,7 +55,7 @@ import org.sormula.operation.ModifyOperation;
  * and select methods.
  * 
  * @author Jeff Miller
- * @since 1.7
+ * @since 1.7 and 2.1
  * 
  * @param <R> record type
  */
@@ -548,7 +548,7 @@ public class ActiveTable<R extends ActiveRecord<R>>
      * @param records records to insert
      * @return count of records affected
      * @throws ActiveException if error
-     * @since 1.9
+     * @since 1.9 and 2.3
      */
     public int insertAllBatch(Collection<R> records) throws ActiveException
     {
@@ -617,7 +617,7 @@ public class ActiveTable<R extends ActiveRecord<R>>
      * @param records records to update
      * @return count of records affected
      * @throws ActiveException if error
-     * @since 1.9
+     * @since 1.9 and 2.3
      */
     public int updateAllBatch(Collection<R> records) throws ActiveException
     {
@@ -706,7 +706,7 @@ public class ActiveTable<R extends ActiveRecord<R>>
      * @param records get primary key values from each record in this collection
      * @return count of records affected
      * @throws ActiveException if error
-     * @since 1.9
+     * @since 1.9 and 2.3
      */
     public int deleteAllBatch(Collection<R> records) throws ActiveException
     {

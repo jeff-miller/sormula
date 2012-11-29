@@ -61,6 +61,7 @@ public class IdentityInsert extends ExampleBase
         insertRows();
         
         // clean up
+        database.close();
         closeDatabase();
     }
     

@@ -18,7 +18,6 @@ package org.sormula.examples.basic;
 
 import java.util.Date;
 
-import org.sormula.annotation.Column;
 import org.sormula.annotation.Where;
 import org.sormula.annotation.WhereField;
 import org.sormula.annotation.Wheres;
@@ -29,13 +28,12 @@ import org.sormula.annotation.Wheres;
  * See {@link BasicInsert} for table definition.
  */
 @Wheres({
-    @Where(name="fn",   fieldNames="firstName"),
-    @Where(name="idin", whereFields=@WhereField(name="id", comparisonOperator="IN"))
+    @Where(name="fn",   fieldNames="firstName"), // where firstname=?
+    @Where(name="idin", whereFields=@WhereField(name="id", comparisonOperator="IN")) // where id in (?, ?, ...)
 })
 public class Student
 {
-    @Column(primaryKey=true)
-    int id;
+    int id; // defaults to @Column(primaryKey=true)
     String firstName;
     String lastName;
     Date graduationDate;

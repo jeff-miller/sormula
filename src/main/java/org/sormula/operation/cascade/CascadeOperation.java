@@ -32,7 +32,7 @@ import org.sormula.reflect.SormulaField;
  * @param <S> row class of table that is source of cascade
  * @param <T> row class of table that is target of cascade 
  */
-public abstract class CascadeOperation<S, T>
+public abstract class CascadeOperation<S, T> implements AutoCloseable
 {
     SormulaField<S, ?> targetField;
     Table<T> targetTable;

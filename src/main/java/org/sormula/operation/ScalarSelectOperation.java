@@ -310,7 +310,7 @@ public class ScalarSelectOperation<R> extends SqlOperation<R>
                         this.getClass(), table.getClass(), table.getRowClass()).getAnnotation(orderByName);
                 if (orderByAnnotation != null)
                 {
-                    setOrderByTranslator(new OrderByTranslator<R>(table.getRowTranslator(), orderByAnnotation));
+                    setOrderByTranslator(new OrderByTranslator<>(table.getRowTranslator(), orderByAnnotation));
                 }
                 else
                 {
@@ -540,7 +540,7 @@ public class ScalarSelectOperation<R> extends SqlOperation<R>
             if (log.isDebugEnabled()) log.debug("prepareCascades() for " + field.getName());
             Table<?> targetTable = getTargetTable(scar.getTargetClass(), field);
             SormulaField<R, ?> targetField = createTargetField(field);
-            co = new ArrayList<CascadeOperation<R, ?>>(selectCascades.length);
+            co = new ArrayList<>(selectCascades.length);
             
             // for each cascade operation
             for (SelectCascade c: selectCascades)

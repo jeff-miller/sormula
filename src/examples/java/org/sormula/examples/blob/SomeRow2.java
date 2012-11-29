@@ -26,8 +26,7 @@ import org.sormula.annotation.Row;
 @Row(tableName="blobexample")
 public class SomeRow2
 {
-    @Column(primaryKey=true)
-    int id;
+    int id; // defaults to @Column(primaryKey=true)
     
     @Column(translator=WidgetColumnTranslator2.class)
     Widget widget;

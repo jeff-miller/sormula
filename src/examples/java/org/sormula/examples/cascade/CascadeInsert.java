@@ -77,7 +77,7 @@ public class CascadeInsert extends ExampleBase
     
     void insertRows() throws SormulaException
     {
-        ArrayList<Student4> list = new ArrayList<Student4>();
+        ArrayList<Student4> list = new ArrayList<>();
         ArrayList<Enrolled> enrollment;
         Student4 student;
         
@@ -88,7 +88,7 @@ public class CascadeInsert extends ExampleBase
         list.add(student);
         
         // courses for student
-        enrollment = new ArrayList<Enrolled>();
+        enrollment = new ArrayList<>();
         enrollment.add(enroll202(student));
         student.setEnrollment(enrollment);
         
@@ -99,7 +99,7 @@ public class CascadeInsert extends ExampleBase
         list.add(student);
         
         // courses for student
-        enrollment = new ArrayList<Enrolled>();
+        enrollment = new ArrayList<>();
         enrollment.add(enroll202(student));
         enrollment.add(enroll601(student));
         student.setEnrollment(enrollment);

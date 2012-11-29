@@ -42,7 +42,7 @@ public class Sql99KeywordNameTranslator extends DelimitedNameTranslator
     static final Set<String> keywords;
     static
     {
-        keywords = new HashSet<String>(600);
+        keywords = new HashSet<>(600);
         keywords.add("ABSOLUTE");    
         keywords.add("ACTION");  
         keywords.add("ADD");

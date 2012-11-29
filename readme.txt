@@ -1,7 +1,7 @@
 sormula for JDK 7
 
 - Lazy loading is available with SelectCascade#lazy() annotation
-- Built from Sormula 1.9.2 to use new featues of JDK 7 
+- Built from Sormula 1.x to use new featues of JDK 7 
 - SqlOperation (and subclasses) implement AutoCloseable
 - Deprecated classes and methods from Sormula 1.x have been removed
 - See SimpleExample directory for stand-alone example

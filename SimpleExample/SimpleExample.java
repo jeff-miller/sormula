@@ -71,6 +71,9 @@ public class SimpleExample
         // update
         inventory.setQuantity(inventory.getQuantity() - delta);
         inventoryTable.update(inventory);
+        
+        // optional cleanup
+        database.close();
     }    
     
     
@@ -121,6 +124,9 @@ public class SimpleExample
         
         // update
         inventoryTable.updateAll(list);
+        
+        // optional cleanup
+        database.close();
     }    
     
     
@@ -149,6 +155,9 @@ public class SimpleExample
         {
             System.out.println(inventory.getPartNumber() + " quantity=" + inventory.getQuantity());
         }
+        
+        // optional cleanup
+        database.close();
     }
     
     
@@ -177,6 +186,9 @@ public class SimpleExample
         {
             System.out.println(inventory.getPartNumber() + " quantity=" + inventory.getQuantity());
         }
+        
+        // optional cleanup
+        database.close();
     }
     
     
@@ -201,5 +213,8 @@ public class SimpleExample
         {
             System.out.println(inventory.getPartNumber());
         }
+        
+        // optional cleanup
+        database.close();
     }
 }

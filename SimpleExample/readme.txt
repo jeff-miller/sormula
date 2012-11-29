@@ -9,7 +9,7 @@ Run   with run.bat     (or equivalent shell command)
 Files contained in this example:
 ------------------------------------------------------------------------------
 compile.bat                   Executes javac to compile example
-hsqldb.jar                    HSQLDB database api
+hsqldb-j5-2.2.4.jar           HSQLDB database api (JRE 5)
 Inventory.class               Row compiled class 
 Inventory.java                Row source class
 QuantityRangeSelect.class     Custom query compiled class

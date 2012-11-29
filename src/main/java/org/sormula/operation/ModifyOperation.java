@@ -25,6 +25,7 @@ import java.util.Map;
 import org.sormula.Table;
 import org.sormula.annotation.cascade.DeleteCascade;
 import org.sormula.annotation.cascade.InsertCascade;
+import org.sormula.annotation.cascade.SaveCascade;
 import org.sormula.annotation.cascade.UpdateCascade;
 import org.sormula.log.ClassLogger;
 import org.sormula.operation.monitor.OperationTime;
@@ -376,7 +377,7 @@ public abstract class ModifyOperation<R> extends SqlOperation<R>
      * where post flag is false. 
      * @see InsertCascade#post()
      * @see UpdateCascade#post()
-     * @see SaveeCascade#post()
+     * @see SaveCascade#post()
      * @see DeleteCascade#post()
      * 
      * @param row row for JDBC execute 
@@ -392,7 +393,7 @@ public abstract class ModifyOperation<R> extends SqlOperation<R>
      * where post flag is true. 
      * @see InsertCascade#post()
      * @see UpdateCascade#post()
-     * @see SaveeCascade#post()
+     * @see SaveCascade#post()
      * @see DeleteCascade#post()
      * 
      * @param row row for JDBC execute 

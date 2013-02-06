@@ -140,6 +140,8 @@ public class SelectCascadeOperation<S, T> extends CascadeOperation<S, T>
         // parameter fields to read
         prepareParameterFields();
         
+        // TODO if instanceof SelectOperation, setDefaultReadAllSize
+        
         // where
         selectOperation.setWhere(selectCascadeAnnotation.targetWhereName());
         

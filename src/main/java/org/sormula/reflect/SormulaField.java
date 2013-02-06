@@ -159,7 +159,7 @@ public class SormulaField<C, T>
         {
             @SuppressWarnings("unchecked") // invoke returns Object, type not known at compile time
             T value = (T)getMethod.invoke(object);
-            if (log.isDebugEnabled()) log.debug("method="+getMethod.getName() + " value="+value);
+            if (log.isDebugEnabled()) log.debug("invokeGetMethod() method="+getMethod.getName() + " value="+value);
             return value;
         }
         catch (Exception e)
@@ -180,7 +180,7 @@ public class SormulaField<C, T>
     {
         try
         {
-            if (log.isDebugEnabled()) log.debug("method="+setMethod.getName() + " value="+value);
+            if (log.isDebugEnabled()) log.debug("invokeSetMethod() method="+setMethod.getName() + " value="+value);
             setMethod.invoke(object, value);
         }
         catch (Exception e)

@@ -106,7 +106,6 @@ public class InsertTest extends ActiveDatabaseTest<SormulaTestAR>
         assert table.insertAll(list) == list.size() : "insert collection AR failed";
     }
     
-    
     @Test
     public void insertCollectionARBatch() 
     {

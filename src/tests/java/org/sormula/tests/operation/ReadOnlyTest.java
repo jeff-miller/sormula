@@ -54,7 +54,9 @@ public class ReadOnlyTest extends DatabaseTest<SormulaTest4RO>
         {
             testRows.add(new SormulaTest4RO(i, 1, "ReadOnlyTest " + i));
         }
+        begin();
         getTable().insertAll(testRows);
+        commit();
         getDatabase().setReadOnly(true);
     }
     

@@ -18,6 +18,8 @@ package org.sormula;
 
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.sormula.log.ClassLogger;
 
@@ -36,6 +38,7 @@ public class Transaction
 	Connection connection;
 	boolean active;
 	boolean originalAutoCommit;
+	List<TransactionListener> listenerList; 
 	
 	
 	/**
@@ -46,6 +49,7 @@ public class Transaction
 	public Transaction(Connection connection)
 	{
 		this.connection = connection;
+		listenerList = new ArrayList<TransactionListener>();
 	}
 	
 	
@@ -80,13 +84,20 @@ public class Transaction
 	{
 	    if (active) throw new SormulaException("transaction is already active");
 	    
-		try
+        if (log.isDebugEnabled()) log.debug("begin()");
+        
+        try
 		{
-			if (log.isDebugEnabled()) log.debug("begin");
 			connection.clearWarnings();
 			originalAutoCommit = connection.getAutoCommit();
 			connection.setAutoCommit(false);
 			active = true;
+	          
+	        // notify after transaction is ready so that transaction can be used
+	        for (TransactionListener l : listenerList)
+	        {
+	            l.begin(this);
+	        }
 		}
 		catch (SQLException e)
 		{
@@ -102,7 +113,8 @@ public class Transaction
 	 */
 	public void commit() throws SormulaException
 	{
-	    if (log.isDebugEnabled()) log.debug("commit");
+	    if (log.isDebugEnabled()) log.debug("commit()");
+	    for (TransactionListener l : listenerList) l.commit(this);
 	    
 		try
 		{
@@ -125,11 +137,12 @@ public class Transaction
 	 */
 	public void rollback() throws SormulaException
 	{
-	    if (log.isDebugEnabled()) log.debug("rollback");
+	    if (log.isDebugEnabled()) log.debug("rollback()");
+	    for (TransactionListener l : listenerList) l.rollback(this);
 	    
 		try
 		{
-			connection.commit();
+			connection.rollback();
 		}
 		catch (SQLException e)
 		{
@@ -141,6 +154,42 @@ public class Transaction
 		}
 	}
 	
+	
+	/**
+	 * Adds a listener that will be notified of {@link Transaction} events.
+	 * 
+	 * @param listener notify this class of transaction events
+	 * @since 3.0
+	 */
+	public void addListener(TransactionListener listener)
+	{
+	    listenerList.add(listener);
+	}
+	
+	
+    /**
+     * Removes a transaction listener.
+     * 
+     * @param listener listener to remove
+     * @since 3.0
+     */
+    public void removeListener(TransactionListener listener)
+    {
+        listenerList.remove(listener);
+    }
+	
+    
+    /**
+     * Gets list of listeners that were added with {@link #addListener(TransactionListener)}.
+     * 
+     * @return list of transaction listeners
+     * @since 3.0
+     */
+    protected List<TransactionListener> getListeners()
+    {
+        return listenerList;
+    }
+    
 	
 	/**
 	 * Sets {@link #isActive()} to false and restores auto commit to the original state.

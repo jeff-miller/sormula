@@ -27,6 +27,8 @@ import java.util.List;
 import org.sormula.Table;
 import org.sormula.annotation.cascade.InsertCascade;
 import org.sormula.annotation.cascade.InsertCascadeAnnotationReader;
+import org.sormula.cache.Cache;
+import org.sormula.cache.CacheException;
 import org.sormula.log.ClassLogger;
 import org.sormula.operation.cascade.CascadeOperation;
 import org.sormula.operation.cascade.InsertCascadeOperation;
@@ -220,6 +222,50 @@ public class InsertOperation<R> extends ModifyOperation<R>
         catch (Exception e)
         {
             throw new OperationException("error getting auto generated keys", e);
+        }
+    }
+
+
+    /**
+     * Tests if row is managed by cache. Delegates to {@link Cache#insert(Object)}.
+     * 
+     * @param row test this row
+     * @return true if cache will insert the row to database when appropriate;
+     * false if this operation should insert row into database
+     * @throws OperationException if cache reports an error
+     * @since 3.0
+     */
+    @Override
+    protected boolean notifyCacheModify(R row) throws OperationException
+    {
+        try
+        {
+            return getTable().getCache().insert(row);
+        }
+        catch (CacheException e)
+        {
+            throw new OperationException("cache error", e);
+        }
+    }
+
+
+    /**
+     * Notifies cache that row has been inserted into database. Delegates to {@link Cache#inserted(Object)}.
+     * 
+     * @param row row that was inserted
+     * @throws OperationException if cache reports an error
+     * @since 3.0
+     */
+    @Override
+    public void notifyCacheModified(R row) throws OperationException
+    {
+        try
+        {
+            getTable().getCache().inserted(row);
+        }
+        catch (CacheException e)
+        {
+            throw new OperationException("cache error", e);
         }
     }
 }

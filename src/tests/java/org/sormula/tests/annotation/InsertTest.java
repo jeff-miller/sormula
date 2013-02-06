@@ -22,6 +22,7 @@ import java.util.List;
 import org.sormula.Database;
 import org.sormula.SormulaException;
 import org.sormula.tests.DatabaseTest;
+import org.sormula.tests.TestDatabase;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
@@ -68,7 +69,7 @@ public class InsertTest extends DatabaseTest<SormulaTestA>
     
     
     @Override
-    public Database getDatabase()
+    public TestDatabase getDatabase()
     {
         return db;
     }
@@ -93,7 +94,8 @@ public class InsertTest extends DatabaseTest<SormulaTestA>
         
         // verify test types are correct
         List<SormulaTestA> selected = getTable().selectAll();
-        assert list.size() == selected.size() : "inserted size not same as selected size";
+        assert list.size() == selected.size() : "inserted size=" + list.size() + 
+                " is not same as selected size=" + selected.size();
         for (SormulaTestA row : selected)
         {
             assert row.getTest1().intValue() == row.getId()%4 : "Test1 type is not correct";

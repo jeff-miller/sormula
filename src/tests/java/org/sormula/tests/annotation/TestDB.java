@@ -18,10 +18,10 @@ package org.sormula.tests.annotation;
 
 import java.sql.Connection;
 
-import org.sormula.Database;
 import org.sormula.SormulaException;
 import org.sormula.annotation.ExplicitType;
 import org.sormula.annotation.ExplicitTypes;
+import org.sormula.tests.TestDatabase;
 
 /**
  * Tests type annotations on database class.
@@ -31,7 +31,7 @@ import org.sormula.annotation.ExplicitTypes;
 @ExplicitTypes({
     @ExplicitType(type=Test3.class, translator=Test3Translator.class)
 })
-public class TestDB extends Database
+public class TestDB extends TestDatabase
 {
     public TestDB(Connection connection, String schema) throws SormulaException
     {

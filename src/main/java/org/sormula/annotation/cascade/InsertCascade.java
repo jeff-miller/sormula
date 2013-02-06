@@ -34,6 +34,8 @@ import org.sormula.operation.InsertOperation;
 @Target(ElementType.ANNOTATION_TYPE)
 public @interface InsertCascade
 {
+    // TODO provide way to update foreign key from identity fields
+    
     /**
      * Specifies operation to perform as a insert cascade. Typically it is
      * {@link InsertOperation}. Use subclass of {@link InsertOperation} to

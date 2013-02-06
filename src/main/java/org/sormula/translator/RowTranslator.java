@@ -126,6 +126,7 @@ public class RowTranslator<R> extends ColumnsTranslator<R>
     {
         Class<R> rowClass = getRowClass();
         Field[] fields = rowClass.getDeclaredFields();
+      //TODO Field[] fields = rowClass.getFields(); // TODO allow subclass fields?
         initColumnTranslatorList(fields.length);
         
         // for all fields

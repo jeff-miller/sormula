@@ -19,6 +19,7 @@ package org.sormula.active;
 import java.util.Collection;
 import java.util.List;
 
+import org.sormula.SormulaException;
 import org.sormula.active.operation.Delete;
 import org.sormula.active.operation.DeleteAll;
 import org.sormula.active.operation.DeleteAllBatch;
@@ -44,6 +45,7 @@ import org.sormula.active.operation.UpdateAll;
 import org.sormula.active.operation.UpdateAllBatch;
 import org.sormula.annotation.Column;
 import org.sormula.annotation.OrderBy;
+import org.sormula.cache.Cache;
 import org.sormula.operation.ModifyOperation;
 
 
@@ -63,7 +65,7 @@ public class ActiveTable<R extends ActiveRecord<R>>
 {
     final ActiveDatabase activeDatabase;
     final Class<R> recordClass;
-    
+
     
     /**
      * Constructs for default active database and a record type. Uses the default active database
@@ -100,7 +102,7 @@ public class ActiveTable<R extends ActiveRecord<R>>
     /**
      * Gets the active database.
      * 
-     * @return active database that was supplied in constructor
+     * @return active database that was supplied in constructor; null if default active database will be used
      */
     public ActiveDatabase getActiveDatabase()
     {
@@ -717,5 +719,121 @@ public class ActiveTable<R extends ActiveRecord<R>>
         }
         
         return 0;
+    }
+    
+    
+    /**
+     * Tests if this table is cached. This method is useful only if a transaction is active
+     * since active record packages do not retain any underlying sormula objects between transactions
+     * by design.
+     * 
+     * @return true if table is cached and transaction is active; otherwise false
+     * @throws ActiveException if error
+     * @since 3.0
+     */
+    public boolean isCached() throws ActiveException
+    {
+        boolean cached = false;
+
+        ActiveTransaction at = getActiveTransaction();
+        if (at != null)
+        {
+            // transaction is in use, get sormula database from it
+            try
+            {
+                cached = at.getOperationTransaction().getOperationDatabase().getTable(getRecordClass()).isCached();
+            }
+            catch (SormulaException e)
+            {
+                // not likely
+                throw new ActiveException("getTable() error for " + getRecordClass(), e);
+            }
+        }
+        
+        return cached;
+    }
+    
+    
+    /**
+     * Gets this table's cache. This method is useful only if a transaction is active
+     * since active record packages do not retain any underlying sormula objects between transactions
+     * by design.
+     * 
+     * @return cache for table if is cached and transaction is active; otherwise null
+     * @throws ActiveException if error
+     * @since 3.0
+     */
+    public Cache<R> getCache() throws ActiveException
+    {
+        Cache<R> cache = null;
+
+        ActiveTransaction at = getActiveTransaction();
+        if (at != null)
+        {
+            // transaction is in use, get sormula database from it
+            try
+            {
+                cache = at.getOperationTransaction().getOperationDatabase().getTable(getRecordClass()).getCache();
+            }
+            catch (SormulaException e)
+            {
+                // not likely
+                throw new ActiveException("getTable() error for " + getRecordClass(), e);
+            }
+        }
+        
+        return cache;
+    }
+    
+    
+    /**
+     * Writes uncommitted table cache records to database and removes them from the cache. This 
+     * method is useful only if a transaction is active since active record packages do not retain 
+     * any underlying sormula objects between transactions by design.
+     * 
+     * @throws ActiveException if error
+     * @since 3.0
+     */
+    public void flush() throws ActiveException
+    {
+        ActiveTransaction at = getActiveTransaction();
+        if (at != null)
+        {
+            // transaction is in use, get sormula database from it
+            try
+            {
+                at.getOperationTransaction().getOperationDatabase().getTable(getRecordClass()).flush();
+            }
+            catch (SormulaException e)
+            {
+                // not likely
+                throw new ActiveException("getTable() error for " + getRecordClass(), e);
+            }
+        }
+    }
+    
+    
+    /**
+     * Gets the active transaction if transaction is in use.
+     * 
+     * @return active transaction currently in use by this table; null if no transaction is in use
+     */
+    protected ActiveTransaction getActiveTransaction() 
+    {
+        ActiveDatabase adb;
+        
+        if (activeDatabase == null)
+        {
+            // use default
+            adb = ActiveDatabase.getDefault();
+            if (activeDatabase == null) throw new NoDefaultActiveDatabaseException();
+        }
+        else
+        {
+            // use record's
+            adb = activeDatabase;
+        }
+
+        return adb.getActiveTransaction();
     }
 }

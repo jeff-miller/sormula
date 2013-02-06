@@ -30,6 +30,10 @@ import org.sormula.Table;
  * @param <C> collection type returned
  */
 public abstract class SelectOperation<R, C> extends ScalarSelectOperation<R>
+// TODO implements Iterable<R> + iterator() method? 
+// TODO or implements Iterator<R> ?
+// TODO or SelectOperationIterator?
+// see see http://stackoverflow.com/questions/1870022/java-resultset-hasnext
 {
     int defaultReadAllSize = 20;
     C selectedRows;
@@ -100,8 +104,8 @@ public abstract class SelectOperation<R, C> extends ScalarSelectOperation<R>
         while (true)
         {
             R row = readNext();
-            if (row == null) break;
-            else add(row);
+            if (row == null) break; 
+            add(row);
         }
         
         return selectedRows;

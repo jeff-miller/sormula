@@ -381,7 +381,32 @@ public class Database implements TypeTranslatorMap
 	}
 
 
-	/**
+    /**
+     * Sets a custom implementation of {@link Transaction} subclass. This method should be
+     * invoked prior to creating {@link Table} objects that use this {@link Database} and
+     * prior to using {@link #getTable(Class)} or {@link #getTable(Class, boolean)}.
+     * 
+     * @param transaction transaction for this database
+     * @since 3.0
+     */
+	public void setTransaction(Transaction transaction)
+    {
+        this.transaction = transaction;
+    }
+
+    
+    /**
+     * Invokes {@link Table#flush()} on all known table objects in this database.
+     * 
+     * @throws SormulaException if error
+     */
+    public void flush() throws SormulaException
+    {
+        for (Table<?> t: tableMap.values()) t.flush();
+    }
+
+
+    /**
      * Dereferences all objects used. Does not close connection if these constructors were used:
      * {@link #Database(Connection)} or {@link #Database(Connection, String)}.
      * <p>
@@ -523,12 +548,12 @@ public class Database implements TypeTranslatorMap
     
     
     /**
-     * Adds a table object to cache to be used for row objects of type
-     * {@link Table#getClass()}. Use this method to save table in cache. This method provides
+     * Adds a table object to map to be used for row objects of type
+     * {@link Table#getClass()}. Use this method to save table in map. This method provides
      * a way to ensure that a custom subclass of {@link Table} is returned from {@link #getTable(Class)}
      * for the table row class. 
      * 
-     * @param table table object to add to cache (table row class cannonical name is key)
+     * @param table table object to add to map (table row class cannonical name is key)
      */
     public void addTable(Table<?> table)
     {

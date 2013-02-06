@@ -16,6 +16,7 @@
  */
 package org.sormula;
 
+import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -27,8 +28,12 @@ import org.sormula.annotation.Column;
 import org.sormula.annotation.ExplicitTypeAnnotationReader;
 import org.sormula.annotation.OrderBy;
 import org.sormula.annotation.Row;
+import org.sormula.annotation.cache.Cached;
+import org.sormula.annotation.cache.CachedAnnotationReader;
 import org.sormula.annotation.cascade.SelectCascade;
 import org.sormula.annotation.cascade.SelectCascadeAnnotationReader;
+import org.sormula.cache.Cache;
+import org.sormula.cache.CacheException;
 import org.sormula.log.ClassLogger;
 import org.sormula.operation.ArrayListSelectOperation;
 import org.sormula.operation.DeleteOperation;
@@ -96,7 +101,7 @@ import org.sormula.translator.TypeTranslatorMap;
  * @author Jeff Miller
  * @param <R> type of row objects
  */
-public class Table<R> implements TypeTranslatorMap
+public class Table<R> implements TypeTranslatorMap, TransactionListener
 {
     private static final ClassLogger log = new ClassLogger();
     
@@ -109,6 +114,8 @@ public class Table<R> implements TypeTranslatorMap
     List<? extends NameTranslator> nameTranslators;
     Map<String, TypeTranslator<?>> typeTranslatorMap; // key is row class canonical name
     List<Field> lazySelectCascadeFields;
+    Cache<R> cache;
+    boolean legacyAnnotationPrecedence;
     
     
     /**
@@ -124,15 +131,34 @@ public class Table<R> implements TypeTranslatorMap
         this.database = database;
         this.rowClass = rowClass;
         
+        // LEGACY_ANNOTATION_PRECEDENCE=true means read table annotations prior to row annotations
+        // by default version 3.0 and later will read row annotations prior to table annotations
+        String lap = System.getenv("LEGACY_ANNOTATION_PRECEDENCE");
+        if (lap != null && Boolean.valueOf(lap)) legacyAnnotationPrecedence = true;
+        
         initTypeTranslatorMap();
         
         // process row annotation
-        Row rowAnnotation = getClass().getAnnotation(Row.class); // look in table subclass first
-        if (rowAnnotation == null) rowAnnotation = rowClass.getAnnotation(Row.class); // look in row class if none for table subclass
+        Row rowAnnotation;
+        if (legacyAnnotationPrecedence)
+        {
+            // table then row
+            rowAnnotation = getClass().getAnnotation(Row.class);
+            if (rowAnnotation == null) rowAnnotation = rowClass.getAnnotation(Row.class);
+        }
+        else
+        {
+            // row then table
+            rowAnnotation = rowClass.getAnnotation(Row.class); 
+            if (rowAnnotation == null) rowAnnotation = getClass().getAnnotation(Row.class); 
+        }
         
         nameTranslators = initNameTranslators(rowAnnotation);
         rowTranslator = initRowTranslator();
         tableName = initTableName(rowAnnotation);
+        cache = initCache();
+        
+        database.getTransaction().addListener(this);
         
         if (log.isDebugEnabled())
         {
@@ -146,10 +172,66 @@ public class Table<R> implements TypeTranslatorMap
             log.debug("nameTranslators=" + sb);
             log.debug("table name = " + tableName);
             log.debug("number of columns=" + rowTranslator.getColumnTranslatorList().size());
+            if (cache != null) log.debug("cache = " + cache);
         }
     }
     
     
+    /**
+     * Indicates if table is cached.
+     * 
+     * @return true if table has a cache; false if not
+     * @since 3.0
+     */
+    public boolean isCached()
+    {
+    	return cache != null; 
+    }
+    
+    
+    /**
+     * Gets the cache for this table.
+     * 
+     * @return cache for this table or null if table is not cached
+     * @since 3.0
+     */
+	public Cache<R> getCache()
+    {
+        return cache;
+    }
+
+	
+	/**
+	 * Writes uncommitted cache changes to database and then evicts all rows from cache.
+	 * 
+	 * @throws SormulaException if error
+	 * @since 3.0
+	 */
+	public void flush() throws SormulaException
+	{
+	    if (cache != null)
+	    {
+	        if (log.isDebugEnabled()) log.debug("flush for Table " + rowClass.getCanonicalName());
+	        cache.write();
+	        cache.evictAll();
+	    }
+	}
+	
+
+	/**
+	 * Indicates the order in which annotations are processed. Prior to version 3.0, table annotations
+	 * were read first and thus had precedence over row annotations. Returns false by default. Set
+	 * LEGACY_ANNOTATION_PRECEDENCE=true to have this method return true.
+	 * 
+	 * @return true if table annotations have precedence over row annotations
+	 * @since 3.0
+	 */
+    public boolean isLegacyAnnotationPrecedence()
+    {
+        return legacyAnnotationPrecedence;
+    }
+
+
     /**
      * Initializes type translators for table. Invoked by the constructor. Override to add 
      * custom types via {@link #putTypeTranslator(Class, TypeTranslator)}.
@@ -164,7 +246,16 @@ public class Table<R> implements TypeTranslatorMap
         // process any type annotations
         try
         {
-            new ExplicitTypeAnnotationReader(this, this.getClass(), rowClass).install();
+            if (legacyAnnotationPrecedence)
+            {
+                // table then row
+                new ExplicitTypeAnnotationReader(this, this.getClass(), rowClass).install();
+            }
+            else
+            {
+                // row then table
+                new ExplicitTypeAnnotationReader(this, rowClass, this.getClass()).install();
+            }
         }
         catch (Exception e)
         {
@@ -272,6 +363,67 @@ public class Table<R> implements TypeTranslatorMap
     {
         // default
         return new RowTranslator<R>(this);
+        // TODO add method getFields() to RowTranslator => getDeclaredFields or getFields based upon Row.inheritFields()
+    }
+    
+    
+    /**
+     * Initialize cache for this table. Subclasses may override to provide custom implementation.
+     * 
+     * @return cache for this table
+     * @throws CacheException if error
+     * @since 3.0
+     */
+    protected Cache<R> initCache() throws CacheException
+    {
+        if (log.isDebugEnabled()) log.debug("initCache() for " + rowClass);
+        Cache<R> cache = null;        
+        Cached cachedAnnotation = initCachedAnnotation();
+        
+        if (cachedAnnotation != null && cachedAnnotation.enabled())
+        {
+            try
+            {
+                @SuppressWarnings("unchecked") // row type not known at compile time
+                Constructor<Cache<R>> cacheConstructor = (Constructor<Cache<R>>)cachedAnnotation.type().getConstructor(
+                        Table.class, Cached.class);
+                cache = cacheConstructor.newInstance(this, cachedAnnotation);
+            }
+            catch (Exception e)
+            {
+                throw new CacheException("error creating cache", e);
+            }
+            
+            if (database.getTransaction().isActive())
+            {
+                // cache must be opened for use since transaction notify was invoked prior to this table creation
+                begin(database.getTransaction());
+            }
+        }
+
+        return cache;
+    }
+    
+    
+    /**
+     * Gets the annotation that defines caching. Subclasses can override to check for Cached 
+     * annotation in other classes if desired.
+     * 
+     * @return cached annotation or null if no Cached annotation for table
+     * @since 3.0
+     */
+    protected Cached initCachedAnnotation()
+    {
+        if (legacyAnnotationPrecedence)
+        {
+            // table, row, database
+            return new CachedAnnotationReader(getClass(), rowClass, database.getClass()).getAnnotation();
+        }
+        else
+        {
+            // row, table, database
+            return new CachedAnnotationReader(rowClass, getClass(), database.getClass()).getAnnotation();
+        }
     }
     
 
@@ -1125,5 +1277,77 @@ public class Table<R> implements TypeTranslatorMap
     public int saveAll(Collection<R> rows) throws SormulaException
     {
         return new SaveOperation<R>(this).modifyAll(rows);
+    }
+    
+    
+    /**
+     * {@link TransactionListener#begin(Transaction)} implementation. Normally other
+     * classes do not invoke this method. Subclasses may override if needed.
+     * 
+     * @param transaction database transaction that invoked this method
+     * @since 3.0
+     */
+    public void begin(Transaction transaction)
+    {
+        if (log.isDebugEnabled()) log.debug("begin(transaction) " + getQualifiedTableName());
+        if (cache != null)
+        {
+            try
+            {
+                cache.begin(transaction);
+            }
+            catch (CacheException e)
+            {
+                log.error("cache error", e);
+            }
+        }
+    }
+    
+    
+    /**
+     * {@link TransactionListener#commit(Transaction)} implementation. Normally other
+     * classes do not invoke this method. Subclasses may override if needed.
+     * 
+     * @param transaction database transaction that invoked this method
+     * @since 3.0
+     */
+    public void commit(Transaction transaction)
+    {
+        if (log.isDebugEnabled()) log.debug("commit(transaction) " + getQualifiedTableName());
+        if (cache != null)
+        {
+            try
+            {
+                cache.commit(transaction);
+            }
+            catch (CacheException e)
+            {
+                log.error("cache error", e);
+            }
+        }
+    }
+    
+    
+    /**
+     * {@link TransactionListener#rollback(Transaction)} implementation. Normally other
+     * classes do not invoke this method. Subclasses may override if needed.
+     * 
+     * @param transaction database transaction that invoked this method
+     * @since 3.0
+     */
+    public void rollback(Transaction transaction)
+    {
+        if (log.isDebugEnabled()) log.debug("rollback(transaction) " + getQualifiedTableName());
+        if (cache != null)
+        {
+            try
+            {
+                cache.rollback(transaction);
+            }
+            catch (CacheException e)
+            {
+                log.error("cache error", e);
+            }
+        }
     }
 }

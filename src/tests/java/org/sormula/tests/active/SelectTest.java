@@ -170,6 +170,10 @@ public class SelectTest extends ActiveDatabaseTest<SormulaTestAR>
     @Test
     public void selectAllWhereAR()
     {
+        // ensure at least one row to test
+        ActiveTable<SormulaTestAR> table = getActiveTable();
+        table.insert(new SormulaTestAR(8, 8, "test"));
+        
         selectTestRows(); // must perform each time since other tests are destructive
 
         // expected count 
@@ -182,7 +186,6 @@ public class SelectTest extends ActiveDatabaseTest<SormulaTestAR>
         assert expectedCount > 0 : "selectAllWhereAR no rows meet expected condition to test";
 
         // select many
-        ActiveTable<SormulaTestAR> table = getActiveTable();
         List<SormulaTestAR> selectedList = table.selectAllWhere("byType", 8);
         
         // confirm

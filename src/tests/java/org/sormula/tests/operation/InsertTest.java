@@ -153,29 +153,34 @@ public class InsertTest extends DatabaseTest<SormulaTest4>
     @Test
     public void insertNotifyMethods() throws SormulaException
     {
-        begin();
-        final SormulaTest4 testRow = new SormulaTest4(7, 4, "Insert 7");
-        
-        InsertOperation<SormulaTest4> operation = new InsertOperation<SormulaTest4>(getTable())
+        if (!getTable().isCached())
         {
-            @Override
-            protected void preExecute(SormulaTest4 row)
-            {
-                preMethod = testRow.getId() == row.getId();
-            }
+            // this test only works if table is not cached
+            // cached table may use its own insert operation
+            begin();
+            final SormulaTest4 testRow = new SormulaTest4(7, 4, "Insert 7");
             
-            @Override
-            protected void postExecute(SormulaTest4 row)
+            InsertOperation<SormulaTest4> operation = new InsertOperation<SormulaTest4>(getTable())
             {
-                postMethod = testRow.getId() == row.getId();
-            }
-        };
-        
-        operation.setRow(testRow);
-        operation.execute();
-        operation.close();
-        
-        assert preMethod && postMethod : "notify methods failed";
-        commit();
+                @Override
+                protected void preExecute(SormulaTest4 row)
+                {
+                    preMethod = testRow.getId() == row.getId();
+                }
+                
+                @Override
+                protected void postExecute(SormulaTest4 row)
+                {
+                    postMethod = testRow.getId() == row.getId();
+                }
+            };
+            
+            operation.setRow(testRow);
+            operation.execute();
+            operation.close();
+            commit();
+            
+            assert preMethod && postMethod : "notify methods failed";
+        }
     }
 }

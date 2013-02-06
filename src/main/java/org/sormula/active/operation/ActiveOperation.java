@@ -26,6 +26,7 @@ import org.sormula.active.ActiveException;
 import org.sormula.active.ActiveRecord;
 import org.sormula.active.ActiveTable;
 import org.sormula.active.ActiveTransaction;
+import org.sormula.active.NoDefaultActiveDatabaseException;
 import org.sormula.log.ClassLogger;
 
 
@@ -67,7 +68,7 @@ public abstract class ActiveOperation<R extends ActiveRecord<R>, T>
         if (activeDatabase == null)
         {
             activeDatabase = ActiveDatabase.getDefault();
-            if (activeDatabase == null) throw new ActiveException("no default active database has been set; use ActiveDatabase#setDefault");
+            if (activeDatabase == null) throw new NoDefaultActiveDatabaseException();
         }
     }
 
@@ -104,13 +105,13 @@ public abstract class ActiveOperation<R extends ActiveRecord<R>, T>
                 if (operationDatabase.getConnection().getAutoCommit())
                 {
                     // don't use transaction since autocommit is off
-                    if (log.isDebugEnabled()) log.debug("execute with no transaction");
+                    if (log.isDebugEnabled()) log.debug("execute() with no transaction");
                     result = operate();
                 }
                 else
                 {
                     // use transaction since autocommit is on
-                    if (log.isDebugEnabled()) log.debug("execute with auto transaction");
+                    if (log.isDebugEnabled()) log.debug("execute() with local ActiveTransaction");
                     try
                     {
                         activeTransaction.begin();
@@ -127,7 +128,7 @@ public abstract class ActiveOperation<R extends ActiveRecord<R>, T>
             else
             {
                 // a transaction is already active
-                if (log.isDebugEnabled()) log.debug("execute using existing transaction");
+                if (log.isDebugEnabled()) log.debug("execute() using existing transaction");
                 result = operate();
             }
         }

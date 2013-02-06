@@ -30,6 +30,7 @@ import org.sormula.annotation.OrderByAnnotationReader;
 import org.sormula.annotation.Where;
 import org.sormula.annotation.cascade.SelectCascade;
 import org.sormula.annotation.cascade.SelectCascadeAnnotationReader;
+import org.sormula.cache.CacheException;
 import org.sormula.log.ClassLogger;
 import org.sormula.operation.cascade.CascadeOperation;
 import org.sormula.operation.cascade.SelectCascadeOperation;
@@ -59,9 +60,11 @@ public class ScalarSelectOperation<R> extends SqlOperation<R>
     OrderByTranslator<R> orderByTranslator;
     RowTranslator<R> rowTranslator;
     int maximumRowsRead = Integer.MAX_VALUE;
+    // TODO int fetchSize;
     int rowsReadCount;
     boolean lazySelectsCascades;
     boolean notifyLazySelects;
+    boolean readFromCache; // set by execute() if cache hit
     
     
     /**
@@ -176,36 +179,69 @@ public class ScalarSelectOperation<R> extends SqlOperation<R>
     @Override
     public void execute() throws OperationException
     {
+        readFromCache = false;
         initOperationTime();
-        prepareCheck();
         setNextParameter(1);
         rowsReadCount = 0;
-        OperationTime operationTime = getOperationTime();
-        
-        operationTime.startWriteTime();
-        if (rowParameters != null)
+
+        if (isCached())
         {
-            // where values from row object
-            writeWhere(rowParameters);
+            try
+            {
+                // notify cache of start of execution
+                getTable().getCache().execute(this);
+            }
+            catch (CacheException e)
+            {
+                throw new OperationException("error notifying cache", e);
+            }
+
+            if (isPrimaryKey() && rowParameters == null)
+            {
+                // table is cached and select is for primary key and primary is from parameters, look in cache
+                try
+                {
+                    if (log.isDebugEnabled()) log.debug("execute() check cache " + table.getRowClass());
+                    readFromCache = table.getCache().isAuthority(parameters);
+                }
+                catch (CacheException e)
+                {
+                    throw new OperationException("error reading cache", e);
+                }
+            }
         }
-        else 
-        {
-            // where values from objects
-            writeParameters();
-        }
-        operationTime.stop();
         
-        try
+        if (!readFromCache)
         {
-            log.debug("execute query");
-            if (maximumRowsRead < Integer.MAX_VALUE) preparedStatement.setMaxRows(maximumRowsRead);
-            operationTime.startExecuteTime();
-            resultSet = preparedStatement.executeQuery();
+            // query database
+            prepareCheck();
+            OperationTime operationTime = getOperationTime();
+            
+            operationTime.startWriteTime();
+            if (rowParameters != null)
+            {
+                // where values from row object
+                writeWhere(rowParameters);
+            }
+            else 
+            {
+                // where values from objects
+                writeParameters();
+            }
             operationTime.stop();
-        }
-        catch (Exception e)
-        {
-            throw new OperationException("execute() error", e);
+            
+            try
+            {
+                log.debug("execute query");
+                if (maximumRowsRead < Integer.MAX_VALUE) preparedStatement.setMaxRows(maximumRowsRead);
+                operationTime.startExecuteTime();
+                resultSet = preparedStatement.executeQuery();
+                operationTime.stop();
+            }
+            catch (Exception e)
+            {
+                throw new OperationException("execute() error", e);
+            }
         }
     }
     
@@ -234,7 +270,8 @@ public class ScalarSelectOperation<R> extends SqlOperation<R>
     
     
     /**
-     * Reads one row from current result set.
+     * Reads next row from current result set. If table is cached, and cache indicates that the next row is deleted,
+     * this method will continue to read until non deleted row is selected.
      * 
      * @return new instance of row or null if no more row in the current result set
      * @throws OperationException if error
@@ -245,45 +282,77 @@ public class ScalarSelectOperation<R> extends SqlOperation<R>
         
         try
         {
-            // include resultSet.next() in read time but don't include cascade 
-            // times since that would cause cascade timings summed twice into total
-            operationTime.startReadTime();
-            
-            if (resultSet.next() && rowsReadCount < maximumRowsRead)
+            if (readFromCache)
             {
-                row = table.newRow();
-                
-                if (notifyLazySelects) 
+                if (rowsReadCount == 0) // readNext() returns null after 1st invocation
                 {
-                    // inform row of pending select cascades
-                    LazySelectable lazySelectCascadeRow = (LazySelectable)row;
-                    lazySelectCascadeRow.pendingLazySelects(table.getDatabase());
+                    // return value from most recent execute()
+                    row = table.getCache().select(parameters);
+                    rowsReadCount = 1;
                 }
-                
-                operationTime.pause();
-                preReadCascade(row);
-                preRead(row);
-                operationTime.resume();
-                
-                rowTranslator.read(resultSet, 1, row);
-                ++rowsReadCount;
-                operationTime.stop();
-                
-                postRead(row);
-                postReadCascade(row);
             }
             else
             {
-                // don't stop timer since count will be 1 more than rows read
-                // ignore time for ResultSet.next when no more rows
-                operationTime.cancel();
+                // select from result set
+            
+                // include resultSet.next() in read time but don't include cascade
+                // times since that would cause cascade timings summed twice into total
+                operationTime.startReadTime();
+                
+                if (resultSet.next() && rowsReadCount < maximumRowsRead)
+                {
+                    row = table.newRow();
+                    
+                    if (notifyLazySelects) 
+                    {
+                        // inform row of pending select cascades
+                        LazySelectable lazySelectCascadeRow = (LazySelectable)row;
+                        lazySelectCascadeRow.pendingLazySelects(table.getDatabase());
+                    }
+                    
+                    operationTime.pause();
+                    if (isCascade()) preReadCascade(row);
+                    preRead(row);
+                    operationTime.resume();
+                    
+                    rowTranslator.read(resultSet, 1, row);
+                    ++rowsReadCount;
+                    operationTime.stop();
+                    
+                    postRead(row);
+                    if (isCascade()) postReadCascade(row);
+                    
+                    if (isCached())
+                    {
+                        // now that row has been selected, key is known, check if cache has newer
+                        R cachedRow = table.getCache().selected(row);
+                        
+                        if (cachedRow != null)
+                        {
+                            // assume cached row is authority
+                            row = cachedRow;
+                        }   
+                        else
+                        {
+                            // cache indicates row has been deleted, dont use it, read next row
+                            if (log.isDebugEnabled()) log.debug("selected deleted row, select next");
+                            row = readNext();
+                        }
+                    }
+                }
+                else
+                {
+                    // don't stop timer since count will be 1 more than rows read
+                    // ignore time for ResultSet.next when no more rows
+                    operationTime.cancel();
+                }
             }
         }
         catch (Exception e)
         {
             throw new OperationException("readNext() error", e);
         }
-
+        
         return row;
     }
     
@@ -351,6 +420,7 @@ public class ScalarSelectOperation<R> extends SqlOperation<R>
      */
     public R select(Object... parameters) throws OperationException
     {
+        if (log.isDebugEnabled()) log.debug("select() read from database");
         setParameters(parameters);
         execute();
         R row = readNext();

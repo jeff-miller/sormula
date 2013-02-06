@@ -64,4 +64,12 @@ public @interface Row
      * @return translators for mapping java names to sql names
      */
     Class<? extends NameTranslator>[] nameTranslators() default {};
+    
+    
+    // TODO use for select all
+    int initialCapacity() default 20; // TODO move to Where?
+    
+    
+    // TODO
+    boolean inhertedFields() default false; // allow subclass fields
 }

@@ -42,19 +42,6 @@ public class WhereAnnotationReader
         this.sources = sources;
     }
     
-    
-    /**
-     * Constructs for a class.
-     * 
-     * @param source class that contains {@link Where} or {@link Wheres} annotations
-     */
-    @Deprecated
-    public WhereAnnotationReader(Class<?> source) 
-    {
-        sources = new Class<?>[1];
-        sources[0] = source;
-    }
-    
 
     /**
      * Gets annotation for a specific name.
@@ -85,9 +72,7 @@ public class WhereAnnotationReader
                 if (wheresAnnotation != null)
                 {
                     // look for name
-                    Where[] wheres = wheresAnnotation.value();
-                    if (wheres.length == 0) wheres = wheresAnnotation.whereConditions(); // remove when deprecated removed
-                    for (Where w: wheres)
+                    for (Where w: wheresAnnotation.value())
                     {
                         if (w.name().equals(name))
                         {

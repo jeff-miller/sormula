@@ -4,7 +4,8 @@ JDK 5/6  JDK 7   comments
 ------------------------------------------------------------------------------------------------------------
 3.0-j5   3.0-j7  caching
                  TransactionListener
-                 row annotations have precendence over table annotations (set legacyAnnotationPrecedence=true for pre v3.0 precendence) 
+                 row annotations have precendence over table annotations (set legacyAnnotationPrecedence=true for pre v3.0 precendence)
+                 remove deprecated 
 1.9.3    2.3.3   save cascades to all levels
 1.9.2    2.3.2   TypeTranslator can be used for primative
 1.9.1    2.3.1   update examples

@@ -46,19 +46,6 @@ public class OrderByAnnotationReader
     
 
     /**
-     * Constructs for a class.
-     * 
-     * @param source class that contains {@link OrderBy} or {@link OrderBys} annotations
-     */
-    @Deprecated
-    public OrderByAnnotationReader(Class<?> source)
-    {
-        sources = new Class<?>[1];
-        sources[0] = source;
-    }
-    
-
-    /**
      * Gets annotation for a specific name.
      * 
      * @param name look for annotation where name equals {@link OrderBy#name()}
@@ -87,9 +74,7 @@ public class OrderByAnnotationReader
                 if (orderBysAnnotation != null)
                 {
                     // look for name
-                    OrderBy[] orderbys = orderBysAnnotation.value();
-                    if (orderbys.length == 0) orderbys = orderBysAnnotation.orderByConditions();
-                    for (OrderBy o: orderbys)
+                    for (OrderBy o: orderBysAnnotation.value())
                     {
                         if (o.name().equals(name))
                         {

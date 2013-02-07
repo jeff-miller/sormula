@@ -31,7 +31,6 @@ import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import javax.sql.DataSource;
 
-import org.sormula.annotation.Column;
 import org.sormula.annotation.ExplicitTypeAnnotationReader;
 import org.sormula.annotation.ImplicitType;
 import org.sormula.log.ClassLogger;
@@ -559,36 +558,6 @@ public class Database implements TypeTranslatorMap
     {
         tableMap.put(table.getRowClass().getCanonicalName(), table);
     }
-
-
-    /**
-     * Gets the default name translator class for tables when none is specified.
-     * Use {@link #getNameTranslatorClasses()} instead this method.
-     * 
-     * @return default name translator class; null if none
-     */
-    @Deprecated
-	public Class<? extends NameTranslator> getNameTranslatorClass() 
-	{
-        if (nameTranslatorClasses.size() > 0) return nameTranslatorClasses.get(0);
-        else return null;
-	}
-
-
-	/**
-	 * Sets the name translator class to use for a table if no translator is specified by
-	 * {@link Column#translator()}. A new instance is created for each table.
-	 * Use {@link #addNameTranslatorClass(Class)} instead of this method.
-	 * 
-	 * @param nameTranslatorClass default name translator class; null for none
-	 */
-    @Deprecated
-	public void setNameTranslatorClass(Class<? extends NameTranslator> nameTranslatorClass) 
-	{
-        // replace all with new one
-		nameTranslatorClasses.clear();
-		addNameTranslatorClass(nameTranslatorClass);
-	}
 	
 	
     /**

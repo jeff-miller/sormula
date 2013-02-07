@@ -20,14 +20,14 @@ import java.util.Date;
 
 import org.sormula.annotation.Row;
 import org.sormula.annotation.Where;
-import org.sormula.translator.StandardNameTranslator;
+import org.sormula.translator.ExpandedNameTranslator;
 
 
 /**
- * Row class where table name and column names are derived from {@link StandardNameTranslator}.
+ * Row class where table name and column names are derived from {@link ExpandedNameTranslator}.
  * See {@link NameInsert} for table definition.
  */
-@Row(nameTranslator=StandardNameTranslator.class)
+@Row(nameTranslators=ExpandedNameTranslator.class)
 @Where(name="fn", fieldNames="firstName")
 public class Student2
 {

@@ -30,13 +30,13 @@ import org.sormula.annotation.Wheres;
  * 
  * @author Jeff Miller
  */
-@Wheres(whereConditions={ // test deprecated, remove when deprecated removed
+@Wheres({
     @Where(name="byType", fieldNames="type"),
     @Where(name="idIn",  whereFields=@WhereField(name="id", comparisonOperator="in")),
     @Where(name="idIn2", whereFields=@WhereField(name="id", comparisonOperator="in", operand="(6001, 6002)"))
 })
 
-@OrderBys(orderByConditions={ // test deprecated, remove when deprecated removed
+@OrderBys({
     @OrderBy(name="ob1", ascending="type"),
     @OrderBy(name="ob2", ascending="description")
 })

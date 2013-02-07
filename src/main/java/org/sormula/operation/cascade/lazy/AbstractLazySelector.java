@@ -103,21 +103,6 @@ abstract public class AbstractLazySelector<R> implements LazySelectable, Seriali
     
     
     /**
-     * Invoked once to create a {@link Database} instance that will be used to perform the lazy selects.
-     * The first time that {@link #getDatabase()} is used, it will invoke {@link #initDatabase()}.
-     * 
-     * @return a sormula database from which to select rows
-     * @throws LazyCascadeException if error
-     */
-    @Deprecated // replaced by openDatabase()
-    protected Database initDatabase() throws LazyCascadeException
-    {
-        openDatabase();
-        return database;
-    }
-    
-    
-    /**
      * Invoked by {@link #checkLazySelects(String)} to create a {@link Database} instance that will be used to 
      * perform the lazy selects.
      * 

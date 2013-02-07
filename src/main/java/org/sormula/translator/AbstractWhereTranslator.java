@@ -35,7 +35,6 @@ public abstract class AbstractWhereTranslator<R> extends ColumnsTranslator<R>
 {
     RowTranslator<R> rowTranslator;
     List<WhereFieldExpression> whereFieldExpressionList;
-    @Deprecated boolean inOperator; 
     boolean collectionOperand;
     Object[] parameters;
     
@@ -122,23 +121,6 @@ public abstract class AbstractWhereTranslator<R> extends ColumnsTranslator<R>
     
     
     /**
-     * Adds translator with a specific sql comparison operator and boolean operator. This
-     * method is kept for backward compatibility to versions prior to 1.4. Note that parameter 
-     * order is different from {@link #addColumnTranslator(ColumnTranslator, String, String, String)}.
-     * 
-     * @param c column translator to add
-     * @param comparisonOperator sql comparison operator to use in where condition (examples: ">", "=<", "<>", etc.)
-     * @param booleanOperator logical operator to precede this column (examples: "AND", "OR", "AND NOT", etc.)
-     */
-    @Deprecated
-    public void addColumnTranslator(ColumnTranslator<R> c, String comparisonOperator, String booleanOperator)
-    {
-        // note parameter order is different
-        addColumnTranslator(c, booleanOperator, comparisonOperator, "");
-    }
-    
-    
-    /**
      * Adds translator with a specific sql comparison operator and boolean operator. Note that
      * parameter order has changed so that booleanOperator, operator, operand appear in same order
      * as in SQL. 
@@ -157,28 +139,6 @@ public abstract class AbstractWhereTranslator<R> extends ColumnsTranslator<R>
 
         // remember if collection operand was used (for faster prepares)
         if (wfe.isCollectionOperand()) collectionOperand = true;
-        
-        // remember if IN operator was used (keep for backward compatibility but is not needed)
-        if (isInOperator(comparisonOperator)) inOperator = true;
-    }
-
-
-    /**
-     * Kept for backward compatibility but is not needed.
-     * 
-     * @return true if one or more column uses the "IN" operator
-     */
-    @Deprecated
-    public boolean isInOperator()
-    {
-        return inOperator;
-    }
-    
-    
-    @Deprecated
-    protected boolean isInOperator(String operator)
-    {
-        return operator.equalsIgnoreCase("IN") || operator.equalsIgnoreCase("NOT IN");
     }
     
     

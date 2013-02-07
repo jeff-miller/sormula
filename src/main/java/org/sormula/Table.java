@@ -49,7 +49,6 @@ import org.sormula.operation.aggregate.SelectMaxOperation;
 import org.sormula.operation.aggregate.SelectMinOperation;
 import org.sormula.operation.aggregate.SelectSumOperation;
 import org.sormula.translator.NameTranslator;
-import org.sormula.translator.NoNameTranslator;
 import org.sormula.translator.RowTranslator;
 import org.sormula.translator.TranslatorException;
 import org.sormula.translator.TypeTranslator;
@@ -109,8 +108,6 @@ public class Table<R> implements TypeTranslatorMap, TransactionListener
     Class<R> rowClass;
     String tableName;
     RowTranslator<R> rowTranslator;
-    @Deprecated
-    NoNameTranslator noNameTranslator = new NoNameTranslator(); // remove when NoNameTranslator is removed
     List<? extends NameTranslator> nameTranslators;
     Map<String, TypeTranslator<?>> typeTranslatorMap; // key is row class canonical name
     List<Field> lazySelectCascadeFields;
@@ -281,19 +278,7 @@ public class Table<R> implements TypeTranslatorMap, TransactionListener
         if (rowAnnotation != null)
         {
             // row annotation is available
-            // remove if statement when deprecated is removed
-            if (rowAnnotation.nameTranslator().getName().equals(NoNameTranslator.class.getName()))
-            {
-                // deprecated use is default, use replacement method
-                nameTranslatorClasses = rowAnnotation.nameTranslators(); // keep this when deprecated is removed
-            }
-            else
-            {
-                // deprecated method defines something other than default, use it
-                // remove this block when deprecated is removed
-                nameTranslatorClasses = new Class[1];
-                nameTranslatorClasses[0] = rowAnnotation.nameTranslator();
-            }
+            nameTranslatorClasses = rowAnnotation.nameTranslators();
         }
         else
         {
@@ -482,20 +467,6 @@ public class Table<R> implements TypeTranslatorMap, TransactionListener
         String schema = database.getSchema();
         if (schema.length() > 0) return schema + "." + getTableName();
         else return getTableName();
-    }
-
-    
-    /**
-     * Gets translator defined by {@link Row#nameTranslator()}.
-     * Use {@link #getNameTranslators()} instead of this method.
-     * 
-     * @return translator for converting java names to sql table and column names
-     */
-    @Deprecated
-    public NameTranslator getNameTranslator()
-    {
-        if (nameTranslators.size() > 0) return nameTranslators.get(0);
-        else return noNameTranslator; // to be backward compatible can't return null
     }
 
 

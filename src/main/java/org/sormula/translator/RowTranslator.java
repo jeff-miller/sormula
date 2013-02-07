@@ -32,7 +32,6 @@
  */
 package org.sormula.translator;
 
-import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 
@@ -40,7 +39,6 @@ import org.sormula.Table;
 import org.sormula.annotation.Column;
 import org.sormula.annotation.ImplicitType;
 import org.sormula.annotation.ImplicitTypeAnnotationReader;
-import org.sormula.annotation.Row;
 import org.sormula.annotation.Transient;
 import org.sormula.annotation.UnusedColumn;
 import org.sormula.annotation.UnusedColumns;
@@ -185,8 +183,7 @@ public class RowTranslator<R> extends ColumnsTranslator<R>
                     AbstractColumnTranslator.newInstance(columnTranslatorClass, f, columnName);
                 addColumnTranslator(translator);
 
-                // remove table!=null check when deprecated constructor is removed
-                if (translator instanceof AbstractColumnTranslator && table != null) 
+                if (translator instanceof AbstractColumnTranslator) 
                 {
                     TypeTranslator<?> typeTranslator = table.getTypeTranslator(f.getType());
                     
@@ -217,53 +214,6 @@ public class RowTranslator<R> extends ColumnsTranslator<R>
     
     
     /**
-     * Do not use. Replaced with {@link ImplicitTypeAnnotationReader}.
-     * @since 1.6 and 2.0
-     */
-    @Deprecated
-    protected TypeTranslator<?> readimplicitType(AnnotatedElement... annotatedElements) throws TranslatorException
-    {
-        return readImplicitType(annotatedElements);
-    }
-    
-    
-    /**
-     * Do not use. Replaced with {@link ImplicitTypeAnnotationReader}.
-     * Searches any {@link ImplicitType} annotations and returns new instance of {@link ImplicitType#translator()}
-     * for the first one found.
-     * 
-     * @param annotatedElements objects that may contain an {@link ImplicitType} annotation
-     * @return new {@link TypeTranslator} or null if no {@link ImplicitType} annotations
-     * @throws TranslatorException if error creating new instance of type translator
-     * @since 1.8 and 2.2
-     */
-    @Deprecated 
-    protected TypeTranslator<?> readImplicitType(AnnotatedElement... annotatedElements) throws TranslatorException
-    {
-        for (AnnotatedElement ae : annotatedElements)
-        {
-            ImplicitType typeAnnotation = ae.getAnnotation(ImplicitType.class);
-            
-            if (typeAnnotation != null)
-            {
-                // create type translator
-                try
-                {
-                    return typeAnnotation.translator().newInstance(); // deprecated since creates new instance even when not needed
-                }
-                catch (Exception e)
-                {
-                    throw new TranslatorException("error instantiating " + typeAnnotation.translator().getCanonicalName(), e);
-                }
-            }
-        }
-        
-        // not found or error
-        return null;
-    }
-    
-    
-    /**
      * Process {@link UnusedColumns} annotations.
      * 
      * @param rowClass
@@ -279,7 +229,6 @@ public class RowTranslator<R> extends ColumnsTranslator<R>
         {
             // at least one unused column
             UnusedColumn[] unusedColumnAnnotations = unusedColumnsAnnotation.value();
-            if (unusedColumnAnnotations.length == 0) unusedColumnAnnotations = unusedColumnsAnnotation.unusedColumns(); // remove when deprecated removed
             
             // allocate typical space needed
             StringBuilder insertNames = new StringBuilder(unusedColumnAnnotations.length * 20);
@@ -312,48 +261,6 @@ public class RowTranslator<R> extends ColumnsTranslator<R>
             unusedColumnInsertValuesSql = "";
             unusedColumnUpdateSql = "";
         }
-    }
-    
-    
-    /**
-     * Gets translator defined by {@link Row#nameTranslator()}.
-     * Use {@link Table#getNameTranslators()} instead of this method.
-     * 
-     * @return translator for converting java names to sql names
-     */
-    @Deprecated
-    public NameTranslator getNameTranslator()
-    {
-        return table.getNameTranslator();
-    }
-    
-
-    /**
-     * Creates new instance of row object using zero-argument constructor. New instances
-     * are typically created by select operations when they are reading data from a
-     * result set.
-     * 
-     * Moved to {@link Table}.
-     * 
-     * @return object to hold one row 
-     * @throws TranslatorException if new row instance cannot be created
-     */
-    @Deprecated
-    public R newInstance() throws TranslatorException
-    {
-        R row;
-        
-        try
-        {
-            row = getRowClass().newInstance();
-        }
-        catch (Exception e)
-        {
-            throw new TranslatorException("error creating row instance for " + getRowClass().getName() +
-                    "; make sure row has public zero-arg constructor", e);
-        }
-        
-        return row;
     }
 
 

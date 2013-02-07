@@ -23,7 +23,6 @@ import java.lang.annotation.Target;
 
 import org.sormula.Table;
 import org.sormula.translator.NameTranslator;
-import org.sormula.translator.NoNameTranslator;
 
 
 /**
@@ -45,16 +44,6 @@ public @interface Row
      * @return name of table for row
      */
     String tableName() default "";
-    
-    
-    /**
-     * Class for providing sql names in place of class and field names.
-     * Use {@link #nameTranslators()} instead of this method.
-     * 
-     * @return translator for mapping java names to sql names
-     */
-    @Deprecated
-    Class<? extends NameTranslator> nameTranslator() default NoNameTranslator.class;
     
     
     /**

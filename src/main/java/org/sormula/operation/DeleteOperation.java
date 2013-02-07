@@ -120,14 +120,6 @@ public class DeleteOperation<R> extends ModifyOperation<R>
     }
 
 
-    @Deprecated
-    @Override
-    protected void prepareColumns(R row) throws OperationException
-    {
-        // no columns are prepared for delete
-    }
-
-
     /**
      * Does nothing since delete statements have no columns.
      */

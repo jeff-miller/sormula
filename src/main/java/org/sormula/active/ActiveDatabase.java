@@ -28,7 +28,6 @@ import javax.sql.DataSource;
 import org.sormula.Database;
 import org.sormula.SormulaException;
 import org.sormula.Table;
-import org.sormula.annotation.Column;
 import org.sormula.operation.ModifyOperation;
 import org.sormula.operation.SqlOperation;
 import org.sormula.translator.NameTranslator;
@@ -240,36 +239,6 @@ public class ActiveDatabase implements Serializable
     }
 
 
-    /**
-     * Gets the default name translator class for tables when none is specified.
-     * Use {@link #getNameTranslatorClasses()} instead of this method.
-     * 
-     * @return default name translator class; null if none
-     */
-    @Deprecated
-    public Class<? extends NameTranslator> getNameTranslatorClass() 
-    {
-        if (nameTranslatorClasses.size() > 0) return nameTranslatorClasses.get(0);
-        else return null;
-    }
-
-
-    /**
-     * Sets the name translator class to use for a table if no translator is specified by
-     * {@link Column#translator()}. A new instance is created for each table.
-     * Use {@link #addNameTranslatorClass(Class)} instead of this method.
-     * 
-     * @param nameTranslatorClass default name translator class
-     */
-    @Deprecated
-    public void setNameTranslatorClass(Class<? extends NameTranslator> nameTranslatorClass) 
-    {
-        // replace all with new one
-        nameTranslatorClasses.clear();
-        addNameTranslatorClass(nameTranslatorClass);
-    }
-    
-    
     /**
      * Gets the default name translators to be used when none are defined for the table.
      * 

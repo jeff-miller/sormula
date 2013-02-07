@@ -25,11 +25,11 @@ import org.sormula.Database;
 import org.sormula.SormulaException;
 import org.sormula.Table;
 import org.sormula.examples.ExampleBase;
-import org.sormula.translator.StandardNameTranslator;
+import org.sormula.translator.ExpandedNameTranslator;
 
 
 /**
- * Same as InsertExample1 but uses {@link StandardNameTranslator} which derives
+ * Same as InsertExample1 but uses {@link ExpandedNameTranslator} which derives
  * column names from row class names with underscores between words. See {@link Student2}.
  */
 public class NameInsert extends ExampleBase

@@ -21,8 +21,8 @@ import java.util.List;
 import org.sormula.SormulaException;
 import org.sormula.annotation.Row;
 import org.sormula.tests.DatabaseTest;
+import org.sormula.translator.ExpandedNameTranslator;
 import org.sormula.translator.Sql92KeywordNameTranslator;
-import org.sormula.translator.StandardNameTranslator;
 import org.sormula.translator.UpperCaseNameTranslator;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
@@ -30,7 +30,7 @@ import org.testng.annotations.Test;
 
 
 /**
- * Tests {@link StandardNameTranslator}, {@link Sql92KeywordNameTranslator}, and 
+ * Tests {@link ExpandedNameTranslator}, {@link Sql92KeywordNameTranslator}, and 
  * {@link UpperCaseNameTranslator} for table and column names.  
  * {@link SormulaTest2} has translators defined with {@link Row} annotation.
  * 

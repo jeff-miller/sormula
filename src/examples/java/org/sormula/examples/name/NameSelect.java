@@ -24,11 +24,11 @@ import org.sormula.Table;
 import org.sormula.examples.ExampleBase;
 import org.sormula.operation.ArrayListSelectOperation;
 import org.sormula.operation.ListSelectOperation;
-import org.sormula.translator.StandardNameTranslator;
+import org.sormula.translator.ExpandedNameTranslator;
 
 
 /**
- * Same as SelectExample1 but uses {@link StandardNameTranslator} which derives
+ * Same as SelectExample1 but uses {@link ExpandedNameTranslator} which derives
  * column names from row class names with underscores between words. See {@link Student2}.
  */
 public class NameSelect extends ExampleBase

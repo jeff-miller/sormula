@@ -29,7 +29,7 @@ import org.testng.annotations.Test;
  * 
  * @author Jeff Miller
  */
-@Test(singleThreaded=true, groups="cache.save", dependsOnGroups="cache.insert")
+@Test(singleThreaded=true, groups="cache.readwrite.save", dependsOnGroups="cache.readwrite.insert")
 public class SaveTest extends CacheTest<SormulaCacheTestRW>
 {
     @BeforeClass
@@ -43,7 +43,6 @@ public class SaveTest extends CacheTest<SormulaCacheTestRW>
     @AfterClass
     public void tearDown() throws Exception
     {
-        getTable().getCache().log(); // TODO keep?
         closeDatabase();
     }
     

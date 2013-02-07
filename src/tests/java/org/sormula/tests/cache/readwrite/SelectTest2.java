@@ -29,7 +29,7 @@ import org.testng.annotations.Test;
  * 
  * @author Jeff Miller
  */
-@Test(singleThreaded=true, groups="cache.select", dependsOnGroups="cache.insert")
+@Test(singleThreaded=true, groups="cache.readwrite.select", dependsOnGroups="cache.readwrite.insert")
 public class SelectTest2 extends CacheTest<SormulaCacheTestRW2>
 {
     @BeforeClass

@@ -152,9 +152,9 @@ public abstract class AbstractCache<R> implements Cache<R>
     
     /**
      * Tests if row is in cache. Returns true if row exists as committed or uncommitted. Note that
-     * {@link #select(Object[])} will return null but {@link #isAuthority(Object[])} will true for the
+     * {@link #select(Object[])} will return null but {@link #contains(Object[])} will true for the
      * same primary key(s) if row is an uncommitted delete. {@link #select(Object[])} indicates 
-     * committed visibilty while {@link #isAuthority(Object[])} simply indicates if row is known to
+     * committed visibilty while {@link #contains(Object[])} simply indicates if row is known to
      * the cache. This method is used by {@link ScalarSelectOperation#execute()} to know if
      * cache is authority for row or if database must be queried to get row.
      * 
@@ -163,7 +163,7 @@ public abstract class AbstractCache<R> implements Cache<R>
      * exist in committed or uncommitted map
      * @throws CacheException if error
      */
-    public boolean isAuthority(Object[] primaryKeys) throws CacheException
+    public boolean contains(Object[] primaryKeys) throws CacheException
     {
         CacheKey cacheKey = new CacheKey(primaryKeys);
         return getUncommitted(cacheKey) != null || getCommitted(cacheKey) != null;
@@ -272,7 +272,7 @@ public abstract class AbstractCache<R> implements Cache<R>
         if (log.isDebugEnabled())
         {
             log.debug("committed keys   = " + committedCache.keySet());
-            log.debug("uncommitted keys = " + (uncommittedCache != null ? uncommittedCache.keySet() : "0"));
+            log.debug("uncommitted keys = " + (uncommittedCache != null ? uncommittedCache.keySet() : "none"));
         }
     }
     

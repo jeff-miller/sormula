@@ -202,7 +202,7 @@ public class ScalarSelectOperation<R> extends SqlOperation<R>
                 try
                 {
                     if (log.isDebugEnabled()) log.debug("execute() check cache " + table.getRowClass());
-                    readFromCache = table.getCache().isAuthority(parameters);
+                    readFromCache = table.getCache().contains(parameters);
                 }
                 catch (CacheException e)
                 {

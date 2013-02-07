@@ -14,10 +14,10 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.sormula.tests.cache.readwrite;
+package org.sormula.tests.cache.readonly;
 
 import org.sormula.SormulaException;
-import org.sormula.cache.readwrite.ReadWriteCache;
+import org.sormula.cache.readonly.ReadOnlyCache;
 import org.sormula.tests.cache.CacheTest;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
@@ -25,18 +25,18 @@ import org.testng.annotations.Test;
 
 
 /**
- * Tests cached deletes for {@link ReadWriteCache}. 
+ * Tests cached deletes for {@link ReadOnlyCache}. 
  * 
  * @author Jeff Miller
  */
-@Test(singleThreaded=true, groups="cache.readwrite.delete", dependsOnGroups="cache.readwrite.insert")
-public class DeleteTest extends CacheTest<SormulaCacheTestRW>
+@Test(singleThreaded=true, groups="cache.readonly.delete", dependsOnGroups="cache.readonly.insert")
+public class DeleteTest extends CacheTest<SormulaCacheTestRO>
 {
     @BeforeClass
     public void setUp() throws Exception
     {
         openDatabase();
-        createTable(SormulaCacheTestRW.class);
+        createTable(SormulaCacheTestRO.class);
     }
     
     
@@ -47,20 +47,20 @@ public class DeleteTest extends CacheTest<SormulaCacheTestRW>
     }
     
     
-    protected SormulaCacheTestRW insertTestRow(int id) throws SormulaException
+    protected SormulaCacheTestRO insertTestRow(int id) throws SormulaException
     {
-        SormulaCacheTestRW test = new SormulaCacheTestRW(id, 400, "Delete test " + id);
+        SormulaCacheTestRO test = new SormulaCacheTestRO(id, 400, "Delete test " + id);
         assert getTable().insert(test) == 1 : "insert failed";
         return test;
     }
     
     
     @Test
-    public void deleteBasicExistent() throws SormulaException
+    public void deleteBasic() throws SormulaException
     {
         // insert test record into database
         begin();
-        SormulaCacheTestRW test = insertTestRow(401);
+        SormulaCacheTestRO test = insertTestRow(401);
         commit();
         confirmInDatabase(test);
         
@@ -71,30 +71,20 @@ public class DeleteTest extends CacheTest<SormulaCacheTestRW>
         commit();
         
         begin();
+        confirmNotCached(test); // should not be in cache
         confirmNotInDatabase(test); // confirm delete occurred
         commit();
     }
     
     
     @Test
-    public void deleteBasicNonexistent() throws SormulaException
+    public void deleteInsert() throws SormulaException
     {
-        // test delete of non existent produces no exceptions
-        begin();
-        SormulaCacheTestRW test = new SormulaCacheTestRW(402, 0, "nonexistent");
-        getTable().delete(test);
-        commit();
-    }
-    
-    
-    @Test
-    public void deleteExistentInsert() throws SormulaException
-    {
-        // test delete existing row r1 then insert r2 is equivalent to save r2
+        // test delete existing row r1 then insert r2 results in insert r2 in cache
         
         // insert test record into database
         begin();
-        SormulaCacheTestRW test = insertTestRow(403);
+        SormulaCacheTestRO test = insertTestRow(403);
         commit();
         confirmInDatabase(test);
         
@@ -105,8 +95,8 @@ public class DeleteTest extends CacheTest<SormulaCacheTestRW>
         getTable().delete(test);
         
         // insert row with same key (different type and description)
-        SormulaCacheTestRW duplicate = new SormulaCacheTestRW(test.getId(), 0, "duplicate " + test.getId());
-        assert getTable().insert(duplicate) == 1 : "insert failed"; // cached but not yet committed
+        SormulaCacheTestRO duplicate = new SormulaCacheTestRO(test.getId(), 0, "duplicate " + test.getId());
+        assert getTable().insert(duplicate) == 1 : "insert failed"; // replaces test in cache
         confirmCached(duplicate);
         confirmNotCached(test);
         commit();
@@ -118,40 +108,15 @@ public class DeleteTest extends CacheTest<SormulaCacheTestRW>
         commit();
     }
     
-    
-    @Test
-    public void deleteNonexistentInsert() throws SormulaException
-    {
-        // test delete non existing row r1 then insert r2 is equivalent to save r2
-        begin();
-        
-        // delete to start with UncommittedDelete
-        SormulaCacheTestRW test = new SormulaCacheTestRW(404, 0, "nonexistent");
-        getTable().delete(test);
-        
-        // insert row with same key (different type and description)
-        SormulaCacheTestRW duplicate = new SormulaCacheTestRW(test.getId(), 0, "duplicate " + test.getId());
-        assert getTable().insert(duplicate) == 1 : "insert failed"; // cached but not yet committed
-        confirmCached(duplicate);
-        confirmNotCached(test);
-        commit();
-        
-        // confirm duplicate was inserted and test was not inserted
-        begin();
-        confirmInDatabase(duplicate);
-        confirmNotInDatabase(test);
-        commit();
-    }
-    
-    
+
     @Test
     public void deleteUpdate() throws SormulaException
     {
-        // test that delete r1 followed by update r2 is equivalent to delete r1
+        // test that delete r1 followed by update r2 is delete r1
         
         // insert test record into database
         begin();
-        SormulaCacheTestRW test = insertTestRow(405);
+        SormulaCacheTestRO test = insertTestRow(405);
         commit();
         confirmInDatabase(test);
         
@@ -160,7 +125,7 @@ public class DeleteTest extends CacheTest<SormulaCacheTestRW>
         
         // delete then update
         getTable().delete(test);
-        SormulaCacheTestRW updated = new SormulaCacheTestRW(test.getId(), 0, "no-op " + test.getId());
+        SormulaCacheTestRO updated = new SormulaCacheTestRO(test.getId(), 0, "no-op " + test.getId());
         getTable().update(updated);
         
         // should have ignored update
@@ -183,7 +148,7 @@ public class DeleteTest extends CacheTest<SormulaCacheTestRW>
         
         // insert test record into database
         begin();
-        SormulaCacheTestRW test = insertTestRow(406);
+        SormulaCacheTestRO test = insertTestRow(406);
         commit();
         confirmInDatabase(test);
         
@@ -191,7 +156,7 @@ public class DeleteTest extends CacheTest<SormulaCacheTestRW>
         getTable().getCache().evictAll(); // start with empty cache
         begin();
         getTable().delete(test);
-        SormulaCacheTestRW deleted = new SormulaCacheTestRW(test.getId(), 0, "no-op " + test.getId());
+        SormulaCacheTestRO deleted = new SormulaCacheTestRO(test.getId(), 0, "no-op " + test.getId());
         getTable().delete(deleted);
         commit();
         
@@ -212,12 +177,12 @@ public class DeleteTest extends CacheTest<SormulaCacheTestRW>
         {
             // insert test record into database
             begin();
-            SormulaCacheTestRW test = insertTestRow(407);
+            SormulaCacheTestRO test = insertTestRow(407);
             commit();
 
             // delete then rollback
             begin();
-            SormulaCacheTestRW deleted = new SormulaCacheTestRW(test.getId(), 0, "no-op " + test.getId());
+            SormulaCacheTestRO deleted = new SormulaCacheTestRO(test.getId(), 0, "no-op " + test.getId());
             getTable().delete(deleted);
             rollback();
             
@@ -228,7 +193,7 @@ public class DeleteTest extends CacheTest<SormulaCacheTestRW>
         }
     }
     
-    
+
     @Test
     public void deleteSelected() throws SormulaException
     {
@@ -236,7 +201,7 @@ public class DeleteTest extends CacheTest<SormulaCacheTestRW>
         
         // insert test row
         begin();
-        SormulaCacheTestRW test = insertTestRow(408);
+        SormulaCacheTestRO test = insertTestRow(408);
         commit();
         
         // delete test row to get it into cache as uncommitted delete
@@ -246,7 +211,7 @@ public class DeleteTest extends CacheTest<SormulaCacheTestRW>
         
         // select all type 400 rows (type 400 used by these tests)
         boolean tested = false;
-        for (SormulaCacheTestRW s : getTable().selectAllWhere("type", 400))
+        for (SormulaCacheTestRO s : getTable().selectAllWhere("type", 400))
         {
             // confirm that cached deleted row was NOT selected
             assert s.getId() != test.getId() : "selectAll returned deleted row " + s.getId();

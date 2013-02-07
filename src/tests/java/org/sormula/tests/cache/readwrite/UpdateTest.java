@@ -30,7 +30,7 @@ import org.testng.annotations.Test;
  * 
  * @author Jeff Miller
  */
-@Test(singleThreaded=true, groups="cache.update", dependsOnGroups="cache.insert")
+@Test(singleThreaded=true, groups="cache.readwrite.update", dependsOnGroups="cache.readwrite.insert")
 public class UpdateTest extends CacheTest<SormulaCacheTestRW>
 {
     @BeforeClass
@@ -44,7 +44,6 @@ public class UpdateTest extends CacheTest<SormulaCacheTestRW>
     @AfterClass
     public void tearDown() throws Exception
     {
-        getTable().getCache().log(); // TODO keep?
         closeDatabase();
     }
     

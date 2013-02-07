@@ -17,7 +17,39 @@
 
 
 /**
- * TODO
+ * Implementation of {@link org.sormula.cache.readonly.ReadOnlyCache}. It is
+ * specified with {@link org.sormula.annotation.cache.Cached#type()} by annotating a 
+ * row class, {@link org.sormula.Table}, or {@link org.sormula.Database}.
+ * <p>
+ * Specify cache on class that is used for row:
+ * <blockquote><pre>
+ * &#64;Cached(type=ReadOnlyCache.class)
+ * public class SomeRow 
+ * {
+ *     ...
+ * }
+ * </pre></blockquote>
+ * <p>
+ * Specify cache on Table class:
+ * <blockquote><pre>
+ * &#64;Cached(type=ReadOnlyCache.class)
+ * public class SomeTable extends Table&lt;SomeRow&gt; 
+ * {
+ *     ...
+ * }
+ * </pre></blockquote>
+ * <p>
+ * Specify cache on Database class (all tables will be cached):
+ * <blockquote><pre>
+ * &#64;Cached(type=ReadOnlyCache.class)
+ * public class SomeDatabase extends Database 
+ * {
+ *     ...
+ * }
+ * 
+ * SomeDatabase db = new SomeDatabase(...);
+ * Table&lt;SomeRow&gt; table = db.getTable(SomeRow.class);
+ * </pre></blockquote>
  * 
  * @since 3.0
  */

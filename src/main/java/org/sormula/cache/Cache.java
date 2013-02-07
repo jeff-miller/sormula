@@ -90,15 +90,15 @@ public interface Cache<R>
 	
 	
 	/**
-	 * Tests if cache contains a row with the primary key(s). This method should return true for
-	 * a row that is an uncommitted delete meaning that row is in cache but will be deleted when
-	 * transaction completes.
+	 * Tests if cache contains a row with the primary key(s). True is returned if cache has 
+	 * knowlege of any kind of row including one that has been deleted. For deleted rows, true
+	 * is returned meaning that row is in cache but will be deleted when transaction completes.
 	 * 
 	 * @param primaryKeys primary key(s) for one row 
 	 * @return true if cache contains a row for the primary key(s); false if not
 	 * @throws CacheException if error
 	 */
-	public boolean isAuthority(Object[] primaryKeys) throws CacheException;
+	public boolean contains(Object[] primaryKeys) throws CacheException;
 	
 	
 	/**
@@ -121,7 +121,7 @@ public interface Cache<R>
 	 * 
 	 * @param row row to insert
 	 * @return true if cache is authority for row (cache will insert row into database);
-	 * false if cache does not manage the row (row should be inserted by the operation that invoked this method)
+	 * false if cache does not insert row into database (row should be inserted by the operation that invoked this method)
 	 *  
 	 * @throws CacheException if error
 	 */
@@ -135,7 +135,7 @@ public interface Cache<R>
      * 
      * @param row row to update
      * @return true if cache is authority for row (cache will update row in database);
-     * false if cache does not manage the row (row should be updated by the operation that invoked this method)
+     * false if cache does not update row in database (row should be updated by the operation that invoked this method)
      *  
      * @throws CacheException if error
      */
@@ -149,7 +149,7 @@ public interface Cache<R>
      * 
      * @param row row to delete
      * @return true if cache is authority for row (cache will delete row from database);
-     * false if cache does not manage the row (row should be delete by the operation that invoked this method)
+     * false if cache does not delete row from database (row should be delete by the operation that invoked this method)
      *  
      * @throws CacheException if error
      */

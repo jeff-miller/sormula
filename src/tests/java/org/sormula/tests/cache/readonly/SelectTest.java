@@ -14,10 +14,10 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.sormula.tests.cache.readwrite;
+package org.sormula.tests.cache.readonly;
 
 import org.sormula.SormulaException;
-import org.sormula.cache.readwrite.ReadWriteCache;
+import org.sormula.cache.readonly.ReadOnlyCache;
 import org.sormula.tests.cache.CacheTest;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
@@ -25,18 +25,18 @@ import org.testng.annotations.Test;
 
 
 /**
- * Tests cached selects for {@link ReadWriteCache}. 
+ * Tests cached selects for {@link ReadOnlyCache}. 
  * 
  * @author Jeff Miller
  */
-@Test(singleThreaded=true, groups="cache.readwrite.select", dependsOnGroups="cache.readwrite.insert")
-public class SelectTest extends CacheTest<SormulaCacheTestRW>
+@Test(singleThreaded=true, groups="cache.readonly.select", dependsOnGroups="cache.readonly.insert")
+public class SelectTest extends CacheTest<SormulaCacheTestRO>
 {
     @BeforeClass
     public void setUp() throws Exception
     {
         openDatabase();
-        createTable(SormulaCacheTestRW.class);
+        createTable(SormulaCacheTestRO.class);
     }
     
     
@@ -47,9 +47,9 @@ public class SelectTest extends CacheTest<SormulaCacheTestRW>
     }
     
     
-    protected SormulaCacheTestRW insertTestRow(int id) throws SormulaException
+    protected SormulaCacheTestRO insertTestRow(int id) throws SormulaException
     {
-        SormulaCacheTestRW test = new SormulaCacheTestRW(id, 200, "Select test " + id);
+        SormulaCacheTestRO test = new SormulaCacheTestRO(id, 200, "Select test " + id);
         assert getTable().insert(test) == 1 : "insert failed";
         return test;
     }
@@ -60,7 +60,7 @@ public class SelectTest extends CacheTest<SormulaCacheTestRW>
     {
         // insert test record into database
         begin();
-        SormulaCacheTestRW test = insertTestRow(201);
+        SormulaCacheTestRO test = insertTestRow(201);
         commit();
         
         // confirm that select is from cache
@@ -77,25 +77,7 @@ public class SelectTest extends CacheTest<SormulaCacheTestRW>
     }
     
 
-    @Test
-    public void selectInsert() throws SormulaException
-    {
-        // insert test record into database
-        begin();
-        SormulaCacheTestRW test = insertTestRow(202);
-        commit();
-    
-        // confirm that select followed by insert is error
-        getTable().getCache().evictAll(); // start with nothing in cache
-        begin();
-        getTable().select(test.getId()); // causes UncommittedSelect to be added to cache
-        confirmDuplicateException(new SormulaCacheTestRW(test.getId(), 0, "duplicate"));
-        commit();
-        
-        begin();
-        confirmInDatabase(test); // confirm original insert is still in db
-        commit();
-    }
+    // selectInsert() is not needed since database will report duplicate inserts
     
     
     @Test
@@ -103,44 +85,36 @@ public class SelectTest extends CacheTest<SormulaCacheTestRW>
     {
         // insert test record into database
         begin();
-        SormulaCacheTestRW test1 = insertTestRow(203);
+        SormulaCacheTestRO test1 = insertTestRow(203);
         commit();
     
-        // confirm that select test1 followed by update test2 is equivalent to update test2
+        // confirm that select test1 followed by update test2 is cached as update test2
         getTable().getCache().evictAll(); // start with nothing in cache
         begin();
         getTable().select(test1.getId()); // causes UncommittedSelect to be added to cache
-        SormulaCacheTestRW test2 = new SormulaCacheTestRW(test1.getId(), 11, "update");
+        SormulaCacheTestRO test2 = new SormulaCacheTestRO(test1.getId(), 11, "update");
         assert getTable().update(test2) == 1 : "update failed";
         confirmCached(test2);
         commit();
-        
-        begin();
-        confirmInDatabase(test2); // confirm test2 was final result
-        commit();
     }
     
-    
+
     @Test
     public void selectDelete() throws SormulaException
     {
         // insert test record into database
         begin();
-        SormulaCacheTestRW test1 = insertTestRow(204);
+        SormulaCacheTestRO test1 = insertTestRow(204);
         commit();
     
-        // confirm that select test1 followed by delete test2 is equivalent to delete test2
+        // confirm that select test1 followed by delete test2 is cached as delete test2
         getTable().getCache().evictAll(); // start with nothing in cache
         begin();
         getTable().select(test1.getId()); // causes UncommittedSelect to be added to cache
-        SormulaCacheTestRW test2 = new SormulaCacheTestRW(test1.getId(), 11, "delete");
+        SormulaCacheTestRO test2 = new SormulaCacheTestRO(test1.getId(), 11, "delete");
         assert getTable().delete(test2) == 1 : "delete failed";
         confirmNotCached(test1);
         confirmNotCached(test2);
-        commit();
-        
-        begin();
-        confirmNotInDatabase(test2); // confirm test2 was deleted
         commit();
     }
     
@@ -151,7 +125,7 @@ public class SelectTest extends CacheTest<SormulaCacheTestRW>
         if (isUseTransacation()) // only test if transactions are used
         {
             begin();
-            SormulaCacheTestRW test = insertTestRow(205);
+            SormulaCacheTestRO test = insertTestRow(205);
             commit();
          
             // confirm that select followed by rollback does not cache the select
@@ -175,18 +149,18 @@ public class SelectTest extends CacheTest<SormulaCacheTestRW>
         
         // insert test row
         begin();
-        SormulaCacheTestRW test = insertTestRow(206);
+        SormulaCacheTestRO test = insertTestRow(206);
         commit();
         
         // select test row to get it into cache as uncommitted select
         getTable().getCache().evictAll(); // start with empty cache
         begin();
-        SormulaCacheTestRW testCached = getTable().select(test.getId());
+        SormulaCacheTestRO testCached = getTable().select(test.getId());
         confirmCached(testCached);
         
         // select all type 200 rows (insertTestRow inserts type 200)
         boolean tested = false;
-        for (SormulaCacheTestRW s : getTable().selectAllWhere("type", 200))
+        for (SormulaCacheTestRO s : getTable().selectAllWhere("type", 200))
         {
             if (s.getId() == test.getId())
             {

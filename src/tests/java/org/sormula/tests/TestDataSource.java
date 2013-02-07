@@ -71,7 +71,7 @@ public class TestDataSource implements DataSource
     }
 
     /* required for jdk 7 */
-    public Logger getParentLogger() /* jdk 7 only: throws SQLFeatureNotSupportedException */
+    public Logger getParentLogger() throws SQLFeatureNotSupportedException 
     {
         return null;
     }

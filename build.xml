@@ -196,7 +196,7 @@
     </target>
 	
 	<target name="lib" description="Creates sormula.jar" depends="compile-main">
-		<property name="lib.jar" value="sormula-${version}.jar"/>
+		<property name="lib.jar" value="sormula-${version}${dist.suffix}.jar"/>
 	    <jar jarfile="${lib.jar}" basedir="${target}"
 	            excludes="org/sormula/examples/**/* 
 	      	              org/sormula/tests/**/*"

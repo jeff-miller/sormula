@@ -34,7 +34,6 @@ import javax.naming.NamingException;
 import javax.naming.spi.NamingManager;
 import javax.sql.DataSource;
 
-import org.sormula.Database;
 import org.sormula.SormulaException;
 import org.sormula.Table;
 import org.sormula.log.ClassLogger;
@@ -93,7 +92,7 @@ public class DatabaseTest<R>
     String user;
     String password;
     DataSource dataSource;
-    Database database;
+    TestDatabase database;
     Table<R> table;
     String qualifiedTableName;
     Random random = new Random(testSeed);
@@ -141,6 +140,12 @@ public class DatabaseTest<R>
     }
 
 
+    public boolean isUseTransacation()
+    {
+        return useTransacation;
+    }
+
+
     public void openDatabase() throws Exception
     {
         openDatabase(false);
@@ -170,14 +175,14 @@ public class DatabaseTest<R>
             // use connection
             dataSourceDatabase = false;
             Connection connection = getConnection();
-            database = new Database(connection, schema);
+            database = new TestDatabase(connection, schema);
         }
         else if (dataSourceName.equals(""))
         {
             // use data source directly (not through JNDI)
             dataSourceDatabase = true;
             dataSource = new TestDataSource(this); // simulated data source
-            database = new Database(dataSource, schema);
+            database = new TestDatabase(dataSource, schema);
         }
         else 
         {
@@ -186,7 +191,7 @@ public class DatabaseTest<R>
             dataSource = new TestDataSource(this); // simulated data source
             InitialContext ic = new InitialContext();
             ic.bind(dataSourceName, dataSource); // put data source in context for JNDI lookups
-            database = new Database(dataSourceName, schema);
+            database = new TestDatabase(dataSourceName, schema);
         }
         database.setTimings(Boolean.parseBoolean(System.getProperty("timings")));
     }
@@ -232,25 +237,35 @@ public class DatabaseTest<R>
     
     protected void createTable(String ddl) throws Exception
     {
-        // drop table if already exists from previous test
+        begin();
         try
         {
-            dropTable();
-            log.debug("existing table " + qualifiedTableName + " was dropped before creating new version");
+            try
+            {
+                // drop table if already exists from previous test
+                dropTable();
+                log.debug("existing table " + qualifiedTableName + " was dropped before creating new version");
+            }
+            catch (SQLException e)
+            {
+                // ignore table does not exist exception
+                log.debug("exception dropping " + qualifiedTableName + " :" + e.getMessage());
+            }
+            
+            log.debug(ddl);
+            Connection connection = getConnection();
+            Statement statement = connection.createStatement();
+            statement.executeUpdate(ddl);
+            statement.close();
+            if (useTransacation) connection.commit();
+            connection.close();
+            commit();
         }
-        catch (SQLException e)
+        catch (SormulaException e)
         {
-            // ignore table does not exist exception
-            log.debug("exception dropping " + qualifiedTableName + " :" + e.getMessage());
+            log.error("error creating table " + qualifiedTableName, e);
+            rollback();
         }
-        
-        log.debug(ddl);
-        Connection connection = getConnection();
-        Statement statement = connection.createStatement();
-        statement.executeUpdate(ddl);
-        statement.close();
-        if (useTransacation) connection.commit();
-        connection.close();
     }
     
     
@@ -320,6 +335,15 @@ public class DatabaseTest<R>
             getDatabase().getTransaction().commit();
         }
     }
+    
+    
+    public void rollback() throws SormulaException
+    {
+        if (useTransacation)
+        {
+            getDatabase().getTransaction().rollback();
+        }
+    }
 
 
     public DataSource getDataSource()
@@ -328,7 +352,7 @@ public class DatabaseTest<R>
     }
 
 
-    public Database getDatabase()
+    public TestDatabase getDatabase()
     {
         return database;
     }

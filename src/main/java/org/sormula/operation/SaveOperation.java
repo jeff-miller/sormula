@@ -184,6 +184,51 @@ public class SaveOperation<R> extends ModifyOperation<R>
         updateOperation.close();
     }
 
+    
+    /**
+     * Sets batch state for internal insert and update operations.
+     * 
+     * @param batch true for batch save 
+     * @since 3.0
+     */
+    @Override
+    public void setBatch(boolean batch)
+    {
+        super.setBatch(batch);
+        insertOperation.setBatch(batch);
+        updateOperation.setBatch(batch);
+    }
+
+
+    /**
+     * Sets cached enabled state for internal insert and update operations.
+     * 
+     * @param cached true to enable cache; false to turn off caching
+     * @since 3.0
+     */
+    @Override
+    public void setCached(boolean cached)
+    {
+        super.setCached(cached);
+        insertOperation.setCached(cached);
+        updateOperation.setCached(cached);
+    }
+
+
+    /**
+     * Sets cascade state for internal insert and update operations.
+     * 
+     * @param cascade true to allow cascades to occur; false for no cascading
+     * @since 3.0
+     */
+    @Override
+    public void setCascade(boolean cascade)
+    {
+        super.setCascade(cascade);
+        insertOperation.setCascade(cascade);
+        updateOperation.setCascade(cascade);
+    }
+
 
     /**
      * Saves a row. Set parameters, executes, closes. 
@@ -376,4 +421,32 @@ public class SaveOperation<R> extends ModifyOperation<R>
 		// indicate to invoke InsertOperation/UpdateOperation equivalent method
 		invokeSuper = true;
 	}
+
+
+    /**
+     * Not used since {@link #execute()} delegates to {@link InsertOperation} and/or
+     * {@link UpdateOperation}.
+     * 
+     * @param row ignored
+     * @return false
+     * @since 3.0
+     */
+    @Override
+    protected boolean notifyCacheModify(R row) throws OperationException
+    {
+        return false;
+    }
+
+
+    /**
+     * Does nothing since {@link #execute()} delegates to {@link InsertOperation} and/or
+     * {@link UpdateOperation}.
+     * 
+     * @param row ignored
+     * @since 3.0
+     */
+    @Override
+    public void notifyCacheModified(R row) throws OperationException
+    {
+    }
 }

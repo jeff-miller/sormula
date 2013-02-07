@@ -25,6 +25,8 @@ import java.util.List;
 import org.sormula.Table;
 import org.sormula.annotation.cascade.DeleteCascade;
 import org.sormula.annotation.cascade.DeleteCascadeAnnotationReader;
+import org.sormula.cache.Cache;
+import org.sormula.cache.CacheException;
 import org.sormula.log.ClassLogger;
 import org.sormula.operation.cascade.CascadeOperation;
 import org.sormula.operation.cascade.DeleteCascadeOperation;
@@ -178,5 +180,49 @@ public class DeleteOperation<R> extends ModifyOperation<R>
         }
         
         return co;
+    }
+
+
+    /**
+     * Tests if row is managed by cache. Delegates to {@link Cache#delete(Object)}.
+     * 
+     * @param row test this row
+     * @return true if cache will delete the row from database when appropriate;
+     * false if this operation should delete row from database
+     * @throws OperationException if cache reports an error
+     * @since 3.0
+     */
+    @Override
+    protected boolean notifyCacheModify(R row) throws OperationException
+    {
+        try
+        {
+            return getTable().getCache().delete(row);
+        }
+        catch (CacheException e)
+        {
+            throw new OperationException("cache error", e);
+        }
+    }
+
+
+    /**
+     * Notifies cache that row has been deleted from database. Delegates to {@link Cache#deleted(Object)}.
+     * 
+     * @param row row that was deleted
+     * @throws OperationException if cache reports an error
+     * @since 3.0
+     */
+    @Override
+    public void notifyCacheModified(R row) throws OperationException
+    {
+        try
+        {
+            getTable().getCache().deleted(row);
+        }
+        catch (CacheException e)
+        {
+            throw new OperationException("cache error", e);
+        }
     }
 }

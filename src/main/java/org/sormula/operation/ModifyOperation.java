@@ -22,11 +22,14 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Map;
 
+import org.sormula.Database;
 import org.sormula.Table;
 import org.sormula.annotation.cascade.DeleteCascade;
 import org.sormula.annotation.cascade.InsertCascade;
 import org.sormula.annotation.cascade.SaveCascade;
 import org.sormula.annotation.cascade.UpdateCascade;
+import org.sormula.cache.Cache;
+import org.sormula.cache.CacheException;
 import org.sormula.log.ClassLogger;
 import org.sormula.operation.monitor.OperationTime;
 
@@ -149,7 +152,12 @@ public abstract class ModifyOperation<R> extends SqlOperation<R>
      * JDBC batch mode. Batch mode does not support identity columns or cascades. Auto commit must 
      * be off for batch mode. {@link #preExecute(Object)} is invoked prior to batch add and 
      * {@link #postExecute(Object)} is invoked after batch execute.
-     *  
+     * <p>
+     * Batch modifications are not cached. So when batch is true and table is cached, then 
+     * table cache is flushed prior to executing batch modifications to avoid inconsistencies in
+     * cache. {@link Database#flush()} may be required if batched rows affect foreign key
+     * relationships.
+     * 
      * @param batch true to use JDBC batching for {@link #execute()}
      * @since 1.9 and 2.3
      * @see PreparedStatement#executeBatch()
@@ -177,6 +185,19 @@ public abstract class ModifyOperation<R> extends SqlOperation<R>
     {
         if (readOnly) throw new OperationException("Attempt to modify with read-only operation");
             
+        if (isCached())
+        {
+            try
+            {
+                // notify cache of start of execution
+                getTable().getCache().execute(this);
+            }
+            catch (CacheException e)
+            {
+                throw new OperationException("execute error", e);
+            }
+        }
+
         initOperationTime();
         prepareCheck();
         int allRowsAffected = 0; 
@@ -186,8 +207,13 @@ public abstract class ModifyOperation<R> extends SqlOperation<R>
         {
             PreparedStatement ps = getPreparedStatement();
             
-            if (isBatch())
+            if (batch)
             {
+                if (log.isDebugEnabled()) log.debug("begin batch");
+                
+                // batch modifications are not cached, flush to avoid inconsistencies
+                getTable().flush();
+                
                 // execute all rows as a batch
                 if (rows != null && rows.size() > 0) 
                 {
@@ -230,23 +256,52 @@ public abstract class ModifyOperation<R> extends SqlOperation<R>
                 // operation parameters from rows
                 for (R row: rows)
                 {
-                    if (log.isDebugEnabled()) log.debug("write parameters from row=" + row);
+                    boolean cacheAuthority = false;
                     
-                    setNextParameter(1);
-                    preExecuteCascade(row);
-                    preExecute(row);
-                    operationTime.startWriteTime();
-                    writeColumns(row);
-                    writeWhere(row);
-                    operationTime.stop();
+                    if (isCached())
+                    {
+                        if (log.isDebugEnabled()) log.debug("modify cache " + table.getRowClass());
+                        if (notifyCacheModify(row))
+                        {
+                            // cache will modify database, assume 1 row will be modified
+                            ++allRowsAffected;
+                            cacheAuthority = true;
+                            
+                            if (isCascade())
+                            {
+                                // target tables must be cascaded now for consistency
+                                preExecuteCascade(row);
+                                postExecuteCascade(row);
+                            }
+                        }
+                    }
                     
-                    if (log.isDebugEnabled()) log.debug("execute update row=" + row);
-                    operationTime.startExecuteTime();
-                    allRowsAffected += ps.executeUpdate();
-                    operationTime.stop();
-                    
-                    postExecute(row);
-                    postExecuteCascade(row);
+                    if (!cacheAuthority)
+                    {
+                        // cache will not modify database for row
+                        if (log.isDebugEnabled()) log.debug("write parameters from row=" + row);
+                        setNextParameter(1);
+                        if (isCascade()) preExecuteCascade(row);
+                        preExecute(row);
+                        operationTime.startWriteTime();
+                        writeColumns(row);
+                        writeWhere(row);
+                        operationTime.stop();
+                        
+                        if (log.isDebugEnabled()) log.debug("execute update row=" + row);
+                        operationTime.startExecuteTime();
+                        int updateCount = ps.executeUpdate();
+                        allRowsAffected += updateCount; 
+                        operationTime.stop();
+                        postExecute(row);
+                        if (isCascade()) postExecuteCascade(row);
+                        
+                        if (isCached() && updateCount > 0)
+                        {
+                            // notify cache that database was modified with row
+                            notifyCacheModified(row);
+                        }
+                    }
                 }
             }
             else if (getParameters() != null)
@@ -408,4 +463,26 @@ public abstract class ModifyOperation<R> extends SqlOperation<R>
     {
         this.rowsAffected = rowsAffected;
     }
+    
+    
+    /**
+     * Delegates to {@link Cache#insert(Object)}, {@link Cache#update(Object)},
+     * {@link Cache#delete(Object)} based upon the subclass operation.
+
+     * @param row row to be modified
+     * @return true if cache is authority for row (cache will modify row in database);
+     * false if cache does not modify the database 
+     * @since 3.0
+     */
+    protected abstract boolean notifyCacheModify(R row) throws OperationException;
+    
+    
+    /**
+     * Delegates to {@link Cache#inserted(Object)}, {@link Cache#updated(Object)},
+     * {@link Cache#deleted(Object)} based upon the subclass operation.
+
+     * @param row that was modified in database
+     * @since 3.0
+     */
+    protected abstract void notifyCacheModified(R row) throws OperationException;
 }

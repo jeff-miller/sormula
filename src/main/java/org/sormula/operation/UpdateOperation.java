@@ -25,6 +25,8 @@ import java.util.List;
 import org.sormula.Table;
 import org.sormula.annotation.cascade.UpdateCascade;
 import org.sormula.annotation.cascade.UpdateCascadeAnnotationReader;
+import org.sormula.cache.Cache;
+import org.sormula.cache.CacheException;
 import org.sormula.log.ClassLogger;
 import org.sormula.operation.cascade.CascadeOperation;
 import org.sormula.operation.cascade.UpdateCascadeOperation;
@@ -183,4 +185,48 @@ public class UpdateOperation<R> extends ModifyOperation<R>
         
         return co;
     }        
+
+
+    /**
+     * Tests if row is managed by cache. Delegates to {@link Cache#update(Object)}.
+     * 
+     * @param row test this row
+     * @return true if cache will update the row in database when appropriate;
+     * false if this operation should update database
+     * @throws OperationException if cache reports an error
+     * @since 3.0
+     */
+    @Override
+    protected boolean notifyCacheModify(R row) throws OperationException
+    {
+        try
+        {
+            return getTable().getCache().update(row);
+        }
+        catch (CacheException e)
+        {
+            throw new OperationException("cache error", e);
+        }
+    }
+
+
+    /**
+     * Notifies cache that row has been updated into database. Delegates to {@link Cache#updated(Object)}.
+     * 
+     * @param row row that was updated
+     * @throws OperationException if cache reports an error
+     * @since 3.0
+     */
+    @Override
+    public void notifyCacheModified(R row) throws OperationException
+    {
+        try
+        {
+            getTable().getCache().updated(row);
+        }
+        catch (CacheException e)
+        {
+            throw new OperationException("cache error", e);
+        }
+    }
 }

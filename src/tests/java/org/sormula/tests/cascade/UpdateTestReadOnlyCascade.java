@@ -46,7 +46,7 @@ public class UpdateTestReadOnlyCascade extends DatabaseTest<SormulaTestParentRea
         closeDatabase();
     }
     
-    
+
     @Test
     public void updateOneToOne() throws SormulaException
     {
@@ -62,6 +62,12 @@ public class UpdateTestReadOnlyCascade extends DatabaseTest<SormulaTestParentRea
         assert parentTable.insert(parent) == 1: "1:1 test set up parent not inserted";
         assert child1Table.insert(child1) == 1: "1:1 test set up child not inserted";
         
+        if (child1Table.isCached())
+        {
+            // avoid modifying cache reference
+            child1Table.flush(); 
+        }
+
         // test update on 1 to 1 relationship
         child1.setDescription(child1.getDescription() + " updated1 roc");
         assert parentTable.update(parent) == 1 : "1:1 parent was not updated";
@@ -74,7 +80,7 @@ public class UpdateTestReadOnlyCascade extends DatabaseTest<SormulaTestParentRea
         
         commit();
     }
-    
+
     
     @Test
     public void updateOneToManyList() throws SormulaException
@@ -90,10 +96,15 @@ public class UpdateTestReadOnlyCascade extends DatabaseTest<SormulaTestParentRea
         assert parentTable.insert(parent) == 1: "1:n test set up parent not inserted";
         assert childNTable.insert(childN) == 1: "1:n test set up child not inserted";
         
-        // test update on 1 to n relationship        
+        // test update on 1 to n relationship
+        
+        // use different objects to avoid modifying cache references (if test is used with cached tables)
+        parent = new SormulaTestParentReadOnlyCascade(970, "parent roc 970");
+        childN = new SormulaTestChildNReadOnlyCascade(9970, "child roc of parent 970"); 
         childN.setDescription(childN.getDescription() + " updatedN roc");
+        parent.add(childN);
         assert parentTable.update(parent) == 1 : "1:n parent was not updated";
-                
+        
         // select directly to test that child was NOT updated
         SormulaTestChildNReadOnlyCascade selectedChildN = childNTable.select(childN.getId());
         assert selectedChildN != null : "1:n no child " + childN.getId();

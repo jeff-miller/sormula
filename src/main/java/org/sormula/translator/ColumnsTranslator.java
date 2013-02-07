@@ -105,7 +105,7 @@ public class ColumnsTranslator<R>
      */
     public int read(ResultSet resultSet, int columnIndex, R row) throws TranslatorException
     {
-        if (log.isDebugEnabled()) log.debug("read columnIndex=" + columnIndex + " row=" + row);
+        if (log.isDebugEnabled()) log.debug("read() columnIndex=" + columnIndex + " row=" + row);
         int p = columnIndex;
         
         try
@@ -114,7 +114,7 @@ public class ColumnsTranslator<R>
             {
                 if (includeIdentityColumns || !c.isIdentity())
                 {
-                    if (log.isDebugEnabled()) log.debug("read result set parameter " + p);
+                    if (log.isDebugEnabled()) log.debug("read() result set parameter " + p);
                     c.read(resultSet, p, row);
                     ++p;
                 }
@@ -141,7 +141,7 @@ public class ColumnsTranslator<R>
      */
     public int write(PreparedStatement preparedStatement, int parameterIndex, R row) throws TranslatorException
     {
-        if (log.isDebugEnabled()) log.debug("write parameterIndex=" + parameterIndex + " row=" + row);
+        if (log.isDebugEnabled()) log.debug("write() parameterIndex=" + parameterIndex + " row=" + row);
         int p = parameterIndex;
         
         try
@@ -150,7 +150,7 @@ public class ColumnsTranslator<R>
             {
                 if (includeIdentityColumns || !c.isIdentity())
                 {
-                    if (log.isDebugEnabled()) log.debug("write parameter " + p);
+                    if (log.isDebugEnabled()) log.debug("write() parameter " + p);
                     c.write(preparedStatement, p, row);
                     ++p;
                 }

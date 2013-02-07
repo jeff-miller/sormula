@@ -7,6 +7,9 @@ import org.sormula.SormulaException;
 import org.sormula.Table;
 import org.sormula.active.ActiveDatabase;
 import org.sormula.active.ActiveRecord;
+import org.sormula.annotation.cache.Cached;
+import org.sormula.annotation.cache.CachedAnnotationReader;
+import org.sormula.cache.Cache;
 import org.sormula.translator.RowTranslator;
 import org.sormula.translator.TranslatorException;
 
@@ -39,6 +42,29 @@ public class OperationTable<R extends ActiveRecord> extends Table<R>
     {
         super(operationDatabase, rowClass);
         this.activeDatabase = operationDatabase.getActiveDatabase();
+    }
+    
+    
+    /**
+     * Looks for {@link Cache} annotation in record, {@link OperationDatabase}, and {@link ActiveDatabase}.
+     * 
+     * {@inheritDoc}
+     */
+    protected Cached initCachedAnnotation()
+    {
+        // must get active database from operation database since activeDatabase not yet initialized
+        OperationDatabase odb = (OperationDatabase)getDatabase();
+        
+        if (isLegacyAnnotationPrecedence())
+        {
+            // table, row, database
+            return new CachedAnnotationReader(getClass(), getRowClass(), odb.getActiveDatabase().getClass()).getAnnotation();
+        }
+        else
+        {
+            // row, table, database
+            return new CachedAnnotationReader(getRowClass(), getClass(), odb.getActiveDatabase().getClass()).getAnnotation();
+        }
     }
     
     

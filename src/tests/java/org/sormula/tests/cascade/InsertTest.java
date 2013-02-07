@@ -91,7 +91,7 @@ public class InsertTest extends DatabaseTest<SormulaTestParent>
         closeDatabase();
     }
     
-    
+
     @Test
     public void insertOneToOne() throws SormulaException
     {
@@ -114,7 +114,7 @@ public class InsertTest extends DatabaseTest<SormulaTestParent>
         Table<SormulaTestChild1> child1Table = getDatabase().getTable(SormulaTestChild1.class);
         assert child1Table.select(child1.getId()) != null : "child " + child1.getId() + " was not inserted"; 
     }
-    
+
     
     @Test
     public void insertOneToManyList() throws SormulaException

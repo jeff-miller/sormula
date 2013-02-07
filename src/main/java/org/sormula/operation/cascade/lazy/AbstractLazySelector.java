@@ -261,7 +261,7 @@ abstract public class AbstractLazySelector<R> implements LazySelectable, Seriali
      */
     public void checkLazySelects(String fieldName) throws LazyCascadeException
     {
-        if (log.isDebugEnabled()) log.debug("checkLazySelects " + fieldName);
+        if (log.isDebugEnabled()) log.debug("checkLazySelects() " + fieldName);
         if (pendingLazySelects)
         {
             // row has been identified with lazy selects
@@ -303,7 +303,7 @@ abstract public class AbstractLazySelector<R> implements LazySelectable, Seriali
     {
         try
         {
-            if (log.isDebugEnabled()) log.debug("lazySelect " + field.getName());
+            if (log.isDebugEnabled()) log.debug("lazySelect() " + field.getName());
             
             // init loop variables
             SelectCascadeAnnotationReader scar = new SelectCascadeAnnotationReader(field);
@@ -356,7 +356,7 @@ abstract public class AbstractLazySelector<R> implements LazySelectable, Seriali
         try
         {
             // delay init until first cascade request so less cpu time if no cascades are needed
-            if (log.isDebugEnabled()) log.debug("initPendingLazySelectCascadeFields for source=" + source);
+            if (log.isDebugEnabled()) log.debug("initPendingLazySelectCascadeFields() for source=" + source);
             
             // create map of field name to field for all that contain lazy select cascade
             List<Field> lazyFields = getDatabase().getTable(source.getClass()).getLazySelectCascadeFields();

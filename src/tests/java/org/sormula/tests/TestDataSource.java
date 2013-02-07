@@ -70,15 +70,18 @@ public class TestDataSource implements DataSource
         return 0;
     }
 
-    /* jdk 7 (remaining methods) */
-    public Logger getParentLogger() throws SQLFeatureNotSupportedException
+    /* required for jdk 7 */
+    public Logger getParentLogger() /* jdk 7 only: throws SQLFeatureNotSupportedException */
     {
         return null;
     }
+    /* required for jdk 7 */
     public <T> T unwrap(Class<T> iface) throws SQLException
     {
         return null;
     }
+
+    /* required for jdk 7 */
     public boolean isWrapperFor(Class<?> iface) throws SQLException
     {
         return false;

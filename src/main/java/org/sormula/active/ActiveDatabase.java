@@ -26,6 +26,7 @@ import javax.naming.NamingException;
 import javax.sql.DataSource;
 
 import org.sormula.Database;
+import org.sormula.SormulaException;
 import org.sormula.Table;
 import org.sormula.annotation.Column;
 import org.sormula.operation.ModifyOperation;
@@ -333,5 +334,27 @@ public class ActiveDatabase implements Serializable
     public void setTimings(boolean timings)
     {
         this.timings = timings;
+    }
+    
+    
+    /**
+     * Writes all uncommitted cache to the database and removes all cached records. Delegates
+     * to {@link Database#flush()}.
+     * 
+     * @since 3.0
+     */
+    public void flush()
+    {
+        if (activeTransaction != null)
+        {
+            try
+            {
+                activeTransaction.getOperationTransaction().getOperationDatabase().flush();
+            }
+            catch (SormulaException e)
+            {
+                throw new ActiveException("flush error", e);
+            }
+        }
     }
 }

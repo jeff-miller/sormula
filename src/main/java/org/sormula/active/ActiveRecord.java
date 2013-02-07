@@ -210,7 +210,7 @@ public abstract class ActiveRecord<R extends ActiveRecord<R>> implements LazySel
      */
     public void checkLazySelects(String fieldName) throws ActiveException
     {
-        if (log.isDebugEnabled()) log.debug("lazySelectCascade check " + fieldName);
+        if (log.isDebugEnabled()) log.debug("checkLazySelects() " + fieldName);
         
         if (pendingLazySelects)
         {
@@ -219,7 +219,7 @@ public abstract class ActiveRecord<R extends ActiveRecord<R>> implements LazySel
             if (pendingLazySelectFieldNames == null)
             {
                 // initialize upon first request
-                if (log.isDebugEnabled()) log.debug("lazySelectCascade determine lazy fields");
+                if (log.isDebugEnabled()) log.debug("checkLazySelects() determine lazy fields");
                 pendingLazySelectFieldNames = new HashSet<>();
                 
                 // for all fields
@@ -283,7 +283,10 @@ public abstract class ActiveRecord<R extends ActiveRecord<R>> implements LazySel
      */
     protected ActiveTable<R> createTable() throws ActiveException
     {
-        if (activeDatabase == null) return new ActiveTable<>(recordClass);
-        else return new ActiveTable<>(activeDatabase, recordClass);
+        ActiveTable<R> activeTable;
+        if (activeDatabase == null) activeTable = new ActiveTable<R>(recordClass);
+        else                        activeTable = new ActiveTable<R>(activeDatabase, recordClass);
+        if (log.isDebugEnabled()) log.debug("createTable() " + activeTable);
+        return activeTable;
     }
 }

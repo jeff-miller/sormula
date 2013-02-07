@@ -29,6 +29,7 @@ import org.sormula.operation.ArrayListSelectOperation;
 import org.sormula.operation.LinkedHashMapSelectOperation;
 import org.sormula.operation.ListSelectOperation;
 import org.sormula.tests.DatabaseTest;
+import org.sormula.tests.TestDatabase;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
@@ -69,7 +70,7 @@ public class SelectTest extends DatabaseTest<SormulaTestA>
     
     
     @Override
-    public Database getDatabase()
+    public TestDatabase getDatabase()
     {
         return db;
     }

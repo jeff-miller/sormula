@@ -64,4 +64,9 @@ public @interface Where
      * @return array of column conditions in where condition
      */
     WhereField[] whereFields() default {};
+    
+    
+    // TODO int maxRows(); ?
+    // TODO int fetchSize(); ?
+    // TODO limit(); ?
 }

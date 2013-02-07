@@ -24,6 +24,7 @@ import org.sormula.Table;
 import org.sormula.active.ActiveDatabase;
 import org.sormula.active.ActiveRecord;
 import org.sormula.annotation.ExplicitTypeAnnotationReader;
+import org.sormula.log.ClassLogger;
 import org.sormula.translator.NameTranslator;
 
 
@@ -38,6 +39,7 @@ import org.sormula.translator.NameTranslator;
  */
 public class OperationDatabase extends Database
 {
+    private static final ClassLogger log = new ClassLogger();
     ActiveDatabase activeDatabase;
     
     
@@ -84,7 +86,7 @@ public class OperationDatabase extends Database
      * Cascade operations for Table<R> may invoke getTable for some cascaded Table<T> where T is different from R.
      */
     @Override
-    @SuppressWarnings("unchecked") // can't change signature to R<extends ActiveRecord>
+    @SuppressWarnings("unchecked") // can't change signature to R<? extends ActiveRecord>
     public <R> Table<R> getTable(Class<R> rowClass) throws SormulaException
     {
         Table<R> table = getTable(rowClass, false);
@@ -92,8 +94,9 @@ public class OperationDatabase extends Database
         if (table == null)
         {
             // init row translator that sets the active database
+            if (log.isDebugEnabled()) log.debug("create OperationTable for " + rowClass.getCanonicalName());
             table = (Table<R>)new OperationTable<>(this, (Class<ActiveRecord>)rowClass);
-            
+
             // add it for reuse
             addTable(table);
         }

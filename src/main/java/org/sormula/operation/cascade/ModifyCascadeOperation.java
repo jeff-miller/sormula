@@ -65,7 +65,7 @@ public abstract class ModifyCascadeOperation<S, T> extends CascadeOperation<S, T
     {
         try
         {
-            if (log.isDebugEnabled()) log.debug("cascade " + getTargetField().getField());
+            if (log.isDebugEnabled()) log.debug("cascade() " + getTargetField().getField());
             Object value = getTargetField().invokeGetMethod(sourceRow);
             
             if (value != null)

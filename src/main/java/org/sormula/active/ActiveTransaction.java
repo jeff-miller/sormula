@@ -82,7 +82,9 @@ public class ActiveTransaction
     {
         try
         {
-            operationTransaction = new OperationTransaction(new OperationDatabase(activeDatabase));
+            OperationDatabase odb = new OperationDatabase(activeDatabase);
+            operationTransaction = new OperationTransaction(odb);
+            odb.setTransaction(operationTransaction);
         }
         catch (Exception e)
         {
@@ -127,7 +129,7 @@ public class ActiveTransaction
     {
         try
         {
-            if (log.isDebugEnabled()) log.debug("begin");
+            if (log.isDebugEnabled()) log.debug("begin()");
             operationTransaction.begin();
             activeDatabase.setActiveTransaction(this); // important: if begin() fails, this does not happen
         }
@@ -150,7 +152,7 @@ public class ActiveTransaction
     {
         try
         {
-            if (log.isDebugEnabled()) log.debug("commit");
+            if (log.isDebugEnabled()) log.debug("commit()");
             operationTransaction.commit();
         }
         catch (SormulaException e)
@@ -175,7 +177,7 @@ public class ActiveTransaction
     {
         try
         {
-            if (log.isDebugEnabled()) log.debug("rollback");
+            if (log.isDebugEnabled()) log.debug("rollback()");
             operationTransaction.rollback();
         }
         catch (SormulaException e)

@@ -34,6 +34,8 @@ import org.sormula.annotation.WhereAnnotationReader;
 import org.sormula.annotation.cascade.Cascade;
 import org.sormula.annotation.cascade.OneToManyCascade;
 import org.sormula.annotation.cascade.OneToOneCascade;
+import org.sormula.cache.CacheException;
+import org.sormula.cache.writable.WriteOperations;
 import org.sormula.log.ClassLogger;
 import org.sormula.operation.cascade.CascadeOperation;
 import org.sormula.operation.monitor.NoOperationTime;
@@ -78,6 +80,9 @@ public abstract class SqlOperation<R> implements AutoCloseable
     boolean timings;
     boolean readOnly;
     int queryTimeout;
+    boolean primaryKey;
+    boolean cached;
+    boolean cascade;
     
 
     /**
@@ -101,6 +106,8 @@ public abstract class SqlOperation<R> implements AutoCloseable
         connection = database.getConnection();
         setTimings(database.isTimings()); // default to database setting
         setReadOnly(database.isReadOnly()); // default to database setting
+        cached = table.isCached(); // default, change with setCached()
+        cascade = true;
     }
     
     
@@ -185,6 +192,61 @@ public abstract class SqlOperation<R> implements AutoCloseable
 
 
     /**
+     * Gets the caching mode.
+     * 
+     * @return true if caching is enabled; false if no caching is performed
+     * @since 3.0
+     */
+    public boolean isCached()
+    {
+        return cached;
+    }
+
+
+    /**
+     * Sets the cache mode for this operation. True by default. Set to false by {@link WriteOperations}
+     * when writing cache changeds to the database.
+     * <p>
+     * Setting to true enables caching only if Cached annotation is specified for row/table.
+     * 
+     * @param cached true to allow caching; false to prevent caching of rows for this operation
+     * @since 3.0
+     */
+    public void setCached(boolean cached)
+    {
+        this.cached = cached;
+    }
+
+
+    /**
+     * Gets cascade status. Default is true unless turned off by {@link #setCascade(boolean)}.
+     * 
+     * @return true if caching is to be used; false if not caching
+     * @since 3.0
+     */
+    public boolean isCascade()
+    {
+        return cascade;
+    }
+
+
+    /**
+     * Sets whether cascades are enabled for this operation. Default is true. If false, then
+     * cascades will not occur if they are defined for the row.
+     * <p>
+     * Set to false by {@link WriteOperations} when writing cache changes to the database since
+     * cascades for cached tables are performed at the time the row is put into cache.
+     * 
+     * @param cascade true to perform cascades; false to ignore cascades
+     * @since 3.0
+     */
+    public void setCascade(boolean cascade)
+    {
+        this.cascade = cascade;
+    }
+
+
+    /**
      * Prepares statement and then sets all parameters with {@link PreparedStatement#setObject(int, Object)}.
      * {@link #prepareCheck()} or {@link #prepare()} must be invoked prior to using this method.
      * 
@@ -196,7 +258,7 @@ public abstract class SqlOperation<R> implements AutoCloseable
         
         if (getParameters() != null)
         {
-	        if (log.isDebugEnabled()) log.debug("writeParameters parameters from objects");
+	        if (log.isDebugEnabled()) log.debug("writeParameters() parameters from objects");
 	        AbstractWhereTranslator<R> wt = getWhereTranslator();
 	        boolean inOperator = wt != null && wt.isCollectionOperand();
 	        
@@ -204,7 +266,7 @@ public abstract class SqlOperation<R> implements AutoCloseable
 	        {
 	            for (Object p: parameters)
 	            {
-	                if (log.isDebugEnabled()) log.debug("writeParameters parameterIndex=" + parameterIndex + " value='" + p + "'");
+	                if (log.isDebugEnabled()) log.debug("writeParameters() parameterIndex=" + parameterIndex + " value='" + p + "'");
 	                
 	                if (inOperator && p instanceof Collection<?>)
 	                {
@@ -249,7 +311,7 @@ public abstract class SqlOperation<R> implements AutoCloseable
         {
             if (log.isDebugEnabled())
             {
-                log.debug("writeParameter parameter type="+parameterClass + " value="+parameter);
+                log.debug("writeParameter() parameter type="+parameterClass + " value="+parameter);
             }
             
             typeTranslator.write(preparedStatement, parameterIndex, parameter);
@@ -306,6 +368,18 @@ public abstract class SqlOperation<R> implements AutoCloseable
      */
     public void close() throws OperationException
     {
+        if (isCached())
+        {
+            try
+            {
+                getTable().getCache().close(this);
+            }
+            catch (CacheException e)
+            {
+                throw new OperationException("close error", e);
+            }
+        }
+
         closeStatement();
         closeCascades();
     }
@@ -552,7 +626,7 @@ public abstract class SqlOperation<R> implements AutoCloseable
         
         try
         {
-            if (log.isDebugEnabled()) log.debug("prepare " + preparedSql);
+            if (log.isDebugEnabled()) log.debug("prepare() " + preparedSql);
             
             if (isAutoGeneratedKeys())
             {
@@ -792,15 +866,27 @@ public abstract class SqlOperation<R> implements AutoCloseable
         
         if (whereConditionName.equals("primaryKey"))
         {
+            primaryKey = true;
             setWhereTranslator(table.getRowTranslator().getPrimaryKeyWhereTranslator());
         }
         else if (whereConditionName.length() > 0)
         {
             try
             {
-                // look for where annotation in operation, table class, row class (in that order)
-                Where whereAnnotation = new WhereAnnotationReader(
+                // look for where annotation
+                Where whereAnnotation;
+                if (table.isLegacyAnnotationPrecedence())
+                {
+                    // in operation, table class, row class (in that order)
+                    whereAnnotation = new WhereAnnotationReader(
                         this.getClass(), table.getClass(), table.getRowClass()).getAnnotation(whereConditionName);
+                }
+                else
+                {
+                    // in operation, row class, table class (in that order)
+                    whereAnnotation = new WhereAnnotationReader(
+                        this.getClass(), table.getClass(), table.getRowClass()).getAnnotation(whereConditionName);
+                }
                 
                 if (whereAnnotation != null)
                 {
@@ -834,6 +920,18 @@ public abstract class SqlOperation<R> implements AutoCloseable
         return whereConditionName;
     }
     
+
+    /**
+     * Gets primary key status. 
+     * 
+     * @return true if where condition for this operation is for primary key
+     * @since 3.0
+     */
+    public boolean isPrimaryKey()
+    {
+        return primaryKey;
+    }
+
 
     /**
      * Tests if identity columns are used in this operation. Default is true. 
@@ -913,7 +1011,7 @@ public abstract class SqlOperation<R> implements AutoCloseable
      */
     protected void writeWhere(R row) throws OperationException
     {
-    	if (log.isDebugEnabled()) log.debug("write parameters from row");
+    	if (log.isDebugEnabled()) log.debug("writeWhere() parameters from row");
     	
         if (getWhereTranslator() != null)
         {

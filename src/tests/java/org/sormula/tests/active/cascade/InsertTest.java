@@ -81,7 +81,7 @@ public class InsertTest extends ActiveDatabaseTest<SormulaTestParentAR>
         closeDatabase();
     }
     
-    
+
     @Test
     public void insertOneToOneAR() 
     {
@@ -109,7 +109,7 @@ public class InsertTest extends ActiveDatabaseTest<SormulaTestParentAR>
         // verify that child was attached
         assert child1.getActiveDatabase() == activeDatabase : "child was not attached to active database";
     }
-    
+
     
     @Test
     public void insertOneToManyListAR() throws SormulaException

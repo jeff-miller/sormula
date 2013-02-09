@@ -48,7 +48,7 @@ public class SaveTest extends DatabaseTest<SormulaTestLevel1>
         closeDatabase();
     }
     
-    
+
     @Test
     public void saveMultiLevelNewNode2() throws SormulaException
     {
@@ -117,6 +117,40 @@ public class SaveTest extends DatabaseTest<SormulaTestLevel1>
         SormulaTestLevel3 node3Test = table3.select(node3.getId());
         assert node3Test != null : "node3 " + node3.getId() + " was not inserted";
         assert node3Test.getParentId() == node2.getId() : "node3 " + node3.getId() + " wrong parent";
+        
+        commit();
+    }
+
+    
+    @Test
+    public void saveAllNewNodes() throws SormulaException
+    {
+        // test save cascade when all rows are new
+        begin();
+        Table<SormulaTestLevel1> table1 = getTable();
+        Table<SormulaTestLevel2> table2 = getDatabase().getTable(SormulaTestLevel2.class);
+        Table<SormulaTestLevel3> table3 = getDatabase().getTable(SormulaTestLevel3.class);
+
+        SormulaTestLevel1 node1 = new SormulaTestLevel1(401, "Save parent 401");
+        SormulaTestLevel2 node2 = new SormulaTestLevel2(444, "Save middle node 444");
+        node1.add(node2);
+        SormulaTestLevel3 node3 = new SormulaTestLevel3(4443, "Save leaf node 4443");
+        node2.add(node3);
+
+        // should insert all 3 nodes
+        table1.save(node1);
+        
+        // confirm node1 was inserted
+        SormulaTestLevel1 node1Test = table1.select(node1.getId());
+        assert node1Test != null : " node1 " + node1.getId() + " was not saved";
+        
+        // confirm node2 was inserted
+        SormulaTestLevel2 node2Test = table2.select(node2.getId());
+        assert node2Test != null : " node2 " + node2.getId() + " was not saved";
+        
+        // confirm node3 was inserted
+        SormulaTestLevel3 node3Test = table3.select(node3.getId());
+        assert node3Test != null : " node3 " + node3.getId() + " was not saved";
         
         commit();
     }

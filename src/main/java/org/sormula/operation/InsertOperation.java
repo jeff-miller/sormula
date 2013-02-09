@@ -84,6 +84,9 @@ public class InsertOperation<R> extends ModifyOperation<R>
      */
     public int insert(R row) throws OperationException
     {
+        // TODO remove if (row instanceof SormulaTestLevel1) log.info("--->insert STL1 " + ((SormulaTestLevel1)row).getId());
+        // TODO remove if (row instanceof SormulaTestLevel2) log.info("--->insert STL2 " + ((SormulaTestLevel2)row).getId());
+        // TODO remove if (row instanceof SormulaTestLevel3) log.info("--->insert STL3 " + ((SormulaTestLevel3)row).getId());
         return super.modify(row);
     }
 

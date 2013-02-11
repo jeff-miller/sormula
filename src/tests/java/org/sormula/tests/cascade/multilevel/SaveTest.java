@@ -152,6 +152,12 @@ public class SaveTest extends DatabaseTest<SormulaTestLevel1>
         SormulaTestLevel3 node3Test = table3.select(node3.getId());
         assert node3Test != null : " node3 " + node3.getId() + " was not saved";
         
+        // confirm all nodes selected from cascade
+        SormulaTestLevel2 node1Child = node1Test.getChildList().get(0);
+        assert node1Child != null && node1Child.getId() == node2.getId() : " node2 not selected";
+        SormulaTestLevel3 node2Child = node2Test.getChildList().get(0);
+        assert node2Child != null && node2Child.getId() == node3.getId() : " node3 not selected";
+        
         commit();
     }
 }

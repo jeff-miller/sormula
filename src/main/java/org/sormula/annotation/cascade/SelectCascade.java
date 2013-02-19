@@ -122,6 +122,7 @@ public @interface SelectCascade
      * @since 3.0
      */
     // TODO member set by method must be Transient or ignored to avoid saving to db 
+    // TODO targetParentFieldName?
     String targetParentMethodName() default "setParent"; // TODO blank for none or ignore if setParent does not exist?
     
     

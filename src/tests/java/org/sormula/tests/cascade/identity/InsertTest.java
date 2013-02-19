@@ -19,14 +19,13 @@ package org.sormula.tests.cascade.identity;
 import org.sormula.SormulaException;
 import org.sormula.log.ClassLogger;
 import org.sormula.tests.DatabaseTest;
-import org.sormula.tests.cascade.SormulaTestParent;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 
 /**
- * Tests cascade inserts for {@link SormulaTestParent}.
+ * Tests cascade inserts for {@link SormulaIdentityParent}.
  * 
  * @author Jeff Miller
  */

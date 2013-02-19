@@ -86,13 +86,13 @@ public class SelectTest extends ActiveDatabaseTest<SormulaTestParentAR>
             
             // verify 1 to many
             List<SormulaTestChildNAR> children = parent.getChildList();
-            int countN = childNTable.<Integer>selectCount("id", "byParent", parent.getId());
+            int countN = childNTable.<Integer>selectCount("id", "byParent", parent.getParentId());
             if (children.size() > 0)
             {
                 // verify all rows selected
                 for (SormulaTestChildNAR c: children)
                 { 
-                    assert c.getParentId() == parent.getId() : "AR 1:n child parent id != parent id";
+                    assert c.getParentId() == parent.getParentId() : "AR 1:n child parent id != parent id";
                     
                     // verify that child was attached
                     assert c.getActiveDatabase() == activeDatabase : "child was not attached to active database";

@@ -302,8 +302,12 @@ abstract public class AbstractLazySelector<R> implements LazySelectable, Seriali
             {
                 if (c.lazy())
                 {
+                    // select cascade currently does not use source table so can't write test to verfiy source table is correct
+                    @SuppressWarnings("unchecked") // source field type is not known at compile time
+                    Table<R> sourceTable = (Table<R>)getDatabase().getTable(field.getDeclaringClass());
+                    
                     @SuppressWarnings("unchecked") // target field type is not known at compile time
-                    SelectCascadeOperation<R, ?> operation = new SelectCascadeOperation(targetField, targetTable, c);
+                    SelectCascadeOperation<R, ?> operation = new SelectCascadeOperation(sourceTable, targetField, targetTable, c);
                     try
                     {
                         operation.prepare();

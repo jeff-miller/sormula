@@ -18,7 +18,7 @@ package org.sormula.operation.cascade;
 
 import org.sormula.Table;
 import org.sormula.annotation.cascade.DeleteCascade;
-import org.sormula.operation.InsertOperation;
+import org.sormula.operation.DeleteOperation;
 import org.sormula.operation.OperationException;
 import org.sormula.operation.SqlOperation;
 import org.sormula.reflect.SormulaField;
@@ -35,15 +35,31 @@ import org.sormula.reflect.SormulaField;
 public class DeleteCascadeOperation<S, T> extends ModifyCascadeOperation<S, T>
 {
     /**
-     * Constructor used by {@link InsertOperation}.
+     * Constructor used by {@link DeleteOperation}.
      *  
      * @param targetField cascade delete operation uses row(s) from this field
      * @param targetTable cascade delete operation is performed on this table 
      * @param deleteCascadeAnnotation cascade operation
      */
+    @Deprecated // use constructor with source table
     public DeleteCascadeOperation(SormulaField<S, ?> targetField, Table<T> targetTable, DeleteCascade deleteCascadeAnnotation)
     {
         super(targetField, targetTable, deleteCascadeAnnotation.operation(), deleteCascadeAnnotation.post());
+    }
+    
+    
+    /**
+     * Constructor used by {@link DeleteOperation}.
+     *  
+     * @param sourceTable cascade orgininates on row from this table 
+     * @param targetField cascade delete operation uses row(s) from this field
+     * @param targetTable cascade delete operation is performed on this table 
+     * @param deleteCascadeAnnotation cascade operation
+     * @since 3.0
+     */
+    public DeleteCascadeOperation(Table<S> sourcetTable, SormulaField<S, ?> targetField, Table<T> targetTable, DeleteCascade deleteCascadeAnnotation)
+    {
+        super(sourcetTable, targetField, targetTable, deleteCascadeAnnotation.operation(), deleteCascadeAnnotation.post());
     }
 
     

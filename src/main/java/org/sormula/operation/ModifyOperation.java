@@ -116,6 +116,20 @@ public abstract class ModifyOperation<R> extends SqlOperation<R>
 
     
     /**
+     * Gets the rows that will be modified. All of the setter methods for setting rows convert
+     * parmeters to {@link Collection} so this method will get the row(s) regardless of setter
+     * method that was used.
+     * 
+     * @return rows to be modified or null if {@link #setParameters(Object...)} was used
+     * @since 3.0
+     */
+    public Collection<R> getRows()
+    {
+        return rows;
+    }
+
+
+    /**
      * Allows modification of table data using objects instead from row objects. This method is
      * not recommended for updates or inserts but may be useful for delete when no row object is
      * available. Use {@link #setRow(Object)}, {@link #setRows(Collection)}, or {@link #setRows(Map)}

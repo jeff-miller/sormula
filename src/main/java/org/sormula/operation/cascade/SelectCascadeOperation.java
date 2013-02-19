@@ -56,9 +56,26 @@ public class SelectCascadeOperation<S, T> extends CascadeOperation<S, T>
      * @param targetTable cascade select operation is performed on this table 
      * @param selectCascadeAnnotation cascade operation
      */
+	@Deprecated // use constructor with source table
     public SelectCascadeOperation(SormulaField<S, ?> targetField, Table<T> targetTable, SelectCascade selectCascadeAnnotation)
     {
         super(targetField, targetTable, selectCascadeAnnotation.operation(), selectCascadeAnnotation.post());
+        this.selectCascadeAnnotation = selectCascadeAnnotation;
+    }
+    
+    
+    /**
+     * Constructor used by {@link SelectOperation}.
+     *  
+     * @param sourceTable cascade orgininates on row from this table 
+     * @param targetField cascade select operation modifies this field
+     * @param targetTable cascade select operation is performed on this table 
+     * @param selectCascadeAnnotation cascade operation
+     * @since 3.0
+     */
+    public SelectCascadeOperation(Table<S> sourcetTable, SormulaField<S, ?> targetField, Table<T> targetTable, SelectCascade selectCascadeAnnotation)
+    {
+        super(sourcetTable, targetField, targetTable, selectCascadeAnnotation.operation(), selectCascadeAnnotation.post());
         this.selectCascadeAnnotation = selectCascadeAnnotation;
     }
 
@@ -69,6 +86,7 @@ public class SelectCascadeOperation<S, T> extends CascadeOperation<S, T>
     @Override
     public void cascade(S sourceRow) throws OperationException
     {
+        super.cascade(sourceRow);
         setParameters(sourceRow);
         selectOperation.execute();
         
@@ -81,42 +99,57 @@ public class SelectCascadeOperation<S, T> extends CascadeOperation<S, T>
             if (targetField.isScalar())
             {
                 // non collection type, set target row as next row
-                targetField.invokeSetMethod(sourceRow, selectOperation.readNext());
+                T targetRow = selectOperation.readNext();
+                selected(targetRow);
+                targetField.invokeSetMethod(sourceRow, targetRow);
             }
             else
             {
                 // collection or map, set target field to all rows in results
                 @SuppressWarnings("unchecked") // collection fields must use SelectOperation
                 SelectOperation<T, Object> o = (SelectOperation<T, Object>)selectOperation;
+                Object rows = o.readAll();
                 
-                if (targetField.isArray())
+                if (rows instanceof Collection)
                 {
-                    Object rows = o.readAll();
+                    // select operation returned a Collection
+                    @SuppressWarnings("unchecked") // target field type is not known at compile time
+                    Collection<T> c = (Collection<T>)rows;
+                    selected(c);
                     
-                    if (rows instanceof Collection)
+                    if (targetField.isArray())
                     {
-                        // select operation returned a Collection
-                        @SuppressWarnings("unchecked") // target field type is not known at compile time
-                        Collection<T> c = (Collection<T>)rows;
+                        // set as array
                         targetField.invokeSetMethod(sourceRow, toTargetArray(c));
                     }
-                    else if (rows instanceof Map)
+                    else
                     {
-                        // select operation returned a Map
-                        @SuppressWarnings("unchecked") // target field type is not known at compile time
-                        Map<?, T> m = (Map<?, T>)rows;
+                        // set as collection 
+                        targetField.invokeSetMethod(sourceRow, c);
+                    }
+                }
+                else if (rows instanceof Map)
+                {
+                    // select operation returned a Map
+                    @SuppressWarnings("unchecked") // target field type is not known at compile time
+                    Map<?, T> m = (Map<?, T>)rows;
+                    selected(m);
+
+                    if (targetField.isArray())
+                    {
+                        // set as array
                         targetField.invokeSetMethod(sourceRow, toTargetArray(m.values()));
                     }
                     else
                     {
-                        throw new OperationException("can't convert result " + o.getClass() +
-                            " for " + targetField.getCanonicalSetMethodName());
+                        // set as map
+                        targetField.invokeSetMethod(sourceRow, m);
                     }
                 }
                 else
                 {
-                    // collection or map
-                    targetField.invokeSetMethod(sourceRow, o.readAll());
+                    throw new OperationException("can't convert result " + o.getClass() +
+                        " for " + targetField.getCanonicalSetMethodName());
                 }
             }
         }
@@ -127,6 +160,42 @@ public class SelectCascadeOperation<S, T> extends CascadeOperation<S, T>
         }
     }
 
+    
+    /**
+     * Invoked by {@link #cascade(Object)} after row has been selected for scalar target field. Provides
+     * a hook for subclass to operation upon row after it has been selected. This method does nothing.
+     * 
+     * @param row selected target row
+     * @since 3.0
+     */
+    protected void selected(T row)
+    {
+    }
+    
+    
+    /**
+     * Invoked by {@link #cascade(Object)} after row has been selected for collection/array target field. Provides
+     * a hook for subclass to operation upon row after it has been selected. This method does nothing.
+     * 
+     * @param rows selected target rows
+     * @since 3.0
+     */
+    protected void selected(Collection<T> rows)
+    {
+    }
+    
+    
+    /**
+     * Invoked by {@link #cascade(Object)} after row has been selected for map target field. Provides
+     * a hook for subclass to operation upon row after it has been selected. This method does nothing.
+     * 
+     * @param rows selected target rows
+     * @since 3.0
+     */
+    protected void selected(Map<?, T> rows)
+    {
+    }
+    
 
     /**
      * {@inheritDoc}

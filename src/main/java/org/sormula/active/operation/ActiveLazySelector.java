@@ -67,7 +67,7 @@ public class ActiveLazySelector<R extends ActiveRecord<R>> extends ActiveOperati
             if (c.lazy())
             {
                 @SuppressWarnings("unchecked") // target field type is not known at compile time
-                SelectCascadeOperation<R, ?> operation = new SelectCascadeOperation(targetField, targetTable, c);
+                SelectCascadeOperation<R, ?> operation = new SelectCascadeOperation(getTable(), targetField, targetTable, c);
                 try
                 {
                     operation.prepare();

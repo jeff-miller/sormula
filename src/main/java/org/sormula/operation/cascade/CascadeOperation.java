@@ -34,10 +34,12 @@ import org.sormula.reflect.SormulaField;
  */
 public abstract class CascadeOperation<S, T>
 {
+    Table<S> sourceTable;
     SormulaField<S, ?> targetField;
     Table<T> targetTable;
     Class <?> cascadeOperationClass;
     boolean post;
+    S sourceRow;
     
     
     /**
@@ -49,8 +51,30 @@ public abstract class CascadeOperation<S, T>
      * @param post true if operation is to be performed after source row operation; false if operation
      * is to be performed before source row operation
      */
+    @Deprecated // use constructor with source table
 	public CascadeOperation(SormulaField<S, ?> targetField, Table<T> targetTable, Class <?> cascadeOperationClass, boolean post)
     {
+        this.targetField = targetField;
+        this.targetTable = targetTable;
+        this.cascadeOperationClass = cascadeOperationClass;
+        this.post = post;
+    }
+    
+    
+    /**
+     * Constructs for field and table to be affected by cascade.
+     * 
+     * @param sourceTable cascade orgininates on row from this table
+     * @param targetField in source row to be affected by cascade operation
+     * @param targetTable sorm table that will be cascaded
+     * @param cascadeOperationClass class of cascade operation (used to create new instance)
+     * @param post true if operation is to be performed after source row operation; false if operation
+     * is to be performed before source row operation
+     * @since 3.0
+     */
+    public CascadeOperation(Table<S> sourceTable, SormulaField<S, ?> targetField, Table<T> targetTable, Class <?> cascadeOperationClass, boolean post)
+    {
+        this.sourceTable = sourceTable;
         this.targetField = targetField;
         this.targetTable = targetTable;
         this.cascadeOperationClass = cascadeOperationClass;
@@ -69,12 +93,16 @@ public abstract class CascadeOperation<S, T>
 	
 
     /**
-     * Performs cascade operation. 
+     * Performs cascade operation. Retains value of source row parameter. Subclasses should
+     * invoke super.cascade() and then implement their specific behavior.
      * 
 	 * @param sourceRow row in parent table that was source the cascade
 	 * @throws OperationException if error
 	 */
-    public abstract void cascade(S sourceRow) throws OperationException;
+    public void cascade(S sourceRow) throws OperationException
+    {
+        this.sourceRow = sourceRow;
+    }
 
     
     /**
@@ -92,6 +120,18 @@ public abstract class CascadeOperation<S, T>
      */
     public abstract void close() throws OperationException;
     
+
+    /**
+     * Gets {@link Table} that originates (is source of) cascade.
+     * 
+     * @return parent (source) table of cascade
+     * @since 3.0
+     */
+    public Table<S> getSourceTable()
+    {
+        return sourceTable;
+    }
+
 
     /**
      * Gets target field as {@link SormulaField}.
@@ -113,6 +153,18 @@ public abstract class CascadeOperation<S, T>
     }
     
     
+    /**
+     * Source row of cascade set by {@link #cascade(Object)}.
+     * 
+     * @return row where cascade originates
+     * @since 3.0
+     */
+    public S getSourceRow()
+    {
+        return sourceRow;
+    }
+
+
     /**
      * Creates new instance of sql operation from {@link #cascadeOperationClass} supplied in the 
      * constructor.

@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.sormula.active.ActiveRecord;
+import org.sormula.annotation.cascade.InsertCascade;
 import org.sormula.annotation.cascade.OneToManyCascade;
 import org.sormula.annotation.cascade.OneToOneCascade;
 import org.sormula.annotation.cascade.SelectCascade;
@@ -33,17 +34,19 @@ import org.sormula.annotation.cascade.SelectCascade;
 public class SormulaTestParentAR extends ActiveRecord<SormulaTestParentAR>
 {
     private static final long serialVersionUID = 1L;
-    int id;
+    int parentId;
     String description;
     int child1Id;
     
     // tests 1 to many relationship
     @OneToManyCascade(// optional in v1.9 targetClass=SormulaTestChildNAR.class, 
-            selects=@SelectCascade(sourceParameterFieldNames="id", targetWhereName="byParent"))
+            selects=@SelectCascade(sourceParameterFieldNames="parentId", targetWhereName="byParent"),
+            inserts=@InsertCascade(targetForeignKeyFields="*")) // tests targetForeignKeyFields for ActiveRecord
     List<SormulaTestChildNAR> childList;
     
     // tests 1 to 1 relationship
-    @OneToOneCascade(selects=@SelectCascade(sourceParameterFieldNames="child1Id"))
+    @OneToOneCascade(
+            selects=@SelectCascade(sourceParameterFieldNames="child1Id"))
     SormulaTestChild1AR child;
 
     
@@ -53,10 +56,10 @@ public class SormulaTestParentAR extends ActiveRecord<SormulaTestParentAR>
     }
 
     
-    public SormulaTestParentAR(int id, String description)
+    public SormulaTestParentAR(int parentId, String description)
     {
         this();
-        this.id = id;
+        this.parentId = parentId;
         this.description = description;
     }
 
@@ -64,17 +67,19 @@ public class SormulaTestParentAR extends ActiveRecord<SormulaTestParentAR>
     public void add(SormulaTestChildNAR child)
     {
         childList.add(child);
-        child.setParentId(id);
+        
+        // don't need since targetForeignKeyFields="*" was specified
+        // child.setParentId(parentId);
     }
 
     
-    public int getId()
+    public int getParentId()
     {
-        return id;
+        return parentId;
     }
-    public void setId(int id)
+    public void setParentId(int parentId)
     {
-        this.id = id;
+        this.parentId = parentId;
     }
     
     

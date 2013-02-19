@@ -175,7 +175,9 @@ public class InsertTest extends DatabaseTest<SormulaTestParent>
         {
             SormulaTestChildM c = new SormulaTestChildM(childId + i, "Child of parent " + parentId);
             map.put(c.getId(), c);
-            c.setParentId(parentId);
+            
+            // dont' need to set parent since InsertCascade.targetForeignKeyFields="parentId" 
+            // c.setParentId(parentId);
         }
         
         assert getTable().insert(parent) == 1 : "insertOneToManyMap did not insert parent";
@@ -187,7 +189,9 @@ public class InsertTest extends DatabaseTest<SormulaTestParent>
         {
             operation.setParameters(c.getId());
             operation.execute();
-            assert operation.readNext() != null : "child " + c.getId() + " was not inserted"; 
+            SormulaTestChildM testChild = operation.readNext();
+            assert testChild != null : "child " + c.getId() + " was not inserted";
+            assert testChild.getParentId() == parent.getId() : "child " + testChild.getId() + " has wrong parent";
         }
         operation.close();
     }

@@ -624,7 +624,7 @@ public class ScalarSelectOperation<R> extends SqlOperation<R>
                     // prepare non lazy cascade for execution
                     if (log.isDebugEnabled()) log.debug("prepare cascade " + c.operation());
                     @SuppressWarnings("unchecked") // target field type is not known at compile time
-                    SelectCascadeOperation<R, ?> operation = new SelectCascadeOperation(targetField, targetTable, c);
+                    SelectCascadeOperation<R, ?> operation = new SelectCascadeOperation(getTable(), targetField, targetTable, c);
                     operation.prepare();
                     co.add(operation);
                 }

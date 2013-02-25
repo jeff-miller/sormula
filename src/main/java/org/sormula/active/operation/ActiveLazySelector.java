@@ -70,6 +70,8 @@ public class ActiveLazySelector<R extends ActiveRecord<R>> extends ActiveOperati
                 SelectCascadeOperation<R, ?> operation = new SelectCascadeOperation(getTable(), targetField, targetTable, c);
                 try
                 {
+                    operation.setForeignKeyFieldNames(scar.getForeignKeyValueFields());
+                    operation.setForeignKeyReferenceFieldName(scar.getForeignKeyReferenceField());
                     operation.prepare();
                     operation.cascade(sourceActiveRecord);
                 }

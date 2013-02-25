@@ -21,6 +21,8 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+import org.sormula.annotation.Column;
+
 
 /**
  * Cascade annotation for a one to one relationship between source row and 
@@ -91,4 +93,33 @@ public @interface OneToOneCascade
      * @return delete annotations for cascade; use empty array for no delete cascade
      */
     DeleteCascade[] deletes() default @DeleteCascade();
+    
+    
+    /** TODO update javadoc
+     * Indicates that insert cascade should set foreign key(s) on target (child) rows before
+     * they are inserted. When target (parent) row is cascaded, then each target (child) row
+     * foreign key setters are invoked with values from source (parent) primary key. 
+     * <p>
+     * Source row key(s) are primary keys in source row where {@link Column#primaryKey()} is true.
+     * <p>
+     * When asterisk (*) is used, then cascade assumes that source key field names are the
+     * same as target (child) key field names. For example: Parent.parentId --> Child.parentId.
+     * <p>
+     * If explicit fields are named, then they must be in same order as source row key fields.
+     * 
+     * @return names of foreign key fields in child (target) row; asterisk "*" means use
+     * same foreign key names as source (parent) field names; empty array means don't set foreign 
+     * key(s) on target rows
+     * @since 3.0
+     */
+    String[] foreignKeyValueFields() default {}; 
+    
+    
+    /**
+     * TODO
+     * TODO member set by method must be Transient or ignored to avoid saving to db 
+     * @return
+     * @since 3.0
+     */
+    String foreignKeyReferenceField() default "";
 }

@@ -114,19 +114,6 @@ public @interface SelectCascade
     
     
     /**
-     * TODO
-     * Method name in target class that is invoked to set parent of the target. If specified, all target rows, r,
-     * selected will be invoked with r.setParent(target). By specifity parent method, ...
-     *  
-     * @return name of method that sets the parent (source) in the child (target) rows
-     * @since 3.0
-     */
-    // TODO member set by method must be Transient or ignored to avoid saving to db 
-    // TODO targetParentFieldName?
-    String targetParentMethodName() default "setParent"; // TODO blank for none or ignore if setParent does not exist?
-    
-    
-    /**
      * Marks a select cascade to be performed some later time after source row is selected.
      * The target row is selected when {@link LazySelectable#checkLazySelects(String)} is invoked 
      * or when {@link ActiveRecord#checkLazySelects(String)} is invoked.

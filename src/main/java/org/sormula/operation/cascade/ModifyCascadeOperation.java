@@ -65,14 +65,13 @@ public abstract class ModifyCascadeOperation<S, T> extends CascadeOperation<S, T
      * @param targetField cascade operation uses row(s) from this field
      * @param targetTable cascade operation is performed on this table 
      * @param cascadeOperationClass class of cascade operation
-     * @param post true if cascade is performed after row execute (see {@link ModifyOperation#postExecute});
      * false if cascade is performed before row execute (see {@link ModifyOperation#preExecute}
      * @since 3.0
      */
     public ModifyCascadeOperation(Table<S> sourcetTable, SormulaField<S, ?> targetField, Table<T> targetTable, 
-            Class <?> cascadeOperationClass, boolean post)
+            Class <?> cascadeOperationClass)
     {
-        super(sourcetTable, targetField, targetTable, cascadeOperationClass, post);
+        super(sourcetTable, targetField, targetTable, cascadeOperationClass);
     }
 
 
@@ -96,7 +95,6 @@ public abstract class ModifyCascadeOperation<S, T> extends CascadeOperation<S, T
                     // non collection/map type
                     @SuppressWarnings("unchecked") // target field type is not known at compile time
                     T row = (T)value;
-                    modify(row);
                     modifyOperation.setRow(row);
                 }
                 else if (targetField.isArray())
@@ -104,7 +102,6 @@ public abstract class ModifyCascadeOperation<S, T> extends CascadeOperation<S, T
                     // array
                     @SuppressWarnings("unchecked") // target field type is not known at compile time
                     T[] array = (T[])value;
-                    modify(array);
                     modifyOperation.setRows(array);
                 }
                 else if (targetField.isCollection())
@@ -112,7 +109,6 @@ public abstract class ModifyCascadeOperation<S, T> extends CascadeOperation<S, T
                     // collection
                     @SuppressWarnings("unchecked") // target field type is not known at compile time
                     Collection<T> collection = (Collection<T>)value;
-                    modify(collection);
                     modifyOperation.setRows(collection);
                 }
                 else if (targetField.isMap())
@@ -120,7 +116,6 @@ public abstract class ModifyCascadeOperation<S, T> extends CascadeOperation<S, T
                     // collection
                     @SuppressWarnings("unchecked") // target field type is not known at compile time
                     Map<?, T> map = (Map<?, T>)value;
-                    modify(map);
                     modifyOperation.setRows(map);
                 }
                 else
@@ -128,6 +123,7 @@ public abstract class ModifyCascadeOperation<S, T> extends CascadeOperation<S, T
                     throw new OperationException("unknown operation type for target field " + targetField.getField().getType()); 
                 }
             
+                setForeignKeyValues(modifyOperation.getRows());
                 modifyOperation.execute();
             }
             else
@@ -141,62 +137,6 @@ public abstract class ModifyCascadeOperation<S, T> extends CascadeOperation<S, T
                     getTargetField().getCanonicalGetMethodName(), e);
         }
     }
-    
-    
-    /**
-     * Invoked by {@link #cascade(Object)} prior to executing cascade for scalar target field. Provides
-     * a hook for subclass to operate upon row before they is inserted/updated/deleted. This method
-     * does nothing as default.
-     * 
-     * @param row target row to be inserted/updated/deleted
-     * @throws OperationException if error
-     * @since 3.0
-     */
-    protected void modify(T row) throws OperationException
-    {
-    }
-    
-    
-    /**
-     * Invoked by {@link #cascade(Object)} prior to executing cascade for array target field. Provides
-     * a hook for subclass to operate upon rows before they are inserted/updated/deleted. This method
-     * does nothing as default.
-     * 
-     * @param rows target rows to be inserted/updated/deleted
-     * @throws OperationException if error
-     * @since 3.0
-     */
-    protected void modify(T[] rows) throws OperationException
-    {
-    }
-    
-    
-    /**
-     * Invoked by {@link #cascade(Object)} prior to executing cascade for collection target field. Provides
-     * a hook for subclass to operate upon rows before they are inserted/updated/deleted. This method
-     * does nothing as default. 
-     * 
-     * @param rows target rows to be inserted/updated/deleted
-     * @throws OperationException if error
-     * @since 3.0
-     */
-    protected void modify(Collection<T> rows) throws OperationException
-    {
-    }
-    
-    
-    /**
-     * Invoked by {@link #cascade(Object)} prior to executing cascade for map target field. Provides
-     * a hook for subclass to operate upon rows before they are inserted/updated/deleted. This method
-     * does nothing as default.
-     * 
-     * @param rowMap target rows to be inserted/updated/deleted
-     * @throws OperationException if error
-     * @since 3.0
-     */
-    protected void modify(Map<?, T> rowMap) throws OperationException
-    {
-    }
 
 
     /**
@@ -206,6 +146,7 @@ public abstract class ModifyCascadeOperation<S, T> extends CascadeOperation<S, T
     @SuppressWarnings("unchecked") // type controlled by annotations 
     public void prepare() throws OperationException
     {
+        super.prepare();
         modifyOperation = (ModifyOperation<T>)createOperation();
     }
 

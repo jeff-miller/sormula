@@ -39,6 +39,8 @@ public class UpdateCascadeAnnotationReader extends CascadeAnnotationReader
     protected void initOneToManyCascade()
     {
         OneToManyCascade cascadesAnnotation = source.getAnnotation(OneToManyCascade.class);
+        setForeignKeyValueFields(cascadesAnnotation.foreignKeyValueFields());
+        setForeignKeyReferenceField(cascadesAnnotation.foreignKeyReferenceField());
         
         if (!cascadesAnnotation.readOnly())
         {
@@ -54,6 +56,8 @@ public class UpdateCascadeAnnotationReader extends CascadeAnnotationReader
     protected void initOneToOneCascade()
     {
         OneToOneCascade cascadesAnnotation = source.getAnnotation(OneToOneCascade.class);
+        setForeignKeyValueFields(cascadesAnnotation.foreignKeyValueFields());
+        setForeignKeyReferenceField(cascadesAnnotation.foreignKeyReferenceField());
         
         if (!cascadesAnnotation.readOnly())
         {
@@ -69,6 +73,8 @@ public class UpdateCascadeAnnotationReader extends CascadeAnnotationReader
     protected void initCascade()
     {
         Cascade cascadesAnnotation = source.getAnnotation(Cascade.class);
+        setForeignKeyValueFields(cascadesAnnotation.foreignKeyValueFields());
+        setForeignKeyReferenceField(cascadesAnnotation.foreignKeyReferenceField());
         initTargetClass(cascadesAnnotation.targetClass());
         updateCascades = cascadesAnnotation.updates();
     }

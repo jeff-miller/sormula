@@ -59,7 +59,8 @@ public class DeleteCascadeOperation<S, T> extends ModifyCascadeOperation<S, T>
      */
     public DeleteCascadeOperation(Table<S> sourcetTable, SormulaField<S, ?> targetField, Table<T> targetTable, DeleteCascade deleteCascadeAnnotation)
     {
-        super(sourcetTable, targetField, targetTable, deleteCascadeAnnotation.operation(), deleteCascadeAnnotation.post());
+        super(sourcetTable, targetField, targetTable, deleteCascadeAnnotation.operation());
+        setPost(deleteCascadeAnnotation.post());
     }
 
     

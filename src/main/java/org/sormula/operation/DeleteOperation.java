@@ -169,6 +169,8 @@ public class DeleteOperation<R> extends ModifyOperation<R>
                 if (log.isDebugEnabled()) log.debug("prepare cascade " + c.operation());
                 @SuppressWarnings("unchecked") // target field type is not known at compile time
                 CascadeOperation<R, ?> operation = new DeleteCascadeOperation(getTable(), targetField, targetTable, c);
+                operation.setForeignKeyFieldNames(dcar.getForeignKeyValueFields());
+                operation.setForeignKeyReferenceFieldName(dcar.getForeignKeyReferenceField());
                 operation.prepare();
                 co.add(operation);
             }

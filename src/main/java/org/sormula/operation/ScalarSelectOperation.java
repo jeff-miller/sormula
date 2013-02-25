@@ -625,6 +625,8 @@ public class ScalarSelectOperation<R> extends SqlOperation<R>
                     if (log.isDebugEnabled()) log.debug("prepare cascade " + c.operation());
                     @SuppressWarnings("unchecked") // target field type is not known at compile time
                     SelectCascadeOperation<R, ?> operation = new SelectCascadeOperation(getTable(), targetField, targetTable, c);
+                    operation.setForeignKeyFieldNames(scar.getForeignKeyValueFields());
+                    operation.setForeignKeyReferenceFieldName(scar.getForeignKeyReferenceField());
                     operation.prepare();
                     co.add(operation);
                 }

@@ -18,7 +18,9 @@ abstract public class CascadeAnnotationReader
     private static final ClassLogger log = new ClassLogger();
     Field source;
     Class<?> targetClass;
-
+    String[] foreignKeyValueFields;
+    String foreignKeyReferenceField;
+    
     
     /**
      * Constructs for a field.
@@ -143,5 +145,49 @@ abstract public class CascadeAnnotationReader
     public Class<?> getTargetClass()
     {
         return targetClass;
+    }
+
+
+    /**
+     * TODO
+     * @param foreignKeyValueFields
+     * @since 3.0
+     */
+    public void setForeignKeyValueFields(String[] foreignKeyValueFields)
+    {
+        this.foreignKeyValueFields = foreignKeyValueFields;
+    }
+
+
+    /** 
+     * TODO
+     * @return
+     * @since 3.0
+     */
+    public String[] getForeignKeyValueFields()
+    {
+        return foreignKeyValueFields;
+    }
+
+
+    /**
+     * TODO
+     * @param foreignKeyReferenceField
+     * @since 3.0
+     */
+    public void setForeignKeyReferenceField(String foreignKeyReferenceField)
+    {
+        this.foreignKeyReferenceField = foreignKeyReferenceField;
+    }
+
+    
+    /**
+     * TODO
+     * @return
+     * @since 3.0
+     */
+    public String getForeignKeyReferenceField()
+    {
+        return foreignKeyReferenceField;
     }
 }

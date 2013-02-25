@@ -20,7 +20,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.sormula.annotation.Column;
-import org.sormula.annotation.cascade.InsertCascade;
 import org.sormula.annotation.cascade.OneToManyCascade;
 import org.sormula.annotation.cascade.SelectCascade;
 
@@ -39,7 +38,7 @@ public class SormulaIdentityParent
     // tests 1 to many relationship
     @OneToManyCascade( 
             selects=@SelectCascade(sourceParameterFieldNames="id", targetWhereName="byParent"),
-            inserts=@InsertCascade(targetForeignKeyFields="*"))
+            foreignKeyValueFields="*")
     List<SormulaIdentityChildN> childList;
     
     

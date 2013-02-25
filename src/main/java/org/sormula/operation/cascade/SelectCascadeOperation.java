@@ -75,8 +75,9 @@ public class SelectCascadeOperation<S, T> extends CascadeOperation<S, T>
      */
     public SelectCascadeOperation(Table<S> sourcetTable, SormulaField<S, ?> targetField, Table<T> targetTable, SelectCascade selectCascadeAnnotation)
     {
-        super(sourcetTable, targetField, targetTable, selectCascadeAnnotation.operation(), selectCascadeAnnotation.post());
+        super(sourcetTable, targetField, targetTable, selectCascadeAnnotation.operation());
         this.selectCascadeAnnotation = selectCascadeAnnotation;
+        setPost(selectCascadeAnnotation.post());
     }
 
     
@@ -100,7 +101,7 @@ public class SelectCascadeOperation<S, T> extends CascadeOperation<S, T>
             {
                 // non collection type, set target row as next row
                 T targetRow = selectOperation.readNext();
-                selected(targetRow);
+                setForeignKeyValues(targetRow);
                 targetField.invokeSetMethod(sourceRow, targetRow);
             }
             else
@@ -115,7 +116,7 @@ public class SelectCascadeOperation<S, T> extends CascadeOperation<S, T>
                     // select operation returned a Collection
                     @SuppressWarnings("unchecked") // target field type is not known at compile time
                     Collection<T> c = (Collection<T>)rows;
-                    selected(c);
+                    setForeignKeyValues(c);
                     
                     if (targetField.isArray())
                     {
@@ -133,12 +134,14 @@ public class SelectCascadeOperation<S, T> extends CascadeOperation<S, T>
                     // select operation returned a Map
                     @SuppressWarnings("unchecked") // target field type is not known at compile time
                     Map<?, T> m = (Map<?, T>)rows;
-                    selected(m);
+
+                    Collection<T> mapValues = m.values();
+                    setForeignKeyValues(mapValues);
 
                     if (targetField.isArray())
                     {
                         // set as array
-                        targetField.invokeSetMethod(sourceRow, toTargetArray(m.values()));
+                        targetField.invokeSetMethod(sourceRow, toTargetArray(mapValues));
                     }
                     else
                     {
@@ -159,42 +162,6 @@ public class SelectCascadeOperation<S, T> extends CascadeOperation<S, T>
                     targetField.getCanonicalSetMethodName(), e);
         }
     }
-
-    
-    /**
-     * Invoked by {@link #cascade(Object)} after row has been selected for scalar target field. Provides
-     * a hook for subclass to operation upon row after it has been selected. This method does nothing.
-     * 
-     * @param row selected target row
-     * @since 3.0
-     */
-    protected void selected(T row)
-    {
-    }
-    
-    
-    /**
-     * Invoked by {@link #cascade(Object)} after row has been selected for collection/array target field. Provides
-     * a hook for subclass to operation upon row after it has been selected. This method does nothing.
-     * 
-     * @param rows selected target rows
-     * @since 3.0
-     */
-    protected void selected(Collection<T> rows)
-    {
-    }
-    
-    
-    /**
-     * Invoked by {@link #cascade(Object)} after row has been selected for map target field. Provides
-     * a hook for subclass to operation upon row after it has been selected. This method does nothing.
-     * 
-     * @param rows selected target rows
-     * @since 3.0
-     */
-    protected void selected(Map<?, T> rows)
-    {
-    }
     
 
     /**
@@ -204,6 +171,7 @@ public class SelectCascadeOperation<S, T> extends CascadeOperation<S, T>
     @SuppressWarnings("unchecked") // type controlled by annotations 
     public void prepare() throws OperationException
     {
+        super.prepare();
         selectOperation = (ScalarSelectOperation<T>)createOperation();
         
         // parameter fields to read

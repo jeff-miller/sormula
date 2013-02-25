@@ -20,7 +20,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.sormula.active.ActiveRecord;
-import org.sormula.annotation.cascade.InsertCascade;
 import org.sormula.annotation.cascade.OneToManyCascade;
 import org.sormula.annotation.cascade.OneToOneCascade;
 import org.sormula.annotation.cascade.SelectCascade;
@@ -41,7 +40,7 @@ public class SormulaTestParentAR extends ActiveRecord<SormulaTestParentAR>
     // tests 1 to many relationship
     @OneToManyCascade(// optional in v1.9 targetClass=SormulaTestChildNAR.class, 
             selects=@SelectCascade(sourceParameterFieldNames="parentId", targetWhereName="byParent"),
-            inserts=@InsertCascade(targetForeignKeyFields="*")) // tests targetForeignKeyFields for ActiveRecord
+            foreignKeyValueFields="*") // tests targetForeignKeyFields for ActiveRecord
     List<SormulaTestChildNAR> childList;
     
     // tests 1 to 1 relationship

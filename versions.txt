@@ -4,9 +4,10 @@ JDK 5/6  JDK 7   comments
 ------------------------------------------------------------------------------------------------------------
 3.0-j5   3.0-j7  caching
                  TransactionListener
-                 row annotations have precendence over table annotations (set legacyAnnotationPrecedence=true for pre v3.0 precendence)
+                 row annotations have precendence over table annotations 
+                 (set legacyAnnotationPrecedence=true for pre v3.0 precendence)
                  remove deprecated 
-                 InsertCascade.targetForeignKeyFields allows parent inserts to set parent foreign key(s) in cascaded child row(s)
+                 cascades can set foreign key values and reference on target objects
 1.9.3    2.3.3   save cascades to all levels
 1.9.2    2.3.2   TypeTranslator can be used for primative
 1.9.1    2.3.1   update examples

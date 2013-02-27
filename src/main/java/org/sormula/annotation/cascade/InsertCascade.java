@@ -21,6 +21,7 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+import org.sormula.annotation.Column;
 import org.sormula.operation.InsertOperation;
 
 
@@ -60,6 +61,10 @@ public @interface InsertCascade
      * <p>
      * Foreign key values are set prior to cascade for insert, update, delete, and save cascades.
      * They are set after select cascades.
+     * <p>
+     * This value is particularly useful when parent key is created based upon an identity column
+     * {@link Column#identity()} is true. Child row's parent foreign key will be set when parent is
+     * inserted.
      * 
      * @return true to set foreign key values during cascade
      * @since 3.0

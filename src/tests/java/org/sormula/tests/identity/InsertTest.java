@@ -51,6 +51,10 @@ public class InsertTest extends DatabaseTest<IdentityTest>
                 ")"
             );
         }
+        else
+        {
+            log.info("skipping identity test " + getClass());
+        }
     }
     
     
@@ -74,10 +78,6 @@ public class InsertTest extends DatabaseTest<IdentityTest>
             assert getTable().insert(row) == 1 : "insert one failed";
             assert row.getId() > 0 : "indentity column was not generated";
             commit();
-        }
-        else
-        {
-            log.info("skipping insertOne for IDENTITY type");
         }
     }
     
@@ -103,10 +103,6 @@ public class InsertTest extends DatabaseTest<IdentityTest>
             }
             
             commit();
-        }
-        else
-        {
-            log.info("skipping insertCollection for IDENTITY type");
         }
     }
 }

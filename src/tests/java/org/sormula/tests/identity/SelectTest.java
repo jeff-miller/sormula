@@ -44,6 +44,10 @@ public class SelectTest extends DatabaseTest<IdentityTest>
             openDatabase();
             createTable(IdentityTest.class);
         }
+        else
+        {
+            log.info("skipping identity test " + getClass());
+        }
     }
     
     
@@ -73,10 +77,6 @@ public class SelectTest extends DatabaseTest<IdentityTest>
             assert selected != null && row.getId() == selected.getId() : "select by primary key failed";
             
             commit();
-        }
-        else
-        {
-            log.info("skipping selectByPrimaryKey for IDENTITY type");
         }
     }
 }

@@ -365,8 +365,8 @@ public class SaveOperation<R> extends ModifyOperation<R>
                 if (log.isDebugEnabled()) log.debug("prepare cascade " + c.operation());
                 @SuppressWarnings("unchecked") // target field type is not known at compile time
                 CascadeOperation<R, ?> operation = new SaveCascadeOperation(getTable(), targetField, targetTable, c);
-                operation.setForeignKeyFieldNames(scar.getForeignKeyValueFields());
-                operation.setForeignKeyReferenceFieldName(scar.getForeignKeyReferenceField());
+                if (c.setForeignKeyValues()) operation.setForeignKeyFieldNames(scar.getForeignKeyValueFields());
+                if (c.setForeignKeyReference()) operation.setForeignKeyReferenceFieldName(scar.getForeignKeyReferenceField());
                 operation.prepare();
                 co.add(operation);
             }

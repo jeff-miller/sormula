@@ -14,48 +14,49 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.sormula.tests.cascade.identity;
+package org.sormula.tests.cascade.nofk;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import org.sormula.annotation.Column;
+import org.sormula.annotation.cascade.InsertCascade;
 import org.sormula.annotation.cascade.OneToManyCascade;
 import org.sormula.annotation.cascade.SelectCascade;
 
 
 /**
- * Row class for testing insert cascades when parent uses identity column.
+ * Row class for testing insert cascades when foreign key updates are false.
  * 
  * @author Jeff Miller
  */
-public class SormulaIdentityParent
+public class SormulaParentNFK
 {
-    @Column(identity=true)
     int parentId;
     String description;
     
     // tests 1 to many relationship
     @OneToManyCascade( 
-            selects=@SelectCascade(sourceParameterFieldNames="parentId", targetWhereName="byParent"),
-            foreignKeyValueFields="*", foreignKeyReferenceField="parent")
-    List<SormulaIdentityChildN> childList;
+            selects=@SelectCascade(sourceParameterFieldNames="id", targetWhereName="byParent"),
+            inserts=@InsertCascade(setForeignKeyValues=false), // test no foreign key value change
+            foreignKeyValueFields="*")
+    List<SormulaChildNFK> childList;
     
     
-    public SormulaIdentityParent()
+    public SormulaParentNFK()
     {
-        childList = new ArrayList<SormulaIdentityChildN>();
+        childList = new ArrayList<SormulaChildNFK>();
     }
 
     
-    public SormulaIdentityParent(String description)
+    public SormulaParentNFK(int parentId, String description)
     {
         this();
+        this.parentId = parentId;
         this.description = description;
     }
 
     
-    public void add(SormulaIdentityChildN child)
+    public void add(SormulaChildNFK child)
     {
         childList.add(child);
     }
@@ -81,11 +82,11 @@ public class SormulaIdentityParent
     }
 
 
-    public List<SormulaIdentityChildN> getChildList()
+    public List<SormulaChildNFK> getChildList()
     {
         return childList;
     }
-    public void setChildList(List<SormulaIdentityChildN> childList)
+    public void setChildList(List<SormulaChildNFK> childList)
     {
         this.childList = childList;
     }

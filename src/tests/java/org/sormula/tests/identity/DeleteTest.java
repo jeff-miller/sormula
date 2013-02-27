@@ -44,6 +44,10 @@ public class DeleteTest extends DatabaseTest<IdentityTest>
             openDatabase();
             createTable(IdentityTest.class);
         }
+        else
+        {
+            log.info("skipping identity test " + getClass());
+        }
     }
     
     
@@ -74,10 +78,6 @@ public class DeleteTest extends DatabaseTest<IdentityTest>
             assert getTable().select(row.getId()) == null : "row was not deleted";
             
             commit();
-        }
-        else
-        {
-            log.info("skipping deleteOne for IDENTITY type");
         }
     }
 }

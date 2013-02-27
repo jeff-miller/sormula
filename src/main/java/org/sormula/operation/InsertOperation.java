@@ -84,9 +84,6 @@ public class InsertOperation<R> extends ModifyOperation<R>
      */
     public int insert(R row) throws OperationException
     {
-        // TODO remove if (row instanceof SormulaTestLevel1) log.info("--->insert STL1 " + ((SormulaTestLevel1)row).getId());
-        // TODO remove if (row instanceof SormulaTestLevel2) log.info("--->insert STL2 " + ((SormulaTestLevel2)row).getId());
-        // TODO remove if (row instanceof SormulaTestLevel3) log.info("--->insert STL3 " + ((SormulaTestLevel3)row).getId());
         return super.modify(row);
     }
 
@@ -175,8 +172,8 @@ public class InsertOperation<R> extends ModifyOperation<R>
                 if (log.isDebugEnabled()) log.debug("prepare cascade " + c.operation());
                 @SuppressWarnings("unchecked") // target field type is not known at compile time
                 CascadeOperation<R, ?> operation = new InsertCascadeOperation(getTable(), targetField, targetTable, c);
-                operation.setForeignKeyFieldNames(icar.getForeignKeyValueFields());
-                operation.setForeignKeyReferenceFieldName(icar.getForeignKeyReferenceField());
+                if (c.setForeignKeyValues()) operation.setForeignKeyFieldNames(icar.getForeignKeyValueFields());
+                if (c.setForeignKeyReference()) operation.setForeignKeyReferenceFieldName(icar.getForeignKeyReferenceField());
                 operation.prepare();
                 co.add(operation);
             }

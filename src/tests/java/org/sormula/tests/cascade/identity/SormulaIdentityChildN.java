@@ -17,6 +17,7 @@
 package org.sormula.tests.cascade.identity;
 
 import org.sormula.annotation.Column;
+import org.sormula.annotation.Transient;
 import org.sormula.annotation.Where;
 
 
@@ -32,6 +33,9 @@ public class SormulaIdentityChildN
     int childId;
     int parentId;
     String description;
+    
+    @Transient
+    SormulaIdentityParent parent;
     
     
     public SormulaIdentityChildN()
@@ -72,5 +76,15 @@ public class SormulaIdentityChildN
     public void setDescription(String description)
     {
         this.description = description;
+    }
+
+
+    public SormulaIdentityParent getParent()
+    {
+        return parent;
+    }
+    public void setParent(SormulaIdentityParent parent)
+    {
+        this.parent = parent;
     }
 }

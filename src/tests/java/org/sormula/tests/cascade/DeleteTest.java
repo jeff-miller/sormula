@@ -104,7 +104,7 @@ public class DeleteTest extends DatabaseTest<SormulaTestParent>
     
 
     @Test
-    public void deleeOneToManyMap() throws SormulaException
+    public void deleteOneToManyMap() throws SormulaException
     {
         begin();
         Table<SormulaTestParent> parentTable = getTable();

@@ -124,6 +124,7 @@ public abstract class ModifyCascadeOperation<S, T> extends CascadeOperation<S, T
                 }
             
                 setForeignKeyValues(modifyOperation.getRows());
+                setForeignKeyReference(modifyOperation.getRows());
                 modifyOperation.execute();
             }
             else

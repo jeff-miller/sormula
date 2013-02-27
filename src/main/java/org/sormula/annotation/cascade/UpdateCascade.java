@@ -51,4 +51,32 @@ public @interface UpdateCascade
      * to perform cascade before source row operation
      */
     boolean post() default true;
+    
+
+    /**
+     * Indicates that foreign key values should be set on target (child) rows during cascade.
+     * Foreign key value fields are defined by {@link Cascade#foreignKeyValueFields()},
+     * {@link OneToManyCascade#foreignKeyValueFields()}, or {@link OneToOneCascade#foreignKeyValueFields()}.
+     * <p>
+     * Foreign key values are set prior to cascade for insert, update, delete, and save cascades.
+     * They are set after select cascades.
+     * 
+     * @return true to set foreign key values during cascade
+     * @since 3.0
+     */
+    boolean setForeignKeyValues() default true;
+    
+    
+    /**
+     * Indicates that foreign key reference should be set on target (child) rows during cascade.
+     * Foreign key reference field is defined by {@link Cascade#foreignKeyReferenceField()},
+     * {@link OneToManyCascade#foreignKeyReferenceField()}, or {@link OneToOneCascade#foreignKeyReferenceField()}.
+     * <p>
+     * Foreign key reference is set prior to cascade for insert, update, delete, and save cascades.
+     * It is set after select cascades.
+     * 
+     * @return true to set foreign key reference during cascade
+     * @since 3.0
+     */
+    boolean setForeignKeyReference() default true;
 }

@@ -45,7 +45,11 @@ public class UpdateTest extends DatabaseTest<IdentityTest>
             openDatabase();
             createTable(IdentityTest.class);
         }
-    }
+        else
+        {
+            log.info("skipping identity test " + getClass());
+        }
+}
     
     
     @AfterClass
@@ -79,10 +83,6 @@ public class UpdateTest extends DatabaseTest<IdentityTest>
             assert row2 != null && row2.getDescription().equals(row.getDescription()) : "updated row not same";
             
             commit();
-        }
-        else
-        {
-            log.info("skipping updateOne for IDENTITY type");
         }
     }
 }

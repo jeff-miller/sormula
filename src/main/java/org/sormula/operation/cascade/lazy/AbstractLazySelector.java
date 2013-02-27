@@ -310,8 +310,8 @@ abstract public class AbstractLazySelector<R> implements LazySelectable, Seriali
                     SelectCascadeOperation<R, ?> operation = new SelectCascadeOperation(sourceTable, targetField, targetTable, c);
                     try
                     {
-                        operation.setForeignKeyFieldNames(scar.getForeignKeyValueFields());
-                        operation.setForeignKeyReferenceFieldName(scar.getForeignKeyReferenceField());
+                        if (c.setForeignKeyValues()) operation.setForeignKeyFieldNames(scar.getForeignKeyValueFields());
+                        if (c.setForeignKeyReference()) operation.setForeignKeyReferenceFieldName(scar.getForeignKeyReferenceField());
                         operation.prepare();
                         operation.cascade(source);
                     }

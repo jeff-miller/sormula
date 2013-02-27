@@ -125,9 +125,13 @@ public @interface OneToManyCascade
     DeleteCascade[] deletes() default @DeleteCascade();
     
     
-    /** TODO update javadoc
-     * Indicates that insert cascade should set foreign key(s) on target (child) rows before
-     * they are inserted. When target (parent) row is cascaded, then each target (child) row
+    /** 
+     * Defines foreign key(s) on target (child) rows. Used by cascades when the following is true:
+     * {@link SelectCascade#setForeignKeyValues()}, {@link InsertCascade#setForeignKeyValues()},
+     * {@link UpdateCascade#setForeignKeyValues()}, {@link DeleteCascade#setForeignKeyValues()},
+     * {@link SaveCascade#setForeignKeyValues()}.
+     * <p>
+     * When target (parent) row is cascaded, then each target (child) row
      * foreign key setters are invoked with values from source (parent) primary key. 
      * <p>
      * Source row key(s) are primary keys in source row where {@link Column#primaryKey()} is true.
@@ -135,20 +139,32 @@ public @interface OneToManyCascade
      * When asterisk (*) is used, then cascade assumes that source key field names are the
      * same as target (child) key field names. For example: Parent.parentId --> Child.parentId.
      * <p>
-     * If explicit fields are named, then they must be in same order as source row key fields.
+     * If explicit fields are named, then they must be in same order as source row primary key fields.
      * 
      * @return names of foreign key fields in child (target) row; asterisk "*" means use
-     * same foreign key names as source (parent) field names; empty array means don't set foreign 
-     * key(s) on target rows
+     * same foreign key names as source (parent) field names; empty array means no foreign keys are defined 
+     * 
      * @since 3.0
      */
     String[] foreignKeyValueFields() default {}; 
     
     
-    /**
-     * TODO
-     * TODO member set by method must be Transient or ignored to avoid saving to db 
-     * @return
+    /** 
+     * Defines foreign key reference on target (child) rows. Used by cascades when the following is true:
+     * {@link SelectCascade#setForeignKeyReference()}, {@link InsertCascade#setForeignKeyReference()},
+     * {@link UpdateCascade#setForeignKeyReference()}, {@link DeleteCascade#setForeignKeyReference()},
+     * {@link SaveCascade#setForeignKeyReference()}.
+     * <p>
+     * When target (parent) row is cascaded, then each target (child) row
+     * foreign key reference setter is invoked with reference to source (parent). 
+     * <p>
+     * When asterisk (*) is used, then cascade assumes that target (child) key reference field
+     * name is parent class simple name (begins with lower case). For example: SomeParent (source) of
+     * SomeChild (target) will use SomeChild.someParent field and invoke SomeChild.setSomeParent(SomeParent). 
+     * 
+     * @return name of foreign key reference field in child (target) row; asterisk "*" means use
+     * source (parent) class name; empty string means no foreign key reference is defined 
+     * 
      * @since 3.0
      */
     String foreignKeyReferenceField() default "";

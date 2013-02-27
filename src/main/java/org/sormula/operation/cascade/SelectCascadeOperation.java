@@ -102,6 +102,7 @@ public class SelectCascadeOperation<S, T> extends CascadeOperation<S, T>
                 // non collection type, set target row as next row
                 T targetRow = selectOperation.readNext();
                 setForeignKeyValues(targetRow);
+                setForeignKeyReference(targetRow);
                 targetField.invokeSetMethod(sourceRow, targetRow);
             }
             else
@@ -117,6 +118,7 @@ public class SelectCascadeOperation<S, T> extends CascadeOperation<S, T>
                     @SuppressWarnings("unchecked") // target field type is not known at compile time
                     Collection<T> c = (Collection<T>)rows;
                     setForeignKeyValues(c);
+                    setForeignKeyReference(c);
                     
                     if (targetField.isArray())
                     {
@@ -137,7 +139,8 @@ public class SelectCascadeOperation<S, T> extends CascadeOperation<S, T>
 
                     Collection<T> mapValues = m.values();
                     setForeignKeyValues(mapValues);
-
+                    setForeignKeyReference(mapValues);
+                    
                     if (targetField.isArray())
                     {
                         // set as array

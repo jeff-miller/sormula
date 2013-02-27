@@ -17,12 +17,15 @@
 package org.sormula.operation.cascade;
 
 import java.lang.reflect.Constructor;
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
 import org.sormula.Table;
-import org.sormula.annotation.cascade.InsertCascade;
+import org.sormula.annotation.cascade.Cascade;
+import org.sormula.annotation.cascade.OneToManyCascade;
+import org.sormula.annotation.cascade.OneToOneCascade;
 import org.sormula.operation.OperationException;
 import org.sormula.operation.SqlOperation;
 import org.sormula.reflect.ReflectException;
@@ -47,11 +50,11 @@ public abstract class CascadeOperation<S, T>
     Class <?> cascadeOperationClass;
     boolean post;
     String[] foreignKeyValueFieldNames;
-    String foreignKeyReferenceFieldName; // TODO
+    String foreignKeyReferenceFieldName;
     S sourceRow;
     List<SormulaField<S, Object>> sourceKeyFieldList;
     List<SormulaField<T, Object>> targetForeignKeyFieldList;
-    SormulaField<T, Object> targetForeignReferenceField; // TODO
+    SormulaField<T, Object> targetForeignReferenceField;
     int keyFieldCount;
     
     
@@ -117,8 +120,9 @@ public abstract class CascadeOperation<S, T>
 	
 
 	/**
-	 * TODO
-	 * @return
+	 * Gets the field key value field names in target (child) rows.
+	 * 
+	 * @return target (child) row foreign key fields; null means don't update foreign key values
 	 * @since 3.0
 	 */
 	public String[] getForeignKeyFieldNames()
@@ -127,20 +131,30 @@ public abstract class CascadeOperation<S, T>
     }
 
 
-	/**
-	 * TODO
-	 * @param foreignKeyFieldNames
-	 * @since 3.0
-	 */
+    /**
+     * Sets the name of fields that contain the foreign key values in target (child) rows.
+     * If length of array parameter is zero, then null is used so that null means that no
+     * foreign key fields are defined.
+     * 
+     * @param foreignKeyValueFields field names from cascade annotation foreignKeyValueFields
+     * @since 3.0
+     * @see Cascade#foreignKeyValueFields()
+     * @see OneToManyCascade#foreignKeyValueFields()
+     * @see OneToOneCascade#foreignKeyValueFields()
+     */
     public void setForeignKeyFieldNames(String[] foreignKeyFieldNames)
     {
-        this.foreignKeyValueFieldNames = foreignKeyFieldNames;
+        if (foreignKeyFieldNames != null && foreignKeyFieldNames.length > 0) 
+            this.foreignKeyValueFieldNames = foreignKeyFieldNames;
+        else 
+            this.foreignKeyReferenceFieldName = null;
     }
 
 
     /**
-     * TODO
-     * @return
+     * Gets the name of the foreign key reference field in the target (child) rows.
+     * 
+     * @return name; null means dont set reference
      * @since 3.0
      */
     public String getForeignKeyReferenceFieldName()
@@ -150,13 +164,24 @@ public abstract class CascadeOperation<S, T>
 
 
     /**
-     * TODO
-     * @param foreignKeyReferenceFieldName
+     * Sets the field name that contains a reference to the foreign key object in target (child) rows.
+     * If length of parameter is zero, then null is used so that null means that no
+     * foreign key reference field is defined.
+     * 
+     * @param foreignKeyReferenceField field name of foreign key reference from cascade 
+     * annotation foreignKeyReferenceField
+     * 
      * @since 3.0
+     * @see Cascade#foreignKeyReferenceField()
+     * @see OneToManyCascade#foreignKeyReferenceField()
+     * @see OneToOneCascade#foreignKeyReferenceField()
      */
     public void setForeignKeyReferenceFieldName(String foreignKeyReferenceFieldName)
     {
-        this.foreignKeyReferenceFieldName = foreignKeyReferenceFieldName;
+        if (foreignKeyReferenceFieldName != null && foreignKeyReferenceFieldName.length() > 0)
+            this.foreignKeyReferenceFieldName = foreignKeyReferenceFieldName;
+        else
+            this.foreignKeyReferenceFieldName = null;
     }
 
 
@@ -189,14 +214,15 @@ public abstract class CascadeOperation<S, T>
     
     /**
      * Prepares operation by initializing JDBC statements. This method prepares foreign
-     * key mapping with {@link #prepareForeignKeyMapping()}. Subclasses should override
+     * key mapping with {@link #prepareForeignKeyValueFields()}. Subclasses should override
      * to perform additional preparation.
      * 
      * @throws OperationException if error
      */
     public void prepare() throws OperationException
     {
-        prepareForeignKeyMapping();
+        prepareForeignKeyValueFields();
+        prepareForeignKeyReferenceField();
     }
     
     
@@ -283,14 +309,14 @@ public abstract class CascadeOperation<S, T>
     
     /**
      * Prepares accessors that will set foreign key(s) on cascaded target rows as defined by
-     * {@link InsertCascade#foreignKeyValueFields()}.
+     * {@link Cascade#foreignKeyValueFields()}.
      * 
      * @throws OperationException if error
      * @since 3.0
      */
-    protected void prepareForeignKeyMapping() throws OperationException
+    protected void prepareForeignKeyValueFields() throws OperationException
     {
-        if (foreignKeyValueFieldNames.length > 0)
+        if (foreignKeyValueFieldNames != null)
         {
             // at least one foreign key in target
             List<ColumnTranslator<S>> sourceKeyColumnTranslators = getSourceTable().
@@ -305,11 +331,11 @@ public abstract class CascadeOperation<S, T>
             {
                 // for all source primary key(s)
                 int foreignKeyNameIndex = 0;
-                boolean sametargetAndSourceNames = foreignKeyValueFieldNames[0].equals("*");
+                boolean sameTargetAndSourceNames = foreignKeyValueFieldNames[0].equals("*");
                 for (ColumnTranslator<S> sct : sourceKeyColumnTranslators)
                 {
                     String targetFieldName;
-                    if (sametargetAndSourceNames) targetFieldName = sct.getField().getName();
+                    if (sameTargetAndSourceNames) targetFieldName = sct.getField().getName();
                     else                          targetFieldName = foreignKeyValueFieldNames[foreignKeyNameIndex++];
                     
                     ColumnTranslator<T> tct = targetRowTranslator.getColumnTranslator(targetFieldName);
@@ -323,16 +349,55 @@ public abstract class CascadeOperation<S, T>
                     else
                     {
                         throw new OperationException(targetFieldName + " does not exist in " + getTargetTable().getRowClass() + 
-                                " as specified with InsertCascade in " + sourceTable.getRowClass());
+                                " as specified with Cascade.foreignKeyValueFields in " + sourceTable.getRowClass());
                     }
                 }
             }
             catch (ReflectException e)
             {
-                throw new OperationException("error creating method access for InsertCascade", e);
+                throw new OperationException("error creating method access for Cascade", e);
             }
             
             keyFieldCount = sourceKeyFieldList.size();
+        }
+    }
+
+    
+    /**
+     * Prepares accessor that will set foreign key reference on cascaded target rows as defined by
+     * {@link Cascade#foreignKeyReferenceField()}.
+     * 
+     * @throws OperationException if error
+     * @since 3.0
+     */
+    protected void prepareForeignKeyReferenceField() throws OperationException
+    { 
+        if (foreignKeyReferenceFieldName != null)
+        {
+            String targetFieldName;
+            if (foreignKeyReferenceFieldName.equals("*"))
+            {
+                // foreign key field is simple class name
+                String classSimpleName = getSourceTable().getRowClass().getSimpleName();
+                targetFieldName = classSimpleName.substring(0, 1).toLowerCase() +
+                        classSimpleName.substring(1);
+            }
+            else
+            {
+                // foreign key field is specified
+                targetFieldName = foreignKeyReferenceFieldName;
+            }
+            
+            try
+            {
+                Field field = getTargetTable().getRowClass().getDeclaredField(targetFieldName); // TODO allow in subclass too?
+                targetForeignReferenceField = new SormulaField<T, Object>(field);
+            }
+            catch (Exception e)
+            {
+                throw new OperationException("error creating method reference to field " + 
+                        targetFieldName + " in " + getTargetTable().getRowClass(), e);
+            }
         }
     }
     
@@ -358,7 +423,7 @@ public abstract class CascadeOperation<S, T>
         }
         catch (ReflectException e)
         {
-            throw new OperationException("TODO", e);
+            throw new OperationException("error setting foreign key value", e);
         }
     }
 
@@ -376,6 +441,45 @@ public abstract class CascadeOperation<S, T>
         {
             // foreign key mapping is desired
             for (T t : rows) setForeignKeyValues(t);
+        }
+    }
+    
+    
+    /**
+     * Sets the foreign key reference in target (child) row as source (parent) row.
+     * 
+     * @param row target (child) row to affect
+     * @throws OperationException if error
+     * @since 3.0
+     */
+    protected void setForeignKeyReference(T row) throws OperationException
+    {
+        if (targetForeignReferenceField != null)
+        try
+        {
+            // set reference on target row 
+            targetForeignReferenceField.invokeSetMethod(row, sourceRow);
+        }
+        catch (ReflectException e)
+        {
+            throw new OperationException("error setting foreign key reference", e);
+        }
+    }
+
+
+    /**
+     * Sets the foreign key reference in target (child) rows as source (parent) row.
+     * 
+     * @param rows target (child) rows to affect
+     * @throws OperationException if error
+     * @since 3.0
+     */
+    protected void setForeignKeyReference(Collection<T> rows) throws OperationException
+    {
+        if (targetForeignReferenceField != null)
+        {
+            // foreign key mapping is desired
+            for (T t : rows) setForeignKeyReference(t);
         }
     }
 }

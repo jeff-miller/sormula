@@ -38,25 +38,32 @@ public class InsertTest extends DatabaseTest<SormulaIdentityParent>
     @BeforeClass
     public void setUp() throws Exception
     {
-        openDatabase();
-        createTable(SormulaIdentityParent.class, 
-            "CREATE TABLE " + getSchemaPrefix() + SormulaIdentityParent.class.getSimpleName() + " (" +
-            " parentid INTEGER GENERATED ALWAYS AS IDENTITY(START WITH 11) PRIMARY KEY," +
-            " description VARCHAR(60)" +
-            ")"
-        );
-        
-        // create child table for 1 to n relationship
-        DatabaseTest<SormulaIdentityChildN> childN = new DatabaseTest<SormulaIdentityChildN>();
-        childN.openDatabase();
-        childN.createTable(SormulaIdentityChildN.class, 
-                "CREATE TABLE " + getSchemaPrefix() + SormulaIdentityChildN.class.getSimpleName() + " (" +
-                " childid INTEGER GENERATED ALWAYS AS IDENTITY(START WITH 1001) PRIMARY KEY," +
-                " parentid INTEGER NOT NULL," +
+        if (isTestIdentity())
+        {
+            openDatabase();
+            createTable(SormulaIdentityParent.class, 
+                "CREATE TABLE " + getSchemaPrefix() + SormulaIdentityParent.class.getSimpleName() + " (" +
+                " parentid INTEGER GENERATED ALWAYS AS IDENTITY(START WITH 11) PRIMARY KEY," +
                 " description VARCHAR(60)" +
                 ")"
             );
-        childN.closeDatabase();
+            
+            // create child table for 1 to n relationship
+            DatabaseTest<SormulaIdentityChildN> childN = new DatabaseTest<SormulaIdentityChildN>();
+            childN.openDatabase();
+            childN.createTable(SormulaIdentityChildN.class, 
+                    "CREATE TABLE " + getSchemaPrefix() + SormulaIdentityChildN.class.getSimpleName() + " (" +
+                    " childid INTEGER GENERATED ALWAYS AS IDENTITY(START WITH 1001) PRIMARY KEY," +
+                    " parentid INTEGER NOT NULL," +
+                    " description VARCHAR(60)" +
+                    ")"
+                );
+            childN.closeDatabase();
+        }
+        else
+        {
+            log.info("skipping identity test " + getClass());
+        }
     }
     
     
@@ -85,10 +92,6 @@ public class InsertTest extends DatabaseTest<SormulaIdentityParent>
             assert child.getParentId() == parent.getParentId() : "child parent id was not set";
             
             commit();
-        }
-        else
-        {
-            log.info("skipping insertOne for IDENTITY type");
         }
     }
 }

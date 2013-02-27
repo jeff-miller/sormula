@@ -149,9 +149,13 @@ abstract public class CascadeAnnotationReader
 
 
     /**
-     * TODO
-     * @param foreignKeyValueFields
+     * Sets the name of fields that contain the foreign key values in target (child) rows.
+     * 
+     * @param foreignKeyValueFields field names from cascade annotation foreignKeyValueFields
      * @since 3.0
+     * @see Cascade#foreignKeyValueFields()
+     * @see OneToManyCascade#foreignKeyValueFields()
+     * @see OneToOneCascade#foreignKeyValueFields()
      */
     public void setForeignKeyValueFields(String[] foreignKeyValueFields)
     {
@@ -160,8 +164,10 @@ abstract public class CascadeAnnotationReader
 
 
     /** 
-     * TODO
-     * @return
+     * Gets the field names of foreign key values in target (child) rows. See cascade annotations
+     * for details.
+     * 
+     * @return names of foreign key value fields
      * @since 3.0
      */
     public String[] getForeignKeyValueFields()
@@ -171,9 +177,15 @@ abstract public class CascadeAnnotationReader
 
 
     /**
-     * TODO
-     * @param foreignKeyReferenceField
+     * Sets the field name that contains a reference to the foreign key object in target (child) rows.
+     * 
+     * @param foreignKeyReferenceField field name of foreign key reference from cascade 
+     * annotation foreignKeyReferenceField
+     * 
      * @since 3.0
+     * @see Cascade#foreignKeyReferenceField()
+     * @see OneToManyCascade#foreignKeyReferenceField()
+     * @see OneToOneCascade#foreignKeyReferenceField()
      */
     public void setForeignKeyReferenceField(String foreignKeyReferenceField)
     {
@@ -182,8 +194,10 @@ abstract public class CascadeAnnotationReader
 
     
     /**
-     * TODO
-     * @return
+     * Gets the field name of that contains foreign key reference in target (child) rows. 
+     * See cascade annotations for details.
+     * 
+     * @return names of foreign key value fields
      * @since 3.0
      */
     public String getForeignKeyReferenceField()

@@ -14,50 +14,47 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.sormula.tests.cascade.identity;
+package org.sormula.tests.cascade.fk;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.sormula.annotation.Column;
-import org.sormula.annotation.cascade.OneToManyCascade;
-import org.sormula.annotation.cascade.SelectCascade;
+import org.sormula.annotation.Transient;
+import org.sormula.annotation.Where;
 
 
 /**
- * Row class for testing insert cascades when parent uses identity column.
+ * Child of {@link SormulaFKTestParent}.
  * 
  * @author Jeff Miller
  */
-public class SormulaIdentityParent
+@Where(name="byParent", fieldNames="parentId")
+public class SormulaFKTestChildN
 {
-    @Column(identity=true)
+    int id;
     int parentId;
     String description;
     
-    // tests 1 to many relationship
-    @OneToManyCascade( 
-            selects=@SelectCascade(sourceParameterFieldNames="parentId", targetWhereName="byParent"),
-            foreignKeyValueFields="*", foreignKeyReferenceField="parent")
-    List<SormulaIdentityChildN> childList;
+    @Transient // must be transient to avoid infinite recursion for database operations
+    SormulaFKTestParent parent; 
     
     
-    public SormulaIdentityParent()
+    public SormulaFKTestChildN()
     {
-        childList = new ArrayList<SormulaIdentityChildN>();
     }
 
     
-    public SormulaIdentityParent(String description)
+    public SormulaFKTestChildN(int id, String description)
     {
-        this();
+        this.id = id;
         this.description = description;
     }
-
     
-    public void add(SormulaIdentityChildN child)
+    
+    public int getId()
     {
-        childList.add(child);
+        return id;
+    }
+    public void setId(int id)
+    {
+        this.id = id;
     }
     
     
@@ -65,12 +62,12 @@ public class SormulaIdentityParent
     {
         return parentId;
     }
-    public void setParentId(int id)
+    public void setParentId(int parentId)
     {
-        this.parentId = id;
+        this.parentId = parentId;
     }
-    
-    
+
+
     public String getDescription()
     {
         return description;
@@ -81,12 +78,12 @@ public class SormulaIdentityParent
     }
 
 
-    public List<SormulaIdentityChildN> getChildList()
+    public SormulaFKTestParent getParent()
     {
-        return childList;
+        return parent;
     }
-    public void setChildList(List<SormulaIdentityChildN> childList)
+    public void setParent(SormulaFKTestParent parent)
     {
-        this.childList = childList;
+        this.parent = parent;
     }
 }

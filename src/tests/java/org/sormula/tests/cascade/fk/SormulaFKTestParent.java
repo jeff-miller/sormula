@@ -14,18 +14,16 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.sormula.tests.cascade;
+package org.sormula.tests.cascade.fk;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import org.sormula.annotation.Column;
 import org.sormula.annotation.cascade.Cascade;
 import org.sormula.annotation.cascade.DeleteCascade;
 import org.sormula.annotation.cascade.InsertCascade;
 import org.sormula.annotation.cascade.OneToManyCascade;
-import org.sormula.annotation.cascade.OneToOneCascade;
 import org.sormula.annotation.cascade.SaveCascade;
 import org.sormula.annotation.cascade.SelectCascade;
 import org.sormula.annotation.cascade.UpdateCascade;
@@ -33,65 +31,66 @@ import org.sormula.operation.HashMapSelectOperation;
 
 
 /**
- * Row class where child belongs to only one parent so that cascades are defined for all operations
+ * Row class for testing foreign key updates by casacades.
  * 
  * @author Jeff Miller
  */
-public class SormulaTestParent
+public class SormulaFKTestParent
 {
-    @Column(primaryKey=true)
-    int id;
+    int parentId;
     String description;
-    int child1Id;
     
     // tests 1 to many relationship
-    @OneToManyCascade(// test when targetClass is omitted targetClass=SormulaTestChildN.class, 
-            selects=@SelectCascade(sourceParameterFieldNames="id", targetWhereName="byParent"))
-    List<SormulaTestChildN> childList;
-    
-    // tests 1 to 1 relationship
-    @OneToOneCascade(selects=@SelectCascade(sourceParameterFieldNames="child1Id"))
-    SormulaTestChild1 child;
+    @OneToManyCascade( 
+            selects=@SelectCascade(sourceParameterFieldNames="parentId", targetWhereName="byParent"),
+            foreignKeyValueFields="*",          // foreign key fields are same name as parent foreign key (parentId)
+            foreignKeyReferenceField="parent"   // foreign key reference field is named "parent"
+    )
+    List<SormulaFKTestChildN> childList;
     
     // tests general cascade and map type
-    @Cascade(targetClass=SormulaTestChildM.class, // targetClass is optional in v1.9 
-    		selects=@SelectCascade(operation=HashMapSelectOperation.class, sourceParameterFieldNames="id", targetWhereName="byParent", targetKeyMethodName="getId"),
+    @Cascade( 
+    		selects=@SelectCascade(operation=HashMapSelectOperation.class, sourceParameterFieldNames="parentId", targetWhereName="byParent", targetKeyMethodName="getId"),
 			inserts=@InsertCascade(),
             updates=@UpdateCascade(),
             saves=@SaveCascade(),
-            deletes=@DeleteCascade()
+            deletes=@DeleteCascade(),
+            foreignKeyValueFields="parentId",   // foreign key field in child is named "parentId" 
+            foreignKeyReferenceField="*"        // foreign key reference field has same name as parent foreign key class (sormulaFKTestParent)
 	)
-    Map<Integer, SormulaTestChildM> childMap;
+    Map<Integer, SormulaFKTestChildM> childMap;
     
     
-    public SormulaTestParent()
+    public SormulaFKTestParent()
     {
-        childList = new ArrayList<SormulaTestChildN>();
+        childList = new ArrayList<SormulaFKTestChildN>();
     }
 
     
-    public SormulaTestParent(int id, String description)
+    public SormulaFKTestParent(int parentId, String description)
     {
         this();
-        this.id = id;
+        this.parentId = parentId;
         this.description = description;
     }
 
     
-    public void add(SormulaTestChildN child)
+    public void add(SormulaFKTestChildN child)
     {
         childList.add(child);
-        child.setParentId(id);
+        
+        // not needed when foreign key annotated 
+        // child.setParentId(parentId);
     }
     
     
-    public int getId()
+    public int getParentId()
     {
-        return id;
+        return parentId;
     }
-    public void setId(int id)
+    public void setParentId(int id)
     {
-        this.id = id;
+        this.parentId = id;
     }
     
     
@@ -105,41 +104,21 @@ public class SormulaTestParent
     }
 
 
-    public List<SormulaTestChildN> getChildList()
+    public List<SormulaFKTestChildN> getChildList()
     {
         return childList;
     }
-    public void setChildList(List<SormulaTestChildN> childList)
+    public void setChildList(List<SormulaFKTestChildN> childList)
     {
         this.childList = childList;
     }
 
 
-    public int getChild1Id()
-    {
-        return child1Id;
-    }
-    public void setChild1Id(int child1Id)
-    {
-        this.child1Id = child1Id;
-    }
-
-
-    public SormulaTestChild1 getChild()
-    {
-        return child;
-    }
-    public void setChild(SormulaTestChild1 child)
-    {
-        this.child = child;
-    }
-
-
-    public Map<Integer, SormulaTestChildM> getChildMap()
+    public Map<Integer, SormulaFKTestChildM> getChildMap()
     {
 		return childMap;
 	}
-	public void setChildMap(Map<Integer, SormulaTestChildM> childMap) 
+	public void setChildMap(Map<Integer, SormulaFKTestChildM> childMap) 
 	{
 		this.childMap = childMap;
 	}

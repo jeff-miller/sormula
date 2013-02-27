@@ -49,7 +49,7 @@ public class ReadOnlyTest extends DatabaseTest<SormulaTest4RO>
             ")"
         );
         
-        List<SormulaTest4RO> testRows = new ArrayList<SormulaTest4RO>();
+        List<SormulaTest4RO> testRows = new ArrayList<>();
         for (int i = 1; i <= 20; ++i)
         {
             testRows.add(new SormulaTest4RO(i, 1, "ReadOnlyTest " + i));
@@ -115,7 +115,7 @@ public class ReadOnlyTest extends DatabaseTest<SormulaTest4RO>
         
         // test readonly at operation level
         getDatabase().setReadOnly(false); // operation gets false when created
-        DeleteOperation<SormulaTest4RO> delete = new DeleteOperation<SormulaTest4RO>(getTable());
+        DeleteOperation<SormulaTest4RO> delete = new DeleteOperation<>(getTable());
         assert !delete.isReadOnly() : "incorrect read-only state";
         
         delete.setReadOnly(true);

@@ -49,6 +49,7 @@ import org.sormula.Table;
 public class ZeroConfigExample
 {
     Connection connection;
+    Database database;
     Table<Inventory> inventoryTable;
     
     
@@ -71,7 +72,7 @@ public class ZeroConfigExample
     {
         Class.forName("org.hsqldb.jdbc.JDBCDriver");
         connection = DriverManager.getConnection("jdbc:hsqldb:file:exampleDB;shutdown=true");
-        Database database = new Database(connection);
+        database = new Database(connection);
         inventoryTable = database.getTable(Inventory.class);
     }
     
@@ -79,6 +80,7 @@ public class ZeroConfigExample
     public void close() throws Exception
     {
         connection.close();
+        database.close();
     }
     
     

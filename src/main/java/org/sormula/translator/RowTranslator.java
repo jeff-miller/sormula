@@ -82,7 +82,7 @@ public class RowTranslator<R> extends ColumnsTranslator<R>
         this.table = table;
         initColumnTranslators();
         initUnusedColumnSql(rowClass);
-        primaryKeyWhereTranslator = new PrimaryKeyWhereTranslator<R>(this);
+        primaryKeyWhereTranslator = new PrimaryKeyWhereTranslator<>(this);
         
         if (log.isDebugEnabled())
         {

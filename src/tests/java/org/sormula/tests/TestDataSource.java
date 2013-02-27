@@ -19,6 +19,7 @@ package org.sormula.tests;
 import java.io.PrintWriter;
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.sql.SQLFeatureNotSupportedException;
 import java.util.logging.Logger;
 
 import javax.sql.DataSource;
@@ -70,11 +71,10 @@ public class TestDataSource implements DataSource
     }
 
     /* required for jdk 7 */
-    public Logger getParentLogger() /* jdk 7 only: throws SQLFeatureNotSupportedException */
+    public Logger getParentLogger() throws SQLFeatureNotSupportedException 
     {
         return null;
     }
-    
     /* required for jdk 7 */
     public <T> T unwrap(Class<T> iface) throws SQLException
     {

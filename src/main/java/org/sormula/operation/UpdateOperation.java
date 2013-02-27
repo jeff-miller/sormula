@@ -165,7 +165,7 @@ public class UpdateOperation<R> extends ModifyOperation<R>
             if (log.isDebugEnabled()) log.debug("prepareCascades() for " + field.getName());
             Table<?> targetTable = getTargetTable(ucar.getTargetClass(), field);
             SormulaField<R, ?> targetField = createTargetField(field);
-            co = new ArrayList<CascadeOperation<R, ?>>(updateCascades.length);
+            co = new ArrayList<>(updateCascades.length);
             
             // for each cascade operation
             for (UpdateCascade c: updateCascades)

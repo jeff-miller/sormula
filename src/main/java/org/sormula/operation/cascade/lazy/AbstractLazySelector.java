@@ -292,7 +292,7 @@ abstract public class AbstractLazySelector<R> implements LazySelectable, Seriali
             
             // init loop variables
             SelectCascadeAnnotationReader scar = new SelectCascadeAnnotationReader(field);
-            SormulaField<R, ?> targetField = new SormulaField<R, Object>(scar.getSource());
+            SormulaField<R, ?> targetField = new SormulaField<>(scar.getSource());
             Table<?> targetTable = getDatabase().getTable(scar.getTargetClass());
             
             begin();
@@ -356,7 +356,7 @@ abstract public class AbstractLazySelector<R> implements LazySelectable, Seriali
             
             // create map of field name to field for all that contain lazy select cascade
             List<Field> lazyFields = getDatabase().getTable(source.getClass()).getLazySelectCascadeFields();
-            pendingLazySelectFields = new HashMap<String, Field>(lazyFields.size() * 2);
+            pendingLazySelectFields = new HashMap<>(lazyFields.size() * 2);
             for (Field f: lazyFields) pendingLazySelectFields.put(f.getName(), f);
         }
         catch (SormulaException e)

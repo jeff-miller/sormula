@@ -42,7 +42,7 @@ import org.sormula.translator.RowTranslator;
  * @param <S> row class of table that is source of cascade
  * @param <T> row class of table that is target of cascade 
  */
-public abstract class CascadeOperation<S, T>
+public abstract class CascadeOperation<S, T> implements AutoCloseable
 {
     Table<S> sourceTable;
     SormulaField<S, ?> targetField;

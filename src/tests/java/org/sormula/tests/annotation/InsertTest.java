@@ -79,7 +79,7 @@ public class InsertTest extends DatabaseTest<SormulaTestA>
     public void insertCollection() throws SormulaException
     {
         begin();
-        ArrayList<SormulaTestA> list = new ArrayList<SormulaTestA>();
+        ArrayList<SormulaTestA> list = new ArrayList<>();
         
         for (int id = 101; id < 400; ++id)
         {

@@ -174,8 +174,7 @@ public class ActiveRecordExample
         System.out.println("selectByRange2 " + minimumQuanity + " " + maximumQuantity);
         
         // use a specific active data base (data source) instead of default
-        ActiveTable<Inventory> table = new ActiveTable<Inventory>(
-                new ActiveDatabase(dataSource), Inventory.class);
+        ActiveTable<Inventory> table = new ActiveTable<>(new ActiveDatabase(dataSource), Inventory.class);
 
         // select
         List<Inventory> results = table.selectAllCustom(
@@ -194,7 +193,7 @@ public class ActiveRecordExample
      */
     public void selectIn() throws Exception
     {
-        ArrayList<Integer> partNumbers = new ArrayList<Integer>();
+        ArrayList<Integer> partNumbers = new ArrayList<>();
         partNumbers.add(999);
         partNumbers.add(777);
         partNumbers.add(1234);

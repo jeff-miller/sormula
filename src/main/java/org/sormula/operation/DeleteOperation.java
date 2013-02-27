@@ -161,7 +161,7 @@ public class DeleteOperation<R> extends ModifyOperation<R>
             if (log.isDebugEnabled()) log.debug("prepareCascades() for " + field.getName());
             Table<?> targetTable = getTargetTable(dcar.getTargetClass(), field);
             SormulaField<R, ?> targetField = createTargetField(field);
-            co = new ArrayList<CascadeOperation<R, ?>>(deleteCascades.length);
+            co = new ArrayList<>(deleteCascades.length);
             
             // for each cascade operation
             for (DeleteCascade c: deleteCascades)

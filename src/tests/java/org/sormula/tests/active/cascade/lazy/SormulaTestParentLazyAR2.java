@@ -14,38 +14,21 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.sormula.active.operation;
+package org.sormula.tests.active.cascade.lazy;
 
-import java.util.Collection;
-
-import org.sormula.Table;
-import org.sormula.active.ActiveRecord;
-import org.sormula.active.ActiveTable;
+import org.sormula.annotation.Row;
 
 
 /**
- * Delegate for {@link Table#updateAllBatch(Collection)}.
+ * Sublcass of {@link SormulaTestParentLazyAR} for testing inherited fields using
+ * lazy loading.
  * 
  * @author Jeff Miller
- * @since 1.9 and 2.3
- * @param <R> record type
  */
-public class UpdateAllBatch<R extends ActiveRecord<? super R>> extends ActiveOperation<R, Integer>
+@Row(tableName="SormulaTestParentLazyAR", // use same table as superclass
+    inhertedFields=true // tests use of inherited fields in active record
+)
+public class SormulaTestParentLazyAR2 extends SormulaTestParentLazyAR
 {
-    Collection<R> records;
-    
-    
-    public UpdateAllBatch(ActiveTable<R> activeTable, Collection<R> records)
-    {
-        super(activeTable, "error updating active record collection in batch");
-        this.records = records;
-    }
-
-    
-    @Override
-    public Integer operate() throws Exception
-    {
-        attach(records);
-        return getTable().updateAllBatch(records);
-    }
+    private static final long serialVersionUID = 1L;
 }

@@ -30,7 +30,7 @@ import org.sormula.active.ActiveTable;
  * @since 1.7 and 2.1
  * @param <R> record type
  */
-public class SelectAll<R extends ActiveRecord<R>> extends ActiveOperation<R, List<R>>
+public class SelectAll<R extends ActiveRecord<? super R>> extends ActiveOperation<R, List<R>>
 {
     public SelectAll(ActiveTable<R> activeTable)
     {

@@ -665,7 +665,7 @@ public abstract class SqlOperation<R>
     protected void prepareCascades() throws OperationException
     {
         // for all fields
-        for (Field f: getTable().getRowTranslator().getRowClass().getDeclaredFields())
+        for (Field f: getTable().getRowTranslator().getDeclaredFields())
         {
             List<CascadeOperation<R, ?>> fieldCascades = prepareCascades(f);
             

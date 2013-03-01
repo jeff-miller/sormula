@@ -34,11 +34,14 @@ package org.sormula.translator;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.sormula.Table;
 import org.sormula.annotation.Column;
 import org.sormula.annotation.ImplicitType;
 import org.sormula.annotation.ImplicitTypeAnnotationReader;
+import org.sormula.annotation.Row;
 import org.sormula.annotation.Transient;
 import org.sormula.annotation.UnusedColumn;
 import org.sormula.annotation.UnusedColumns;
@@ -67,6 +70,7 @@ public class RowTranslator<R> extends ColumnsTranslator<R>
     String unusedColumnInsertValuesSql;
     String unusedColumnUpdateSql;
     ColumnTranslator<R> identityColumnTranslator;
+    boolean inheritedFields;
     
     
     /**
@@ -76,10 +80,28 @@ public class RowTranslator<R> extends ColumnsTranslator<R>
      * @throws TranslatorException if error
      * @since 1.6 and 2.0
      */
+    @Deprecated // use RowTranslator(Table<R>, Row) constructor 
     public RowTranslator(Table<R> table) throws TranslatorException
+    {
+        this(table, null);
+    }
+    
+    
+    /**
+     * Constructs for a table.
+     * 
+     * @param table table associated with this row translator
+     * @param rowAnnotation row annotation on table or row class
+     * @throws TranslatorException if error
+     * @since 3.0
+     */
+    public RowTranslator(Table<R> table, Row rowAnnotation) throws TranslatorException
     {
         super(table.getRowClass());
         this.table = table;
+        
+        if (rowAnnotation != null) inheritedFields = rowAnnotation.inhertedFields();
+
         initColumnTranslators();
         initUnusedColumnSql(rowClass);
         primaryKeyWhereTranslator = new PrimaryKeyWhereTranslator<R>(this);
@@ -109,7 +131,154 @@ public class RowTranslator<R> extends ColumnsTranslator<R>
         return identityColumnTranslator;
     }
 
+
+    /**
+     * Reports if super class fields are used.
+     * 
+     * @return true if fields used include super class fields; false to use only fields in {@link #getRowClass()}
+     * @since 3.0
+     * @see Row#inhertedFields()
+     */
+    public boolean isInheritedFields()
+    {
+        return inheritedFields;
+    }
+
     
+    /**
+     * Gets all of the declared fields for {@link #getRowClass()}. Also gets declared fields for
+     * subclass(es) if {@link #isInheritedFields()} is true. Subclass fields appear in array prior
+     * to superclass fields.
+     * 
+     * @return all fields for row class (and optionaly row class superclass(es))
+     * @since 3.0
+     */
+    public Field[] getDeclaredFields()
+    {
+        if (!inheritedFields || rowClass.getSuperclass() == null)
+        {
+            // simple case
+            return rowClass.getDeclaredFields();
+        }
+        else
+        {
+            // find recursively
+            List<Field[]> classHierarchyFields = new ArrayList<Field[]>();
+            getDeclaredFields(rowClass, classHierarchyFields);
+            
+            // calculate return array length
+            int length = 0;
+            for (Field[] fields : classHierarchyFields) length += fields.length;
+            
+            // create return array
+            int i = 0;
+            Field[] returnFields = new Field[length];
+            for (Field[] fields : classHierarchyFields) 
+            {
+                for (Field f : fields) returnFields[i++] = f;      
+            }
+            
+            return returnFields;
+        }
+    }
+    
+    
+    /**
+     * Recurisvely searches for declared fields in super class(es) of clazz and then clazz parameter.
+     * 
+     * @param clazz get fields from this class and superclass(es)
+     * @param classHierarchyFields each class fields are added to this list 
+     * @since 3.0
+     */
+    protected void getDeclaredFields(Class<?> clazz, List<Field[]> classHierarchyFields)
+    {
+        Class<?> superClass = clazz.getSuperclass();
+        
+        if (superClass != null)
+        {
+            // check super class first 
+            getDeclaredFields(superClass, classHierarchyFields);
+        }
+
+        // clazz's fields
+        classHierarchyFields.add(clazz.getDeclaredFields());
+    }
+
+    
+    /**
+     * Gets a declared field of {@link #getRowClass()}. Searches for declared fields in
+     * subclass(es) of {@link #getRowClass()} if {@link #isInheritedFields()} is true. Subclasses 
+     * are searched prior to to superclasses.
+     *
+     * @param fieldName get field for this name
+     * @return field for row class (and optionaly row class superclass(es)); null if field not found
+     * @since 3.0
+     */
+    public Field getDeclaredField(String fieldName)
+    {
+        if (inheritedFields)
+        {
+            // recursively check starting with super most class
+            return getDeclaredField(rowClass, fieldName);
+        }
+        else
+        {
+            // search row class only
+            Field field;
+            
+            try
+            {
+                field = rowClass.getDeclaredField(fieldName);
+            }
+            catch (NoSuchFieldException e)
+            {
+                field = null;
+            }
+            
+            return field;
+        }
+    }
+    
+    
+    /**
+     * Recurisvely searches for declared field in superclass(es) of clazz and then clazz parameter.
+     * 
+     * @param clazz get fields from this class and superclass(es)
+     * @param fieldName get field for this name
+     * @return field or null if not found
+     * @since 3.0
+     */
+    protected Field getDeclaredField(Class<?> clazz, String fieldName)
+    {
+        Field field = null;
+        
+        if (inheritedFields)
+        {
+            Class<?> superClass = clazz.getSuperclass();
+            
+            if (superClass != null)
+            {
+                // check super class first
+                field = getDeclaredField(superClass, fieldName);
+            }
+        }
+        
+        if (field == null)
+        {
+            // not found in super class, check clazz
+            try
+            {
+                field = clazz.getDeclaredField(fieldName);
+            }
+            catch (NoSuchFieldException e)
+            {
+            }
+        }
+        
+        return field;
+    }
+    
+
     /**
      * Process {@link Transient} and {@link Cascade} annotations.
      * <p>
@@ -123,8 +292,7 @@ public class RowTranslator<R> extends ColumnsTranslator<R>
     protected void initColumnTranslators() throws TranslatorException
     {
         Class<R> rowClass = getRowClass();
-        Field[] fields = rowClass.getDeclaredFields();
-      //TODO Field[] fields = rowClass.getFields(); // TODO allow subclass fields?
+        Field[] fields = getDeclaredFields();
         initColumnTranslatorList(fields.length);
         
         // for all fields

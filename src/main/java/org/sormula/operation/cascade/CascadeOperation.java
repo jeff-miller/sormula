@@ -390,10 +390,10 @@ public abstract class CascadeOperation<S, T>
             
             try
             {
-                Field field = getTargetTable().getRowClass().getDeclaredField(targetFieldName); // TODO allow in subclass too?
+                Field field = getTargetTable().getRowTranslator().getDeclaredField(targetFieldName);
                 targetForeignReferenceField = new SormulaField<T, Object>(field);
             }
-            catch (Exception e)
+            catch (ReflectException e)
             {
                 throw new OperationException("error creating method reference to field " + 
                         targetFieldName + " in " + getTargetTable().getRowClass(), e);

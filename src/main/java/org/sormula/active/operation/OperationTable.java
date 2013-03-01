@@ -7,6 +7,7 @@ import org.sormula.SormulaException;
 import org.sormula.Table;
 import org.sormula.active.ActiveDatabase;
 import org.sormula.active.ActiveRecord;
+import org.sormula.annotation.Row;
 import org.sormula.annotation.cache.Cached;
 import org.sormula.annotation.cache.CachedAnnotationReader;
 import org.sormula.cache.Cache;
@@ -75,10 +76,10 @@ public class OperationTable<R extends ActiveRecord> extends Table<R>
      * database to the row using {@link ActiveRecord#attach(ActiveDatabase)}.
      */
     @Override
-    protected RowTranslator<R> initRowTranslator() throws TranslatorException
+    protected RowTranslator<R> initRowTranslator(Row rowAnnotation) throws TranslatorException
     {
         // row translator attaches each row to active database
-        return new RowTranslator<R>(this)
+        return new RowTranslator<R>(this, rowAnnotation)
         {
             @Override
             public int read(ResultSet resultSet, int columnIndex, R row) throws TranslatorException

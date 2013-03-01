@@ -32,7 +32,7 @@ import org.sormula.reflect.SormulaField;
  * @since 1.8 and 2.2
  * @param <R> record type
  */
-public class ActiveLazySelector<R extends ActiveRecord<R>> extends ActiveOperation<R, Void>
+public class ActiveLazySelector<R extends ActiveRecord<? super R>> extends ActiveOperation<R, Void>
 {
     R sourceActiveRecord;    
     SelectCascadeAnnotationReader scar;

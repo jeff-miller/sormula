@@ -59,6 +59,12 @@ public @interface Row
     int initialCapacity() default 20; // TODO move to Where?
     
     
-    // TODO
-    boolean inhertedFields() default false; // allow subclass fields
+    /**
+     * Indicates that declared fields from the entire class hierarchy are to be used. Super class fields
+     * are read prior to subclass fields.
+     * 
+     * @return true to use declared fields in super class(es); false to use declared fields only from
+     * class with {@link Row} annotation
+     */
+    boolean inhertedFields() default false; 
 }

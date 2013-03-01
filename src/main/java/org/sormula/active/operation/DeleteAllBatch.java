@@ -30,7 +30,7 @@ import org.sormula.active.ActiveTable;
  * @since 1.9 and 2.3
  * @param <R> record type
  */
-public class DeleteAllBatch<R extends ActiveRecord<R>> extends ActiveOperation<R, Integer>
+public class DeleteAllBatch<R extends ActiveRecord<? super R>> extends ActiveOperation<R, Integer>
 {
     Collection<R> records;
     

@@ -27,7 +27,7 @@ import org.sormula.tests.DatabaseTest;
  * 
  * @author Jeff Miller
  */
-public class ActiveDatabaseTest<R extends ActiveRecord<R>> extends DatabaseTest<R>
+public class ActiveDatabaseTest<R extends ActiveRecord<? super R>> extends DatabaseTest<R>
 {
     ActiveDatabase activeDatabase;
     ActiveTable<R> activeTable;

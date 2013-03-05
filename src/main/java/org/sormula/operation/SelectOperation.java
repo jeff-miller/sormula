@@ -35,7 +35,7 @@ public abstract class SelectOperation<R, C> extends ScalarSelectOperation<R>
 // TODO or SelectOperationIterator?
 // see see http://stackoverflow.com/questions/1870022/java-resultset-hasnext
 {
-    int defaultReadAllSize = 20;
+    int defaultReadAllSize;
     C selectedRows;
     
     
@@ -49,6 +49,7 @@ public abstract class SelectOperation<R, C> extends ScalarSelectOperation<R>
     public SelectOperation(Table<R> table) throws OperationException
     {
         super(table);
+        setDefaultReadAllSize(20);
     }
     
     
@@ -64,6 +65,12 @@ public abstract class SelectOperation<R, C> extends ScalarSelectOperation<R>
     public SelectOperation(Table<R> table, String whereConditionName) throws OperationException
     {
         super(table, whereConditionName);
+        
+        if (getWhereAnnotation() == null)
+        {
+            // no where annotation so use default size
+            setDefaultReadAllSize(20);
+        }
     }
     
     
@@ -87,6 +94,20 @@ public abstract class SelectOperation<R, C> extends ScalarSelectOperation<R>
     public void setDefaultReadAllSize(int defaultReadAllSize)
     {
         this.defaultReadAllSize = defaultReadAllSize;
+    }
+
+
+    /**
+     * {@inheritDoc}
+     * Invokes superclass method and then sets the initial capacity {@link #setDefaultReadAllSize(int)} 
+     * if there is a where annotation.
+     * @since 3.0
+     */
+    @Override
+    public void setWhere(String whereConditionName) throws OperationException
+    {
+        super.setWhere(whereConditionName);
+        if (getWhereAnnotation() != null) setDefaultReadAllSize(getWhereAnnotation().selectInitialCapacity());
     }
 
 

@@ -83,6 +83,7 @@ public abstract class SqlOperation<R>
     boolean primaryKey;
     boolean cached;
     boolean cascade;
+    Where whereAnnotation;
     
 
     /**
@@ -868,13 +869,13 @@ public abstract class SqlOperation<R>
         {
             primaryKey = true;
             setWhereTranslator(table.getRowTranslator().getPrimaryKeyWhereTranslator());
+            whereAnnotation = null;
         }
         else if (whereConditionName.length() > 0)
         {
             try
             {
                 // look for where annotation
-                Where whereAnnotation;
                 if (table.isLegacyAnnotationPrecedence())
                 {
                     // in operation, table class, row class (in that order)
@@ -906,6 +907,7 @@ public abstract class SqlOperation<R>
         {
             // no where
             setWhereTranslator(null);
+            whereAnnotation = null;
         }
     }
     
@@ -918,6 +920,18 @@ public abstract class SqlOperation<R>
     public String getWhereConditionName()
     {
         return whereConditionName;
+    }
+    
+    
+    /**
+     * Gets the where annotation in use by this operation.
+     * 
+     * @return where annotation set by {@link #setWhere(String)} or null if none
+     * @since 3.0
+     */
+    public Where getWhereAnnotation()
+    {
+        return whereAnnotation;
     }
     
 

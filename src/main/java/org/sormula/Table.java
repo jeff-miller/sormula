@@ -113,6 +113,7 @@ public class Table<R> implements TypeTranslatorMap, TransactionListener
     List<Field> lazySelectCascadeFields;
     Cache<R> cache;
     boolean legacyAnnotationPrecedence;
+    Row rowAnnotation;
     
     
     /**
@@ -136,7 +137,6 @@ public class Table<R> implements TypeTranslatorMap, TransactionListener
         initTypeTranslatorMap();
         
         // process row annotation
-        Row rowAnnotation;
         if (legacyAnnotationPrecedence)
         {
             // table then row
@@ -658,7 +658,9 @@ public class Table<R> implements TypeTranslatorMap, TransactionListener
      */
     public List<R> selectAll() throws SormulaException
     {
-        return new ArrayListSelectOperation<R>(this, "").selectAll();
+        ArrayListSelectOperation<R> operation = new ArrayListSelectOperation<R>(this, "");
+        if (rowAnnotation != null) operation.setDefaultReadAllSize(rowAnnotation.selectInitialCapacity());
+        return operation.selectAll();
     }
     
     
@@ -751,6 +753,7 @@ public class Table<R> implements TypeTranslatorMap, TransactionListener
     {
     	ArrayListSelectOperation<R> operation = new ArrayListSelectOperation<R>(this, "");
     	operation.setCustomSql(customSql);
+        if (rowAnnotation != null) operation.setDefaultReadAllSize(rowAnnotation.selectInitialCapacity());
     	return operation.selectAll(parameters);
     }
     

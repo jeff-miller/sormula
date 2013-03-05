@@ -23,6 +23,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 import org.sormula.Table;
+import org.sormula.operation.SelectOperation;
 import org.sormula.operation.SqlOperation;
 
 
@@ -64,6 +65,16 @@ public @interface Where
      * @return array of column conditions in where condition
      */
     WhereField[] whereFields() default {};
+    
+    
+    /**
+     * Initial capacity of collection/map that will contain the results from {@link SelectOperation}
+     * that uses this where condition.  Sets this value with
+     * {@link SelectOperation#setDefaultReadAllSize(int)}.
+     * 
+     * @return initial capacity of results colllection/map 
+     */
+    int selectInitialCapacity() default 20;
     
     
     // TODO int maxRows(); ?

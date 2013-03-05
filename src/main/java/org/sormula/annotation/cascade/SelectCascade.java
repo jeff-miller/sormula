@@ -154,12 +154,4 @@ public @interface SelectCascade
      * @see DurableLazySelector
      */
     boolean lazy() default false;
-    
-    
-    /**
-     * TODO initial size of result collection
-     * @return TODO
-     * @since 3.0
-     */
-    int initialCapacity() default 20;
 }

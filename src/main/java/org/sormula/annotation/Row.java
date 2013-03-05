@@ -22,6 +22,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 import org.sormula.Table;
+import org.sormula.operation.SelectOperation;
 import org.sormula.translator.NameTranslator;
 
 
@@ -55,8 +56,14 @@ public @interface Row
     Class<? extends NameTranslator>[] nameTranslators() default {};
     
     
-    // TODO use for select all
-    int initialCapacity() default 20; // TODO move to Where?
+    /**
+     * Initial capacity of collection/map that will contain the results from {@link Table#selectAll()},
+     * {@link Table#selectAllCustom(String, Object...)}, or other {@link Table} method that
+     * does not use a where condition. Sets this value with {@link SelectOperation#setDefaultReadAllSize(int)}.
+     * 
+     * @return initial capacity of results colllection/map for a select
+     */
+    int selectInitialCapacity() default 20;
     
     
     /**

@@ -105,6 +105,16 @@ public class SelectTest extends DatabaseTest<SormulaTest4>
 
     
     @Test
+    public void selectMaximumRows() throws SormulaException
+    {
+        begin();
+        List<SormulaTest4> selected = getTable().selectAllWhere("maximumRowsTest", 2);
+        assert selected.size() <= 10 : "maximumRows annotation failed returned " + selected.size();
+        commit();
+    }
+
+    
+    @Test
     public void selectAggregate() throws SormulaException
     {
         begin();

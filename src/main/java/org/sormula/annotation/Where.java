@@ -24,6 +24,7 @@ import java.lang.annotation.Target;
 import java.sql.PreparedStatement;
 
 import org.sormula.Table;
+import org.sormula.operation.ScalarSelectOperation;
 import org.sormula.operation.SelectOperation;
 import org.sormula.operation.SqlOperation;
 
@@ -95,6 +96,11 @@ public @interface Where
     int fetchSize() default 0;
     
     
-    // TODO int maxRows(); ?
-    // TODO limit(); ?
+    /**
+     * Limits the number of rows to read by invoking {@link ScalarSelectOperation#setMaximumRowsRead(int)}.
+     * 
+     * @return maximum number of rows to read from a result set; {@link Integer#MAX_VALUE} means no limit
+     * @since 3.0
+     */
+    int maximumRows() default Integer.MAX_VALUE;
 }

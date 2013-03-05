@@ -117,6 +117,7 @@ public abstract class SelectOperation<R, C> extends ScalarSelectOperation<R>
         {
             setDefaultReadAllSize(whereAnnotation.selectInitialCapacity());
             setFetchSize(whereAnnotation.fetchSize());
+            setMaximumRowsRead(whereAnnotation.maximumRows());
         }
     }
 

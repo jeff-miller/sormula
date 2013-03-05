@@ -33,7 +33,8 @@ import org.sormula.annotation.Wheres;
  */
 @Wheres({
     @Where(name="byType", fieldNames="type", 
-            selectInitialCapacity=50, fetchSize=44), // exercise branch that sets these values
+            selectInitialCapacity=50, fetchSize=44), // exercise branches that set these values
+    @Where(name="maximumRowsTest", fieldNames="type", maximumRows=10),            
     @Where(name="idIn",  whereFields=@WhereField(name="id", comparisonOperator="in")),
     @Where(name="idIn2", whereFields=@WhereField(name="id", comparisonOperator="in", operand="(6001, 6002)"))
 })

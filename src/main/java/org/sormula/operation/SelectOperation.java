@@ -16,9 +16,12 @@
  */
 package org.sormula.operation;
 
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 import java.util.Collection;
 
 import org.sormula.Table;
+import org.sormula.annotation.Where;
 
 
 /**
@@ -37,6 +40,7 @@ public abstract class SelectOperation<R, C> extends ScalarSelectOperation<R>
 {
     int defaultReadAllSize;
     C selectedRows;
+    int fetchSize;
     
     
     /**
@@ -107,7 +111,13 @@ public abstract class SelectOperation<R, C> extends ScalarSelectOperation<R>
     public void setWhere(String whereConditionName) throws OperationException
     {
         super.setWhere(whereConditionName);
-        if (getWhereAnnotation() != null) setDefaultReadAllSize(getWhereAnnotation().selectInitialCapacity());
+        
+        Where whereAnnotation = getWhereAnnotation(); 
+        if (whereAnnotation != null)
+        {
+            setDefaultReadAllSize(whereAnnotation.selectInitialCapacity());
+            setFetchSize(whereAnnotation.fetchSize());
+        }
     }
 
 
@@ -181,7 +191,55 @@ public abstract class SelectOperation<R, C> extends ScalarSelectOperation<R>
     }
 
 
-	/**
+    /**
+     * Gets the JDBC fetch size set with {@link #setFetchSize(int)}. The default is zero.
+     * 
+     * @return result set fetch size
+     * @since 3.0
+     * @see PreparedStatement#setFetchSize(int)
+     */
+    public int getFetchSize()
+    {
+        return fetchSize;
+    }
+
+
+    /**
+     * Sets the JDBC fetch size to use for prepared statement. Fetch size is set on
+     * prepared statement during {@link #prepare()} with
+     * {@link PreparedStatement#setFetchSize(int)}.
+     * 
+     * @param fetchSize
+     * @since 3.0
+     * @see PreparedStatement#setFetchSize(int)
+     */
+    public void setFetchSize(int fetchSize)
+    {
+        this.fetchSize = fetchSize;
+    }
+
+
+    /**
+     * {@inheritDoc}
+     * Invokes the superclass prepare and then sets the fetch size on the prepared statement.
+     * @since 3.0
+     */
+	@Override
+    protected void prepare() throws OperationException
+    {
+        super.prepare();
+        try
+        {
+            getPreparedStatement().setFetchSize(fetchSize);
+        }
+        catch (SQLException e)
+        {
+            throw new OperationException("error setting fetch size", e);
+        }
+    }
+
+
+    /**
      * Implement to create collection to use by {@link #readAll()}.
      * 
      * @return collection to use for {@link #readAll()}

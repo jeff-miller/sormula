@@ -21,6 +21,7 @@ import java.lang.annotation.Inherited;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
+import java.sql.PreparedStatement;
 
 import org.sormula.Table;
 import org.sormula.operation.SelectOperation;
@@ -70,14 +71,30 @@ public @interface Where
     /**
      * Initial capacity of collection/map that will contain the results from {@link SelectOperation}
      * that uses this where condition.  Sets this value with
-     * {@link SelectOperation#setDefaultReadAllSize(int)}.
+     * {@link SelectOperation#setDefaultReadAllSize(int)}. 
+     * <p>
+     * For queries that return large result sets, setting the initial capacity close to the number of
+     * rows in result set may improve performance since collection/map that holds results will not 
+     * need to be resized as much.
      * 
      * @return initial capacity of results colllection/map 
+     * @since 3.0
      */
     int selectInitialCapacity() default 20;
     
     
+    /**
+     * JDBC fetch size to use for prepared statement. Setting fetch size may improve memory
+     * and/or performance for large result sets.
+     * 
+     * @param fetchSize number of rows that should be fetched from the database when more rows are needed; zero
+     * to ignore
+     * @since 3.0
+     * @see PreparedStatement#setFetchSize(int)
+     */
+    int fetchSize() default 0;
+    
+    
     // TODO int maxRows(); ?
-    // TODO int fetchSize(); ?
     // TODO limit(); ?
 }

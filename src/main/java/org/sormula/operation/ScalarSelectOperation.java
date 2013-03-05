@@ -60,7 +60,6 @@ public class ScalarSelectOperation<R> extends SqlOperation<R>
     OrderByTranslator<R> orderByTranslator;
     RowTranslator<R> rowTranslator;
     int maximumRowsRead = Integer.MAX_VALUE;
-    // TODO int fetchSize;
     int rowsReadCount;
     boolean lazySelectsCascades;
     boolean notifyLazySelects;

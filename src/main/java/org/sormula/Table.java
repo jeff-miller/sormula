@@ -659,7 +659,11 @@ public class Table<R> implements TypeTranslatorMap, TransactionListener
     public List<R> selectAll() throws SormulaException
     {
         ArrayListSelectOperation<R> operation = new ArrayListSelectOperation<R>(this, "");
-        if (rowAnnotation != null) operation.setDefaultReadAllSize(rowAnnotation.selectInitialCapacity());
+        if (rowAnnotation != null)
+        {
+            operation.setDefaultReadAllSize(rowAnnotation.selectInitialCapacity());
+            operation.setFetchSize(rowAnnotation.fetchSize());
+        }
         return operation.selectAll();
     }
     
@@ -753,7 +757,11 @@ public class Table<R> implements TypeTranslatorMap, TransactionListener
     {
     	ArrayListSelectOperation<R> operation = new ArrayListSelectOperation<R>(this, "");
     	operation.setCustomSql(customSql);
-        if (rowAnnotation != null) operation.setDefaultReadAllSize(rowAnnotation.selectInitialCapacity());
+        if (rowAnnotation != null)
+        {
+            operation.setDefaultReadAllSize(rowAnnotation.selectInitialCapacity());
+            operation.setFetchSize(rowAnnotation.fetchSize());
+        }
     	return operation.selectAll(parameters);
     }
     

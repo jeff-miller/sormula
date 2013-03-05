@@ -33,7 +33,7 @@ import org.sormula.annotation.Wheres;
  */
 @Wheres({
     @Where(name="byType", fieldNames="type", 
-            selectInitialCapacity=50), // exercise branch that sets this value
+            selectInitialCapacity=50, fetchSize=44), // exercise branch that sets these values
     @Where(name="idIn",  whereFields=@WhereField(name="id", comparisonOperator="in")),
     @Where(name="idIn2", whereFields=@WhereField(name="id", comparisonOperator="in", operand="(6001, 6002)"))
 })
@@ -42,7 +42,7 @@ import org.sormula.annotation.Wheres;
     @OrderBy(name="ob1", ascending="type"),
     @OrderBy(name="ob2", ascending="description")
 })
-@Row(selectInitialCapacity=300) // exercise branch that sets this value
+@Row(selectInitialCapacity=300, fetchSize=100) // exercise branch that sets these values
 public class SormulaTest4
 {
     @Column(primaryKey=true)

@@ -41,7 +41,8 @@ import org.sormula.annotation.Wheres;
 
 @OrderBys({
     @OrderBy(name="ob1", ascending="type"),
-    @OrderBy(name="ob2", ascending="description")
+    @OrderBy(name="ob2", ascending="description"),
+    @OrderBy(name="obId", ascending="id")
 })
 @Row(selectInitialCapacity=300, fetchSize=100) // exercise branch that sets these values
 public class SormulaTest4

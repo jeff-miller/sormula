@@ -14,6 +14,7 @@ JDK 5/6  JDK 7   comments
                  SelectOperation.setFetchSize sets PreparedStatement fetch size
                  Row.fetchSize and Where.fetchSize configures fetch size
                  Where.maximumRows limits rows read from select operation
+                 SelectOperation implements Iterable to enable SelectOperation objects in for each loops
 1.9.3    2.3.3   save cascades to all levels
 1.9.2    2.3.2   TypeTranslator can be used for primative
 1.9.1    2.3.1   update examples

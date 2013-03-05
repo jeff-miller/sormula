@@ -19,6 +19,7 @@ package org.sormula.operation;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.Collection;
+import java.util.Iterator;
 
 import org.sormula.Table;
 import org.sormula.annotation.Where;
@@ -32,11 +33,7 @@ import org.sormula.annotation.Where;
  * @param <R> class type which contains members for columns of a row in a table
  * @param <C> collection type returned
  */
-public abstract class SelectOperation<R, C> extends ScalarSelectOperation<R>
-// TODO implements Iterable<R> + iterator() method? 
-// TODO or implements Iterator<R> ?
-// TODO or SelectOperationIterator?
-// see see http://stackoverflow.com/questions/1870022/java-resultset-hasnext
+public abstract class SelectOperation<R, C> extends ScalarSelectOperation<R> implements Iterable<R>
 {
     int defaultReadAllSize;
     C selectedRows;
@@ -78,6 +75,16 @@ public abstract class SelectOperation<R, C> extends ScalarSelectOperation<R>
     }
     
     
+    /**
+     * {@inheritDoc}
+     * @since 3.0
+     */
+    public Iterator<R> iterator()
+    {
+        return new SelectIterator<R>(this);
+    }
+
+
     /**
      * Gets the default size to allocate for {@link Collection} C by {@link #createReadAllCollection()}.
      * 

@@ -112,7 +112,7 @@ public class ScalarSelectOperation<R> extends SqlOperation<R>
 
 
     /**
-     * Gets the maximum number of rows to read from result set. This method 
+     * Sets the maximum number of rows to read from result set. This method 
      * does NOT alter SQL to contain anything to limit query but only 
      * limits the number of rows read by {@link #readNext()} and 
      * {@link SelectOperation#readAll()}. Limiting rows read is usefull to avoid

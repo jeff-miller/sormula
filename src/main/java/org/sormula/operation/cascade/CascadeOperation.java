@@ -136,7 +136,7 @@ public abstract class CascadeOperation<S, T>
      * If length of array parameter is zero, then null is used so that null means that no
      * foreign key fields are defined.
      * 
-     * @param foreignKeyValueFields field names from cascade annotation foreignKeyValueFields
+     * @param foreignKeyFieldNames field names from cascade annotation foreignKeyValueFields
      * @since 3.0
      * @see Cascade#foreignKeyValueFields()
      * @see OneToManyCascade#foreignKeyValueFields()
@@ -168,7 +168,7 @@ public abstract class CascadeOperation<S, T>
      * If length of parameter is zero, then null is used so that null means that no
      * foreign key reference field is defined.
      * 
-     * @param foreignKeyReferenceField field name of foreign key reference from cascade 
+     * @param foreignKeyReferenceFieldName field name of foreign key reference from cascade 
      * annotation foreignKeyReferenceField
      * 
      * @since 3.0

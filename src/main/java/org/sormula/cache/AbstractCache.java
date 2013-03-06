@@ -267,7 +267,7 @@ public abstract class AbstractCache<R> implements Cache<R>
      */
     public void log()
     {
-        log.info("hits=" + hits + " (" + getPercentHits() + "%)" + " misses=" + misses); // TODO separate method?
+        log.info("hits=" + hits + " (" + getPercentHits() + "%)" + " misses=" + misses);
         
         if (log.isDebugEnabled())
         {
@@ -448,7 +448,7 @@ public abstract class AbstractCache<R> implements Cache<R>
      * 
      * @return number of cache hits
      */
-    public int getHits() // TODO put in Cache interface?
+    public int getHits()
     {
         return hits;
     }
@@ -468,7 +468,7 @@ public abstract class AbstractCache<R> implements Cache<R>
      * 
      * @return number of cache misses
      */
-    public int getMisses() // TODO  put in Cache interface?
+    public int getMisses()
     {
         return misses;
     }

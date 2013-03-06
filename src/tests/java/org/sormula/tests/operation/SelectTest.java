@@ -17,6 +17,7 @@
 package org.sormula.tests.operation;
 
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -31,6 +32,7 @@ import org.sormula.operation.ArrayListSelectOperation;
 import org.sormula.operation.LinkedHashMapSelectOperation;
 import org.sormula.operation.ListSelectOperation;
 import org.sormula.operation.OperationException;
+import org.sormula.operation.SelectIterator;
 import org.sormula.operation.aggregate.SelectAggregateOperation;
 import org.sormula.tests.DatabaseTest;
 import org.testng.annotations.AfterClass;
@@ -100,6 +102,16 @@ public class SelectTest extends DatabaseTest<SormulaTest4>
         ArrayListSelectOperation<SormulaTest4> s = new ArrayListSelectOperation<>(getTable(), "");
         s.setMaximumRowsRead(maxRows);
         assert maxRows == s.selectAll().size() : "setMaximumRowsRead failed";
+        commit();
+    }
+
+    
+    @Test
+    public void selectMaximumRows() throws SormulaException
+    {
+        begin();
+        List<SormulaTest4> selected = getTable().selectAllWhere("maximumRowsTest", 2);
+        assert selected.size() <= 10 : "maximumRows annotation failed returned " + selected.size();
         commit();
     }
 
@@ -237,6 +249,90 @@ public class SelectTest extends DatabaseTest<SormulaTest4>
         for (SormulaTest4 r : selectedList)
         {
             assert r.getDescription().indexOf("operation") >= 0 : r.getId() + " row is incorrect for where condition";
+        }
+        
+        commit();
+    }
+    
+    
+    @Test
+    public void iteratorTest() throws SormulaException
+    {
+        begin();
+        
+        // get all type 3 rows in id order
+        List<SormulaTest4> type3List = getTable().selectAllWhereOrdered("byType", "obId", 3);
+        
+        // set up iterator to iterate type 3 rows
+        ArrayListSelectOperation<SormulaTest4> itop = new ArrayListSelectOperation<SormulaTest4>(getTable(), "byType");
+        itop.setParameters(3);
+        itop.setOrderBy("obId");
+        // optional itop.execute(); 
+        
+        try
+        {
+            // iterate through type 3, compare to known list
+            Iterator<SormulaTest4> type3Iterator = type3List.iterator();
+            
+            for (SormulaTest4 r : itop)
+            {
+                assert r != null : "SelectIterator returned null";
+                
+                SormulaTest4 test = type3Iterator.next();
+                assert test != null : "SelectIterator has more rows than reference list";
+                
+                assert r.getId() == test.getId() : "iterator error " + r.getId() + 
+                        " out of order with " + test.getId();
+            }
+            
+            assert !type3Iterator.hasNext() : "reference list has more rows than SelectIterator";
+        }
+        finally
+        {
+            itop.close();
+        }
+        
+        commit();
+    }
+    
+    
+    @Test
+    public void iteratorTest2() throws SormulaException
+    {
+        begin();
+        
+        // get all type 3 rows in id order
+        List<SormulaTest4> type3List = getTable().selectAllWhereOrdered("byType", "obId", 3);
+        
+        // set up iterator to iterate type 3 rows
+        ArrayListSelectOperation<SormulaTest4> itop = new ArrayListSelectOperation<SormulaTest4>(getTable(), "byType");
+        itop.setParameters(3);
+        itop.setOrderBy("obId");
+        // optional itop.execute(); 
+        
+        try
+        {
+            // iterate through type 3, compare to known list
+            Iterator<SormulaTest4> type3Iterator = type3List.iterator();
+            SelectIterator<SormulaTest4> selectIterator = new SelectIterator<SormulaTest4>(itop);
+            
+            while (selectIterator.hasNext()) // test with explicit iterator
+            {
+                SormulaTest4 r = selectIterator.next();
+                assert r != null : "SelectIterator returned null";
+                
+                SormulaTest4 test = type3Iterator.next();
+                assert test != null : "SelectIterator has more rows than reference list";
+                
+                assert r.getId() == test.getId() : "iterator error " + r.getId() + 
+                        " out of order with " + test.getId();
+            }
+            
+            assert !type3Iterator.hasNext() : "reference list has more rows than SelectIterator";
+        }
+        finally
+        {
+            itop.close();
         }
         
         commit();

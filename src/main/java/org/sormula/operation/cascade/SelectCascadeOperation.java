@@ -31,6 +31,7 @@ import org.sormula.operation.ScalarSelectOperation;
 import org.sormula.operation.SelectOperation;
 import org.sormula.reflect.ReflectException;
 import org.sormula.reflect.SormulaField;
+import org.sormula.translator.RowTranslator;
 
 
 /**
@@ -180,8 +181,6 @@ public class SelectCascadeOperation<S, T> extends CascadeOperation<S, T>
         // parameter fields to read
         prepareParameterFields();
         
-        // TODO if instanceof SelectOperation, setDefaultReadAllSize
-        
         // where
         selectOperation.setWhere(selectCascadeAnnotation.targetWhereName());
         
@@ -224,7 +223,7 @@ public class SelectCascadeOperation<S, T> extends CascadeOperation<S, T>
     protected void prepareParameterFields() throws OperationException
     {
         // parameters are from source class (target field is in source class)
-        Class sourceRowClass = getTargetField().getField().getDeclaringClass();
+        RowTranslator<S> sourceRowTranslator = getSourceTable().getRowTranslator();
         
         try
         {
@@ -234,16 +233,12 @@ public class SelectCascadeOperation<S, T> extends CascadeOperation<S, T>
             for (int i = 0; i < parameterFieldNames.length; ++i)
             {
                 parameterFields.add(new SormulaField<S, Object>(
-                        sourceRowClass.getDeclaredField(parameterFieldNames[i])));
+                        sourceRowTranslator.getDeclaredField(parameterFieldNames[i])));
             }
         }
         catch (ReflectException e)
         {
             throw new OperationException("error creating SormulaField", e);
-        }
-        catch (NoSuchFieldException e)
-        {
-            throw new OperationException("error getting parameter field", e);
         }
     }
     

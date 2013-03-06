@@ -41,7 +41,7 @@ import org.sormula.log.ClassLogger;
  * @param <R> record type
  * @param <T> execute return type
  */
-public abstract class ActiveOperation<R extends ActiveRecord<R>, T>
+public abstract class ActiveOperation<R extends ActiveRecord<? super R>, T>
 {
     private static final ClassLogger log = new ClassLogger();
     ActiveTable<R> activeTable;

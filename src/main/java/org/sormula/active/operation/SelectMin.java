@@ -29,7 +29,7 @@ import org.sormula.active.ActiveTable;
  * @param <R> record type
  * @param <T> aggregate type
  */
-public class SelectMin<R extends ActiveRecord<R>, T> extends ActiveOperation<R, T>
+public class SelectMin<R extends ActiveRecord<? super R>, T> extends ActiveOperation<R, T>
 {
     String expression;
     String whereConditionName;

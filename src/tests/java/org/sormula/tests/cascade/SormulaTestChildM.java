@@ -25,7 +25,7 @@ import org.sormula.annotation.Where;
  * 
  * @author Jeff Miller
  */
-@Where(name="byParent", fieldNames="parentId")
+@Where(name="byParent", fieldNames="parentId", selectInitialCapacity=33)
 public class SormulaTestChildM
 {
     @Column(primaryKey=true)

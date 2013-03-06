@@ -30,7 +30,7 @@ import org.sormula.active.ActiveTable;
  * @since 1.7 and 2.1
  * @param <R> record type
  */
-public class SelectAllWhereOrdered<R extends ActiveRecord<R>> extends ActiveOperation<R, List<R>>
+public class SelectAllWhereOrdered<R extends ActiveRecord<? super R>> extends ActiveOperation<R, List<R>>
 {
     String whereConditionName;
     String orderByName;

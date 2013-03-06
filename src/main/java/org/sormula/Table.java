@@ -113,6 +113,7 @@ public class Table<R> implements TypeTranslatorMap, TransactionListener
     List<Field> lazySelectCascadeFields;
     Cache<R> cache;
     boolean legacyAnnotationPrecedence;
+    Row rowAnnotation;
     
     
     /**
@@ -136,7 +137,6 @@ public class Table<R> implements TypeTranslatorMap, TransactionListener
         initTypeTranslatorMap();
         
         // process row annotation
-        Row rowAnnotation;
         if (legacyAnnotationPrecedence)
         {
             // table then row
@@ -151,7 +151,7 @@ public class Table<R> implements TypeTranslatorMap, TransactionListener
         }
         
         nameTranslators = initNameTranslators(rowAnnotation);
-        rowTranslator = initRowTranslator();
+        rowTranslator = initRowTranslator(rowAnnotation);
         tableName = initTableName(rowAnnotation);
         cache = initCache();
         
@@ -344,11 +344,26 @@ public class Table<R> implements TypeTranslatorMap, TransactionListener
      * @return row translator
      * @throws TranslatorException if error
      */
+    @Deprecated // use initRowTranslator(Row rowAnnotation)
     protected RowTranslator<R> initRowTranslator() throws TranslatorException
     {
         // default
         return new RowTranslator<R>(this);
-        // TODO add method getFields() to RowTranslator => getDeclaredFields or getFields based upon Row.inheritFields()
+    }
+    
+    
+    /**
+     * Creates a {@link RowTranslator} for use by this table. Invoked by constructor.
+     * 
+     * @param rowAnnotation annotation on table or row class
+     * @return row translator
+     * @throws TranslatorException if error
+     * @since 3.0
+     */
+    protected RowTranslator<R> initRowTranslator(Row rowAnnotation) throws TranslatorException
+    {
+        // default
+        return new RowTranslator<R>(this, rowAnnotation);
     }
     
     
@@ -530,7 +545,7 @@ public class Table<R> implements TypeTranslatorMap, TransactionListener
             lazySelectCascadeFields = new ArrayList<>();
             
             // for all fields
-            for (Field field: getRowClass().getDeclaredFields())
+            for (Field field: rowTranslator.getDeclaredFields())
             {
                 SelectCascadeAnnotationReader scar = new SelectCascadeAnnotationReader(field);
                 SelectCascade[] selectCascades = scar.getSelectCascades();
@@ -643,7 +658,13 @@ public class Table<R> implements TypeTranslatorMap, TransactionListener
      */
     public List<R> selectAll() throws SormulaException
     {
-        return new ArrayListSelectOperation<R>(this, "").selectAll();
+        ArrayListSelectOperation<R> operation = new ArrayListSelectOperation<R>(this, "");
+        if (rowAnnotation != null)
+        {
+            operation.setDefaultReadAllSize(rowAnnotation.selectInitialCapacity());
+            operation.setFetchSize(rowAnnotation.fetchSize());
+        }
+        return operation.selectAll();
     }
     
     
@@ -736,6 +757,11 @@ public class Table<R> implements TypeTranslatorMap, TransactionListener
     {
     	ArrayListSelectOperation<R> operation = new ArrayListSelectOperation<>(this, "");
     	operation.setCustomSql(customSql);
+        if (rowAnnotation != null)
+        {
+            operation.setDefaultReadAllSize(rowAnnotation.selectInitialCapacity());
+            operation.setFetchSize(rowAnnotation.fetchSize());
+        }
     	return operation.selectAll(parameters);
     }
     

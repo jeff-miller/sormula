@@ -60,11 +60,11 @@ public class ScalarSelectOperation<R> extends SqlOperation<R>
     OrderByTranslator<R> orderByTranslator;
     RowTranslator<R> rowTranslator;
     int maximumRowsRead = Integer.MAX_VALUE;
-    // TODO int fetchSize;
     int rowsReadCount;
     boolean lazySelectsCascades;
     boolean notifyLazySelects;
     boolean readFromCache; // set by execute() if cache hit
+    boolean executed;
     
     
     /**
@@ -112,7 +112,7 @@ public class ScalarSelectOperation<R> extends SqlOperation<R>
 
 
     /**
-     * Gets the maximum number of rows to read from result set. This method 
+     * Sets the maximum number of rows to read from result set. This method 
      * does NOT alter SQL to contain anything to limit query but only 
      * limits the number of rows read by {@link #readNext()} and 
      * {@link SelectOperation#readAll()}. Limiting rows read is usefull to avoid
@@ -179,11 +179,12 @@ public class ScalarSelectOperation<R> extends SqlOperation<R>
     @Override
     public void execute() throws OperationException
     {
+        executed = true;
         readFromCache = false;
         initOperationTime();
         setNextParameter(1);
         rowsReadCount = 0;
-
+        
         if (isCached())
         {
             try
@@ -243,6 +244,18 @@ public class ScalarSelectOperation<R> extends SqlOperation<R>
                 throw new OperationException("execute() error", e);
             }
         }
+    }
+    
+    
+    /**
+     * Indicates if {@link #execute()} has been invoked.
+     * 
+     * @return true if operation has been executed; false if not
+     * @since 3.0
+     */
+    public boolean isExecuted()
+    {
+        return executed;
     }
     
 

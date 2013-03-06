@@ -23,10 +23,13 @@ import java.util.Set;
 
 import org.sormula.Database;
 import org.sormula.active.operation.ActiveLazySelector;
+import org.sormula.active.operation.OperationDatabase;
+import org.sormula.annotation.Transient;
 import org.sormula.annotation.cascade.SelectCascade;
 import org.sormula.annotation.cascade.SelectCascadeAnnotationReader;
 import org.sormula.log.ClassLogger;
 import org.sormula.operation.cascade.lazy.LazySelectable;
+import org.sormula.translator.RowTranslator;
 
 
 
@@ -39,13 +42,22 @@ import org.sormula.operation.cascade.lazy.LazySelectable;
  * 
  * @param <R> record type
  */
-public abstract class ActiveRecord<R extends ActiveRecord<R>> implements LazySelectable, Serializable
+public abstract class ActiveRecord<R extends ActiveRecord<? super R>> implements LazySelectable, Serializable
 {
     private static final ClassLogger log = new ClassLogger();
     private static final long serialVersionUID = 1L;
+    
+    // the following are transient so that they not used as a column when Row.inheritedFields=true 
+    @Transient 
     ActiveDatabase activeDatabase;
+    
+    @Transient 
     Class<R> recordClass;
+    
+    @Transient 
     boolean pendingLazySelects;  
+    
+    @Transient 
     Set<String> pendingLazySelectFieldNames;
     
     
@@ -114,7 +126,7 @@ public abstract class ActiveRecord<R extends ActiveRecord<R>> implements LazySel
      * @return ActiveTable instance for records of type R
      * @throws ActiveException if error
      */
-    public static <R extends ActiveRecord<R>> ActiveTable<R> table(Class<R> recordClass) throws ActiveException
+    public static <R extends ActiveRecord<? super R>> ActiveTable<R> table(Class<R> recordClass) throws ActiveException
     {
         return new ActiveTable<>(recordClass);
     }
@@ -216,6 +228,31 @@ public abstract class ActiveRecord<R extends ActiveRecord<R>> implements LazySel
         {
             // perform the following test only if record was selected (not created some other way)
             // select cascades are only performed on records that have been selected
+            
+            // get row translator to be used in getting declared fields
+            RowTranslator<R> rowTranslator;
+            try
+            {
+                OperationDatabase odb;
+                ActiveTransaction activeTransaction = activeDatabase.getActiveTransaction(); 
+                if (activeTransaction != null)
+                {
+                    // transaction in progress, use operation database from it
+                    odb = activeTransaction.getOperationTransaction().getOperationDatabase();
+                }
+                else
+                {
+                    // no transaction, create temporary operation database
+                    odb = new OperationDatabase(activeDatabase);
+                }
+                
+                rowTranslator = odb.getTable(getRecordClass()).getRowTranslator();
+            }
+            catch (Exception e)
+            {
+                throw new ActiveException("error getting row translator for " + getRecordClass(), e);
+            }
+            
             if (pendingLazySelectFieldNames == null)
             {
                 // initialize upon first request
@@ -223,7 +260,7 @@ public abstract class ActiveRecord<R extends ActiveRecord<R>> implements LazySel
                 pendingLazySelectFieldNames = new HashSet<>();
                 
                 // for all fields
-                for (Field field: getClass().getDeclaredFields())
+                for (Field field: rowTranslator.getDeclaredFields()) 
                 {
                     SelectCascadeAnnotationReader scar = new SelectCascadeAnnotationReader(field);
                     SelectCascade[] selectCascades = scar.getSelectCascades();
@@ -238,11 +275,12 @@ public abstract class ActiveRecord<R extends ActiveRecord<R>> implements LazySel
             if (pendingLazySelectFieldNames.contains(fieldName))
             {
                 // perform only if pending and fieldName is in pending set
-                try
+                if (log.isDebugEnabled()) log.debug("lazy select " + fieldName);
+                Field field = rowTranslator.getDeclaredField(fieldName); 
+                
+                if (field != null)
                 {
                     // cascade
-                    if (log.isDebugEnabled()) log.debug("lazy select " + fieldName);
-                    Field field = getClass().getDeclaredField(fieldName);
                     SelectCascadeAnnotationReader scar = new SelectCascadeAnnotationReader(field);
                     new ActiveLazySelector<R>(createTable(), recordClass.cast(this), scar).execute();
                     
@@ -255,10 +293,10 @@ public abstract class ActiveRecord<R extends ActiveRecord<R>> implements LazySel
                         pendingLazySelects = false;
                     }
                 }
-                catch (NoSuchFieldException e)
+                else
                 {
                     // not likely since pendingLazySelectCascadeFieldNames contains only valid names
-                    throw new ActiveException("can't get field name " + fieldName + " in class " + getClass(), e);
+                    throw new ActiveException("can't get field name " + fieldName + " in class " + getClass());
                 }
             }
         }

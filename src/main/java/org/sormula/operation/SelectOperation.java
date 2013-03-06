@@ -16,9 +16,13 @@
  */
 package org.sormula.operation;
 
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 import java.util.Collection;
+import java.util.Iterator;
 
 import org.sormula.Table;
+import org.sormula.annotation.Where;
 
 
 /**
@@ -29,14 +33,11 @@ import org.sormula.Table;
  * @param <R> class type which contains members for columns of a row in a table
  * @param <C> collection type returned
  */
-public abstract class SelectOperation<R, C> extends ScalarSelectOperation<R>
-// TODO implements Iterable<R> + iterator() method? 
-// TODO or implements Iterator<R> ?
-// TODO or SelectOperationIterator?
-// see see http://stackoverflow.com/questions/1870022/java-resultset-hasnext
+public abstract class SelectOperation<R, C> extends ScalarSelectOperation<R> implements Iterable<R>
 {
-    int defaultReadAllSize = 20;
+    int defaultReadAllSize;
     C selectedRows;
+    int fetchSize;
     
     
     /**
@@ -49,6 +50,7 @@ public abstract class SelectOperation<R, C> extends ScalarSelectOperation<R>
     public SelectOperation(Table<R> table) throws OperationException
     {
         super(table);
+        setDefaultReadAllSize(20);
     }
     
     
@@ -64,9 +66,25 @@ public abstract class SelectOperation<R, C> extends ScalarSelectOperation<R>
     public SelectOperation(Table<R> table, String whereConditionName) throws OperationException
     {
         super(table, whereConditionName);
+        
+        if (getWhereAnnotation() == null)
+        {
+            // no where annotation so use default size
+            setDefaultReadAllSize(20);
+        }
     }
     
     
+    /**
+     * {@inheritDoc}
+     * @since 3.0
+     */
+    public Iterator<R> iterator()
+    {
+        return new SelectIterator<R>(this);
+    }
+
+
     /**
      * Gets the default size to allocate for {@link Collection} C by {@link #createReadAllCollection()}.
      * 
@@ -87,6 +105,27 @@ public abstract class SelectOperation<R, C> extends ScalarSelectOperation<R>
     public void setDefaultReadAllSize(int defaultReadAllSize)
     {
         this.defaultReadAllSize = defaultReadAllSize;
+    }
+
+
+    /**
+     * {@inheritDoc}
+     * Invokes superclass method and then sets the initial capacity {@link #setDefaultReadAllSize(int)} 
+     * if there is a where annotation.
+     * @since 3.0
+     */
+    @Override
+    public void setWhere(String whereConditionName) throws OperationException
+    {
+        super.setWhere(whereConditionName);
+        
+        Where whereAnnotation = getWhereAnnotation(); 
+        if (whereAnnotation != null)
+        {
+            setDefaultReadAllSize(whereAnnotation.selectInitialCapacity());
+            setFetchSize(whereAnnotation.fetchSize());
+            setMaximumRowsRead(whereAnnotation.maximumRows());
+        }
     }
 
 
@@ -160,7 +199,55 @@ public abstract class SelectOperation<R, C> extends ScalarSelectOperation<R>
     }
 
 
-	/**
+    /**
+     * Gets the JDBC fetch size set with {@link #setFetchSize(int)}. The default is zero.
+     * 
+     * @return result set fetch size
+     * @since 3.0
+     * @see PreparedStatement#setFetchSize(int)
+     */
+    public int getFetchSize()
+    {
+        return fetchSize;
+    }
+
+
+    /**
+     * Sets the JDBC fetch size to use for prepared statement. Fetch size is set on
+     * prepared statement during {@link #prepare()} with
+     * {@link PreparedStatement#setFetchSize(int)}.
+     * 
+     * @param fetchSize
+     * @since 3.0
+     * @see PreparedStatement#setFetchSize(int)
+     */
+    public void setFetchSize(int fetchSize)
+    {
+        this.fetchSize = fetchSize;
+    }
+
+
+    /**
+     * {@inheritDoc}
+     * Invokes the superclass prepare and then sets the fetch size on the prepared statement.
+     * @since 3.0
+     */
+	@Override
+    protected void prepare() throws OperationException
+    {
+        super.prepare();
+        try
+        {
+            getPreparedStatement().setFetchSize(fetchSize);
+        }
+        catch (SQLException e)
+        {
+            throw new OperationException("error setting fetch size", e);
+        }
+    }
+
+
+    /**
      * Implement to create collection to use by {@link #readAll()}.
      * 
      * @return collection to use for {@link #readAll()}

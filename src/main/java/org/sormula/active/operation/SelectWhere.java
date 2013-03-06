@@ -28,7 +28,7 @@ import org.sormula.active.ActiveTable;
  * @since 1.7 and 2.1
  * @param <R> record type
  */
-public class SelectWhere<R extends ActiveRecord<R>> extends ActiveOperation<R, R>
+public class SelectWhere<R extends ActiveRecord<? super R>> extends ActiveOperation<R, R>
 {
     String whereConditionName;
     Object[] parameters;

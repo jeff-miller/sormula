@@ -27,55 +27,8 @@ import org.sormula.cache.readwrite.ReadWriteCache;
  * @author Jeff Miller
  */
 @Cached(type=ReadWriteCache.class, evictOnTransactionEnd=true)
-@Row(tableName="SormulaCacheTestRW", inhertedFields=true)
-public class SormulaCacheTestRW3 // TODO extends SormulaCacheTestRW
+@Row(tableName="SormulaCacheTestRW", 
+    inhertedFields=true) // tests inhertedFields
+public class SormulaCacheTestRW3 extends SormulaCacheTestRW
 {
-    // TODO remove members and methods when inheritFields is implemented
-    int id;
-    int type;
-    String description;
-    
-    
-    public SormulaCacheTestRW3()
-    {
-    }
-
-    
-    public SormulaCacheTestRW3(int id, int type, String description)
-    {
-        this.id = id;
-        this.type = type;
-        this.description = description;
-    }
-    
-    
-    public int getId()
-    {
-        return id;
-    }
-    public void setId(int id)
-    {
-        this.id = id;
-    }
-    
-    
-    public String getDescription()
-    {
-        return description;
-    }
-    public void setDescription(String description)
-    {
-        this.description = description;
-    }
-
-
-    public int getType()
-    {
-        return type;
-    }
-    public void setType(int type)
-    {
-        this.type = type;
-    }
-    
 }

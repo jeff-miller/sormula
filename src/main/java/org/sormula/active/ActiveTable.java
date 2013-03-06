@@ -61,7 +61,7 @@ import org.sormula.operation.ModifyOperation;
  * 
  * @param <R> record type
  */
-public class ActiveTable<R extends ActiveRecord<R>>
+public class ActiveTable<R extends ActiveRecord<? super R>>
 {
     final ActiveDatabase activeDatabase;
     final Class<R> recordClass;

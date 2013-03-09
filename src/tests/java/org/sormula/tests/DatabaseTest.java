@@ -136,9 +136,19 @@ public class DatabaseTest<R>
     
     public boolean isTestIdentity()
     {
-        return jdbcProperties.getBoolean("testIdentity");
+        String testIdentity = jdbcProperties.getString("testIdentity").trim();
+        if (testIdentity.equalsIgnoreCase("false")) return false;
+        else return true; // could be true or custom identity column type
     }
 
+    
+    public String getIdentityColumnDDL()
+    {
+        String testIdentity = jdbcProperties.getString("testIdentity").trim();
+        if (testIdentity.equalsIgnoreCase("true")) return "INTEGER GENERATED ALWAYS AS IDENTITY(START WITH 1)";
+        else return testIdentity; // custom
+    }
+    
 
     public boolean isUseTransacation()
     {

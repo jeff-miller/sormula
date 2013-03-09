@@ -46,7 +46,7 @@ public class InsertTest extends DatabaseTest<IdentityTest>
             openDatabase();
             createTable(IdentityTest.class, 
                 "CREATE TABLE " + getSchemaPrefix() + IdentityTest.class.getSimpleName() + " (" +
-                " id INTEGER GENERATED ALWAYS AS IDENTITY(START WITH 101) PRIMARY KEY," +
+                " id " + getIdentityColumnDDL() + " PRIMARY KEY," +
                 " description VARCHAR(30)" +
                 ")"
             );

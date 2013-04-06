@@ -2,6 +2,7 @@ Version History
 
 JDK 5/6  JDK 7   comments
 ------------------------------------------------------------------------------------------------------------
+1.9.4    2.3.4   cascades occur only when parent row is inserted, updated, or deleted
 1.9.3    2.3.3   save cascades to all levels
 1.9.2    2.3.2   TypeTranslator can be used for primative
 1.9.1    2.3.1   update examples

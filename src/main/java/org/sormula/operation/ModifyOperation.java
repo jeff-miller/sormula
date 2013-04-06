@@ -242,11 +242,15 @@ public abstract class ModifyOperation<R> extends SqlOperation<R>
                     
                     if (log.isDebugEnabled()) log.debug("execute update row=" + row);
                     operationTime.startExecuteTime();
-                    allRowsAffected += ps.executeUpdate();
+                    int updateCount = ps.executeUpdate();
+                    allRowsAffected += updateCount;
                     operationTime.stop();
                     
-                    postExecute(row);
-                    postExecuteCascade(row);
+                    if (updateCount > 0)
+                    {
+                        postExecute(row);
+                        postExecuteCascade(row);
+                    }
                 }
             }
             else if (getParameters() != null)

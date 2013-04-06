@@ -16,8 +16,13 @@
  */
 package org.sormula.tests.cascade.multilevel;
 
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.sql.Statement;
+
 import org.sormula.SormulaException;
 import org.sormula.Table;
+import org.sormula.log.ClassLogger;
 import org.sormula.operation.ScalarSelectOperation;
 import org.sormula.tests.DatabaseTest;
 import org.testng.annotations.AfterClass;
@@ -33,10 +38,30 @@ import org.testng.annotations.Test;
 @Test(singleThreaded=true, groups="cascade.insert")
 public class InsertTest extends DatabaseTest<SormulaTestLevel1>
 {
+    private static final ClassLogger log = new ClassLogger();
+    
     @BeforeClass
     public void setUp() throws Exception
     {
         openDatabase();
+        
+        // drop tables from previous tests in proper order due to foreign key constraints
+        try
+        {
+            Connection connection = getConnection();
+            Statement statement = connection.createStatement();
+            statement.executeUpdate("DROP TABLE " + getSchemaPrefix() + SormulaTestLevel3.class.getSimpleName());
+            statement.executeUpdate("DROP TABLE " + getSchemaPrefix() + SormulaTestLevel2.class.getSimpleName());
+            statement.executeUpdate("DROP TABLE " + getSchemaPrefix() + SormulaTestLevel1.class.getSimpleName());
+            statement.close();
+            connection.close();
+        }
+        catch (SQLException e)
+        {
+            // ignore when table does not exist
+            log.debug("drop error", e);
+        }
+
         createTable(SormulaTestLevel1.class, 
             "CREATE TABLE " + getSchemaPrefix() + SormulaTestLevel1.class.getSimpleName() + " (" +
             " id INTEGER NOT NULL PRIMARY KEY," +
@@ -51,7 +76,8 @@ public class InsertTest extends DatabaseTest<SormulaTestLevel1>
                 "CREATE TABLE " + getSchemaPrefix() + SormulaTestLevel2.class.getSimpleName() + " (" +
                 " id INTEGER NOT NULL PRIMARY KEY," +
                 " parentid INTEGER NOT NULL," +
-                " description VARCHAR(60)" +
+                " description VARCHAR(60)," +
+                " FOREIGN KEY (parentid) REFERENCES " + getSchemaPrefix() + SormulaTestLevel1.class.getSimpleName() +"(id)" +
                 ")"
             );
         child2.closeDatabase();
@@ -63,7 +89,8 @@ public class InsertTest extends DatabaseTest<SormulaTestLevel1>
                 "CREATE TABLE " + getSchemaPrefix() + SormulaTestLevel3.class.getSimpleName() + " (" +
                 " id INTEGER NOT NULL PRIMARY KEY," +
                 " parentid INTEGER NOT NULL," +
-                " description VARCHAR(60)" +
+                " description VARCHAR(60)," +
+                " FOREIGN KEY (parentid) REFERENCES " + getSchemaPrefix() + SormulaTestLevel2.class.getSimpleName() +"(id)" +
                 ")"
             );
         child3.closeDatabase();

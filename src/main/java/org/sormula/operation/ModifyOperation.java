@@ -307,10 +307,12 @@ public abstract class ModifyOperation<R> extends SqlOperation<R>
                         int updateCount = ps.executeUpdate();
                         allRowsAffected += updateCount; 
                         operationTime.stop();
+                    if (updateCount > 0)
+                    {
                         postExecute(row);
                         if (isCascade()) postExecuteCascade(row);
                         
-                        if (isCached() && updateCount > 0)
+                        if (isCached())
                         {
                             // notify cache that database was modified with row
                             notifyCacheModified(row);

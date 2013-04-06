@@ -2,6 +2,7 @@ Version History
 
 JDK 5/6  JDK 7   comments
 ------------------------------------------------------------------------------------------------------------
+1.9.4    2.3.4   cascades occur only when parent row is inserted, updated, or deleted
 3.0-j5   3.0-j7  caching
                  TransactionListener
                  row annotations have precendence over table annotations 

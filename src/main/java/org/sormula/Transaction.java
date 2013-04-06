@@ -129,7 +129,7 @@ public class Transaction
 	    
 		try
 		{
-			connection.commit();
+			connection.rollback();
 		}
 		catch (SQLException e)
 		{

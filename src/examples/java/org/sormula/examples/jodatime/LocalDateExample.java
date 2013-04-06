@@ -86,7 +86,7 @@ public class LocalDateExample extends ExampleBase
     
     void insertRows() throws SormulaException
     {
-        ArrayList<StudentLD> list = new ArrayList<StudentLD>();
+        ArrayList<StudentLD> list = new ArrayList<>();
         StudentLD student;
         
         student = new StudentLD();

@@ -66,7 +66,7 @@ public class SormulaTestParent
     
     public SormulaTestParent()
     {
-        childList = new ArrayList<SormulaTestChildN>();
+        childList = new ArrayList<>();
     }
 
     

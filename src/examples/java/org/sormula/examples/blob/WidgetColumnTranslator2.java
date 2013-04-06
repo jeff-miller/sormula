@@ -45,23 +45,23 @@ public class WidgetColumnTranslator2<R> extends AbstractBlobColumnTranslator<R, 
     protected Blob fieldToBlob(Widget widget) throws Exception
     {
         // convert from domain object to bytes
-        ByteArrayOutputStream bos = new ByteArrayOutputStream(1000);
-        ObjectOutputStream oos = new ObjectOutputStream(bos);
-        oos.writeObject(widget);
-        oos.close();
-        
-        // convert bytes to jdbc blob
-        return new SerialBlob(bos.toByteArray());
+        try (ByteArrayOutputStream bos = new ByteArrayOutputStream(1000))
+        {
+            ObjectOutputStream oos = new ObjectOutputStream(bos);
+            oos.writeObject(widget);
+            
+            // convert bytes to jdbc blob
+            return new SerialBlob(bos.toByteArray());
+        }
     }
     
     
     protected Widget blobToField(Blob blob) throws Exception
     {
         // convert from jdbc blob to bytes to domain object
-        ObjectInputStream ois = new ObjectInputStream(new ByteArrayInputStream(blob.getBytes(1, (int)blob.length())));
-        Widget widget = (Widget)ois.readObject();
-        ois.close();
-        
-        return widget;
+        try (ObjectInputStream ois = new ObjectInputStream(new ByteArrayInputStream(blob.getBytes(1, (int)blob.length()))))
+        {
+            return (Widget)ois.readObject();
+        }
     }
 }

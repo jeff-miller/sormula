@@ -38,6 +38,12 @@ public class InsertTest extends DatabaseTest<SormulaFKTestParent>
     public void setUp() throws Exception
     {
         openDatabase();
+        
+        // need to drop tables in proper order due to foreign key constraints
+        dropTable(getSchemaPrefix() + SormulaFKTestChildM.class.getSimpleName());
+        dropTable(getSchemaPrefix() + SormulaFKTestChildN.class.getSimpleName());
+        dropTable(getSchemaPrefix() + SormulaFKTestParent.class.getSimpleName());
+        
         createTable(SormulaFKTestParent.class, 
             "CREATE TABLE " + getSchemaPrefix() + SormulaFKTestParent.class.getSimpleName() + " (" +
             " parentid INTEGER NOT NULL PRIMARY KEY," +
@@ -53,7 +59,8 @@ public class InsertTest extends DatabaseTest<SormulaFKTestParent>
                 "CREATE TABLE " + getSchemaPrefix() + SormulaFKTestChildN.class.getSimpleName() + " (" +
                 " id INTEGER NOT NULL PRIMARY KEY," +
                 " parentid INTEGER NOT NULL," +
-                " description VARCHAR(60)" +
+                " description VARCHAR(60)," +
+                " FOREIGN KEY (parentid) REFERENCES " + getSchemaPrefix() + SormulaFKTestParent.class.getSimpleName() +"(parentid)" +
                 ")"
             );
         childN.closeDatabase();
@@ -65,7 +72,8 @@ public class InsertTest extends DatabaseTest<SormulaFKTestParent>
                 "CREATE TABLE " + getSchemaPrefix() + SormulaFKTestChildM.class.getSimpleName() + " (" +
                 " id INTEGER NOT NULL PRIMARY KEY," +
                 " parentid INTEGER NOT NULL," +
-                " description VARCHAR(60)" +
+                " description VARCHAR(60)," +
+                " FOREIGN KEY (parentid) REFERENCES " + getSchemaPrefix() + SormulaFKTestParent.class.getSimpleName() +"(parentid)" +
                 ")"
             );
         childM.closeDatabase();

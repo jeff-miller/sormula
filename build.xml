@@ -17,6 +17,8 @@
 		<antcall target="ComplexInsert"/>
 		<antcall target="ComplexSelect"/>
 		<antcall target="ComplexUpdate"/>
+		<antcall target="ManyToManyInsert"/>
+		<antcall target="ManyToManySelect"/>
 		<antcall target="NameDelete"/>
 		<antcall target="NameInsert"/>
 		<antcall target="NameSelect"/>
@@ -76,6 +78,13 @@
     </target>
     <target name="CascadeDelete" description="Runs example">
         <antcall target="run-example"><param name="class" value="org.sormula.examples.cascade.CascadeDelete"/></antcall>
+    </target>
+
+    <target name="ManyToManyInsert" description="Runs example">
+        <antcall target="run-example"><param name="class" value="org.sormula.examples.manytomany.ManyToManyInsert"/></antcall>
+    </target>
+    <target name="ManyToManySelect" description="Runs example">
+        <antcall target="run-example"><param name="class" value="org.sormula.examples.manytomany.ManyToManySelect"/></antcall>
     </target>
 
     <target name="BlobExample" description="Runs example">

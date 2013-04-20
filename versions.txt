@@ -15,6 +15,8 @@ JDK 5/6  JDK 7   comments
                  Row.fetchSize and Where.fetchSize configures fetch size
                  Where.maximumRows limits rows read from select operation
                  SelectOperation implements Iterable to enable SelectOperation objects in for each loops
+                 Fix bug that cascaded insert, save, update, delete when parent row did not exist in database
+                 (see org.sormula.tests.cascade.multilevelfk for example)
 1.9.3    2.3.3   save cascades to all levels
 1.9.2    2.3.2   TypeTranslator can be used for primative
 1.9.1    2.3.1   update examples

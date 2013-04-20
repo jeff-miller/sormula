@@ -49,6 +49,7 @@ import org.sormula.annotation.cascade.Cascade;
 import org.sormula.annotation.cascade.OneToManyCascade;
 import org.sormula.annotation.cascade.OneToOneCascade;
 import org.sormula.log.ClassLogger;
+import org.sormula.operation.ModifyOperation;
 import org.sormula.translator.standard.StandardColumnTranslator;
 
 
@@ -71,6 +72,7 @@ public class RowTranslator<R> extends ColumnsTranslator<R>
     String unusedColumnUpdateSql;
     ColumnTranslator<R> identityColumnTranslator;
     boolean inheritedFields;
+    boolean zeroRowCountPostExecute;
     
     
     /**
@@ -100,8 +102,12 @@ public class RowTranslator<R> extends ColumnsTranslator<R>
         super(table.getRowClass());
         this.table = table;
         
-        if (rowAnnotation != null) inheritedFields = rowAnnotation.inhertedFields();
-
+        if (rowAnnotation != null)
+        {
+            inheritedFields = rowAnnotation.inhertedFields();
+            zeroRowCountPostExecute = rowAnnotation.zeroRowCountPostExecute();
+        }
+        
         initColumnTranslators();
         initUnusedColumnSql(rowClass);
         primaryKeyWhereTranslator = new PrimaryKeyWhereTranslator<R>(this);
@@ -145,6 +151,47 @@ public class RowTranslator<R> extends ColumnsTranslator<R>
     }
 
     
+    /**
+     * Sets if super class fields are used.
+     * @param inheritedFields true if fields used include super class fields; false to use only fields in {@link #getRowClass()}
+     * @since 3.0
+     * @see Row#inhertedFields()
+     */
+    public void setInheritedFields(boolean inheritedFields)
+    {
+        this.inheritedFields = inheritedFields;
+    }
+
+
+    /**
+     * Reports when to invoke {@link ModifyOperation} post execute methods.
+     * 
+     * @return true to invoke post execute methods unconditionally; false to invoke 
+     * post execute methods only when database has been modified by insert, update, or delete
+     * @since 3.0
+     * @see Row#zeroRowCountPostExecute()
+     */
+    public boolean isZeroRowCountPostExecute()
+    {
+        return zeroRowCountPostExecute;
+    }
+
+
+    /**
+     * Sets when to invoke {@link ModifyOperation} post execute methods.
+     * 
+     * @param zeroRowCountPostExecute true to invoke post execute methods unconditionally; 
+     * false to invoke post execute methods only when database has been modified by 
+     * insert, update, or delete
+     * @since 3.0
+     * @see Row#zeroRowCountPostExecute()
+     */
+    public void setZeroRowCountPostExecute(boolean zeroRowCountPostExecute)
+    {
+        this.zeroRowCountPostExecute = zeroRowCountPostExecute;
+    }
+
+
     /**
      * Gets all of the declared fields for {@link #getRowClass()}. Also gets declared fields for
      * subclass(es) if {@link #isInheritedFields()} is true. Subclass fields appear in array prior

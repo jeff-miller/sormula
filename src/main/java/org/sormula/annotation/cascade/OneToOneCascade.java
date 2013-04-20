@@ -54,7 +54,7 @@ public @interface OneToOneCascade
      * Select cascade operations that will select target rows. Typical values would be:
      * <ul>
      * <li>@SelectCascade(operation=ScalarSelectOperation.class, sourceParameterFieldNames="...")</li>
-     * <li>@SelectCascade(operation=NoSelectOperation.class)</li>
+     * <li>@SelectCascade(operation=ArrayListSelectOperation.class)</li>
      * </ul>
      * 
      * @return select annotations for cascade; use empty array for no select cascade

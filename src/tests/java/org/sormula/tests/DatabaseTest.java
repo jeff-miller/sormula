@@ -94,7 +94,6 @@ public class DatabaseTest<R>
     DataSource dataSource;
     TestDatabase database;
     Table<R> table;
-    String qualifiedTableName;
     Random random = new Random(testSeed);
     boolean useTransacation;
     String sqlShutdown;
@@ -232,8 +231,13 @@ public class DatabaseTest<R>
     
     public void createTable(Class<R> rowClass, String ddl) throws Exception
     {
+        // create Table instance
         createTable(rowClass);
-        qualifiedTableName = table.getQualifiedTableName();
+
+        // drop table if already exists from previous test
+        dropTable(table.getQualifiedTableName());
+        log.debug("existing table " + table.getQualifiedTableName() + " was dropped before creating new version");
+
         if (ddl != null) createTable(ddl);
     }
     
@@ -250,18 +254,6 @@ public class DatabaseTest<R>
         begin();
         try
         {
-            try
-            {
-                // drop table if already exists from previous test
-                dropTable();
-                log.debug("existing table " + qualifiedTableName + " was dropped before creating new version");
-            }
-            catch (SQLException e)
-            {
-                // ignore table does not exist exception
-                log.debug("exception dropping " + qualifiedTableName + " :" + e.getMessage());
-            }
-            
             log.debug(ddl);
             Connection connection = getConnection();
             Statement statement = connection.createStatement();
@@ -273,22 +265,34 @@ public class DatabaseTest<R>
         }
         catch (SormulaException e)
         {
-            log.error("error creating table " + qualifiedTableName, e);
+            log.error("error creating table using " + ddl, e);
             rollback();
         }
     }
     
     
-    public void dropTable() throws SQLException
+    public void dropTable(String qualifiedTableName) throws Exception
     {
-    	String ddl = "DROP TABLE " + qualifiedTableName;
-    	log.debug(ddl);
         Connection connection = getConnection();
-        Statement statement = connection.createStatement();
-        statement.executeUpdate(ddl);
-        statement.close();
-        if (useTransacation) connection.commit();
-        connection.close();
+        
+        try
+        {
+        	String ddl = "DROP TABLE " + qualifiedTableName;
+        	log.debug(ddl);
+            Statement statement = connection.createStatement();
+            statement.executeUpdate(ddl);
+            statement.close();
+            if (useTransacation) connection.commit();
+        }
+        catch (SQLException e)
+        {
+            // ignore table does not exist exception
+            log.debug("exception dropping " + qualifiedTableName + " :" + e.getMessage());
+        }
+        finally
+        {
+            connection.close();
+        }
     }
     
     

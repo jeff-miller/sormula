@@ -268,6 +268,8 @@ public abstract class ModifyOperation<R> extends SqlOperation<R>
             else if (rows != null)
             {
                 // operation parameters from rows
+                boolean zeroRowCountPostExecute = getTable().getRowTranslator().isZeroRowCountPostExecute();
+                
                 for (R row: rows)
                 {
                     boolean cacheAuthority = false;
@@ -305,10 +307,18 @@ public abstract class ModifyOperation<R> extends SqlOperation<R>
                         if (log.isDebugEnabled()) log.debug("execute update row=" + row);
                         operationTime.startExecuteTime();
                         int updateCount = ps.executeUpdate();
-                        allRowsAffected += updateCount; 
+                        allRowsAffected += updateCount;
+                        if (log.isDebugEnabled()) log.debug("execute update =" + updateCount + " rows affected=" + allRowsAffected);
                         operationTime.stop();
-                        postExecute(row);
-                        if (isCascade()) postExecuteCascade(row);
+                        
+                        if (updateCount > 0 || zeroRowCountPostExecute)
+                        {
+                            // perform the following only when database indicates that a modification occurred
+                            // or when zeroRowCountPostExecute is true
+                            postExecute(row);
+                            
+                            if (isCascade()) postExecuteCascade(row);
+                        }
                         
                         if (isCached() && updateCount > 0)
                         {

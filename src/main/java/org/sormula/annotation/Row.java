@@ -26,6 +26,7 @@ import java.sql.Statement;
 import org.sormula.Table;
 import org.sormula.operation.ModifyOperation;
 import org.sormula.operation.SelectOperation;
+import org.sormula.operation.SqlOperation;
 import org.sormula.translator.NameTranslator;
 
 
@@ -112,4 +113,21 @@ public @interface Row
      * @since 3.0
      */
     boolean zeroRowCountPostExecute() default false;
+    
+    
+    /**
+     * Defines the primary keys for table. Use this instead of {@link Column#primaryKey()} 
+     * or {@link Column#identity()}.
+     * 
+     * The advantage of this annotation is that the order of the keys listed is the order used 
+     * by {@link SqlOperation#setParameters(Object...)}.
+     * Some JVM's do not reflect the fields in order of declaration so this method provides a 
+     * predicable order for primary keys.
+     * 
+     * @return names of fields that are the primary keys; empty array to obtain primary keys from
+     * {@link Column} annotations
+     * @since 3.0
+     */
+    // TODO update all javadoc that specifies {@link Column#primaryKey()} to include {@link Row#primaryKeyFields()} also
+    String[] primaryKeyFields() default {};
 }

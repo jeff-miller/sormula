@@ -17,8 +17,8 @@
 		<antcall target="ComplexInsert"/>
 		<antcall target="ComplexSelect"/>
 		<antcall target="ComplexUpdate"/>
-		<antcall target="ManyToManyInsert"/>
-		<antcall target="ManyToManySelect"/>
+		<antcall target="ManyToManyInsert1"/>
+		<antcall target="ManyToManySelect1"/>
 		<antcall target="NameDelete"/>
 		<antcall target="NameInsert"/>
 		<antcall target="NameSelect"/>
@@ -80,11 +80,11 @@
         <antcall target="run-example"><param name="class" value="org.sormula.examples.cascade.CascadeDelete"/></antcall>
     </target>
 
-    <target name="ManyToManyInsert" description="Runs example">
-        <antcall target="run-example"><param name="class" value="org.sormula.examples.manytomany.ManyToManyInsert"/></antcall>
+    <target name="ManyToManyInsert1" description="Runs example in org.sormula.examples.manytomany.inherited">
+        <antcall target="run-example"><param name="class" value="org.sormula.examples.manytomany.inherited.ManyToManyInsert"/></antcall>
     </target>
-    <target name="ManyToManySelect" description="Runs example">
-        <antcall target="run-example"><param name="class" value="org.sormula.examples.manytomany.ManyToManySelect"/></antcall>
+    <target name="ManyToManySelect1" description="Runs example in org.sormula.examples.manytomany.inherited">
+        <antcall target="run-example"><param name="class" value="org.sormula.examples.manytomany.inherited.ManyToManySelect"/></antcall>
     </target>
 
     <target name="BlobExample" description="Runs example">

@@ -19,7 +19,6 @@ package org.sormula.tests.cascade;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.sormula.annotation.Column;
 import org.sormula.annotation.Row;
 import org.sormula.annotation.cascade.OneToManyCascade;
 import org.sormula.annotation.cascade.OneToOneCascade;

@@ -16,6 +16,7 @@
  */
 package org.sormula.tests.cache.readwrite;
 
+import org.sormula.annotation.Column;
 import org.sormula.annotation.Where;
 import org.sormula.annotation.cache.Cached;
 import org.sormula.cache.readwrite.ReadWriteCache;
@@ -30,6 +31,7 @@ import org.sormula.cache.readwrite.ReadWriteCache;
 @Where(name="type", fieldNames="type")
 public class SormulaCacheTestRW
 {
+    @Column(primaryKey=true)
     int id;
     int type;
     String description;

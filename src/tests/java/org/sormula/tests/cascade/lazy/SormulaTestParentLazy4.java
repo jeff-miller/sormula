@@ -40,7 +40,7 @@ import org.sormula.operation.cascade.lazy.LazySelectable;
  * 
  * @author Jeff Miller
  */
-@Row(tableName="SormulaTestParentLazy")
+@Row(tableName="SormulaTestParentLazy", primaryKeyFields="id")
 public class SormulaTestParentLazy4 implements LazySelectable
 {
     int id;

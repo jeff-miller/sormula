@@ -19,6 +19,7 @@ package org.sormula.tests.cascade.named;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.sormula.annotation.Row;
 import org.sormula.annotation.cascade.OneToManyCascade;
 import org.sormula.annotation.cascade.OneToOneCascade;
 import org.sormula.annotation.cascade.SelectCascade;
@@ -30,6 +31,7 @@ import org.sormula.operation.ScalarSelectOperation;
  * 
  * @author Jeff Miller
  */
+@Row(primaryKeyFields="id")
 public class SormulaNCTestLevel1
 {
     int id;

@@ -16,6 +16,7 @@
  */
 package org.sormula.tests.cascade.fk;
 
+import org.sormula.annotation.Column;
 import org.sormula.annotation.Transient;
 import org.sormula.annotation.Where;
 
@@ -28,6 +29,7 @@ import org.sormula.annotation.Where;
 @Where(name="byParent", fieldNames="parentId")
 public class SormulaFKTestChildN
 {
+    @Column(primaryKey=true)
     int id;
     int parentId;
     String description;

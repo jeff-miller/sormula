@@ -16,8 +16,8 @@
  */
 package org.sormula.tests.translator.card;
 
-import org.sormula.annotation.Column;
 import org.sormula.annotation.ImplicitType;
+import org.sormula.annotation.Row;
 
 
 /**
@@ -26,13 +26,12 @@ import org.sormula.annotation.ImplicitType;
  * @author Jeff Miller
  * @since 1.6 and 2.0
  */
+@Row(primaryKeyFields={"rank", "suit"})
 public class SormulaTestCard
 {
-    @Column(primaryKey=true)
     @ImplicitType(translator=RankTranslator.class)
     Rank rank; 
     
-    @Column(primaryKey=true)
     Suit suit; // SuitTranslator defined in Suit class
     
     public SormulaTestCard()

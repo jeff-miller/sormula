@@ -16,6 +16,7 @@
  */
 package org.sormula.tests.cascade.named;
 
+import org.sormula.annotation.Row;
 import org.sormula.annotation.Where;
 
 
@@ -25,6 +26,7 @@ import org.sormula.annotation.Where;
  * 
  * @author Jeff Miller
  */
+@Row(primaryKeyFields="id")
 @Where(name="byParent", fieldNames="parentId")
 public class SormulaNCThing
 {

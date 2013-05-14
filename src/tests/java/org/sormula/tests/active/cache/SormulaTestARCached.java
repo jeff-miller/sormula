@@ -17,6 +17,7 @@
 package org.sormula.tests.active.cache;
 
 import org.sormula.active.ActiveRecord;
+import org.sormula.annotation.Row;
 
 
 /**
@@ -24,6 +25,7 @@ import org.sormula.active.ActiveRecord;
  * 
  * @author Jeff Miller
  */
+@Row(primaryKeyFields="id")
 public class SormulaTestARCached extends ActiveRecord<SormulaTestARCached>
 {
     private static final long serialVersionUID = 1L;

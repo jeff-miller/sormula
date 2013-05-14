@@ -16,6 +16,8 @@
  */
 package org.sormula.tests.cascade;
 
+import org.sormula.annotation.Column;
+
 
 
 /**
@@ -25,6 +27,7 @@ package org.sormula.tests.cascade;
  */
 public class SormulaTestChild1
 {
+    @Column(primaryKey=true)
     int id;
     String description;
     

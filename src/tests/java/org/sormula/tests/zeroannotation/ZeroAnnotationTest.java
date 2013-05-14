@@ -35,7 +35,7 @@ package org.sormula.tests.zeroannotation;
  */
 public class ZeroAnnotationTest
 {
-    int id;
+    int id; // this is primary key by default on JVM's that reflect fields in order of declaration
     int type;
     String description;
     

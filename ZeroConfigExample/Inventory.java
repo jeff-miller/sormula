@@ -1,3 +1,6 @@
+import org.sormula.annotation.Column;
+import org.sormula.annotation.Row;
+
 /* sormula - Simple object relational mapping
  * Copyright (C) 2011-2012 Jeff Miller
  *
@@ -19,6 +22,9 @@
 /**
  * Class that corresponds to a row in the INVENTORY table. No sormula annoations are needed
  * since Inventory class name and fields correspond directly with table name and columns.
+ * <p>
+ * Note: some JVM's do not reflect fields in the order that they are declared. For the JVM's that
+ * do not, {@link Column#primaryKey()} or {@link Row#primaryKeyFields()} may be required.
  * 
  * @author Jeff Miller
  */

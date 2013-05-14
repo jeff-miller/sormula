@@ -16,6 +16,8 @@
  */
 package org.sormula.tests.operation;
 
+import org.sormula.annotation.Column;
+
 
 
 /**
@@ -27,6 +29,7 @@ package org.sormula.tests.operation;
  */
 public class SormulaTest4RO
 {
+    @Column(primaryKey=true)
     int id;
     int type;
     String description;

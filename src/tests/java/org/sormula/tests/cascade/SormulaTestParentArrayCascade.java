@@ -27,7 +27,7 @@ import org.sormula.operation.HashMapSelectOperation;
  * 
  * @author Jeff Miller
  */
-@Row(tableName="SormulaTestParentAC")
+@Row(tableName="SormulaTestParentAC", primaryKeyFields="id")
 public class SormulaTestParentArrayCascade
 {
     int id;

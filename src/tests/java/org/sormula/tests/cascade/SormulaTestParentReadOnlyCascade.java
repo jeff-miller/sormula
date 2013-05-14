@@ -32,10 +32,9 @@ import org.sormula.annotation.cascade.SelectCascade;
  * 
  * @author Jeff Miller
  */
-@Row(tableName="SormulaTestParentROC")
+@Row(tableName="SormulaTestParentROC", primaryKeyFields="id")
 public class SormulaTestParentReadOnlyCascade
 {
-    @Column(primaryKey=true)
     int id;
     String description;
     int child1Id;

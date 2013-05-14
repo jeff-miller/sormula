@@ -16,6 +16,8 @@
  */
 package org.sormula.tests.annotation;
 
+import org.sormula.annotation.Column;
+
 
 /**
  * Row class for {@link InsertTest} and {@link SelectTest}.
@@ -24,6 +26,7 @@ package org.sormula.tests.annotation;
  */
 public class SormulaTestA
 {
+    @Column(primaryKey=true)
     int id;
     int type;
     String description;

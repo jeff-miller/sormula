@@ -35,7 +35,7 @@ import org.sormula.operation.cascade.lazy.DurableLazySelector;
  * 
  * @author Jeff Miller
  */
-@Row(tableName="SormulaTestParentLazy")
+@Row(tableName="SormulaTestParentLazy", primaryKeyFields="id")
 public class SormulaTestParentLazy2 extends DurableLazySelector<SormulaTestParentLazy2>
 {
     private static final long serialVersionUID = 1L;

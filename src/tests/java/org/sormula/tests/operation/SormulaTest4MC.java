@@ -16,7 +16,6 @@
  */
 package org.sormula.tests.operation;
 
-import org.sormula.annotation.Column;
 import org.sormula.annotation.Row;
 import org.sormula.annotation.Where;
 import org.sormula.annotation.WhereField;
@@ -28,7 +27,7 @@ import org.sormula.annotation.Wheres;
  * 
  * @author Jeff Miller
  */
-@Row(tableName="sormulatest4") // use same table that was created in InsertTest
+@Row(tableName="sormulatest4", primaryKeyFields={"id", "type"}) // use same table that was created in InsertTest
 @Wheres({
     @Where(name="w1", fieldNames={"type", "id"}),
     @Where(name="w2", whereFields={
@@ -38,9 +37,7 @@ import org.sormula.annotation.Wheres;
 })
 public class SormulaTest4MC
 {
-    @Column(primaryKey=true)
     int id;
-    @Column(primaryKey=true)
     int type;
     String description;
     

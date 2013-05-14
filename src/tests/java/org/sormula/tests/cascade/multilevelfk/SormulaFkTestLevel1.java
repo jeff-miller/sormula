@@ -19,6 +19,7 @@ package org.sormula.tests.cascade.multilevelfk;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.sormula.annotation.Row;
 import org.sormula.annotation.cascade.OneToManyCascade;
 import org.sormula.annotation.cascade.SelectCascade;
 
@@ -29,6 +30,7 @@ import org.sormula.annotation.cascade.SelectCascade;
  * 
  * @author Jeff Miller
  */
+@Row(primaryKeyFields="id")
 public class SormulaFkTestLevel1
 {
     int id;

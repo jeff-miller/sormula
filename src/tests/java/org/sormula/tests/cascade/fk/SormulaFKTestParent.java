@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import org.sormula.annotation.Column;
 import org.sormula.annotation.cascade.Cascade;
 import org.sormula.annotation.cascade.DeleteCascade;
 import org.sormula.annotation.cascade.InsertCascade;
@@ -37,6 +38,7 @@ import org.sormula.operation.HashMapSelectOperation;
  */
 public class SormulaFKTestParent
 {
+    @Column(primaryKey=true)
     int parentId;
     String description;
     

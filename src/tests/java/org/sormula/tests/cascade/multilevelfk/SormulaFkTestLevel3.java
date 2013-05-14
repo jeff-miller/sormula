@@ -16,6 +16,7 @@
  */
 package org.sormula.tests.cascade.multilevelfk;
 
+import org.sormula.annotation.Row;
 import org.sormula.annotation.Where;
 
 
@@ -26,6 +27,7 @@ import org.sormula.annotation.Where;
  * 
  * @author Jeff Miller
  */
+@Row(primaryKeyFields="id")
 @Where(name="byParent", fieldNames="parentId")
 public class SormulaFkTestLevel3
 {

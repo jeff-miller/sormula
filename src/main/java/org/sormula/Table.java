@@ -58,10 +58,10 @@ import org.sormula.translator.TypeTranslatorMap;
 
 /**
  * A table within a sql database. Contains a {@link RowTranslator} for reading/writing
- * data form/to database and contains methods for common input/output operations. The RowTranslator
+ * data form/to database and contains methods for common input/output operations. A {@link RowTranslator}
  * is created based upon fields within the row class of type R and from annotations for the
- * class. All common input/output methods use the primary key defined by {@link Column#primaryKey()} 
- * annotation on class R.
+ * class. The primary key is defined by {@link Column#primaryKey()}, {@link Column#identity()}, or
+ * {@link Row#primaryKeyFields()} on class R.
  * <p>
  * Example 1 - Get table from database:
  * <blockquote><pre>
@@ -709,8 +709,8 @@ public class Table<R> implements TypeTranslatorMap, TransactionListener
     
     
     /**
-     * Selects one row in table using primary key. Primary key must be defined by one
-     * or more {@link Column#primaryKey()} annotations.
+     * Selects one row in table using primary key. The primary key is defined by {@link Column#primaryKey()}, 
+     * {@link Column#identity()}, or {@link Row#primaryKeyFields()}.
      * <p>
      * Example:
      * <blockquote><pre>
@@ -1168,8 +1168,8 @@ public class Table<R> implements TypeTranslatorMap, TransactionListener
     
     
     /**
-     * Updates one row in table by primary key. Primary key must be defined by one
-     * or more {@link Column#primaryKey()} annotations.
+     * Updates one row in table by primary key. The primary key is defined by {@link Column#primaryKey()}, 
+     * {@link Column#identity()}, or {@link Row#primaryKeyFields()}.
      * <p>
      * Example:
      * <blockquote><pre>
@@ -1190,8 +1190,8 @@ public class Table<R> implements TypeTranslatorMap, TransactionListener
     
     
     /**
-     * Updates collection of rows using primary key. Primary key must be defined by one
-     * or more {@link Column#primaryKey()} annotations.
+     * Updates collection of rows using primary key. The primary key is defined by {@link Column#primaryKey()}, 
+     * {@link Column#identity()}, or {@link Row#primaryKeyFields()}.
      * <p>
      * Example:
      * <blockquote><pre>
@@ -1214,8 +1214,9 @@ public class Table<R> implements TypeTranslatorMap, TransactionListener
     
     
     /**
-     * Updates collection of rows using primary key in batch mode. Primary key must be defined by one
-     * or more {@link Column#primaryKey()} annotations. See limitations about batch updates
+     * Updates collection of rows using primary key in batch mode. The primary key 
+     * is defined by {@link Column#primaryKey()}, {@link Column#identity()}, or 
+     * {@link Row#primaryKeyFields()}. See limitations about batch updates
      * in {@link ModifyOperation#setBatch(boolean)}.
      * 
      * @param rows rows to update
@@ -1232,8 +1233,8 @@ public class Table<R> implements TypeTranslatorMap, TransactionListener
     
     
     /**
-     * Deletes by primary key. Primary key must be defined by one
-     * or more {@link Column#primaryKey()} annotations.
+     * Deletes by primary key. The primary key is defined by {@link Column#primaryKey()}, 
+     * {@link Column#identity()}, or {@link Row#primaryKeyFields()}.
      * <p>
      * Example:
      * <blockquote><pre>
@@ -1253,8 +1254,8 @@ public class Table<R> implements TypeTranslatorMap, TransactionListener
     
     
     /**
-     * Deletes by primary key. Primary key must be defined by one
-     * or more {@link Column#primaryKey()} annotations.
+     * Deletes by primary key. The primary key is defined by {@link Column#primaryKey()}, 
+     * {@link Column#identity()}, or {@link Row#primaryKeyFields()}.
      * <p>
      * Example:
      * <blockquote><pre>
@@ -1275,8 +1276,8 @@ public class Table<R> implements TypeTranslatorMap, TransactionListener
     
     
     /**
-     * Deletes many rows by primary key. Primary key must be defined by one
-     * or more {@link Column#primaryKey()} annotations.
+     * Deletes many rows by primary key. The primary key is defined by {@link Column#primaryKey()}, 
+     * {@link Column#identity()}, or {@link Row#primaryKeyFields()}.
      * <p>
      * Example:
      * <blockquote><pre>
@@ -1296,8 +1297,9 @@ public class Table<R> implements TypeTranslatorMap, TransactionListener
     
     
     /**
-     * Deletes many rows by primary key in batch mode. Primary key must be defined by one
-     * or more {@link Column#primaryKey()} annotations.  See limitations about batch deletes
+     * Deletes many rows by primary key in batch mode. The primary key is defined 
+     * by {@link Column#primaryKey()}, {@link Column#identity()}, or 
+     * {@link Row#primaryKeyFields()}.  See limitations about batch deletes
      * in {@link ModifyOperation#setBatch(boolean)}.
      * 
      * @param rows get primary key values from each row in this collection

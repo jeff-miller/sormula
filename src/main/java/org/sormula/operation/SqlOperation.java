@@ -29,6 +29,7 @@ import org.sormula.Database;
 import org.sormula.SormulaException;
 import org.sormula.Table;
 import org.sormula.annotation.Column;
+import org.sormula.annotation.Row;
 import org.sormula.annotation.Where;
 import org.sormula.annotation.WhereAnnotationReader;
 import org.sormula.annotation.cascade.Cascade;
@@ -116,7 +117,8 @@ public abstract class SqlOperation<R>
     
     /**
      * Sets any parameters to be used by operation. Parameters must be in the same
-     * order as defined by {@link Column#primaryKey()} or {@link Where} annotation.
+     * order as defined by {@link Column#primaryKey()} or {@link Where} annotation
+     * or {@link Row#primaryKeyFields()}.
      * 
      * @param parameters parameters as objects (not from row fields)
      */
@@ -876,8 +878,8 @@ public abstract class SqlOperation<R>
      * Sets where condition from annotation name as defined in {@link Where#name()} for row.
      * 
      * @param whereConditionName name of where condition to use; 
-     * "primaryKey" for key defined by {@link Column#primaryKey()}; 
-     * empty string for no where condition
+     * "primaryKey" for key defined by {@link Column#primaryKey()}, {@link Column#identity()}, 
+     * or {@link Row#primaryKeyFields()}; empty string for no where condition
      */
     public void setWhere(String whereConditionName) throws OperationException
     {
@@ -1065,6 +1067,12 @@ public abstract class SqlOperation<R>
         {
             // wildcard (cascade all)
             required = true;
+        }
+        else if (requiredCascades.length == 0)
+        {
+            // no required cascades requested
+            // required only if requested cascade is unnamed (default)
+            required = (cascadeName.length() == 0);
         }
         else
         {

@@ -27,6 +27,7 @@ import org.sormula.Table;
 import org.sormula.annotation.Column;
 import org.sormula.annotation.OrderBy;
 import org.sormula.annotation.OrderByAnnotationReader;
+import org.sormula.annotation.Row;
 import org.sormula.annotation.Where;
 import org.sormula.annotation.cascade.SelectCascade;
 import org.sormula.annotation.cascade.SelectCascadeAnnotationReader;
@@ -146,8 +147,9 @@ public class ScalarSelectOperation<R> extends SqlOperation<R>
     /**
      * Set parameters using values from a row object. Use this instead of {@link #setParameters(Object...)}.
      * 
-     * @param rowParameters where parameters are read from this object using fields definted in
-     * {@link Where} or {@link Column#primaryKey()}.
+     * @param rowParameters where parameters are read from this object using fields defined by
+     * {@link Where} or the primary key defined by {@link Column#primaryKey()}, 
+     * {@link Column#identity()}, or {@link Row#primaryKeyFields()}.
      */
     public void setRowParameters(R rowParameters) 
     {

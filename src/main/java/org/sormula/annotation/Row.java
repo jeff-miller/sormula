@@ -128,6 +128,5 @@ public @interface Row
      * {@link Column} annotations
      * @since 3.0
      */
-    // TODO update all javadoc that specifies {@link Column#primaryKey()} to include {@link Row#primaryKeyFields()} also
     String[] primaryKeyFields() default {};
 }

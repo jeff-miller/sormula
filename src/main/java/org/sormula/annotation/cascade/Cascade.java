@@ -27,6 +27,7 @@ import java.util.Map;
 import org.sormula.Database;
 import org.sormula.Table;
 import org.sormula.annotation.Column;
+import org.sormula.annotation.Row;
 import org.sormula.operation.SqlOperation;
 
 
@@ -126,7 +127,8 @@ public @interface Cascade
      * When target (parent) row is cascaded, then each target (child) row
      * foreign key setters are invoked with values from source (parent) primary key. 
      * <p>
-     * Source row key(s) are primary keys in source row where {@link Column#primaryKey()} is true.
+     * Source row key(s) are primary keys in source row defined by {@link Column#primaryKey()}, 
+     * {@link Column#identity()}, or {@link Row#primaryKeyFields()}.
      * <p>
      * When asterisk (*) is used, then cascade assumes that source key field names are the
      * same as target (child) key field names. For example: Parent.parentId --> Child.parentId.

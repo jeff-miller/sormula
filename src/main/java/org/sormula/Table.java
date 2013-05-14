@@ -1118,7 +1118,8 @@ public class Table<R> implements TypeTranslatorMap, TransactionListener
      */
     public int insertAll(Collection<R> rows) throws SormulaException
     {
-        return new InsertOperation<R>(this).insertAll(rows);
+        if (rows.size() > 0) return new InsertOperation<R>(this).insertAll(rows);
+        else return 0;
     }
     
     
@@ -1131,7 +1132,8 @@ public class Table<R> implements TypeTranslatorMap, TransactionListener
      */
     public int insertNonIdentityAll(Collection<R> rows) throws SormulaException
     {
-        return new InsertOperation<R>(this, false).insertAll(rows);
+        if (rows.size() > 0) return new InsertOperation<R>(this, false).insertAll(rows);
+        else return 0;
     }
     
     
@@ -1146,9 +1148,16 @@ public class Table<R> implements TypeTranslatorMap, TransactionListener
      */
     public int insertAllBatch(Collection<R> rows) throws SormulaException
     {
-        InsertOperation<R> operation = new InsertOperation<R>(this);
-        operation.setBatch(true);
-        return operation.insertAll(rows);
+        if (rows.size() > 0)
+        {
+            InsertOperation<R> operation = new InsertOperation<R>(this);
+            operation.setBatch(true);
+            return operation.insertAll(rows);
+        }
+        else
+        {
+            return 0;
+        }
     }
     
     
@@ -1161,9 +1170,16 @@ public class Table<R> implements TypeTranslatorMap, TransactionListener
      */
     public int insertNonIdentityAllBatch(Collection<R> rows) throws SormulaException
     {
-        InsertOperation<R> operation = new InsertOperation<R>(this, false);
-        operation.setBatch(true);
-        return operation.insertAll(rows);
+        if (rows.size() > 0)
+        {
+            InsertOperation<R> operation = new InsertOperation<R>(this, false);
+            operation.setBatch(true);
+            return operation.insertAll(rows);
+        }
+        else
+        {
+            return 0;
+        }
     }
     
     
@@ -1209,7 +1225,8 @@ public class Table<R> implements TypeTranslatorMap, TransactionListener
      */
     public int updateAll(Collection<R> rows) throws SormulaException
     {
-        return new UpdateOperation<R>(this).updateAll(rows);
+        if (rows.size() > 0) return new UpdateOperation<R>(this).updateAll(rows);
+        else return 0;
     }
     
     
@@ -1226,9 +1243,16 @@ public class Table<R> implements TypeTranslatorMap, TransactionListener
      */
     public int updateAllBatch(Collection<R> rows) throws SormulaException
     {
-        UpdateOperation<R> operation = new UpdateOperation<R>(this);
-        operation.setBatch(true);
-        return operation.updateAll(rows);
+        if (rows.size() > 0)
+        {
+            UpdateOperation<R> operation = new UpdateOperation<R>(this);
+            operation.setBatch(true);
+            return operation.updateAll(rows);
+        }
+        else
+        {
+            return 0;
+        }
     }
     
     
@@ -1292,7 +1316,8 @@ public class Table<R> implements TypeTranslatorMap, TransactionListener
      */
     public int deleteAll(Collection<R> rows) throws SormulaException
     {
-        return new DeleteOperation<R>(this).deleteAll(rows);
+        if (rows.size() > 0) return new DeleteOperation<R>(this).deleteAll(rows);
+        else return 0;
     }
     
     
@@ -1309,9 +1334,16 @@ public class Table<R> implements TypeTranslatorMap, TransactionListener
      */
     public int deleteAllBatch(Collection<R> rows) throws SormulaException
     {
-        DeleteOperation<R> operation = new DeleteOperation<R>(this);
-        operation.setBatch(true);
-        return operation.deleteAll(rows);
+        if (rows.size() > 0)
+        {
+            DeleteOperation<R> operation = new DeleteOperation<R>(this);
+            operation.setBatch(true);
+            return operation.deleteAll(rows);
+        }
+        else
+        {
+            return 0;
+        }
     }
     
     
@@ -1357,7 +1389,8 @@ public class Table<R> implements TypeTranslatorMap, TransactionListener
      */
     public int saveAll(Collection<R> rows) throws SormulaException
     {
-        return new SaveOperation<R>(this).modifyAll(rows);
+        if (rows.size() > 0) return new SaveOperation<R>(this).modifyAll(rows);
+        else return 0;
     }
     
     

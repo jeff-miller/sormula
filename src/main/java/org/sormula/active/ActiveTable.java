@@ -486,7 +486,8 @@ public class ActiveTable<R extends ActiveRecord<? super R>>
      */
     public int saveAll(Collection<R> records) throws ActiveException
     {
-        return new SaveAll<R>(this, records).execute();
+        if (records.size() > 0) return new SaveAll<R>(this, records).execute();
+        else return 0;
     }
 
     
@@ -538,7 +539,8 @@ public class ActiveTable<R extends ActiveRecord<? super R>>
      */
     public int insertAll(Collection<R> records) throws ActiveException
     {
-        return new InsertAll<R>(this, records).execute();
+        if (records.size() > 0) return new InsertAll<R>(this, records).execute();
+        else return 0;
     }
     
 
@@ -555,7 +557,8 @@ public class ActiveTable<R extends ActiveRecord<? super R>>
      */
     public int insertAllBatch(Collection<R> records) throws ActiveException
     {
-        return new InsertAllBatch<R>(this, records).execute();
+        if (records.size() > 0) return new InsertAllBatch<R>(this, records).execute();
+        else return 0;
     }
     
     
@@ -606,7 +609,8 @@ public class ActiveTable<R extends ActiveRecord<? super R>>
      */
     public int updateAll(Collection<R> records) throws ActiveException
     {
-        return new UpdateAll<R>(this, records).execute();
+        if (records.size() > 0) return new UpdateAll<R>(this, records).execute();
+        else return 0;
     }
     
     
@@ -692,7 +696,7 @@ public class ActiveTable<R extends ActiveRecord<? super R>>
     public int deleteAll(Collection<R> records) throws ActiveException
     {
         // if records == null, don't execute since all records will be deleted
-        if (records != null)
+        if (records != null && records.size() > 0) 
         {
             return new DeleteAll<R>(this, records).execute();
         }

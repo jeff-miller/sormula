@@ -77,6 +77,9 @@ public class UpdateTest extends DatabaseTest<SormulaNCTestLevel1>
         SormulaNCThing thing2Updated = node1Updated.getThing2();
         if (thing2Updated != null) thing2Updated.setDescription("updated:" + thing2Updated.getDescription());
         
+        SormulaNCThing thing3Updated = node1Updated.getThing3();
+        if (thing3Updated != null) thing3Updated.setDescription("updated:" + thing3Updated.getDescription());
+        
         table1.update(node1Updated);
         
         // confirm updates
@@ -88,17 +91,20 @@ public class UpdateTest extends DatabaseTest<SormulaNCTestLevel1>
         SormulaNCTestLevel3 node3 = table3.select(node3Updated.getId());
         assert node3.getDescription().equals(node3Updated.getDescription()) : "node3 was not updated";
         
+        Table<SormulaNCThing> thingTable = getDatabase().getTable(SormulaNCThing.class);
         if (requiredCascades.length == 1 && requiredCascades[0].equals("*")) // wildcard means all cascades should be used
         {
-            Table<SormulaNCThing> thingTable = getDatabase().getTable(SormulaNCThing.class);
-            
             // confirm that cascade for thing1 WAS used
             assert thingTable.select(thing1Updated.getId()).getDescription().equals(thing1Updated.getDescription()) : 
-                "thing1 was not updated " + thing1Updated.getId() + " but should have been updated"; 
+                "thing1 " + thing1Updated.getId() + " was not updated"; 
             
             // confirm that cascade for thing2 WAS used
             assert thingTable.select(thing2Updated.getId()).getDescription().equals(thing2Updated.getDescription()) : 
-                "thing2 was not updated " + thing2Updated.getId() + " but should have been updated"; 
+                "thing2 " + thing2Updated.getId() + " was not updated"; 
         }
+        
+        // confirm that cascade for thing3 WAS ALWAYS used
+        assert thingTable.select(thing3Updated.getId()).getDescription().equals(thing3Updated.getDescription()) : 
+            "thing3 " + thing3Updated.getId() + " was not updated"; 
     }
 }

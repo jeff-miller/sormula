@@ -38,6 +38,7 @@ public class SormulaNCTestLevel1
     String description;
     int thing1Id;
     int thing2Id;
+    int thing3Id;
     
     // tests specific name
     @OneToManyCascade(name="1-to-2",
@@ -54,6 +55,11 @@ public class SormulaNCTestLevel1
     @OneToOneCascade(
             selects=@SelectCascade(sourceParameterFieldNames="thing2Id", operation=ScalarSelectOperation.class))
     SormulaNCThing thing2;
+    
+    // tests wildcard name
+    @OneToOneCascade(name="*", // always cascades
+            selects=@SelectCascade(sourceParameterFieldNames="thing3Id", operation=ScalarSelectOperation.class))
+    SormulaNCThing thing3;
     
     
     public SormulaNCTestLevel1()
@@ -126,6 +132,16 @@ public class SormulaNCTestLevel1
     }
 
 
+    public int getThing3Id()
+    {
+        return thing3Id;
+    }
+    public void setThing3Id(int thing3Id)
+    {
+        this.thing3Id = thing3Id;
+    }
+
+
     public SormulaNCThing getThing1()
     {
         return thing1;
@@ -145,5 +161,16 @@ public class SormulaNCTestLevel1
     {
         this.thing2 = thing2;
         thing2Id = thing2.getId();
+    }
+
+
+    public SormulaNCThing getThing3()
+    {
+        return thing3;
+    }
+    public void setThing3(SormulaNCThing thing3)
+    {
+        this.thing3 = thing3;
+        thing3Id = thing3.getId();
     }
 }

@@ -100,10 +100,13 @@ public class DeleteTest extends DatabaseTest<SormulaNCTestLevel1>
         if (requiredCascades.length == 1 && requiredCascades[0].equals("*")) // wildcard means all cascades should be used
         {
             // confirm that cascade for thing1 WAS deleted
-            assert thingTable.select(node1.getThing1Id()) == null : "thing1 was not deleted " + node1.getThing1Id() + " but should have been deleted"; 
+            assert thingTable.select(node1.getThing1Id()) == null : "thing1 " + node1.getThing1Id() + " was not deleted"; 
             
             // confirm that cascade for thing2 WAS deleted
-            assert thingTable.select(node1.getThing2Id()) == null : "thing2 was not deleted " + node1.getThing1Id() + " but should have been deleted"; 
+            assert thingTable.select(node1.getThing2Id()) == null : "thing2 " + node1.getThing2Id() + " was not deleted"; 
         }
+        
+        // confirm that cascade for thing3 WAS ALWAYS deleted
+        assert thingTable.select(node1.getThing3Id()) == null : "thing3 " + node1.getThing3Id() + " was not deleted"; 
     }
 }

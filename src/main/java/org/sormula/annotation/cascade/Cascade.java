@@ -170,7 +170,7 @@ public @interface Cascade
      * If no name is specified (empty string) and no required cascades are specified, then cascade will 
      * occur by default since since the default required cascade for {@link Table} is an empty string.
      *  
-     * @return name of cascade
+     * @return name of cascade; "*" to cascade always regardless of required cascade names 
      * @since 3.0
      */
     String name() default "";

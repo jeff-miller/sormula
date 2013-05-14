@@ -1063,9 +1063,14 @@ public abstract class SqlOperation<R>
     {
         boolean required;
         
-        if (requiredCascades.length == 1 && requiredCascades[0].equals("*"))
+        if (cascadeName.equals("*"))
         {
-            // wildcard (cascade all)
+            // wildcard (cascade always)
+            required = true;
+        }
+        else if (requiredCascades.length == 1 && requiredCascades[0].equals("*"))
+        {
+            // wildcard (cascade any name)
             required = true;
         }
         else if (requiredCascades.length == 0)

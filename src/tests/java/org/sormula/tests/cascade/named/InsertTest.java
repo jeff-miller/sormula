@@ -50,8 +50,9 @@ public class InsertTest extends DatabaseTest<SormulaNCTestLevel1>
             "CREATE TABLE " + getSchemaPrefix() + SormulaNCTestLevel1.class.getSimpleName() + " (" +
             " id INTEGER NOT NULL PRIMARY KEY," +
             " description VARCHAR(60)," +
-            " thing1id INTEGER," + // tests named one-to-one cascade
-            " thing2id INTEGER"  + // tests named one-to-one cascade
+            " thing1id INTEGER," + // tests named cascade
+            " thing2id INTEGER," + // tests unnamed cascade
+            " thing3id INTEGER"  + // tests wildcard cascade
             ")"
         );
         
@@ -136,6 +137,9 @@ public class InsertTest extends DatabaseTest<SormulaNCTestLevel1>
         SormulaNCThing thing2 = new SormulaNCThing(20000 + level1Id, "thing2");
         node1.setThing2(thing2);
         
+        SormulaNCThing thing3 = new SormulaNCThing(30000 + level1Id, "thing3");
+        node1.setThing3(thing3);
+        
         // inserts all nodes via cascades
         Table<SormulaNCTestLevel1> table1 = getDatabase().getTable(SormulaNCTestLevel1.class);
         table1.setRequiredCascades(requiredCascades); // use specific cascades
@@ -170,18 +174,21 @@ public class InsertTest extends DatabaseTest<SormulaNCTestLevel1>
         if (requiredCascades.length == 1 && requiredCascades[0].equals("*")) // wildcard means all cascades should be used
         {
             // confirm that cascade for thing1 WAS used
-            assert thingTable.select(thing1.getId()) != null : "thing1 was not inserted " + thing1.getId() + " but should have been inserted"; 
+            assert thingTable.select(thing1.getId()) != null : "thing1 " + thing1.getId() + " was not inserted "; 
             
             // confirm that cascade for thing2 WAS used
-            assert thingTable.select(thing2.getId()) != null : "thing2 was not inserted " + thing2.getId() + " but should have been inserted"; 
+            assert thingTable.select(thing2.getId()) != null : "thing2 " + thing2.getId() + " was not inserted "; 
         }
         else
         {
             // confirm that cascade for thing1 WAS NOT used
-            assert thingTable.select(thing1.getId()) == null : "thing1 was inserted " + thing1.getId() + " but should not have been inserted"; 
+            assert thingTable.select(thing1.getId()) == null : "thing1 " + thing1.getId() + " was inserted"; 
             
             // confirm that cascade for thing2 NOT used
-            assert thingTable.select(thing2.getId()) == null : "thing2 was inserted " + thing2.getId() + " but should not have been inserted"; 
+            assert thingTable.select(thing2.getId()) == null : "thing2 " + thing2.getId() + " was inserted"; 
         }
+        
+        // confirm that cascade for thing3 WAS ALWAYS used regardless of required cascades
+        assert thingTable.select(thing3.getId()) != null : "thing3 " + thing3.getId() + " was not inserted";
     }
 }

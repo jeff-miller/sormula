@@ -21,7 +21,9 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+import org.sormula.Table;
 import org.sormula.annotation.Column;
+import org.sormula.operation.SqlOperation;
 
 
 /**
@@ -138,4 +140,16 @@ public @interface OneToOneCascade
      * @since 3.0
      */
     String foreignKeyReferenceField() default "";
+    
+    
+    /**
+     * Names the cacacade so that it occurs only when desired. Set desired cascades with 
+     * {@link Table#setRequiredCascades(String...)} or {@link SqlOperation#setRequiredCascades(String...)}.
+     * If no name is specified (empty string) and no required cascades are specified, then cascade will 
+     * occur by default since since the default required cascade for {@link Table} is an empty string.
+     *  
+     * @return name of cascade
+     * @since 3.0
+     */
+    String name() default "";
 }

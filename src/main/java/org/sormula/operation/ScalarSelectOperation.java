@@ -614,14 +614,14 @@ public class ScalarSelectOperation<R> extends SqlOperation<R>
     protected List<CascadeOperation<R, ?>> prepareCascades(Field field) throws OperationException
     {
         List<CascadeOperation<R, ?>> co = null;
-        SelectCascadeAnnotationReader scar = new SelectCascadeAnnotationReader(field);
-        SelectCascade[] selectCascades = scar.getSelectCascades();
+        SelectCascadeAnnotationReader car = new SelectCascadeAnnotationReader(field);
+        SelectCascade[] selectCascades = car.getSelectCascades();
         
-        if (selectCascades.length > 0)
+        if (selectCascades.length > 0 && isRequiredCascade(car.getName()))
         {
-            // at least one select cascade defined in annotation
+            // at least one select cascade and (unnamed or is required)
             if (log.isDebugEnabled()) log.debug("prepareCascades() for " + field.getName());
-            Table<?> targetTable = getTargetTable(scar.getTargetClass(), field);
+            Table<?> targetTable = getTargetTable(car.getTargetClass(), field);
             SormulaField<R, ?> targetField = createTargetField(field);
             co = new ArrayList<CascadeOperation<R, ?>>(selectCascades.length);
             
@@ -638,8 +638,12 @@ public class ScalarSelectOperation<R> extends SqlOperation<R>
                     if (log.isDebugEnabled()) log.debug("prepare cascade " + c.operation());
                     @SuppressWarnings("unchecked") // target field type is not known at compile time
                     SelectCascadeOperation<R, ?> operation = new SelectCascadeOperation(getTable(), targetField, targetTable, c);
-                    if (c.setForeignKeyValues()) operation.setForeignKeyFieldNames(scar.getForeignKeyValueFields());
-                    if (c.setForeignKeyReference()) operation.setForeignKeyReferenceFieldName(scar.getForeignKeyReferenceField());
+                    if (c.setForeignKeyValues()) operation.setForeignKeyFieldNames(car.getForeignKeyValueFields());
+                    if (c.setForeignKeyReference()) operation.setForeignKeyReferenceFieldName(car.getForeignKeyReferenceField());
+
+                    // cascade operation uses same required cascade names as this operation
+                    operation.setRequiredCascades(getRequiredCascades());
+
                     operation.prepare();
                     co.add(operation);
                 }

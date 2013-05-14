@@ -38,14 +38,13 @@ public class UpdateCascadeAnnotationReader extends CascadeAnnotationReader
      */
     protected void initOneToManyCascade()
     {
-        OneToManyCascade cascadesAnnotation = source.getAnnotation(OneToManyCascade.class);
-        setForeignKeyValueFields(cascadesAnnotation.foreignKeyValueFields());
-        setForeignKeyReferenceField(cascadesAnnotation.foreignKeyReferenceField());
+        OneToManyCascade cascadeAnnotation = source.getAnnotation(OneToManyCascade.class);
+        init(cascadeAnnotation);
         
-        if (!cascadesAnnotation.readOnly())
+        if (!cascadeAnnotation.readOnly())
         {
-            initTargetClass(cascadesAnnotation.targetClass());
-            updateCascades = cascadesAnnotation.updates();
+            initTargetClass(cascadeAnnotation.targetClass());
+            updateCascades = cascadeAnnotation.updates();
         }
     }
     
@@ -55,14 +54,13 @@ public class UpdateCascadeAnnotationReader extends CascadeAnnotationReader
      */
     protected void initOneToOneCascade()
     {
-        OneToOneCascade cascadesAnnotation = source.getAnnotation(OneToOneCascade.class);
-        setForeignKeyValueFields(cascadesAnnotation.foreignKeyValueFields());
-        setForeignKeyReferenceField(cascadesAnnotation.foreignKeyReferenceField());
+        OneToOneCascade cascadeAnnotation = source.getAnnotation(OneToOneCascade.class);
+        init(cascadeAnnotation);
         
-        if (!cascadesAnnotation.readOnly())
+        if (!cascadeAnnotation.readOnly())
         {
             initTargetClass(source.getType());
-            updateCascades = cascadesAnnotation.updates();
+            updateCascades = cascadeAnnotation.updates();
         }
     }
     
@@ -72,11 +70,10 @@ public class UpdateCascadeAnnotationReader extends CascadeAnnotationReader
      */
     protected void initCascade()
     {
-        Cascade cascadesAnnotation = source.getAnnotation(Cascade.class);
-        setForeignKeyValueFields(cascadesAnnotation.foreignKeyValueFields());
-        setForeignKeyReferenceField(cascadesAnnotation.foreignKeyReferenceField());
-        initTargetClass(cascadesAnnotation.targetClass());
-        updateCascades = cascadesAnnotation.updates();
+        Cascade cascadeAnnotation = source.getAnnotation(Cascade.class);
+        init(cascadeAnnotation);
+        initTargetClass(cascadeAnnotation.targetClass());
+        updateCascades = cascadeAnnotation.updates();
     }
 
 

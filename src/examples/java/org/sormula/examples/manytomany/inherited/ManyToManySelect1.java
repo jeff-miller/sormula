@@ -29,19 +29,19 @@ import org.sormula.examples.ExampleBase;
  * {@link #selectOrdersForProducts()} selects starting with products through order 
  * items to an order. 
  */
-public class ManyToManySelect extends ExampleBase
+public class ManyToManySelect1 extends ExampleBase
 {
     Database database;
     
     
     public static void main(String[] args) throws Exception
     {
-        new ManyToManyInsert(); // create table and rows
-        new ManyToManySelect();
+        new ManyToManyInsert1(); // create table and rows
+        new ManyToManySelect1();
     }
     
     
-    public ManyToManySelect() throws Exception
+    public ManyToManySelect1() throws Exception
     {
         // init
         openDatabase();

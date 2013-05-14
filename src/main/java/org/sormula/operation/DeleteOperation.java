@@ -152,14 +152,14 @@ public class DeleteOperation<R> extends ModifyOperation<R>
     protected List<CascadeOperation<R, ?>> prepareCascades(Field field) throws OperationException
     {
         List<CascadeOperation<R, ?>> co = null;
-        DeleteCascadeAnnotationReader dcar = new DeleteCascadeAnnotationReader(field);
-        DeleteCascade[] deleteCascades = dcar.getDeleteCascades();
+        DeleteCascadeAnnotationReader car = new DeleteCascadeAnnotationReader(field);
+        DeleteCascade[] deleteCascades = car.getDeleteCascades();
         
-        if (deleteCascades.length > 0)
+        if (deleteCascades.length > 0 && isRequiredCascade(car.getName()))
         {
-            // at least one delete cascade
+            // at least one delete cascade and (unnamed or is required)
             if (log.isDebugEnabled()) log.debug("prepareCascades() for " + field.getName());
-            Table<?> targetTable = getTargetTable(dcar.getTargetClass(), field);
+            Table<?> targetTable = getTargetTable(car.getTargetClass(), field);
             SormulaField<R, ?> targetField = createTargetField(field);
             co = new ArrayList<CascadeOperation<R, ?>>(deleteCascades.length);
             
@@ -169,8 +169,12 @@ public class DeleteOperation<R> extends ModifyOperation<R>
                 if (log.isDebugEnabled()) log.debug("prepare cascade " + c.operation());
                 @SuppressWarnings("unchecked") // target field type is not known at compile time
                 CascadeOperation<R, ?> operation = new DeleteCascadeOperation(getTable(), targetField, targetTable, c);
-                if (c.setForeignKeyValues()) operation.setForeignKeyFieldNames(dcar.getForeignKeyValueFields());
-                if (c.setForeignKeyReference()) operation.setForeignKeyReferenceFieldName(dcar.getForeignKeyReferenceField());
+                if (c.setForeignKeyValues()) operation.setForeignKeyFieldNames(car.getForeignKeyValueFields());
+                if (c.setForeignKeyReference()) operation.setForeignKeyReferenceFieldName(car.getForeignKeyReferenceField());
+
+                // cascade operation uses same required cascade names as this operation
+                operation.setRequiredCascades(getRequiredCascades());
+
                 operation.prepare();
                 co.add(operation);
             }

@@ -29,18 +29,18 @@ import org.sormula.examples.ExampleBase;
  * subclasses of Simple* classes. Cascading is determined based upon the top-level 
  * class that initiates the operations.
  */
-public class ManyToManyInsert extends ExampleBase
+public class ManyToManyInsert1 extends ExampleBase
 {
     Database database;
     
     
     public static void main(String[] args) throws Exception
     {
-        new ManyToManyInsert();
+        new ManyToManyInsert1();
     }
     
     
-    public ManyToManyInsert() throws Exception
+    public ManyToManyInsert1() throws Exception
     {
         openDatabase();
         

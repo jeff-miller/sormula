@@ -84,6 +84,7 @@ public abstract class SqlOperation<R>
     boolean cached;
     boolean cascade;
     Where whereAnnotation;
+    String[] requiredCascades;
     
 
     /**
@@ -109,6 +110,7 @@ public abstract class SqlOperation<R>
         setReadOnly(database.isReadOnly()); // default to database setting
         cached = table.isCached(); // default, change with setCached()
         cascade = true;
+        requiredCascades = table.getRequiredCascades(); // default, change with setRequiredCascades()
     }
     
     
@@ -299,8 +301,24 @@ public abstract class SqlOperation<R>
     @SuppressWarnings("unchecked") // types are not known until runtime
     protected <T> void writeParameter(int parameterIndex, T parameter) throws Exception
     {
-        Class parameterClass = parameter.getClass();
-        TypeTranslator<T> typeTranslator = (TypeTranslator<T>)table.getTypeTranslator(parameterClass);
+        Class<T> parameterClass = (Class<T>)parameter.getClass();
+        TypeTranslator<T> typeTranslator = null;
+        
+        /* TODO required? test by select with parameter that has translator
+        // look for implicit type in parameter class
+        ImplicitType typeAnnotation = parameterClass.getAnnotation(ImplicitType.class);
+        if (typeAnnotation != null) 
+        {
+            if (log.isDebugEnabled()) log.debug("use ImplicitType for " + parameterClass);
+            typeTranslator = typeAnnotation.translator().newInstance();
+        }
+        */
+        
+        if (typeTranslator == null)
+        {
+            // look for translator in table
+            typeTranslator = (TypeTranslator<T>)table.getTypeTranslator(parameterClass);
+        }
         
         if (typeTranslator == null)
         {
@@ -999,25 +1017,73 @@ public abstract class SqlOperation<R>
     
     
     /**
-     * TODO
-     * @param targetClasses
+     * Sets the name(s) of cascades that should occur with this operation. Cascades with names that equal
+     * any of the names specified in cascadeNames parameter will be executed. The default value for 
+     * required cascade names is {@link Table#getRequiredCascades()}. 
+     * <p>
+     * For all cascades that are executed, cascadeNames is passed on to the cascade operation with
+     * {@link CascadeOperation#setRequiredCascades(String...)} so that all cascades for all levels use
+     * the same required cascade names. 
+     * <p> 
+     * The wildcard "*" parameter will result in {@link StackOverflowError} if cascade relationships form 
+     * a cyclic graph and no termination condition exists to end the recursion.
+     * 
+     * @param cascadeNames name(s) of cascades to use; "*" for wildcard to use all cascades
      * @since 3.0
      */
-    public void setRequiredCascades(Class<?>... targetClasses)
+    public void setRequiredCascades(String... cascadeNames)
     {
-        
+        requiredCascades = cascadeNames;
     }
     
     
     /**
-     * TODO
-     * @param lazy
-     * @param targetClasses
+     * Gets the required cascade names.
+     * 
+     * @return names of cascades to use 
      * @since 3.0
      */
-    public void setRequiredCascades(boolean lazy, Class<?>... targetClasses)
+    public String[] getRequiredCascades()
     {
+        return requiredCascades;
+    }
+    
+    
+    /**
+     * Tests if a cascade name equals current required cascade names.
+     * 
+     * @param cascadeName check this name
+     * @return true if required cascades is a "*" or if cascadeName equals any of the
+     * required cascade names
+     * @since 3.0
+     */
+    public boolean isRequiredCascade(String cascadeName) 
+    {
+        boolean required;
         
+        if (requiredCascades.length == 1 && requiredCascades[0].equals("*"))
+        {
+            // wildcard (cascade all)
+            required = true;
+        }
+        else
+        {
+            // search for name amoung required
+            required = false; // assume
+            
+            // linear search should be ok since list should be small
+            for (String name : requiredCascades)
+            {
+                if (name.equals(cascadeName))
+                {
+                    // found 
+                    required = true;
+                    break;
+                }
+            }
+        }
+        
+        return required;
     }
     
     

@@ -48,6 +48,7 @@ import org.sormula.operation.aggregate.SelectAvgOperation;
 import org.sormula.operation.aggregate.SelectMaxOperation;
 import org.sormula.operation.aggregate.SelectMinOperation;
 import org.sormula.operation.aggregate.SelectSumOperation;
+import org.sormula.operation.cascade.CascadeOperation;
 import org.sormula.translator.NameTranslator;
 import org.sormula.translator.RowTranslator;
 import org.sormula.translator.TranslatorException;
@@ -114,6 +115,7 @@ public class Table<R> implements TypeTranslatorMap, TransactionListener
     Cache<R> cache;
     boolean legacyAnnotationPrecedence;
     Row rowAnnotation;
+    String[] requiredCascades;
     
     
     /**
@@ -128,6 +130,8 @@ public class Table<R> implements TypeTranslatorMap, TransactionListener
     {
         this.database = database;
         this.rowClass = rowClass;
+        
+        requiredCascades = new String[0];
         
         // LEGACY_ANNOTATION_PRECEDENCE=true means read table annotations prior to row annotations
         // by default version 3.0 and later will read row annotations prior to table annotations
@@ -226,6 +230,42 @@ public class Table<R> implements TypeTranslatorMap, TransactionListener
     public boolean isLegacyAnnotationPrecedence()
     {
         return legacyAnnotationPrecedence;
+    }
+    
+    
+    /**
+     * Sets the name(s) of cascades that should occur with this operation. Cascades with names that equal
+     * any of the names specified in cascadeNames parameter will be executed. The default value for 
+     * required cascade names is {""}. 
+     * <p>
+     * For all cascades that are executed, cascadeNames is passed on to the cascade operation with
+     * {@link CascadeOperation#setRequiredCascades(String...)} so that all cascades for all levels use
+     * the same required cascade names. 
+     * <p> 
+     * The wildcard "*" parameter will result in {@link StackOverflowError} if cascade relationships form 
+     * a cyclic graph and no termination condition exists to end the recursion.
+     * <p>
+     * If {@link Database#getTable(Class)} is used, keep in mind that the names set with this method 
+     * will be in effect for all future uses of the same {@link Table} object until changed.
+     * 
+     * @param cascadeNames name(s) of cascades to use; "*" for wildcard to use all cascades
+     * @since 3.0
+     */
+    public void setRequiredCascades(String... cascadeNames)
+    {
+        requiredCascades = cascadeNames;
+    }
+    
+    
+    /**
+     * Gets the required cascade names.
+     * 
+     * @return names of cascades to use 
+     * @since 3.0
+     */
+    public String[] getRequiredCascades()
+    {
+        return requiredCascades;
     }
 
 
@@ -1046,6 +1086,20 @@ public class Table<R> implements TypeTranslatorMap, TransactionListener
     
     
     /**
+     * TODO name?
+     * @param row
+     * @return
+     * @throws SormulaException
+     * @since 3.0
+     */
+    // TODO cascades won't be non identity?
+    public int insertNonIdentity(R row) throws SormulaException
+    {
+        return new InsertOperation<R>(this, false).insert(row);
+    }
+    
+    
+    /**
      * Inserts collection of rows.
      * <p>
      * Example:
@@ -1069,6 +1123,19 @@ public class Table<R> implements TypeTranslatorMap, TransactionListener
     
     
     /**
+     * TODO
+     * @param rows
+     * @return
+     * @throws SormulaException
+     * @since 3.0
+     */
+    public int insertNonIdentityAll(Collection<R> rows) throws SormulaException
+    {
+        return new InsertOperation<R>(this, false).insertAll(rows);
+    }
+    
+    
+    /**
      * Inserts a collection of rows in batch mode. See limitations about batch inserts
      * in {@link ModifyOperation#setBatch(boolean)}.
      * 
@@ -1080,6 +1147,21 @@ public class Table<R> implements TypeTranslatorMap, TransactionListener
     public int insertAllBatch(Collection<R> rows) throws SormulaException
     {
         InsertOperation<R> operation = new InsertOperation<R>(this);
+        operation.setBatch(true);
+        return operation.insertAll(rows);
+    }
+    
+    
+    /**
+     * TODO
+     * @param rows
+     * @return
+     * @throws SormulaException
+     * @since 3.0
+     */
+    public int insertNonIdentityAllBatch(Collection<R> rows) throws SormulaException
+    {
+        InsertOperation<R> operation = new InsertOperation<R>(this, false);
         operation.setBatch(true);
         return operation.insertAll(rows);
     }

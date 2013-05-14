@@ -56,6 +56,7 @@ public abstract class CascadeOperation<S, T>
     List<SormulaField<T, Object>> targetForeignKeyFieldList;
     SormulaField<T, Object> targetForeignReferenceField;
     int keyFieldCount;
+    String[] requiredCascades;
     
     
     /**
@@ -183,6 +184,31 @@ public abstract class CascadeOperation<S, T>
         else
             this.foreignKeyReferenceFieldName = null;
     }
+    
+    
+    /**
+     * Sets required cascade names to use. See {@link SqlOperation#setRequiredCascades(String...)} for 
+     * details.
+     * 
+     * @param cascadeNames names of cascades that will be executed 
+     * @since 3.0
+     */
+    public void setRequiredCascades(String... cascadeNames)
+    {
+        requiredCascades = cascadeNames;
+    }
+    
+    
+    /**
+     * Gets required cascade names set with {@link #setRequiredCascades(String...)}.
+     * 
+     * @return names of cascades that will be executed
+     * @since 3.0
+     */
+    public String[] getRequiredCascades()
+    {
+        return requiredCascades;
+    }
 
 
     /**
@@ -291,6 +317,7 @@ public abstract class CascadeOperation<S, T>
         {
             Constructor<?> constructor = cascadeOperationClass.getConstructor(Table.class);
             operation = (SqlOperation<?>)constructor.newInstance(getTargetTable());
+            operation.setRequiredCascades(requiredCascades);
         }
         catch (NoSuchMethodException e)
         {

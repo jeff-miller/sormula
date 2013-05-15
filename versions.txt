@@ -20,6 +20,7 @@ JDK 5/6  JDK 7   comments
                  add Row.primaryKeyFields as alternate way to specify primary keys
                  add many-to-many examples
                  named cascades (see org.sormula.tests.cascade.named for example)
+                 non-identity inserts for tables with identity columns
 1.9.3    2.3.3   save cascades to all levels
 1.9.2    2.3.2   TypeTranslator can be used for primative
 1.9.1    2.3.1   update examples

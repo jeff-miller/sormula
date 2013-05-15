@@ -1086,13 +1086,19 @@ public class Table<R> implements TypeTranslatorMap, TransactionListener
     
     
     /**
-     * TODO name?
-     * @param row
-     * @return
-     * @throws SormulaException
+     * Inserts a row into a table that was defined with an identity column but insert
+     * does not use auto generated key for identity column. This allows you to insert
+     * a row into a table when identity column value is obtained from the row object.
+     * <p>
+     * If cascades for row are defined with identity column, those cascaded rows will use
+     * the normal insert methods unless otherwise defined in the cascade annotation(s).
+     * 
+     * @param row row to insert
+     * @return count of rows affected
+     * @throws SormulaException if error
      * @since 3.0
+     * @see InsertOperation#InsertOperation(Table, boolean)
      */
-    // TODO cascades won't be non identity?
     public int insertNonIdentity(R row) throws SormulaException
     {
         return new InsertOperation<R>(this, false).insert(row);
@@ -1124,11 +1130,18 @@ public class Table<R> implements TypeTranslatorMap, TransactionListener
     
     
     /**
-     * TODO
-     * @param rows
-     * @return
-     * @throws SormulaException
+     * Inserts a collection of rows into a table that was defined with an identity column 
+     * but insert does not use auto generated key for identity column. This allows you to insert
+     * rows into a table when identity column value for each row is obtained from the row object.
+     * <p>
+     * If cascades for row are defined with identity column, those cascaded rows will use
+     * the normal insert methods unless otherwise defined in the cascade annotation(s).
+     * 
+     * @param rows rows to insert
+     * @return count of rows affected
+     * @throws SormulaException if error
      * @since 3.0
+     * @see InsertOperation#InsertOperation(Table, boolean)
      */
     public int insertNonIdentityAll(Collection<R> rows) throws SormulaException
     {
@@ -1162,11 +1175,19 @@ public class Table<R> implements TypeTranslatorMap, TransactionListener
     
     
     /**
-     * TODO
-     * @param rows
-     * @return
-     * @throws SormulaException
+     * Inserts a collection of rows into a table that was defined with an identity column as
+     * a batch operation. Insert does not use auto generated key for identity column. This allows 
+     * you to insert rows into a table when identity column value for each row is obtained from 
+     * the row object.
+     * <p>
+     * Cascades are never performed for batch operations.
+     * 
+     * @param rows rows to insert
+     * @return count of rows affected
+     * @throws SormulaException if error
      * @since 3.0
+     * @see InsertOperation#InsertOperation(Table, boolean)
+     * @see ModifyOperation#setBatch(boolean)
      */
     public int insertNonIdentityAllBatch(Collection<R> rows) throws SormulaException
     {

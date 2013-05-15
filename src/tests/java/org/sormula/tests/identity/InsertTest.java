@@ -105,4 +105,19 @@ public class InsertTest extends DatabaseTest<IdentityTest>
             commit();
         }
     }
+    
+    
+    @Test
+    public void insertOneNonIdentity() throws SormulaException
+    {
+        if (isTestIdentity())
+        {
+            begin();
+            int key = 9999;
+            IdentityTest row = new IdentityTest(key, "Insert one");
+            assert getTable().insertNonIdentity(row) == 1 : "insert one failed";
+            assert row.getId() == key: "indentity column overwrote inserted value";
+            commit();
+        }
+    }
 }

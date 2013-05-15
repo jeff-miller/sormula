@@ -140,12 +140,12 @@ public @interface OneToManyCascade
      * Source row key(s) are primary keys in source row defined by {@link Column#primaryKey()}, 
      * {@link Column#identity()}, or {@link Row#primaryKeyFields()}.
      * <p>
-     * When asterisk (*) is used, then cascade assumes that source key field names are the
+     * When "#" is used, then cascade assumes that source key field names are the
      * same as target (child) key field names. For example: Parent.parentId --> Child.parentId.
      * <p>
      * If explicit fields are named, then they must be in same order as source row primary key fields.
      * 
-     * @return names of foreign key fields in child (target) row; asterisk "*" means use
+     * @return names of foreign key fields in child (target) row; "#" means use
      * same foreign key names as source (parent) field names; empty array means no foreign keys are defined 
      * 
      * @since 3.0
@@ -162,11 +162,11 @@ public @interface OneToManyCascade
      * When target (parent) row is cascaded, then each target (child) row
      * foreign key reference setter is invoked with reference to source (parent). 
      * <p>
-     * When asterisk (*) is used, then cascade assumes that target (child) key reference field
+     * When "class" is used, then cascade assumes that target (child) key reference field
      * name is parent class simple name (begins with lower case). For example: SomeParent (source) of
      * SomeChild (target) will use SomeChild.someParent field and invoke SomeChild.setSomeParent(SomeParent). 
      * 
-     * @return name of foreign key reference field in child (target) row; asterisk "*" means use
+     * @return name of foreign key reference field in child (target) row; "class" means use
      * source (parent) class name; empty string means no foreign key reference is defined 
      * 
      * @since 3.0

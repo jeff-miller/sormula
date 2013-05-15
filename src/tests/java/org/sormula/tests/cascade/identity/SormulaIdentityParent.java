@@ -38,7 +38,7 @@ public class SormulaIdentityParent
     // tests 1 to many relationship
     @OneToManyCascade( 
             selects=@SelectCascade(sourceParameterFieldNames="parentId", targetWhereName="byParent"),
-            foreignKeyValueFields="*", foreignKeyReferenceField="parent")
+            foreignKeyValueFields="#", foreignKeyReferenceField="parent")
     List<SormulaIdentityChildN> childList;
     
     

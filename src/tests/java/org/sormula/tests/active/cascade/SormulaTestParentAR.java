@@ -42,7 +42,7 @@ public class SormulaTestParentAR extends ActiveRecord<SormulaTestParentAR>
     // tests 1 to many relationship
     @OneToManyCascade(// optional in v1.9 targetClass=SormulaTestChildNAR.class, 
             selects=@SelectCascade(sourceParameterFieldNames="parentId", targetWhereName="byParent"),
-            foreignKeyValueFields="*") // tests targetForeignKeyFields for ActiveRecord
+            foreignKeyValueFields="#") // tests foreignKeyValueFields for ActiveRecord
     List<SormulaTestChildNAR> childList;
     
     // tests 1 to 1 relationship
@@ -69,7 +69,7 @@ public class SormulaTestParentAR extends ActiveRecord<SormulaTestParentAR>
     {
         childList.add(child);
         
-        // don't need since targetForeignKeyFields="*" was specified
+        // don't need since foreignKeyValueFields="#" was specified
         // child.setParentId(parentId);
     }
 

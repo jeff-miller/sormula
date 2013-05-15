@@ -358,7 +358,7 @@ public abstract class CascadeOperation<S, T>
             {
                 // for all source primary key(s)
                 int foreignKeyNameIndex = 0;
-                boolean sameTargetAndSourceNames = foreignKeyValueFieldNames[0].equals("*");
+                boolean sameTargetAndSourceNames = foreignKeyValueFieldNames[0].equals("#");
                 for (ColumnTranslator<S> sct : sourceKeyColumnTranslators)
                 {
                     String targetFieldName;
@@ -402,7 +402,7 @@ public abstract class CascadeOperation<S, T>
         if (foreignKeyReferenceFieldName != null)
         {
             String targetFieldName;
-            if (foreignKeyReferenceFieldName.equals("*"))
+            if (foreignKeyReferenceFieldName.equals("class"))
             {
                 // foreign key field is simple class name
                 String classSimpleName = getSourceTable().getRowClass().getSimpleName();

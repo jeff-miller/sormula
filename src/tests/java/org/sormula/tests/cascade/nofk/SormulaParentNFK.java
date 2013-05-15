@@ -40,7 +40,7 @@ public class SormulaParentNFK
     @OneToManyCascade( 
             selects=@SelectCascade(sourceParameterFieldNames="id", targetWhereName="byParent"),
             inserts=@InsertCascade(setForeignKeyValues=false), // test no foreign key value change
-            foreignKeyValueFields="*")
+            foreignKeyValueFields="#")
     List<SormulaChildNFK> childList;
     
     

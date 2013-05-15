@@ -35,7 +35,7 @@ public class SormulaFKTestChildM
     String description;
     
     @Transient // must be transient to avoid infinite recursion for database operations
-    SormulaFKTestParent sormulaFKTestParent; // name is same as class allows foreignKeyReferenceField="*"
+    SormulaFKTestParent sormulaFKTestParent; // name is same as class allows foreignKeyReferenceField="class"
     
     
     public SormulaFKTestChildM()

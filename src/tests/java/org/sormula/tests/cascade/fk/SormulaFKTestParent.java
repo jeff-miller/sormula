@@ -45,7 +45,7 @@ public class SormulaFKTestParent
     // tests 1 to many relationship
     @OneToManyCascade( 
             selects=@SelectCascade(sourceParameterFieldNames="parentId", targetWhereName="byParent"),
-            foreignKeyValueFields="*",          // foreign key fields are same name as parent foreign key (parentId)
+            foreignKeyValueFields="#",          // foreign key fields are same name as parent foreign key (parentId)
             foreignKeyReferenceField="parent"   // foreign key reference field is named "parent"
     )
     List<SormulaFKTestChildN> childList;
@@ -58,7 +58,7 @@ public class SormulaFKTestParent
             saves=@SaveCascade(),
             deletes=@DeleteCascade(),
             foreignKeyValueFields="parentId",   // foreign key field in child is named "parentId" 
-            foreignKeyReferenceField="*"        // foreign key reference field has same name as parent foreign key class (sormulaFKTestParent)
+            foreignKeyReferenceField="class"    // foreign key reference field has same name as parent foreign key class (sormulaFKTestParent)
 	)
     Map<Integer, SormulaFKTestChildM> childMap;
     

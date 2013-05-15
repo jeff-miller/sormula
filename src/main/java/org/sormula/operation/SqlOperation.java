@@ -304,23 +304,9 @@ public abstract class SqlOperation<R>
     protected <T> void writeParameter(int parameterIndex, T parameter) throws Exception
     {
         Class<T> parameterClass = (Class<T>)parameter.getClass();
-        TypeTranslator<T> typeTranslator = null;
         
-        /* TODO required? test by select with parameter that has translator
-        // look for implicit type in parameter class
-        ImplicitType typeAnnotation = parameterClass.getAnnotation(ImplicitType.class);
-        if (typeAnnotation != null) 
-        {
-            if (log.isDebugEnabled()) log.debug("use ImplicitType for " + parameterClass);
-            typeTranslator = typeAnnotation.translator().newInstance();
-        }
-        */
-        
-        if (typeTranslator == null)
-        {
-            // look for translator in table
-            typeTranslator = (TypeTranslator<T>)table.getTypeTranslator(parameterClass);
-        }
+        // look for translator in table
+        TypeTranslator<T> typeTranslator = (TypeTranslator<T>)table.getTypeTranslator(parameterClass);
         
         if (typeTranslator == null)
         {

@@ -30,8 +30,8 @@ import org.sormula.operation.SqlOperation;
  * parameter in the interface methods, allow cahce implementations to cache a subset based upon
  * a row's values.
  * <p>
- * An design goal was to keep this interface as simple as possible and to allow optimal performance
- * with the sormula api. Therefore, only local transactions are supported and there is attempt to support 
+ * A design goal was to keep this interface as simple as possible and to allow optimal performance
+ * with the sormula api. Therefore, only local transactions are supported and there is no attempt to support 
  * JTA, nor generic caches like JCache.
  * <p>
  * Cache implementations require a two parameter constructor of types {@link Table} and {@link Cached}.

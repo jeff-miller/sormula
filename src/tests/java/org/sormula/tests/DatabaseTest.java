@@ -139,6 +139,12 @@ public class DatabaseTest<R>
         if (testIdentity.equalsIgnoreCase("false")) return false;
         else return true; // could be true or custom identity column type
     }
+    
+    
+    public boolean isForeignKey()
+    {
+        return jdbcProperties.getBoolean("foreignKey");
+    }
 
     
     public String getIdentityColumnDDL()

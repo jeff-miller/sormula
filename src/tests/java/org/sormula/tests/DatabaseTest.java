@@ -34,6 +34,7 @@ import javax.naming.NamingException;
 import javax.naming.spi.NamingManager;
 import javax.sql.DataSource;
 
+import org.sormula.NoOpTransaction;
 import org.sormula.SormulaException;
 import org.sormula.Table;
 import org.sormula.log.ClassLogger;
@@ -210,6 +211,12 @@ public class DatabaseTest<R>
             database = new TestDatabase(dataSourceName, schema);
         }
         database.setTimings(Boolean.parseBoolean(System.getProperty("timings")));
+        
+        if (!useTransacation)
+        {
+            // allows transaction listener notification for cached tests
+            database.setTransaction(new NoOpTransaction(database.getConnection()));
+        }
     }
     
     
@@ -342,28 +349,19 @@ public class DatabaseTest<R>
     
     public void begin() throws SormulaException
     {
-        if (useTransacation)
-        {
-            getDatabase().getTransaction().begin();
-        }
+        getDatabase().getTransaction().begin();
     }
     
     
     public void commit() throws SormulaException
     {
-        if (useTransacation)
-        {
-            getDatabase().getTransaction().commit();
-        }
+        getDatabase().getTransaction().commit();
     }
     
     
     public void rollback() throws SormulaException
     {
-        if (useTransacation)
-        {
-            getDatabase().getTransaction().rollback();
-        }
+        getDatabase().getTransaction().rollback();
     }
 
 

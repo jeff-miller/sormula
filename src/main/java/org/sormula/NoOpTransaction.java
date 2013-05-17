@@ -28,6 +28,29 @@ import org.sormula.log.ClassLogger;
  * <p>
  * This class is useful for cached operations when connection autocommit is true (that
  * is when no sql transaction is used).
+ * <p>
+ * Set on existing database:
+ * <blockquote><pre>
+ * Database database = new Database(...);
+ * database.setTransaction(new NoOpTransaction(database.getConnection()));
+ * </pre></blockquote>
+ * <p>
+ * Use through inheritance:
+ * <blockquote><pre>
+ * public class MyDatabase extends Database
+ * {
+ *     public MyDatabase(...) throws SormulaException
+ *     {
+ *         super(...);
+ *     }
+ * 
+ *     {@literal @}Override
+ *     protected Transaction initTransaction(Connection connection) throws SormulaException
+ *     {
+ *         return new NoOpTransaction(connection);
+ *     }
+ * }
+ * </pre></blockquote>
  * 
  * @author Jeff Miller
  * @since 3.0

@@ -16,7 +16,6 @@
  */
 package org.sormula.examples.basic;
 
-import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -46,18 +45,19 @@ public class BasicSelect extends ExampleBase
     {
         // init
         openDatabase();
-        Connection connection = getConnection();
-        Database database = new Database(connection, getSchema());
-        table = database.getTable(Student.class);
-        
-        selectRow();
-        selectAllRows();
-        selectWhere();
-        selectIn();
-        selectWhere2();
+
+        try (Database database = new Database(getConnection(), getSchema()))
+        {
+            table = database.getTable(Student.class);
+            
+            selectRow();
+            selectAllRows();
+            selectWhere();
+            selectIn();
+            selectWhere2();
+        }
         
         // clean up
-        database.close();
         closeDatabase();
     }
     

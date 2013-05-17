@@ -43,7 +43,7 @@ public class Order extends SimpleOrder
     public Order(int orderId)
     {
         super(orderId);
-        orderItems = new ArrayList<OrderItem>();
+        orderItems = new ArrayList<>();
     }
 
 

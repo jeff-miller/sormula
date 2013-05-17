@@ -179,10 +179,8 @@ public class ExampleBase
      */
     protected void dropTable(String tableName) throws Exception
     {
-        Statement statement = connection.createStatement();
-        
         // drop old from previous example
-        try
+        try (Statement statement = connection.createStatement())
         {
             String sql = "DROP TABLE " + tableName;
             System.out.println(sql);
@@ -192,8 +190,6 @@ public class ExampleBase
         {
             // assume ok since table may not exist
         }
-        
-        statement.close();
     }
     
     

@@ -49,7 +49,7 @@ public class InsertTest extends DatabaseTest<SormulaIdentityParent>
             );
             
             // create child table for 1 to n relationship
-            DatabaseTest<SormulaIdentityChildN> childN = new DatabaseTest<SormulaIdentityChildN>();
+            DatabaseTest<SormulaIdentityChildN> childN = new DatabaseTest<>();
             childN.openDatabase();
             childN.createTable(SormulaIdentityChildN.class, 
                     "CREATE TABLE " + getSchemaPrefix() + SormulaIdentityChildN.class.getSimpleName() + " (" +

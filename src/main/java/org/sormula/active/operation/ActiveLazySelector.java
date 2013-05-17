@@ -66,18 +66,13 @@ public class ActiveLazySelector<R extends ActiveRecord<? super R>> extends Activ
         {
             if (c.lazy())
             {
-                @SuppressWarnings("unchecked") // target field type is not known at compile time
-                SelectCascadeOperation<R, ?> operation = new SelectCascadeOperation(getTable(), targetField, targetTable, c);
-                try
+                try (@SuppressWarnings("unchecked") // target field type is not known at compile time
+                     SelectCascadeOperation<R, ?> operation = new SelectCascadeOperation(getTable(), targetField, targetTable, c))
                 {
                     if (c.setForeignKeyValues()) operation.setForeignKeyFieldNames(scar.getForeignKeyValueFields());
                     if (c.setForeignKeyReference()) operation.setForeignKeyReferenceFieldName(scar.getForeignKeyReferenceField());
                     operation.prepare();
                     operation.cascade(sourceActiveRecord);
-                }
-                finally // TODO convert to try(SelectCascadeOperation<R, ?> operation =..., check for more like this
-                {
-                    operation.close();
                 }
             }
         }

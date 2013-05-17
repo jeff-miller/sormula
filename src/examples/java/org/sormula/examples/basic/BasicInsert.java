@@ -16,7 +16,6 @@
  */
 package org.sormula.examples.basic;
 
-import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.GregorianCalendar;
@@ -52,16 +51,15 @@ public class BasicInsert extends ExampleBase
                 " graduationdate TIMESTAMP)" 
         );
         
-        // init
-        Connection connection = getConnection();
-        Database database = new Database(connection, getSchema());
-        table = database.getTable(Student.class);
-        
-        insertRow();
-        insertRows();
+        try (Database database = new Database(getConnection(), getSchema()))
+        {
+            table = database.getTable(Student.class);
+            
+            insertRow();
+            insertRows();
+        }
         
         // clean up
-        database.close();
         closeDatabase();
     }
     

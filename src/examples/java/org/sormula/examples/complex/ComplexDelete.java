@@ -16,7 +16,6 @@
  */
 package org.sormula.examples.complex;
 
-import java.sql.Connection;
 import java.util.List;
 
 import org.sormula.Database;
@@ -45,16 +44,17 @@ public class ComplexDelete extends ExampleBase
     {
         // init
         openDatabase();
-        Connection connection = getConnection();
-        Database database = new Database(connection, getSchema());
-        table = database.getTable(Student3.class);
         
-        deleteByPrimaryKey();
-        deleteRow();
-        deleteRows();
+        try (Database database = new Database(getConnection(), getSchema()))
+        {
+            table = database.getTable(Student3.class);
+            
+            deleteByPrimaryKey();
+            deleteRow();
+            deleteRows();
+        }
         
         // clean up
-        database.close();
         closeDatabase();
     }
     

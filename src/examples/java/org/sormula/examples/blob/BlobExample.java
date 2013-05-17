@@ -17,7 +17,6 @@
 package org.sormula.examples.blob;
 
 import java.sql.Blob;
-import java.sql.Connection;
 
 import org.sormula.Database;
 import org.sormula.SormulaException;
@@ -52,10 +51,7 @@ public class BlobExample extends ExampleBase
                 " widget BLOB)"
         );
         
-        // init
-        Connection connection = getConnection();
-        database = new Database(connection, getSchema());
-        
+        database = new Database(getConnection(), getSchema());
         insert1();
         select1();
         insert2();

@@ -16,8 +16,6 @@
  */
 package org.sormula.examples.name;
 
-import java.sql.Connection;
-
 import org.sormula.Database;
 import org.sormula.SormulaException;
 import org.sormula.Table;
@@ -47,16 +45,17 @@ public class NameSelect extends ExampleBase
     {
         // init
         openDatabase();
-        Connection connection = getConnection();
-        Database database = new Database(connection, getSchema());
-        table = database.getTable(Student2.class);
         
-        selectRow();
-        selectAllRows();
-        selectWhere();
+        try (Database database = new Database(getConnection(), getSchema()))
+        {
+            table = database.getTable(Student2.class);
+            
+            selectRow();
+            selectAllRows();
+            selectWhere();
+        }
         
         // clean up
-        database.close();
         closeDatabase();
     }
     

@@ -16,7 +16,6 @@
  */
 package org.sormula.examples.cascade;
 
-import java.sql.Connection;
 import java.util.List;
 
 import org.sormula.Database;
@@ -42,16 +41,17 @@ public class CascadeUpdate extends ExampleBase
     {
         // init
         openDatabase();
-        Connection connection = getConnection();
-        Database database = new Database(connection, getSchema());
-        database.setTimings(true); // enable timings for all operations 
         
-        table = database.getTable(Student4.class);
-        updateRows();
-        database.logTimings();  // log all timings
+        try (Database database = new Database(getConnection(), getSchema()))
+        {
+            database.setTimings(true); // enable timings for all operations 
+            
+            table = database.getTable(Student4.class);
+            updateRows();
+            database.logTimings();  // log all timings
+        }
         
         // clean up
-        database.close();
         closeDatabase();
     }
     

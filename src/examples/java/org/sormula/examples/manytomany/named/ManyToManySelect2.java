@@ -16,8 +16,6 @@
  */
 package org.sormula.examples.manytomany.named;
 
-import java.sql.Connection;
-
 import org.sormula.Database;
 import org.sormula.SormulaException;
 import org.sormula.Table;
@@ -32,9 +30,6 @@ import org.sormula.examples.ExampleBase;
  */
 public class ManyToManySelect2 extends ExampleBase
 {
-    Database database;
-    
-    
     public static void main(String[] args) throws Exception
     {
         new ManyToManyInsert2(); // create table and rows
@@ -46,20 +41,20 @@ public class ManyToManySelect2 extends ExampleBase
     {
         // init
         openDatabase();
-        Connection connection = getConnection();
-        database = new Database(connection, getSchema());
         
-        // examples
-        selectOrders();
-        selectOrdersForProducts();
+        try (Database database = new Database(getConnection(), getSchema()))
+        {
+            // examples
+            selectOrders(database);
+            selectOrdersForProducts(database);
+        }
         
         // clean up
-        database.close();
         closeDatabase();
     }
     
     
-    void selectOrders() throws SormulaException
+    void selectOrders(Database database) throws SormulaException
     {
         System.out.println("\nOrders and their products obtained with cascade name=standard:");
         
@@ -80,7 +75,7 @@ public class ManyToManySelect2 extends ExampleBase
     }
     
     
-    void selectOrdersForProducts() throws SormulaException
+    void selectOrdersForProducts(Database database) throws SormulaException
     {
         System.out.println("\nProducts and their orders obtained with cascade name=product-orders:");
         

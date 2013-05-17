@@ -306,18 +306,13 @@ abstract public class AbstractLazySelector<R> implements LazySelectable, Seriali
                     @SuppressWarnings("unchecked") // source field type is not known at compile time
                     Table<R> sourceTable = (Table<R>)getDatabase().getTable(field.getDeclaringClass());
                     
-                    @SuppressWarnings("unchecked") // target field type is not known at compile time
-                    SelectCascadeOperation<R, ?> operation = new SelectCascadeOperation(sourceTable, targetField, targetTable, c);
-                    try
+                    try (@SuppressWarnings("unchecked") // target field type is not known at compile time
+                         SelectCascadeOperation<R, ?> operation = new SelectCascadeOperation(sourceTable, targetField, targetTable, c))
                     {
                         if (c.setForeignKeyValues()) operation.setForeignKeyFieldNames(scar.getForeignKeyValueFields());
                         if (c.setForeignKeyReference()) operation.setForeignKeyReferenceFieldName(scar.getForeignKeyReferenceField());
                         operation.prepare();
                         operation.cascade(source);
-                    }
-                    finally
-                    {
-                        operation.close();
                     }
                 }
             }

@@ -96,13 +96,14 @@ public class InsertTest extends DatabaseTest<SormulaTestParentLazy1>
         
         // verify that all children were inserted
         Table<SormulaTestChildLazy> childTable = getDatabase().getTable(SormulaTestChildLazy.class);
-        ScalarSelectOperation<SormulaTestChildLazy> operation = new ScalarSelectOperation<>(childTable);
-        for (SormulaTestChildLazy c: parent.getChildMap().values())
+        try (ScalarSelectOperation<SormulaTestChildLazy> operation = new ScalarSelectOperation<>(childTable))
         {
-            operation.setParameters(c.getId());
-            operation.execute();
-            assert operation.readNext() != null : "child " + c.getId() + " was not inserted"; 
+            for (SormulaTestChildLazy c: parent.getChildMap().values())
+            {
+                operation.setParameters(c.getId());
+                operation.execute();
+                assert operation.readNext() != null : "child " + c.getId() + " was not inserted"; 
+            }
         }
-        operation.close();
     }
 }

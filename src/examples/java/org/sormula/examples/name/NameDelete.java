@@ -16,7 +16,6 @@
  */
 package org.sormula.examples.name;
 
-import java.sql.Connection;
 import java.util.List;
 
 import org.sormula.Database;
@@ -46,16 +45,17 @@ public class NameDelete extends ExampleBase
     {
         // init
         openDatabase();
-        Connection connection = getConnection();
-        Database database = new Database(connection, getSchema());
-        table = database.getTable(Student2.class);
         
-        deleteByPrimaryKey();
-        deleteRow();
-        deleteRows();
+        try (Database database = new Database(getConnection(), getSchema()))
+        {
+            table = database.getTable(Student2.class);
+            
+            deleteByPrimaryKey();
+            deleteRow();
+            deleteRows();
+        }
         
         // clean up
-        database.close();
         closeDatabase();
     }
     

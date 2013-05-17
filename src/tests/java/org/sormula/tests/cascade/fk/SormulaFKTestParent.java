@@ -65,7 +65,7 @@ public class SormulaFKTestParent
     
     public SormulaFKTestParent()
     {
-        childList = new ArrayList<SormulaFKTestChildN>();
+        childList = new ArrayList<>();
     }
 
     

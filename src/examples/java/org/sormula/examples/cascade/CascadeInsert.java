@@ -16,7 +16,6 @@
  */
 package org.sormula.examples.cascade;
 
-import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.GregorianCalendar;
 
@@ -62,15 +61,13 @@ public class CascadeInsert extends ExampleBase
                 " yr INTEGER NOT NULL)"
         );
         
-        // init
-        Connection connection = getConnection();
-        Database database = new Database(connection, getSchema());
-        
-        table = database.getTable(Student4.class);
-        insertRows();
+        try (Database database = new Database(getConnection(), getSchema()))
+        {
+            table = database.getTable(Student4.class);
+            insertRows();
+        }
         
         // clean up
-        database.close();
         closeDatabase();
     }
     

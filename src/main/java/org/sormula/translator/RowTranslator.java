@@ -210,7 +210,7 @@ public class RowTranslator<R> extends ColumnsTranslator<R>
         else
         {
             // find recursively
-            List<Field[]> classHierarchyFields = new ArrayList<Field[]>();
+            List<Field[]> classHierarchyFields = new ArrayList<>();
             getDeclaredFields(rowClass, classHierarchyFields);
             
             // calculate return array length

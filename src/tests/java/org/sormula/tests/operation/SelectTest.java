@@ -262,15 +262,14 @@ public class SelectTest extends DatabaseTest<SormulaTest4>
         
         // get all type 3 rows in id order
         List<SormulaTest4> type3List = getTable().selectAllWhereOrdered("byType", "obId", 3);
-        
-        // set up iterator to iterate type 3 rows
-        ArrayListSelectOperation<SormulaTest4> itop = new ArrayListSelectOperation<SormulaTest4>(getTable(), "byType");
-        itop.setParameters(3);
-        itop.setOrderBy("obId");
-        // optional itop.execute(); 
-        
-        try
+
+        try (ArrayListSelectOperation<SormulaTest4> itop = new ArrayListSelectOperation<>(getTable(), "byType"))
         {
+            // set up iterator to iterate type 3 rows
+            itop.setParameters(3);
+            itop.setOrderBy("obId");
+            // optional itop.execute(); 
+
             // iterate through type 3, compare to known list
             Iterator<SormulaTest4> type3Iterator = type3List.iterator();
             
@@ -287,10 +286,6 @@ public class SelectTest extends DatabaseTest<SormulaTest4>
             
             assert !type3Iterator.hasNext() : "reference list has more rows than SelectIterator";
         }
-        finally
-        {
-            itop.close();
-        }
         
         commit();
     }
@@ -303,18 +298,17 @@ public class SelectTest extends DatabaseTest<SormulaTest4>
         
         // get all type 3 rows in id order
         List<SormulaTest4> type3List = getTable().selectAllWhereOrdered("byType", "obId", 3);
-        
-        // set up iterator to iterate type 3 rows
-        ArrayListSelectOperation<SormulaTest4> itop = new ArrayListSelectOperation<SormulaTest4>(getTable(), "byType");
-        itop.setParameters(3);
-        itop.setOrderBy("obId");
-        // optional itop.execute(); 
-        
-        try
+
+        try (ArrayListSelectOperation<SormulaTest4> itop = new ArrayListSelectOperation<>(getTable(), "byType"))
         {
+            // set up iterator to iterate type 3 rows
+            itop.setParameters(3);
+            itop.setOrderBy("obId");
+            // optional itop.execute(); 
+        
             // iterate through type 3, compare to known list
             Iterator<SormulaTest4> type3Iterator = type3List.iterator();
-            SelectIterator<SormulaTest4> selectIterator = new SelectIterator<SormulaTest4>(itop);
+            SelectIterator<SormulaTest4> selectIterator = new SelectIterator<>(itop);
             
             while (selectIterator.hasNext()) // test with explicit iterator
             {
@@ -329,10 +323,6 @@ public class SelectTest extends DatabaseTest<SormulaTest4>
             }
             
             assert !type3Iterator.hasNext() : "reference list has more rows than SelectIterator";
-        }
-        finally
-        {
-            itop.close();
         }
         
         commit();

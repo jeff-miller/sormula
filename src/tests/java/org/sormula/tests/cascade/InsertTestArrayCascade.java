@@ -85,14 +85,16 @@ public class InsertTestArrayCascade extends DatabaseTest<SormulaTestParentArrayC
         
         // verify that all children were inserted
         Table<SormulaTestChildNArrayCascade> childTable = getDatabase().getTable(SormulaTestChildNArrayCascade.class);
-        ScalarSelectOperation<SormulaTestChildNArrayCascade> operation = new ScalarSelectOperation<>(childTable);
-        for (SormulaTestChildNArrayCascade c: parent.getChildren())
+        
+        try (ScalarSelectOperation<SormulaTestChildNArrayCascade> operation = new ScalarSelectOperation<>(childTable))
         {
-            operation.setParameters(c.getId());
-            operation.execute();
-            assert operation.readNext() != null : "child " + c.getId() + " was not inserted"; 
+            for (SormulaTestChildNArrayCascade c: parent.getChildren())
+            {
+                operation.setParameters(c.getId());
+                operation.execute();
+                assert operation.readNext() != null : "child " + c.getId() + " was not inserted"; 
+            }
         }
-        operation.close();
         commit();
     }
 }

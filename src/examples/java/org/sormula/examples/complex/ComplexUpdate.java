@@ -16,7 +16,6 @@
  */
 package org.sormula.examples.complex;
 
-import java.sql.Connection;
 import java.util.GregorianCalendar;
 import java.util.List;
 
@@ -46,16 +45,17 @@ public class ComplexUpdate extends ExampleBase
     {
         // init
         openDatabase();
-        Connection connection = getConnection();
-        Database database = new Database(connection, getSchema());
-        table = database.getTable(Student3.class);
         
-        updateRow();
-        updateRows();
-        printAll(table.selectAll());
+        try (Database database = new Database(getConnection(), getSchema()))
+        {
+            table = database.getTable(Student3.class);
+            
+            updateRow();
+            updateRows();
+            printAll(table.selectAll());
+        }
         
         // clean up
-        database.close();
         closeDatabase();
     }
     

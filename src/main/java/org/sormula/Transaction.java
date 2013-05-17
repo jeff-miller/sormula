@@ -49,7 +49,7 @@ public class Transaction
 	public Transaction(Connection connection)
 	{
 		this.connection = connection;
-		listenerList = new ArrayList<TransactionListener>();
+		listenerList = new ArrayList<>();
 	}
 	
 	

@@ -45,7 +45,7 @@ public class SormulaFkTestLevel1
     
     public SormulaFkTestLevel1()
     {
-        childList = new ArrayList<SormulaFkTestLevel2>();
+        childList = new ArrayList<>();
     }
 
     

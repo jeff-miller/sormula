@@ -16,7 +16,6 @@
  */
 package org.sormula.examples.basic;
 
-import java.sql.Connection;
 import java.util.GregorianCalendar;
 import java.util.List;
 
@@ -42,16 +41,17 @@ public class BasicUpdate extends ExampleBase
     {
         // init
         openDatabase();
-        Connection connection = getConnection();
-        Database database = new Database(connection, getSchema());
-        table = database.getTable(Student.class);
-        
-        updateRow();
-        updateRows();
-        printAll(table.selectAll());
+
+        try (Database database = new Database(getConnection(), getSchema()))
+        {
+            table = database.getTable(Student.class);
+            
+            updateRow();
+            updateRows();
+            printAll(table.selectAll());
+        }
         
         // clean up
-        database.close();
         closeDatabase();
     }
     

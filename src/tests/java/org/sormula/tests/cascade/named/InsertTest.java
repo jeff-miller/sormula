@@ -61,13 +61,13 @@ public class InsertTest extends DatabaseTest<SormulaNCTestLevel1>
         // create level 2 table
         DatabaseTest<SormulaNCTestLevel2> child2 = new DatabaseTest<SormulaNCTestLevel2>();
         child2.openDatabase();
-        if (isForeignKey()) foreignKeyDdl = " FOREIGN KEY (parentid) REFERENCES " + getSchemaPrefix() + SormulaNCTestLevel1.class.getSimpleName() +"(id),";
+        if (isForeignKey()) foreignKeyDdl = ", FOREIGN KEY (parentid) REFERENCES " + getSchemaPrefix() + SormulaNCTestLevel1.class.getSimpleName() +"(id)";
         child2.createTable(SormulaNCTestLevel2.class, 
                 "CREATE TABLE " + getSchemaPrefix() + SormulaNCTestLevel2.class.getSimpleName() + " (" +
                 " id INTEGER NOT NULL PRIMARY KEY," +
                 " parentid INTEGER NOT NULL," +
-                foreignKeyDdl + 
                 " description VARCHAR(60)" +
+                foreignKeyDdl +
                 ")"
             );
         child2.closeDatabase();
@@ -75,13 +75,13 @@ public class InsertTest extends DatabaseTest<SormulaNCTestLevel1>
         // create level 3 table
         DatabaseTest<SormulaNCTestLevel3> child3 = new DatabaseTest<SormulaNCTestLevel3>();
         child3.openDatabase();
-        if (isForeignKey()) foreignKeyDdl = " FOREIGN KEY (parentid) REFERENCES " + getSchemaPrefix() + SormulaNCTestLevel2.class.getSimpleName() +"(id),";
+        if (isForeignKey()) foreignKeyDdl = ", FOREIGN KEY (parentid) REFERENCES " + getSchemaPrefix() + SormulaNCTestLevel2.class.getSimpleName() +"(id)";
         child3.createTable(SormulaNCTestLevel3.class, 
                 "CREATE TABLE " + getSchemaPrefix() + SormulaNCTestLevel3.class.getSimpleName() + " (" +
                 " id INTEGER NOT NULL PRIMARY KEY," +
                 " parentid INTEGER NOT NULL," +
-                foreignKeyDdl +
                 " description VARCHAR(60)" +
+                foreignKeyDdl +
                 ")"
             );
         child3.closeDatabase();

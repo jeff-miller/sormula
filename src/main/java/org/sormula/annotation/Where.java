@@ -88,7 +88,7 @@ public @interface Where
      * JDBC fetch size to use for prepared statement. Setting fetch size may improve memory
      * and/or performance for large result sets.
      * 
-     * @param fetchSize number of rows that should be fetched from the database when more rows are needed; zero
+     * @return fetchSize number of rows that should be fetched from the database when more rows are needed; zero
      * to ignore
      * @since 3.0
      * @see PreparedStatement#setFetchSize(int)

@@ -38,14 +38,13 @@ public class DeleteCascadeAnnotationReader extends CascadeAnnotationReader
      */
     protected void initOneToManyCascade()
     {
-        OneToManyCascade cascadesAnnotation = source.getAnnotation(OneToManyCascade.class);
-        setForeignKeyValueFields(cascadesAnnotation.foreignKeyValueFields());
-        setForeignKeyReferenceField(cascadesAnnotation.foreignKeyReferenceField());
+        OneToManyCascade cascadeAnnotation = source.getAnnotation(OneToManyCascade.class);
+        init(cascadeAnnotation);
         
-        if (!cascadesAnnotation.readOnly())
+        if (!cascadeAnnotation.readOnly())
         {
-            initTargetClass(cascadesAnnotation.targetClass());
-            deleteCascades = cascadesAnnotation.deletes();
+            initTargetClass(cascadeAnnotation.targetClass());
+            deleteCascades = cascadeAnnotation.deletes();
         }
     }
     
@@ -55,14 +54,13 @@ public class DeleteCascadeAnnotationReader extends CascadeAnnotationReader
      */
     protected void initOneToOneCascade()
     {
-        OneToOneCascade cascadesAnnotation = source.getAnnotation(OneToOneCascade.class);
-        setForeignKeyValueFields(cascadesAnnotation.foreignKeyValueFields());
-        setForeignKeyReferenceField(cascadesAnnotation.foreignKeyReferenceField());
+        OneToOneCascade cascadeAnnotation = source.getAnnotation(OneToOneCascade.class);
+        init(cascadeAnnotation);
         
-        if (!cascadesAnnotation.readOnly())
+        if (!cascadeAnnotation.readOnly())
         {
             initTargetClass(source.getType());
-            deleteCascades = cascadesAnnotation.deletes();
+            deleteCascades = cascadeAnnotation.deletes();
         }
     }
     
@@ -72,11 +70,10 @@ public class DeleteCascadeAnnotationReader extends CascadeAnnotationReader
      */
     protected void initCascade()
     {
-        Cascade cascadesAnnotation = source.getAnnotation(Cascade.class);
-        setForeignKeyValueFields(cascadesAnnotation.foreignKeyValueFields());
-        setForeignKeyReferenceField(cascadesAnnotation.foreignKeyReferenceField());
-        initTargetClass(cascadesAnnotation.targetClass());
-        deleteCascades = cascadesAnnotation.deletes();
+        Cascade cascadeAnnotation = source.getAnnotation(Cascade.class);
+        init(cascadeAnnotation);
+        initTargetClass(cascadeAnnotation.targetClass());
+        deleteCascades = cascadeAnnotation.deletes();
     }
     
 

@@ -17,6 +17,7 @@
 package org.sormula.tests.active.cascade;
 
 import org.sormula.active.ActiveRecord;
+import org.sormula.annotation.Row;
 import org.sormula.annotation.Where;
 
 
@@ -25,6 +26,7 @@ import org.sormula.annotation.Where;
  * 
  * @author Jeff Miller
  */
+@Row(primaryKeyFields="id")
 @Where(name="byParent", fieldNames="parentId")
 public class SormulaTestChildNAR extends ActiveRecord<SormulaTestChildNAR>
 {

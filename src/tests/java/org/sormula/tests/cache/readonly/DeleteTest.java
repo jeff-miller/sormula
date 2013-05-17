@@ -202,6 +202,7 @@ public class DeleteTest extends CacheTest<SormulaCacheTestRO>
         // insert test row
         begin();
         SormulaCacheTestRO test = insertTestRow(408);
+        insertTestRow(409); // ensures at least one type 400
         commit();
         
         // delete test row to get it into cache as uncommitted delete

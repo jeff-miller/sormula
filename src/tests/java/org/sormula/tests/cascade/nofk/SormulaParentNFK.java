@@ -19,6 +19,7 @@ package org.sormula.tests.cascade.nofk;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.sormula.annotation.Column;
 import org.sormula.annotation.cascade.InsertCascade;
 import org.sormula.annotation.cascade.OneToManyCascade;
 import org.sormula.annotation.cascade.SelectCascade;
@@ -31,6 +32,7 @@ import org.sormula.annotation.cascade.SelectCascade;
  */
 public class SormulaParentNFK
 {
+    @Column(primaryKey=true)
     int parentId;
     String description;
     
@@ -38,7 +40,7 @@ public class SormulaParentNFK
     @OneToManyCascade( 
             selects=@SelectCascade(sourceParameterFieldNames="id", targetWhereName="byParent"),
             inserts=@InsertCascade(setForeignKeyValues=false), // test no foreign key value change
-            foreignKeyValueFields="*")
+            foreignKeyValueFields="#")
     List<SormulaChildNFK> childList;
     
     

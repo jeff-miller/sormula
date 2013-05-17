@@ -56,6 +56,7 @@ public abstract class CascadeOperation<S, T> implements AutoCloseable
     List<SormulaField<T, Object>> targetForeignKeyFieldList;
     SormulaField<T, Object> targetForeignReferenceField;
     int keyFieldCount;
+    String[] requiredCascades;
     
     
     /**
@@ -136,7 +137,7 @@ public abstract class CascadeOperation<S, T> implements AutoCloseable
      * If length of array parameter is zero, then null is used so that null means that no
      * foreign key fields are defined.
      * 
-     * @param foreignKeyValueFields field names from cascade annotation foreignKeyValueFields
+     * @param foreignKeyFieldNames field names from cascade annotation foreignKeyValueFields
      * @since 3.0
      * @see Cascade#foreignKeyValueFields()
      * @see OneToManyCascade#foreignKeyValueFields()
@@ -168,7 +169,7 @@ public abstract class CascadeOperation<S, T> implements AutoCloseable
      * If length of parameter is zero, then null is used so that null means that no
      * foreign key reference field is defined.
      * 
-     * @param foreignKeyReferenceField field name of foreign key reference from cascade 
+     * @param foreignKeyReferenceFieldName field name of foreign key reference from cascade 
      * annotation foreignKeyReferenceField
      * 
      * @since 3.0
@@ -182,6 +183,31 @@ public abstract class CascadeOperation<S, T> implements AutoCloseable
             this.foreignKeyReferenceFieldName = foreignKeyReferenceFieldName;
         else
             this.foreignKeyReferenceFieldName = null;
+    }
+    
+    
+    /**
+     * Sets required cascade names to use. See {@link SqlOperation#setRequiredCascades(String...)} for 
+     * details.
+     * 
+     * @param cascadeNames names of cascades that will be executed 
+     * @since 3.0
+     */
+    public void setRequiredCascades(String... cascadeNames)
+    {
+        requiredCascades = cascadeNames;
+    }
+    
+    
+    /**
+     * Gets required cascade names set with {@link #setRequiredCascades(String...)}.
+     * 
+     * @return names of cascades that will be executed
+     * @since 3.0
+     */
+    public String[] getRequiredCascades()
+    {
+        return requiredCascades;
     }
 
 
@@ -291,6 +317,7 @@ public abstract class CascadeOperation<S, T> implements AutoCloseable
         {
             Constructor<?> constructor = cascadeOperationClass.getConstructor(Table.class);
             operation = (SqlOperation<?>)constructor.newInstance(getTargetTable());
+            operation.setRequiredCascades(requiredCascades);
         }
         catch (NoSuchMethodException e)
         {
@@ -331,7 +358,7 @@ public abstract class CascadeOperation<S, T> implements AutoCloseable
             {
                 // for all source primary key(s)
                 int foreignKeyNameIndex = 0;
-                boolean sameTargetAndSourceNames = foreignKeyValueFieldNames[0].equals("*");
+                boolean sameTargetAndSourceNames = foreignKeyValueFieldNames[0].equals("#");
                 for (ColumnTranslator<S> sct : sourceKeyColumnTranslators)
                 {
                     String targetFieldName;
@@ -375,7 +402,7 @@ public abstract class CascadeOperation<S, T> implements AutoCloseable
         if (foreignKeyReferenceFieldName != null)
         {
             String targetFieldName;
-            if (foreignKeyReferenceFieldName.equals("*"))
+            if (foreignKeyReferenceFieldName.equals("class"))
             {
                 // foreign key field is simple class name
                 String classSimpleName = getSourceTable().getRowClass().getSimpleName();

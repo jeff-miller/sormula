@@ -68,10 +68,10 @@ public abstract class ModifyCascadeOperation<S, T> extends CascadeOperation<S, T
      * false if cascade is performed before row execute (see {@link ModifyOperation#preExecute}
      * @since 3.0
      */
-    public ModifyCascadeOperation(Table<S> sourcetTable, SormulaField<S, ?> targetField, Table<T> targetTable, 
+    public ModifyCascadeOperation(Table<S> sourceTable, SormulaField<S, ?> targetField, Table<T> targetTable, 
             Class <?> cascadeOperationClass)
     {
-        super(sourcetTable, targetField, targetTable, cascadeOperationClass);
+        super(sourceTable, targetField, targetTable, cascadeOperationClass);
     }
 
 

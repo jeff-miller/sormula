@@ -20,12 +20,14 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 
 import org.sormula.annotation.Column;
+import org.sormula.annotation.Row;
 import org.sormula.annotation.Transient;
 
 
 /**
  * Translates values from row object to JDBC parameters for a where condition as defined
- * by {@link Column#primaryKey()} or {@link Column#identity()} annotations.
+ * by {@link Column#primaryKey()} or {@link Column#identity()} annotations or
+ * by {@link Row#primaryKeyFields()}.
  * 
  * @since 1.0
  * @author Jeff Miller
@@ -34,9 +36,10 @@ import org.sormula.annotation.Transient;
 public class PrimaryKeyWhereTranslator<R> extends AbstractWhereTranslator<R>
 {
     /**
-     * Constructs based upon a row translator. If no {@link Column} annotation exists for
-     * row to indicate a primary key column, then the first declared field will be assumed
-     * to be primary key.
+     * Constructs based upon a row translator. If {@link Row#primaryKeyFields()} is not empty, then
+     * fields from {@link Row#primaryKeyFields()} are used. Otherwise {@link Column} for class
+     * fields are used. If {@link Row#primaryKeyFields()} is empty and no {@link Column} annotation 
+     * exists for row, then the first declared field will be used as the primary key.
      * 
      * @param rowTranslator obtain primary key information from this translator
      * @throws TranslatorException if error
@@ -45,27 +48,51 @@ public class PrimaryKeyWhereTranslator<R> extends AbstractWhereTranslator<R>
     {
         super(rowTranslator); 
         initColumnTranslatorList(4);
-        Field firstField = null;
         
-        // for all fields
-        for (Field f: rowTranslator.getDeclaredFields())
+        Row rowAnnotation = rowTranslator.getRowClass().getAnnotation(Row.class);
+        
+        if (rowAnnotation != null && rowAnnotation.primaryKeyFields().length > 0)
         {
-            if (Modifier.isStatic(f.getModifiers())) continue; // static are never primary keys
-            if (f.isAnnotationPresent(Transient.class)) continue; // transient are never primary keys
-            
-            if (firstField == null) firstField = f;
-            
-            Column columnAnnotation = f.getAnnotation(Column.class);
-            if (columnAnnotation != null && (columnAnnotation.primaryKey() || columnAnnotation.identity()))
+            // primary keys defined by Row annotation
+            for (String fieldName : rowAnnotation.primaryKeyFields())
             {
-                addColumnTranslator(f, "primary key");
+                Field field = rowTranslator.getDeclaredField(fieldName);
+                if (field != null)
+                {
+                    addColumnTranslator(field, "primary key");
+                }
+                else
+                {
+                    throw new TranslatorException("no field=" + fieldName + ", in class=" + 
+                            rowClass.getCanonicalName() + ", for Row#primaryKeyFields");
+                }
             }
         }
-        
-        if (getColumnTranslatorList().size() == 0 && firstField != null)
+        else
         {
-            // no primary key specificed, assume first non-static, non-transient field
-            addColumnTranslator(firstField, "default");
+            // search for primary key(s) from Column annotations
+            Field firstField = null;
+            
+            // for all fields
+            for (Field f: rowTranslator.getDeclaredFields())
+            {
+                if (Modifier.isStatic(f.getModifiers())) continue; // static are never primary keys
+                if (f.isAnnotationPresent(Transient.class)) continue; // transient are never primary keys
+                
+                if (firstField == null) firstField = f;
+                
+                Column columnAnnotation = f.getAnnotation(Column.class);
+                if (columnAnnotation != null && (columnAnnotation.primaryKey() || columnAnnotation.identity()))
+                {
+                    addColumnTranslator(f, "primary key");
+                }
+            }
+            
+            if (getColumnTranslatorList().size() == 0 && firstField != null)
+            {
+                // no primary key specificed, assume first non-static, non-transient field
+                addColumnTranslator(firstField, "default");
+            }
         }
     }
     

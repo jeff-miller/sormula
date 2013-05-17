@@ -75,7 +75,20 @@ public class Transaction
 	}
 	
 	
-	/**
+	/** 
+	 * Sets the active indicator.
+	 * 
+	 * @param active true if {@link #begin()} was invoked but neither {@link #commit()} nor
+	 * {@link #rollback()} has been invoked
+	 * @since 3.0
+	 */
+	protected void setActive(boolean active)
+    {
+        this.active = active;
+    }
+
+
+    /**
 	 * Starts the transaction. 
 	 * 
 	 * @throws SormulaException if error
@@ -92,12 +105,9 @@ public class Transaction
 			originalAutoCommit = connection.getAutoCommit();
 			connection.setAutoCommit(false);
 			active = true;
-	          
+	        
 	        // notify after transaction is ready so that transaction can be used
-	        for (TransactionListener l : listenerList)
-	        {
-	            l.begin(this);
-	        }
+			notifyBegin();
 		}
 		catch (SQLException e)
 		{
@@ -114,7 +124,7 @@ public class Transaction
 	public void commit() throws SormulaException
 	{
 	    if (log.isDebugEnabled()) log.debug("commit()");
-	    for (TransactionListener l : listenerList) l.commit(this);
+	    notifyCommit();
 	    
 		try
 		{
@@ -138,7 +148,7 @@ public class Transaction
 	public void rollback() throws SormulaException
 	{
 	    if (log.isDebugEnabled()) log.debug("rollback()");
-	    for (TransactionListener l : listenerList) l.rollback(this);
+	    notifyRollback();
 	    
 		try
 		{
@@ -206,4 +216,34 @@ public class Transaction
 			log.error("clean up error", e);
 		}
 	}
+	
+	
+	/**
+	 * Invokes {@link TransactionListener#begin(Transaction)} for all listeners.
+	 * @since 3.0
+	 */
+	protected void notifyBegin()
+	{
+        for (TransactionListener l : listenerList) l.begin(this);
+	}
+    
+    
+    /**
+     * Invokes {@link TransactionListener#commit(Transaction)} for all listeners.
+     * @since 3.0
+     */
+    protected void notifyCommit()
+    {
+        for (TransactionListener l : listenerList) l.commit(this);        
+    }
+    
+    
+    /**
+     * Invokes {@link TransactionListener#rollback(Transaction)} for all listeners.
+     * @since 3.0
+     */
+    protected void notifyRollback()
+    {
+        for (TransactionListener l : listenerList) l.rollback(this);        
+    }
 }

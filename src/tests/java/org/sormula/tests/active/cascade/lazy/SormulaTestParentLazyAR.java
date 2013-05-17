@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.sormula.active.ActiveRecord;
+import org.sormula.annotation.Column;
 import org.sormula.annotation.cascade.OneToManyCascade;
 import org.sormula.annotation.cascade.OneToOneCascade;
 import org.sormula.annotation.cascade.SelectCascade;
@@ -34,6 +35,8 @@ import org.sormula.annotation.cascade.SelectCascade;
 public class SormulaTestParentLazyAR extends ActiveRecord<SormulaTestParentLazyAR>
 {
     private static final long serialVersionUID = 1L;
+    
+    @Column(primaryKey=true)
     int id;
     String description;
     int child1Id;

@@ -74,9 +74,9 @@ public class SelectCascadeOperation<S, T> extends CascadeOperation<S, T>
      * @param selectCascadeAnnotation cascade operation
      * @since 3.0
      */
-    public SelectCascadeOperation(Table<S> sourcetTable, SormulaField<S, ?> targetField, Table<T> targetTable, SelectCascade selectCascadeAnnotation)
+    public SelectCascadeOperation(Table<S> sourceTable, SormulaField<S, ?> targetField, Table<T> targetTable, SelectCascade selectCascadeAnnotation)
     {
-        super(sourcetTable, targetField, targetTable, selectCascadeAnnotation.operation());
+        super(sourceTable, targetField, targetTable, selectCascadeAnnotation.operation());
         this.selectCascadeAnnotation = selectCascadeAnnotation;
         setPost(selectCascadeAnnotation.post());
     }

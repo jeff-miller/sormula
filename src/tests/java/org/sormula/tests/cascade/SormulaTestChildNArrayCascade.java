@@ -25,7 +25,7 @@ import org.sormula.annotation.Where;
  * 
  * @author Jeff Miller
  */
-@Row(tableName="SormulaTestChildNAC")
+@Row(tableName="SormulaTestChildNAC", primaryKeyFields="id")
 @Where(name="byParent", fieldNames="parentId")
 public class SormulaTestChildNArrayCascade
 {

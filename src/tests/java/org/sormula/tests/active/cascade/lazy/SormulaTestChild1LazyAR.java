@@ -17,6 +17,7 @@
 package org.sormula.tests.active.cascade.lazy;
 
 import org.sormula.active.ActiveRecord;
+import org.sormula.annotation.Column;
 
 
 /**
@@ -27,6 +28,8 @@ import org.sormula.active.ActiveRecord;
 public class SormulaTestChild1LazyAR extends ActiveRecord<SormulaTestChild1LazyAR>
 {
     private static final long serialVersionUID = 1L;
+    
+    @Column(primaryKey=true)
     int id;
     String description;
     

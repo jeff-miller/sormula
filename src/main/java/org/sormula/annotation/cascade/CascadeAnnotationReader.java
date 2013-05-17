@@ -20,6 +20,7 @@ abstract public class CascadeAnnotationReader
     Class<?> targetClass;
     String[] foreignKeyValueFields;
     String foreignKeyReferenceField;
+    String name;
     
     
     /**
@@ -62,6 +63,48 @@ abstract public class CascadeAnnotationReader
      * Initializes when {@link Cascade} is annotated on source field.
      */
     abstract protected void initCascade();
+    
+    
+    /**
+     * Initializes common values when {@link OneToManyCascade} is annotated on source field.
+     * 
+     * @param cascadeAnnotation cascade information
+     * @since 3.0
+     */
+    protected void init(OneToManyCascade cascadeAnnotation)
+    {
+        setForeignKeyValueFields(cascadeAnnotation.foreignKeyValueFields());
+        setForeignKeyReferenceField(cascadeAnnotation.foreignKeyReferenceField());
+        setName(cascadeAnnotation.name());
+    }
+    
+    
+    /**
+     * Initializes common values when {@link OneToOneCascade} is annotated on source field.
+     * 
+     * @param cascadeAnnotation cascade information
+     * @since 3.0
+     */
+    protected void init(OneToOneCascade cascadeAnnotation)
+    {
+        setForeignKeyValueFields(cascadeAnnotation.foreignKeyValueFields());
+        setForeignKeyReferenceField(cascadeAnnotation.foreignKeyReferenceField());
+        setName(cascadeAnnotation.name());
+    }
+    
+    
+    /**
+     * Initializes common values when {@link Cascade} is annotated on source field.
+     * 
+     * @param cascadeAnnotation cascade information
+     * @since 3.0
+     */
+    protected void init(Cascade cascadeAnnotation)
+    {
+        setForeignKeyValueFields(cascadeAnnotation.foreignKeyValueFields());
+        setForeignKeyReferenceField(cascadeAnnotation.foreignKeyReferenceField());
+        setName(cascadeAnnotation.name());
+    }
 
 
     /**
@@ -124,8 +167,35 @@ abstract public class CascadeAnnotationReader
             if (log.isDebugEnabled()) log.debug("cascade targetClass defaults to " + targetClass);
         }
     }
+
     
+    /**
+     * Sets the name of the cascade as defined by {@link OneToManyCascade#name()}, or
+     * {@link OneToManyCascade#name()}, or {@link Cascade#name()}. Invoked by {@link #init(Cascade)},
+     * {@link #init(OneToManyCascade)}, and {@link #init(OneToOneCascade)}.
+     * 
+     * @param name of cascade or empty string if none
+     * @since 3.0
+     */
+    public void setName(String name)
+    {
+        this.name = name;
+    }
+
     
+    /**
+     * Gets the name of the cascade as defined by {@link OneToManyCascade#name()}, or
+     * {@link OneToManyCascade#name()}, or {@link Cascade#name()}.
+     * 
+     * @return name of cascade or empty string if none
+     * @since 3.0
+     */
+    public String getName()
+    {
+        return name;
+    }
+
+
     /**
      * Gets the source field supplied in constructor.
      * 

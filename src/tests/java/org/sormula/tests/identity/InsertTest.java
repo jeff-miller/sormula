@@ -46,7 +46,7 @@ public class InsertTest extends DatabaseTest<IdentityTest>
             openDatabase();
             createTable(IdentityTest.class, 
                 "CREATE TABLE " + getSchemaPrefix() + IdentityTest.class.getSimpleName() + " (" +
-                " id INTEGER GENERATED ALWAYS AS IDENTITY(START WITH 101) PRIMARY KEY," +
+                " id " + getIdentityColumnDDL() + " PRIMARY KEY," +
                 " description VARCHAR(30)" +
                 ")"
             );
@@ -102,6 +102,21 @@ public class InsertTest extends DatabaseTest<IdentityTest>
                 assert row.getId() > 0 : "indentity column was not generated";
             }
             
+            commit();
+        }
+    }
+    
+    
+    @Test
+    public void insertOneNonIdentity() throws SormulaException
+    {
+        if (isTestIdentity())
+        {
+            begin();
+            int key = 9999;
+            IdentityTest row = new IdentityTest(key, "Insert one");
+            assert getTable().insertNonIdentity(row) == 1 : "insert one failed";
+            assert row.getId() == key: "indentity column overwrote inserted value";
             commit();
         }
     }

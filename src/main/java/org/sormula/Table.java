@@ -48,6 +48,7 @@ import org.sormula.operation.aggregate.SelectAvgOperation;
 import org.sormula.operation.aggregate.SelectMaxOperation;
 import org.sormula.operation.aggregate.SelectMinOperation;
 import org.sormula.operation.aggregate.SelectSumOperation;
+import org.sormula.operation.cascade.CascadeOperation;
 import org.sormula.translator.NameTranslator;
 import org.sormula.translator.RowTranslator;
 import org.sormula.translator.TranslatorException;
@@ -57,10 +58,10 @@ import org.sormula.translator.TypeTranslatorMap;
 
 /**
  * A table within a sql database. Contains a {@link RowTranslator} for reading/writing
- * data form/to database and contains methods for common input/output operations. The RowTranslator
+ * data form/to database and contains methods for common input/output operations. A {@link RowTranslator}
  * is created based upon fields within the row class of type R and from annotations for the
- * class. All common input/output methods use the primary key defined by {@link Column#primaryKey()} 
- * annotation on class R.
+ * class. The primary key is defined by {@link Column#primaryKey()}, {@link Column#identity()}, or
+ * {@link Row#primaryKeyFields()} on class R.
  * <p>
  * Example 1 - Get table from database:
  * <blockquote><pre>
@@ -114,6 +115,7 @@ public class Table<R> implements TypeTranslatorMap, TransactionListener
     Cache<R> cache;
     boolean legacyAnnotationPrecedence;
     Row rowAnnotation;
+    String[] requiredCascades;
     
     
     /**
@@ -128,6 +130,8 @@ public class Table<R> implements TypeTranslatorMap, TransactionListener
     {
         this.database = database;
         this.rowClass = rowClass;
+        
+        requiredCascades = new String[0];
         
         // LEGACY_ANNOTATION_PRECEDENCE=true means read table annotations prior to row annotations
         // by default version 3.0 and later will read row annotations prior to table annotations
@@ -226,6 +230,42 @@ public class Table<R> implements TypeTranslatorMap, TransactionListener
     public boolean isLegacyAnnotationPrecedence()
     {
         return legacyAnnotationPrecedence;
+    }
+    
+    
+    /**
+     * Sets the name(s) of cascades that should occur with this operation. Cascades with names that equal
+     * any of the names specified in cascadeNames parameter will be executed. The default value for 
+     * required cascade names is {""}. 
+     * <p>
+     * For all cascades that are executed, cascadeNames is passed on to the cascade operation with
+     * {@link CascadeOperation#setRequiredCascades(String...)} so that all cascades for all levels use
+     * the same required cascade names. 
+     * <p> 
+     * The wildcard "*" parameter will result in {@link StackOverflowError} if cascade relationships form 
+     * a cyclic graph and no termination condition exists to end the recursion.
+     * <p>
+     * If {@link Database#getTable(Class)} is used, keep in mind that the names set with this method 
+     * will be in effect for all future uses of the same {@link Table} object until changed.
+     * 
+     * @param cascadeNames name(s) of cascades to use; "*" for wildcard to use all cascades
+     * @since 3.0
+     */
+    public void setRequiredCascades(String... cascadeNames)
+    {
+        requiredCascades = cascadeNames;
+    }
+    
+    
+    /**
+     * Gets the required cascade names.
+     * 
+     * @return names of cascades to use 
+     * @since 3.0
+     */
+    public String[] getRequiredCascades()
+    {
+        return requiredCascades;
     }
 
 
@@ -669,8 +709,8 @@ public class Table<R> implements TypeTranslatorMap, TransactionListener
     
     
     /**
-     * Selects one row in table using primary key. Primary key must be defined by one
-     * or more {@link Column#primaryKey()} annotations.
+     * Selects one row in table using primary key. The primary key is defined by {@link Column#primaryKey()}, 
+     * {@link Column#identity()}, or {@link Row#primaryKeyFields()}.
      * <p>
      * Example:
      * <blockquote><pre>
@@ -1070,6 +1110,26 @@ public class Table<R> implements TypeTranslatorMap, TransactionListener
     
     
     /**
+     * Inserts a row into a table that was defined with an identity column but insert
+     * does not use auto generated key for identity column. This allows you to insert
+     * a row into a table when identity column value is obtained from the row object.
+     * <p>
+     * If cascades for row are defined with identity column, those cascaded rows will use
+     * the normal insert methods unless otherwise defined in the cascade annotation(s).
+     * 
+     * @param row row to insert
+     * @return count of rows affected
+     * @throws SormulaException if error
+     * @since 3.0
+     * @see InsertOperation#InsertOperation(Table, boolean)
+     */
+    public int insertNonIdentity(R row) throws SormulaException
+    {
+        return new InsertOperation<R>(this, false).insert(row);
+    }
+    
+    
+    /**
      * Inserts collection of rows.
      * <p>
      * Example:
@@ -1088,7 +1148,29 @@ public class Table<R> implements TypeTranslatorMap, TransactionListener
      */
     public int insertAll(Collection<R> rows) throws SormulaException
     {
-        return new InsertOperation<R>(this).insertAll(rows);
+        if (rows.size() > 0) return new InsertOperation<R>(this).insertAll(rows);
+        else return 0;
+    }
+    
+    
+    /**
+     * Inserts a collection of rows into a table that was defined with an identity column 
+     * but insert does not use auto generated key for identity column. This allows you to insert
+     * rows into a table when identity column value for each row is obtained from the row object.
+     * <p>
+     * If cascades for row are defined with identity column, those cascaded rows will use
+     * the normal insert methods unless otherwise defined in the cascade annotation(s).
+     * 
+     * @param rows rows to insert
+     * @return count of rows affected
+     * @throws SormulaException if error
+     * @since 3.0
+     * @see InsertOperation#InsertOperation(Table, boolean)
+     */
+    public int insertNonIdentityAll(Collection<R> rows) throws SormulaException
+    {
+        if (rows.size() > 0) return new InsertOperation<R>(this, false).insertAll(rows);
+        else return 0;
     }
     
     
@@ -1103,15 +1185,52 @@ public class Table<R> implements TypeTranslatorMap, TransactionListener
      */
     public int insertAllBatch(Collection<R> rows) throws SormulaException
     {
-        InsertOperation<R> operation = new InsertOperation<R>(this);
-        operation.setBatch(true);
-        return operation.insertAll(rows);
+        if (rows.size() > 0)
+        {
+            InsertOperation<R> operation = new InsertOperation<R>(this);
+            operation.setBatch(true);
+            return operation.insertAll(rows);
+        }
+        else
+        {
+            return 0;
+        }
     }
     
     
     /**
-     * Updates one row in table by primary key. Primary key must be defined by one
-     * or more {@link Column#primaryKey()} annotations.
+     * Inserts a collection of rows into a table that was defined with an identity column as
+     * a batch operation. Insert does not use auto generated key for identity column. This allows 
+     * you to insert rows into a table when identity column value for each row is obtained from 
+     * the row object.
+     * <p>
+     * Cascades are never performed for batch operations.
+     * 
+     * @param rows rows to insert
+     * @return count of rows affected
+     * @throws SormulaException if error
+     * @since 3.0
+     * @see InsertOperation#InsertOperation(Table, boolean)
+     * @see ModifyOperation#setBatch(boolean)
+     */
+    public int insertNonIdentityAllBatch(Collection<R> rows) throws SormulaException
+    {
+        if (rows.size() > 0)
+        {
+            InsertOperation<R> operation = new InsertOperation<R>(this, false);
+            operation.setBatch(true);
+            return operation.insertAll(rows);
+        }
+        else
+        {
+            return 0;
+        }
+    }
+    
+    
+    /**
+     * Updates one row in table by primary key. The primary key is defined by {@link Column#primaryKey()}, 
+     * {@link Column#identity()}, or {@link Row#primaryKeyFields()}.
      * <p>
      * Example:
      * <blockquote><pre>
@@ -1132,8 +1251,8 @@ public class Table<R> implements TypeTranslatorMap, TransactionListener
     
     
     /**
-     * Updates collection of rows using primary key. Primary key must be defined by one
-     * or more {@link Column#primaryKey()} annotations.
+     * Updates collection of rows using primary key. The primary key is defined by {@link Column#primaryKey()}, 
+     * {@link Column#identity()}, or {@link Row#primaryKeyFields()}.
      * <p>
      * Example:
      * <blockquote><pre>
@@ -1151,13 +1270,15 @@ public class Table<R> implements TypeTranslatorMap, TransactionListener
      */
     public int updateAll(Collection<R> rows) throws SormulaException
     {
-        return new UpdateOperation<R>(this).updateAll(rows);
+        if (rows.size() > 0) return new UpdateOperation<R>(this).updateAll(rows);
+        else return 0;
     }
     
     
     /**
-     * Updates collection of rows using primary key in batch mode. Primary key must be defined by one
-     * or more {@link Column#primaryKey()} annotations. See limitations about batch updates
+     * Updates collection of rows using primary key in batch mode. The primary key 
+     * is defined by {@link Column#primaryKey()}, {@link Column#identity()}, or 
+     * {@link Row#primaryKeyFields()}. See limitations about batch updates
      * in {@link ModifyOperation#setBatch(boolean)}.
      * 
      * @param rows rows to update
@@ -1167,15 +1288,22 @@ public class Table<R> implements TypeTranslatorMap, TransactionListener
      */
     public int updateAllBatch(Collection<R> rows) throws SormulaException
     {
-        UpdateOperation<R> operation = new UpdateOperation<R>(this);
-        operation.setBatch(true);
-        return operation.updateAll(rows);
+        if (rows.size() > 0)
+        {
+            UpdateOperation<R> operation = new UpdateOperation<R>(this);
+            operation.setBatch(true);
+            return operation.updateAll(rows);
+        }
+        else
+        {
+            return 0;
+        }
     }
     
     
     /**
-     * Deletes by primary key. Primary key must be defined by one
-     * or more {@link Column#primaryKey()} annotations.
+     * Deletes by primary key. The primary key is defined by {@link Column#primaryKey()}, 
+     * {@link Column#identity()}, or {@link Row#primaryKeyFields()}.
      * <p>
      * Example:
      * <blockquote><pre>
@@ -1195,8 +1323,8 @@ public class Table<R> implements TypeTranslatorMap, TransactionListener
     
     
     /**
-     * Deletes by primary key. Primary key must be defined by one
-     * or more {@link Column#primaryKey()} annotations.
+     * Deletes by primary key. The primary key is defined by {@link Column#primaryKey()}, 
+     * {@link Column#identity()}, or {@link Row#primaryKeyFields()}.
      * <p>
      * Example:
      * <blockquote><pre>
@@ -1217,8 +1345,8 @@ public class Table<R> implements TypeTranslatorMap, TransactionListener
     
     
     /**
-     * Deletes many rows by primary key. Primary key must be defined by one
-     * or more {@link Column#primaryKey()} annotations.
+     * Deletes many rows by primary key. The primary key is defined by {@link Column#primaryKey()}, 
+     * {@link Column#identity()}, or {@link Row#primaryKeyFields()}.
      * <p>
      * Example:
      * <blockquote><pre>
@@ -1233,13 +1361,15 @@ public class Table<R> implements TypeTranslatorMap, TransactionListener
      */
     public int deleteAll(Collection<R> rows) throws SormulaException
     {
-        return new DeleteOperation<R>(this).deleteAll(rows);
+        if (rows.size() > 0) return new DeleteOperation<R>(this).deleteAll(rows);
+        else return 0;
     }
     
     
     /**
-     * Deletes many rows by primary key in batch mode. Primary key must be defined by one
-     * or more {@link Column#primaryKey()} annotations.  See limitations about batch deletes
+     * Deletes many rows by primary key in batch mode. The primary key is defined 
+     * by {@link Column#primaryKey()}, {@link Column#identity()}, or 
+     * {@link Row#primaryKeyFields()}.  See limitations about batch deletes
      * in {@link ModifyOperation#setBatch(boolean)}.
      * 
      * @param rows get primary key values from each row in this collection
@@ -1249,9 +1379,16 @@ public class Table<R> implements TypeTranslatorMap, TransactionListener
      */
     public int deleteAllBatch(Collection<R> rows) throws SormulaException
     {
-        DeleteOperation<R> operation = new DeleteOperation<R>(this);
-        operation.setBatch(true);
-        return operation.deleteAll(rows);
+        if (rows.size() > 0)
+        {
+            DeleteOperation<R> operation = new DeleteOperation<R>(this);
+            operation.setBatch(true);
+            return operation.deleteAll(rows);
+        }
+        else
+        {
+            return 0;
+        }
     }
     
     
@@ -1297,7 +1434,8 @@ public class Table<R> implements TypeTranslatorMap, TransactionListener
      */
     public int saveAll(Collection<R> rows) throws SormulaException
     {
-        return new SaveOperation<R>(this).modifyAll(rows);
+        if (rows.size() > 0) return new SaveOperation<R>(this).modifyAll(rows);
+        else return 0;
     }
     
     

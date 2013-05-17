@@ -156,14 +156,14 @@ public class UpdateOperation<R> extends ModifyOperation<R>
     protected List<CascadeOperation<R, ?>> prepareCascades(Field field) throws OperationException
     {
         List<CascadeOperation<R, ?>> co = null;
-        UpdateCascadeAnnotationReader ucar = new UpdateCascadeAnnotationReader(field);
-        UpdateCascade[] updateCascades = ucar.getUpdateCascades();
+        UpdateCascadeAnnotationReader car = new UpdateCascadeAnnotationReader(field);
+        UpdateCascade[] updateCascades = car.getUpdateCascades();
         
-        if (updateCascades.length > 0)
+        if (updateCascades.length > 0 && isRequiredCascade(car.getName()))
         {
-            // at least one update cascade
+            // at least one update cascade and (unnamed or is required)
             if (log.isDebugEnabled()) log.debug("prepareCascades() for " + field.getName());
-            Table<?> targetTable = getTargetTable(ucar.getTargetClass(), field);
+            Table<?> targetTable = getTargetTable(car.getTargetClass(), field);
             SormulaField<R, ?> targetField = createTargetField(field);
             co = new ArrayList<>(updateCascades.length);
             
@@ -173,8 +173,12 @@ public class UpdateOperation<R> extends ModifyOperation<R>
                 if (log.isDebugEnabled()) log.debug("prepare cascade " + c.operation());
                 @SuppressWarnings("unchecked") // target field type is not known at compile time
                 CascadeOperation<R, ?> operation = new UpdateCascadeOperation(getTable(), targetField, targetTable, c);
-                if (c.setForeignKeyValues()) operation.setForeignKeyFieldNames(ucar.getForeignKeyValueFields());
-                if (c.setForeignKeyReference()) operation.setForeignKeyReferenceFieldName(ucar.getForeignKeyReferenceField());
+                if (c.setForeignKeyValues()) operation.setForeignKeyFieldNames(car.getForeignKeyValueFields());
+                if (c.setForeignKeyReference()) operation.setForeignKeyReferenceFieldName(car.getForeignKeyReferenceField());
+
+                // cascade operation uses same required cascade names as this operation
+                operation.setRequiredCascades(getRequiredCascades());
+                
                 operation.prepare();
                 co.add(operation);
             }

@@ -19,7 +19,6 @@ package org.sormula.tests.cascade;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.sormula.annotation.Column;
 import org.sormula.annotation.Row;
 import org.sormula.annotation.cascade.OneToManyCascade;
 import org.sormula.annotation.cascade.OneToOneCascade;
@@ -32,10 +31,9 @@ import org.sormula.annotation.cascade.SelectCascade;
  * 
  * @author Jeff Miller
  */
-@Row(tableName="SormulaTestParentROC")
+@Row(tableName="SormulaTestParentROC", primaryKeyFields="id")
 public class SormulaTestParentReadOnlyCascade
 {
-    @Column(primaryKey=true)
     int id;
     String description;
     int child1Id;

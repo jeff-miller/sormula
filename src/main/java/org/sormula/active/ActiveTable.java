@@ -45,6 +45,7 @@ import org.sormula.active.operation.UpdateAll;
 import org.sormula.active.operation.UpdateAllBatch;
 import org.sormula.annotation.Column;
 import org.sormula.annotation.OrderBy;
+import org.sormula.annotation.Row;
 import org.sormula.cache.Cache;
 import org.sormula.operation.ModifyOperation;
 
@@ -149,8 +150,8 @@ public class ActiveTable<R extends ActiveRecord<? super R>>
     
     
     /**
-     * Selects one record in table using primary key. Primary key must be defined by one
-     * or more {@link Column#primaryKey()} annotations. 
+     * Selects one record in table using primary key. The primary key is defined by {@link Column#primaryKey()}, 
+     * {@link Column#identity()}, or {@link Row#primaryKeyFields()}. 
      * {@link ActiveRecord#attach(ActiveDatabase)} is invoked on selected record to
      * attach it to the active database of this table.
      * <p>
@@ -485,7 +486,8 @@ public class ActiveTable<R extends ActiveRecord<? super R>>
      */
     public int saveAll(Collection<R> records) throws ActiveException
     {
-        return new SaveAll<R>(this, records).execute();
+        if (records.size() > 0) return new SaveAll<R>(this, records).execute();
+        else return 0;
     }
 
     
@@ -537,7 +539,8 @@ public class ActiveTable<R extends ActiveRecord<? super R>>
      */
     public int insertAll(Collection<R> records) throws ActiveException
     {
-        return new InsertAll<R>(this, records).execute();
+        if (records.size() > 0) return new InsertAll<R>(this, records).execute();
+        else return 0;
     }
     
 
@@ -554,13 +557,14 @@ public class ActiveTable<R extends ActiveRecord<? super R>>
      */
     public int insertAllBatch(Collection<R> records) throws ActiveException
     {
-        return new InsertAllBatch<R>(this, records).execute();
+        if (records.size() > 0) return new InsertAllBatch<R>(this, records).execute();
+        else return 0;
     }
     
     
     /**
-     * Updates one record in table by primary key. Primary key must be defined by one
-     * or more {@link Column#primaryKey()} annotations.
+     * Updates one record in table by primary key. The primary key is defined by {@link Column#primaryKey()}, 
+     * {@link Column#identity()}, or {@link Row#primaryKeyFields()}.
      * {@link ActiveRecord#attach(ActiveDatabase)} is invoked on record to
      * attach it to the active database of this table prior to update.
      * Typically {@link ActiveRecord#update()} is used instead of this method.
@@ -584,8 +588,8 @@ public class ActiveTable<R extends ActiveRecord<? super R>>
 
     
     /**
-     * Updates collection of records using primary key. Primary key must be defined by one
-     * or more {@link Column#primaryKey()} annotations.
+     * Updates collection of records using primary key. The primary key is defined by {@link Column#primaryKey()}, 
+     * {@link Column#identity()}, or {@link Row#primaryKeyFields()}.
      * {@link ActiveRecord#attach(ActiveDatabase)} is invoked on records to
      * attach them to the active database of this table prior to update.
      * <p>
@@ -605,13 +609,15 @@ public class ActiveTable<R extends ActiveRecord<? super R>>
      */
     public int updateAll(Collection<R> records) throws ActiveException
     {
-        return new UpdateAll<R>(this, records).execute();
+        if (records.size() > 0) return new UpdateAll<R>(this, records).execute();
+        else return 0;
     }
     
     
     /**
-     * Updates collection of records using primary key in batch mode. Primary key must be defined by one
-     * or more {@link Column#primaryKey()} annotations.
+     * Updates collection of records using primary key in batch mode. 
+     * The primary key is defined by {@link Column#primaryKey()}, 
+     * {@link Column#identity()}, or {@link Row#primaryKeyFields()}.
      * {@link ActiveRecord#attach(ActiveDatabase)} is invoked on records to
      * attach them to the active database of this table prior to update.
      * See limitations about batch updates in {@link ModifyOperation#setBatch(boolean)}.
@@ -628,8 +634,8 @@ public class ActiveTable<R extends ActiveRecord<? super R>>
     
     
     /**
-     * Deletes by primary key. Primary key must be defined by one
-     * or more {@link Column#primaryKey()} annotations.    
+     * Deletes by primary key. The primary key is defined by {@link Column#primaryKey()}, 
+     * {@link Column#identity()}, or {@link Row#primaryKeyFields()}.    
      * {@link ActiveRecord#attach(ActiveDatabase)} is invoked on record to
      * attach it to the active database of this table prior to delete.
      * Typically {@link ActiveRecord#delete()} is used instead of this method.
@@ -671,8 +677,8 @@ public class ActiveTable<R extends ActiveRecord<? super R>>
 
     
     /**
-     * Deletes many records by primary key. Primary key must be defined by one
-     * or more {@link Column#primaryKey()} annotations.
+     * Deletes many records by primary key. The primary key is defined by {@link Column#primaryKey()}, 
+     * {@link Column#identity()}, or {@link Row#primaryKeyFields()}.
      * {@link ActiveRecord#attach(ActiveDatabase)} is invoked on records to
      * attach them to the active database of this table prior to delete.
      * <p>
@@ -690,7 +696,7 @@ public class ActiveTable<R extends ActiveRecord<? super R>>
     public int deleteAll(Collection<R> records) throws ActiveException
     {
         // if records == null, don't execute since all records will be deleted
-        if (records != null)
+        if (records != null && records.size() > 0) 
         {
             return new DeleteAll<R>(this, records).execute();
         }
@@ -700,8 +706,8 @@ public class ActiveTable<R extends ActiveRecord<? super R>>
 
     
     /**
-     * Deletes many records by primary key in batch mode. Primary key must be defined by one
-     * or more {@link Column#primaryKey()} annotations.
+     * Deletes many records by primary key in batch mode. The primary key is defined by {@link Column#primaryKey()}, 
+     * {@link Column#identity()}, or {@link Row#primaryKeyFields()}.
      * {@link ActiveRecord#attach(ActiveDatabase)} is invoked on records to
      * attach them to the active database of this table prior to delete.
      * 

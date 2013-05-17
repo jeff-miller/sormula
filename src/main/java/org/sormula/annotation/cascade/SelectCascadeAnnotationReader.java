@@ -37,11 +37,10 @@ public class SelectCascadeAnnotationReader extends CascadeAnnotationReader
      */
     protected void initOneToManyCascade()
     {
-        OneToManyCascade cascadesAnnotation = source.getAnnotation(OneToManyCascade.class);
-        setForeignKeyValueFields(cascadesAnnotation.foreignKeyValueFields());
-        setForeignKeyReferenceField(cascadesAnnotation.foreignKeyReferenceField());
-        initTargetClass(cascadesAnnotation.targetClass());
-        selectCascades = cascadesAnnotation.selects();            
+        OneToManyCascade cascadeAnnotation = source.getAnnotation(OneToManyCascade.class);
+        init(cascadeAnnotation);
+        initTargetClass(cascadeAnnotation.targetClass());
+        selectCascades = cascadeAnnotation.selects();            
     }
     
     
@@ -50,11 +49,10 @@ public class SelectCascadeAnnotationReader extends CascadeAnnotationReader
      */
     protected void initOneToOneCascade()
     {
-        OneToOneCascade cascadesAnnotation = source.getAnnotation(OneToOneCascade.class);
-        setForeignKeyValueFields(cascadesAnnotation.foreignKeyValueFields());
-        setForeignKeyReferenceField(cascadesAnnotation.foreignKeyReferenceField());
+        OneToOneCascade cascadeAnnotation = source.getAnnotation(OneToOneCascade.class);
+        init(cascadeAnnotation);
         initTargetClass(source.getType());
-        selectCascades = cascadesAnnotation.selects();            
+        selectCascades = cascadeAnnotation.selects();            
     }
     
     
@@ -63,11 +61,10 @@ public class SelectCascadeAnnotationReader extends CascadeAnnotationReader
      */
     protected void initCascade()
     {
-        Cascade cascadesAnnotation = source.getAnnotation(Cascade.class);
-        setForeignKeyValueFields(cascadesAnnotation.foreignKeyValueFields());
-        setForeignKeyReferenceField(cascadesAnnotation.foreignKeyReferenceField());
-        initTargetClass(cascadesAnnotation.targetClass());
-        selectCascades = cascadesAnnotation.selects();
+        Cascade cascadeAnnotation = source.getAnnotation(Cascade.class);
+        init(cascadeAnnotation);
+        initTargetClass(cascadeAnnotation.targetClass());
+        selectCascades = cascadeAnnotation.selects();
     }
 
 

@@ -41,9 +41,9 @@ import org.sormula.reflect.SormulaField;
  * This class may be used as a super class of row that has a reference to a lazy select field or it may be
  * used as a delegate when row requires a different super class.
  * <p>
- * Subclass must implement {@link #initDatabase()} to create the {@link Database} to use for the lazy
+ * Subclass must implement {@link #openDatabase()} to create the {@link Database} to use for the lazy
  * select. Usually {@link #pendingLazySelects(Database)} is overridden to record information about the
- * current {@link Database} to be used by {@link #initDatabase()}.
+ * current {@link Database} to be used by {@link #openDatabase()}.
  * 
  * @author Jeff Miller
  * @since 1.8 and 2.2

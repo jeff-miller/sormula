@@ -22,6 +22,7 @@ import org.sormula.Database;
 import org.sormula.Table;
 import org.sormula.Transaction;
 import org.sormula.annotation.Column;
+import org.sormula.annotation.Row;
 import org.sormula.annotation.cache.Cached;
 import org.sormula.cache.Cache;
 import org.sormula.cache.CacheException;
@@ -49,8 +50,9 @@ import org.sormula.operation.SqlOperation;
  * is active. Tables that are cached must use {@link Transaction} obtained from {@link Database#getTransaction()}
  * or must use a subclass of {@link Transaction} that is set with {@link Database#setTransaction(Transaction)}.
  * <p>
- * Cached rows are stored in maps with primary keys as the map key. Primary keys are defined by 
- * {@link Column#primaryKey()}. Cache will be searched when selecting by primary key. Non primary key 
+ * Cached rows are stored in maps with primary keys as the map key. Primary keys are defined by
+ * {@link Column#primaryKey()}, {@link Column#identity()}, or {@link Row#primaryKeyFields()}. 
+ * Cache will be searched when selecting by primary key. Non primary key 
  * selects will cause cache to write uncommitted rows to database prior to executing query.
  * 
  * @author Jeff Miller

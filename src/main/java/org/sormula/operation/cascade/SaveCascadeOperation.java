@@ -58,9 +58,9 @@ public class SaveCascadeOperation<S, T> extends ModifyCascadeOperation<S, T>
      * @param saveCascadeAnnotation cascade operation
      * @since 3.0
      */
-    public SaveCascadeOperation(Table<S> sourcetTable, SormulaField<S, ?> targetField, Table<T> targetTable, SaveCascade saveCascadeAnnotation)
+    public SaveCascadeOperation(Table<S> sourceTable, SormulaField<S, ?> targetField, Table<T> targetTable, SaveCascade saveCascadeAnnotation)
     {
-        super(sourcetTable, targetField, targetTable, saveCascadeAnnotation.operation());
+        super(sourceTable, targetField, targetTable, saveCascadeAnnotation.operation());
         setPost(saveCascadeAnnotation.post());
     }
 

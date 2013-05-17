@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.sormula.active.ActiveRecord;
+import org.sormula.annotation.Row;
 import org.sormula.annotation.cascade.OneToManyCascade;
 import org.sormula.annotation.cascade.OneToOneCascade;
 import org.sormula.annotation.cascade.SelectCascade;
@@ -30,6 +31,7 @@ import org.sormula.annotation.cascade.SelectCascade;
  * 
  * @author Jeff Miller
  */
+@Row(primaryKeyFields="parentId")
 public class SormulaTestParentAR extends ActiveRecord<SormulaTestParentAR>
 {
     private static final long serialVersionUID = 1L;
@@ -40,7 +42,7 @@ public class SormulaTestParentAR extends ActiveRecord<SormulaTestParentAR>
     // tests 1 to many relationship
     @OneToManyCascade(// optional in v1.9 targetClass=SormulaTestChildNAR.class, 
             selects=@SelectCascade(sourceParameterFieldNames="parentId", targetWhereName="byParent"),
-            foreignKeyValueFields="*") // tests targetForeignKeyFields for ActiveRecord
+            foreignKeyValueFields="#") // tests foreignKeyValueFields for ActiveRecord
     List<SormulaTestChildNAR> childList;
     
     // tests 1 to 1 relationship
@@ -67,7 +69,7 @@ public class SormulaTestParentAR extends ActiveRecord<SormulaTestParentAR>
     {
         childList.add(child);
         
-        // don't need since targetForeignKeyFields="*" was specified
+        // don't need since foreignKeyValueFields="#" was specified
         // child.setParentId(parentId);
     }
 

@@ -21,9 +21,12 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 import java.sql.PreparedStatement;
+import java.sql.Statement;
 
 import org.sormula.Table;
+import org.sormula.operation.ModifyOperation;
 import org.sormula.operation.SelectOperation;
+import org.sormula.operation.SqlOperation;
 import org.sormula.translator.NameTranslator;
 
 
@@ -89,10 +92,41 @@ public @interface Row
      * does not use a where condition.. Setting fetch size may improve memory
      * and/or performance for large result sets.
      * 
-     * @param fetchSize number of rows that should be fetched from the database when more rows are needed; zero
+     * @return fetchSize number of rows that should be fetched from the database when more rows are needed; zero
      * to ignore
      * @since 3.0
      * @see PreparedStatement#setFetchSize(int)
      */
     int fetchSize() default 0;
+    
+    
+    /**
+     * Indicates that post execute methods are invoked when {@link Statement#executeUpdate(String)} returns a
+     * row count of zero. A value of true means to invoke post execute methods unconditionally. A value of 
+     * false means that post execute methods are not invoked when no rows are modified.
+     * Post execute methods are postExecute and postExecuteCascade of {@link ModifyOperation}.
+     * <p>
+     * Typically this should be false. Set to true for pre-version 3.0 behavior.
+     * 
+     * @return true if post execute methods are performed unconditionally; false to
+     * perform post execute methods only when database is modified
+     * @since 3.0
+     */
+    boolean zeroRowCountPostExecute() default false;
+    
+    
+    /**
+     * Defines the primary keys for table. Use this instead of {@link Column#primaryKey()} 
+     * or {@link Column#identity()}.
+     * 
+     * The advantage of this annotation is that the order of the keys listed is the order used 
+     * by {@link SqlOperation#setParameters(Object...)}.
+     * Some JVM's do not reflect the fields in order of declaration so this method provides a 
+     * predicable order for primary keys.
+     * 
+     * @return names of fields that are the primary keys; empty array to obtain primary keys from
+     * {@link Column} annotations
+     * @since 3.0
+     */
+    String[] primaryKeyFields() default {};
 }

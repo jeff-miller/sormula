@@ -18,6 +18,7 @@ package org.sormula.tests.active;
 
 import org.sormula.active.ActiveRecord;
 import org.sormula.active.ActiveTable;
+import org.sormula.annotation.Column;
 import org.sormula.annotation.OrderBy;
 import org.sormula.annotation.Where;
 
@@ -34,6 +35,7 @@ public class SormulaTestAR extends ActiveRecord<SormulaTestAR>
     private static final long serialVersionUID = 1L;
     public static final ActiveTable<SormulaTestAR> table = table(SormulaTestAR.class);
     
+    @Column(primaryKey=true)
     int id;
     int type;
     String description;

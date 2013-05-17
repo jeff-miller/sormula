@@ -38,6 +38,14 @@ public class InsertTest extends DatabaseTest<SormulaFKTestParent>
     public void setUp() throws Exception
     {
         openDatabase();
+        
+        // need to drop tables in proper order due to foreign key constraints
+        dropTable(getSchemaPrefix() + SormulaFKTestChildM.class.getSimpleName());
+        dropTable(getSchemaPrefix() + SormulaFKTestChildN.class.getSimpleName());
+        dropTable(getSchemaPrefix() + SormulaFKTestParent.class.getSimpleName());
+        
+        String foreignKeyDdl = ""; // some db's have problems with foreign key constraints
+        
         createTable(SormulaFKTestParent.class, 
             "CREATE TABLE " + getSchemaPrefix() + SormulaFKTestParent.class.getSimpleName() + " (" +
             " parentid INTEGER NOT NULL PRIMARY KEY," +
@@ -49,11 +57,13 @@ public class InsertTest extends DatabaseTest<SormulaFKTestParent>
         // create child table for 1 to n relationship
         DatabaseTest<SormulaFKTestChildN> childN = new DatabaseTest<SormulaFKTestChildN>();
         childN.openDatabase();
+        if (isForeignKey()) foreignKeyDdl = ", FOREIGN KEY (parentid) REFERENCES " + getSchemaPrefix() + SormulaFKTestParent.class.getSimpleName() +"(parentid)"; 
         childN.createTable(SormulaFKTestChildN.class, 
                 "CREATE TABLE " + getSchemaPrefix() + SormulaFKTestChildN.class.getSimpleName() + " (" +
                 " id INTEGER NOT NULL PRIMARY KEY," +
                 " parentid INTEGER NOT NULL," +
                 " description VARCHAR(60)" +
+                foreignKeyDdl +
                 ")"
             );
         childN.closeDatabase();
@@ -61,11 +71,13 @@ public class InsertTest extends DatabaseTest<SormulaFKTestParent>
         // create child table for map relationship
         DatabaseTest<SormulaFKTestChildM> childM = new DatabaseTest<SormulaFKTestChildM>();
         childM.openDatabase();
+        if (isForeignKey()) foreignKeyDdl = ", FOREIGN KEY (parentid) REFERENCES " + getSchemaPrefix() + SormulaFKTestParent.class.getSimpleName() +"(parentid)"; 
         childM.createTable(SormulaFKTestChildM.class, 
                 "CREATE TABLE " + getSchemaPrefix() + SormulaFKTestChildM.class.getSimpleName() + " (" +
                 " id INTEGER NOT NULL PRIMARY KEY," +
                 " parentid INTEGER NOT NULL," +
                 " description VARCHAR(60)" +
+                foreignKeyDdl +
                 ")"
             );
         childM.closeDatabase();

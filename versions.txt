@@ -1,31 +1,41 @@
 Version History
 
-JDK 5/6  JDK 7   comments
+JDK 5/6     JDK 7       comments
 ------------------------------------------------------------------------------------------------------------
-3.0-j5   3.0-j7  caching
-                 TransactionListener
-                 row annotations have precendence over table annotations 
-                 (set legacyAnnotationPrecedence=true for pre v3.0 precendence)
-                 remove deprecated 
-                 cascades can set foreign key values and reference on target objects
-                 Row.inheritedFields allows fields in subclasses to be used as columns
-                 Row.selectInitialCapacity configures initial capacity of collections/maps for select results
-                 Where.selectInitialCapacity configures initial capacity of collections/maps for select results
-                 SelectOperation.setFetchSize sets PreparedStatement fetch size
-                 Row.fetchSize and Where.fetchSize configures fetch size
-                 Where.maximumRows limits rows read from select operation
-                 SelectOperation implements Iterable to enable SelectOperation objects in for each loops
-1.9.3    2.3.3   save cascades to all levels
-1.9.2    2.3.2   TypeTranslator can be used for primative
-1.9.1    2.3.1   update examples
-1.9      2.3     batch, JNDI, cascade array types, optional cascade targetClass, query cancel, query timeout
-1.8      2.2     lazy cascade, name translators
-1.7.1    2.1.1   improved active record transaction
-1.7      2.1     active record
-1.6      2.0     ImplicitType, ExplicitType, TypeTranslator, annotations on Table class, read only 
-1.5      n/a     timing instrumentation
-1.4      n/a     execute All methods, comparison operands
-1.3      n/a     IN operator
-1.2      n/a     zero configuration capability, readonly attribute cascade annotation
-1.1      n/a     save operations, aggregate operations
-1.0      n/a     new
+3.0-jdk1.5  3.0-jdk1.7  - caching
+                        - TransactionListener
+                        - row annotations have precendence over table annotations 
+                          (set legacyAnnotationPrecedence=true for pre v3.0 precendence)
+                        - remove deprecated 
+                        - cascades can set foreign key values and reference on target objects
+                        - Row.inheritedFields allows fields in subclasses to be used as columns
+                        - Row.selectInitialCapacity configures initial capacity of 
+                          collections/maps for select results
+                        - Where.selectInitialCapacity configures initial capacity of 
+                          collections/maps for select results
+                        - SelectOperation.setFetchSize sets PreparedStatement fetch size
+                        - Row.fetchSize and Where.fetchSize configures fetch size
+                        - Where.maximumRows limits rows read from select operation
+                        - SelectOperation implements Iterable to enable SelectOperation
+                          objects in for loops
+                        - fix bug that cascaded insert, save, update, delete when parent row did
+                          not exist in database (see org.sormula.tests.cascade.multilevelfk)
+                        - add Row.primaryKeyFields as alternate way to specify primary keys
+                        - add many-to-many examples
+                        - named cascades (see org.sormula.tests.cascade.named for example)
+                        - non-identity inserts for tables with identity columns
+1.9.3       2.3.3       - save cascades to all levels
+1.9.2       2.3.2       - TypeTranslator can be used for primative
+1.9.1       2.3.1       - update examples
+1.9         2.3         - batch, JNDI, cascade array types, optional cascade targetClass, 
+                          query cancel, query timeout
+1.8         2.2         - lazy cascade, name translators
+1.7.1       2.1.1       - improved active record transaction
+1.7         2.1         - active record
+1.6         2.0         - ImplicitType, ExplicitType, TypeTranslator, annotations on Table class, read only 
+1.5         n/a         - timing instrumentation
+1.4         n/a         - execute All methods, comparison operands
+1.3         n/a         - IN operator
+1.2         n/a         - zero configuration capability, readonly attribute cascade annotation
+1.1         n/a         - save operations, aggregate operations
+1.0         n/a         - new

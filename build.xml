@@ -18,6 +18,10 @@
 		<antcall target="IdentityInsert"/>
 		<antcall target="ComplexSelect"/>
 		<antcall target="ComplexUpdate"/>
+		<antcall target="ManyToManyInsert1"/>
+		<antcall target="ManyToManySelect1"/>
+		<antcall target="ManyToManyInsert2"/>
+		<antcall target="ManyToManySelect2"/>
 		<antcall target="NameDelete"/>
 		<antcall target="NameInsert"/>
 		<antcall target="NameSelect"/>
@@ -80,6 +84,20 @@
         <antcall target="run-example"><param name="class" value="org.sormula.examples.identity.IdentityInsert"/></antcall>
     </target>
 
+    <target name="ManyToManyInsert1" description="Runs example in org.sormula.examples.manytomany.inherited">
+        <antcall target="run-example"><param name="class" value="org.sormula.examples.manytomany.inherited.ManyToManyInsert1"/></antcall>
+    </target>
+    <target name="ManyToManySelect1" description="Runs example in org.sormula.examples.manytomany.inherited">
+        <antcall target="run-example"><param name="class" value="org.sormula.examples.manytomany.inherited.ManyToManySelect1"/></antcall>
+    </target>
+
+    <target name="ManyToManyInsert2" description="Runs example in org.sormula.examples.manytomany.named">
+        <antcall target="run-example"><param name="class" value="org.sormula.examples.manytomany.named.ManyToManyInsert2"/></antcall>
+    </target>
+    <target name="ManyToManySelect2" description="Runs example in org.sormula.examples.manytomany.named">
+        <antcall target="run-example"><param name="class" value="org.sormula.examples.manytomany.named.ManyToManySelect2"/></antcall>
+    </target>
+
     <target name="BlobExample" description="Runs example">
         <antcall target="run-example"><param name="class" value="org.sormula.examples.blob.BlobExample"/></antcall>
     </target>
@@ -108,7 +126,7 @@
 
 	<!-- ******* tests ******* -->
 	<target name="tests" description="Runs tests for groups in ${groups} for database ${db.dir} defined in build.properties" depends="compile-tests">
-        <testng verbose="2" groups="${groups}" parallel="false">
+        <testng verbose="${testng.verbose}" groups="${testng.groups}" parallel="false">
         	<sysproperty key="dbdir" value="${db.dir}"/>
         	<sysproperty key="seed" value="${seed}"/>
         	<sysproperty key="timings" value="${timings}"/>

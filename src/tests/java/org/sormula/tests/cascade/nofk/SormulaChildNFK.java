@@ -16,6 +16,7 @@
  */
 package org.sormula.tests.cascade.nofk;
 
+import org.sormula.annotation.Column;
 import org.sormula.annotation.Where;
 
 
@@ -27,6 +28,7 @@ import org.sormula.annotation.Where;
 @Where(name="byParent", fieldNames="parentId")
 public class SormulaChildNFK
 {
+    @Column(primaryKey=true)
     int childId;
     int parentId;
     String description;

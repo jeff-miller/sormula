@@ -24,6 +24,7 @@ import java.lang.annotation.Target;
 import org.sormula.Table;
 import org.sormula.annotation.Column;
 import org.sormula.annotation.Row;
+import org.sormula.operation.ScalarSelectOperation;
 import org.sormula.operation.SqlOperation;
 
 
@@ -54,7 +55,8 @@ public @interface OneToOneCascade
 
     
     /**
-     * Select cascade operations that will select target rows. Typical values would be:
+     * Select cascade operations that will select target rows. The default is primary key select.
+     * Typical values would be:
      * <ul>
      * <li>@SelectCascade(operation=ScalarSelectOperation.class, sourceParameterFieldNames="...")</li>
      * <li>@SelectCascade(operation=ArrayListSelectOperation.class)</li>
@@ -62,7 +64,7 @@ public @interface OneToOneCascade
      * 
      * @return select annotations for cascade; use empty array for no select cascade
      */
-    SelectCascade[] selects();
+    SelectCascade[] selects() default @SelectCascade(operation=ScalarSelectOperation.class);
     
     
     /**

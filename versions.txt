@@ -3,6 +3,7 @@ Version History
 JDK 5/6     JDK 7       comments
 ------------------------------------------------------------------------------------------------------------
 3.1-jdk1.5  3.1-jdk1.7  - SelectCascade#sourceParameterFieldNames can be "#" to use target where field names
+                        - OneToOneCascade has default select operation to select by primary key
 3.0-jdk1.5  3.0-jdk1.7  - caching
                         - TransactionListener
                         - row annotations have precendence over table annotations 

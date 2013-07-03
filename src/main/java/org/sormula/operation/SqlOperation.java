@@ -23,6 +23,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 import org.sormula.Database;
@@ -44,6 +45,7 @@ import org.sormula.operation.monitor.OperationTime;
 import org.sormula.reflect.ReflectException;
 import org.sormula.reflect.SormulaField;
 import org.sormula.translator.AbstractWhereTranslator;
+import org.sormula.translator.ColumnTranslator;
 import org.sormula.translator.RowTranslator;
 import org.sormula.translator.TranslatorException;
 import org.sormula.translator.TypeTranslator;
@@ -1188,6 +1190,19 @@ public abstract class SqlOperation<R>
         this.whereTranslator = whereTranslator;
     }
 
+    
+    /**
+     * Gets the {@link ColumnTranslator} objects used by the current where condition.
+     * 
+     * @return list of {@link ColumnTranslator} or empty list if no where condition
+     * @since 3.1
+     */
+    public List<ColumnTranslator<R>> getWhereColumnTranslators()
+    {
+        if (whereTranslator != null) return whereTranslator.getColumnTranslatorList();
+        else return Collections.emptyList();
+    }
+    
 
     /**
      * Gets the next JDBC parameter number used by {@link PreparedStatement} to set parameters.

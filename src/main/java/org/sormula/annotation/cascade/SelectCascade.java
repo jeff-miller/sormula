@@ -64,10 +64,13 @@ public @interface SelectCascade
      * operation for target row. Names must be in same order as defined in 
      * where condition on target row with {@link #targetWhereName()} or in same order 
      * as primary key fields of target row if primary key is used as where condition.
+     * <p>
+     * Use "#" to use field names defined by {@link #targetWhereName()}. Since "#" is default,
+     * naming source and target fields the same allows sourceParameterFieldNames to be omitted.
      * 
-     * @return field names of fields to be used as parameters 
+     * @return field names of fields to be used as parameters; "#" to use field names from target where condition 
      */
-    String[] sourceParameterFieldNames() default {};
+    String[] sourceParameterFieldNames() default "#";
 
     
     /**

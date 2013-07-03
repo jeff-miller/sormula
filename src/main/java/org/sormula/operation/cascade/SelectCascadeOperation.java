@@ -19,18 +19,21 @@ package org.sormula.operation.cascade;
 import java.lang.reflect.Array;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
 import org.sormula.Table;
 import org.sormula.annotation.cascade.SelectCascade;
+import org.sormula.log.ClassLogger;
 import org.sormula.operation.MapSelectOperation;
 import org.sormula.operation.OperationException;
 import org.sormula.operation.ScalarSelectOperation;
 import org.sormula.operation.SelectOperation;
 import org.sormula.reflect.ReflectException;
 import org.sormula.reflect.SormulaField;
+import org.sormula.translator.ColumnTranslator;
 import org.sormula.translator.RowTranslator;
 
 
@@ -45,6 +48,7 @@ import org.sormula.translator.RowTranslator;
  */
 public class SelectCascadeOperation<S, T> extends CascadeOperation<S, T>
 {
+    private static final ClassLogger log = new ClassLogger();
 	SelectCascade selectCascadeAnnotation;
 	ScalarSelectOperation<T> selectOperation;
 	List<SormulaField<S, ?>> parameterFields;
@@ -178,11 +182,11 @@ public class SelectCascadeOperation<S, T> extends CascadeOperation<S, T>
         super.prepare();
         selectOperation = (ScalarSelectOperation<T>)createOperation();
         
-        // parameter fields to read
-        prepareParameterFields();
-        
-        // where
+        // where (note: this was moved before prepareParameterFields() so that sourceParameterFieldNames="#" can get fields from where translator)
         selectOperation.setWhere(selectCascadeAnnotation.targetWhereName());
+        
+        // parameter fields to read 
+        prepareParameterFields();
         
         // order by
         selectOperation.setOrderBy(selectCascadeAnnotation.targetOrderByName());
@@ -228,12 +232,37 @@ public class SelectCascadeOperation<S, T> extends CascadeOperation<S, T>
         try
         {
             String[] parameterFieldNames = selectCascadeAnnotation.sourceParameterFieldNames();
-            parameterFields = new ArrayList<SormulaField<S,?>>(parameterFieldNames.length);
             
-            for (int i = 0; i < parameterFieldNames.length; ++i)
+            if (parameterFieldNames.length > 0 && parameterFieldNames[0].equals("#"))
             {
-                parameterFields.add(new SormulaField<S, Object>(
-                        sourceRowTranslator.getDeclaredField(parameterFieldNames[i])));
+                // use fields from target where
+                if (log.isDebugEnabled())
+                {
+                    log.debug("source parameter field names from target where condition " + selectOperation.getWhereConditionName());
+                }
+                
+                List<ColumnTranslator<T>> whereColumnTranslators = selectOperation.getWhereColumnTranslators();
+                parameterFields = new ArrayList<SormulaField<S, ?>>(whereColumnTranslators.size());
+                for (ColumnTranslator<T> ct : whereColumnTranslators)
+                {
+                    parameterFields.add(new SormulaField<S, Object>(
+                            sourceRowTranslator.getDeclaredField(ct.getColumnName())));
+                }
+            }
+            else
+            {
+                // use fields from annotation
+                if (log.isDebugEnabled())
+                {
+                    log.debug("source parameter field names from cascade sourceParameterFieldNames=" + 
+                            Arrays.asList(parameterFieldNames));
+                }
+                parameterFields = new ArrayList<SormulaField<S, ?>>(parameterFieldNames.length);
+                for (int i = 0; i < parameterFieldNames.length; ++i)
+                {
+                    parameterFields.add(new SormulaField<S, Object>(
+                            sourceRowTranslator.getDeclaredField(parameterFieldNames[i])));
+                }
             }
         }
         catch (ReflectException e)

@@ -43,7 +43,7 @@ public class InsertTest extends DatabaseTest<SormulaTestParent>
         createTable(SormulaTestParent.class, 
             "CREATE TABLE " + getSchemaPrefix() + SormulaTestParent.class.getSimpleName() + " (" +
             " id INTEGER NOT NULL PRIMARY KEY," +
-            " child1id INTEGER," +
+            " childid INTEGER," +
             " description VARCHAR(60)" +
             ")"
         );
@@ -53,7 +53,7 @@ public class InsertTest extends DatabaseTest<SormulaTestParent>
         child1.openDatabase();
         child1.createTable(SormulaTestChild1.class, 
                 "CREATE TABLE " + getSchemaPrefix() + SormulaTestChild1.class.getSimpleName() + " (" +
-                " id INTEGER NOT NULL PRIMARY KEY," +
+                " childid INTEGER NOT NULL PRIMARY KEY," +
                 " description VARCHAR(60)" +
                 ")"
             );
@@ -106,13 +106,13 @@ public class InsertTest extends DatabaseTest<SormulaTestParent>
     {
         SormulaTestParent parent = new SormulaTestParent(parentId, "Insert parent " + parentId);
         SormulaTestChild1 child1 = new SormulaTestChild1(childId, "1-to-1 Child of parent " + parentId);
-        parent.setChild1Id(childId);
+        parent.setChildId(childId);
         parent.setChild(child1);
         assert getTable().insert(parent) == 1 : "insertOneToOne did not insert parent";
         
         // verify that child was inserted
         Table<SormulaTestChild1> child1Table = getDatabase().getTable(SormulaTestChild1.class);
-        assert child1Table.select(child1.getId()) != null : "child " + child1.getId() + " was not inserted"; 
+        assert child1Table.select(child1.getChildId()) != null : "child " + child1.getChildId() + " was not inserted"; 
     }
 
     

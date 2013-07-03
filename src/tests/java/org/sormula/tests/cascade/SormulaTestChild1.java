@@ -28,7 +28,7 @@ import org.sormula.annotation.Column;
 public class SormulaTestChild1
 {
     @Column(primaryKey=true)
-    int id;
+    int childId;
     String description;
     
     
@@ -37,23 +37,23 @@ public class SormulaTestChild1
     }
 
     
-    public SormulaTestChild1(int id, String description)
+    public SormulaTestChild1(int childId, String description)
     {
-        this.id = id;
+        this.childId = childId;
         this.description = description;
     }
     
     
-    public int getId()
+    public int getChildId()
     {
-        return id;
+        return childId;
     }
-    public void setId(int id)
+    public void setChildId(int childId)
     {
-        this.id = id;
+        this.childId = childId;
     }
-    
-    
+
+
     public String getDescription()
     {
         return description;

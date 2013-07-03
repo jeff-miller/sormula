@@ -64,7 +64,7 @@ public class UpdateTest extends DatabaseTest<SormulaTestParent>
                 parentTable.update(parent);
                 
                 // select directly to test update
-                SormulaTestChild1 selectedChild1 = child1Table.select(child1.getId());
+                SormulaTestChild1 selectedChild1 = child1Table.select(child1.getChildId());
                 assert selectedChild1 != null && selectedChild1.getDescription().equals(child1.getDescription()) :
                     "1:1 child was not updated";
             }

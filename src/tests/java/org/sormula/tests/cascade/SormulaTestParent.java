@@ -42,7 +42,7 @@ public class SormulaTestParent
     @Column(primaryKey=true)
     int id;
     String description;
-    int child1Id;
+    int childId;
     
     // tests 1 to many relationship
     @OneToManyCascade(// test when targetClass is omitted targetClass=SormulaTestChildN.class, 
@@ -50,7 +50,7 @@ public class SormulaTestParent
     List<SormulaTestChildN> childList;
     
     // tests 1 to 1 relationship
-    @OneToOneCascade(selects=@SelectCascade(sourceParameterFieldNames="child1Id"))
+    @OneToOneCascade(selects=@SelectCascade()) // optional in 3.1 sourceParameterFieldNames="child1Id"))
     SormulaTestChild1 child;
     
     // tests general cascade and map type
@@ -115,13 +115,13 @@ public class SormulaTestParent
     }
 
 
-    public int getChild1Id()
+    public int getChildId()
     {
-        return child1Id;
+        return childId;
     }
-    public void setChild1Id(int child1Id)
+    public void setChildId(int childId)
     {
-        this.child1Id = child1Id;
+        this.childId = childId;
     }
 
 

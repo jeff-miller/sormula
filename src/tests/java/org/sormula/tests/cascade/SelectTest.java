@@ -67,13 +67,13 @@ public class SelectTest extends DatabaseTest<SormulaTestParent>
             if (child != null)
             {
                 // verify child was selected
-                assert child.getId() == parent.getChild1Id() : "1:1 child id != parent child1 id";
-                assert child1Table.select(parent.getChild1Id()) != null : "1:1 child cacasade error";
+                assert child.getChildId() == parent.getChildId() : "1:1 child id != parent child1 id";
+                assert child1Table.select(parent.getChildId()) != null : "1:1 child cacasade error";
             }
             else
             {
                 // verify no child in db
-                assert child1Table.select(parent.getChild1Id()) == null : "1:1 child row not read";
+                assert child1Table.select(parent.getChildId()) == null : "1:1 child row not read";
             }
             
             

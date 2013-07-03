@@ -66,7 +66,7 @@ public class DeleteTest extends DatabaseTest<SormulaTestParent>
                     parentTable.delete(parent);
                     
                     // select directly to test delete
-                    SormulaTestChild1 selectedChild1 = child1Table.select(child1.getId());
+                    SormulaTestChild1 selectedChild1 = child1Table.select(child1.getChildId());
                     assert selectedChild1 == null : "1:1 child was not deleted";
                 }
             }

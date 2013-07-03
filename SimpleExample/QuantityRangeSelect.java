@@ -32,7 +32,7 @@ import org.sormula.operation.SqlOperation;
  */
 public class QuantityRangeSelect extends ArrayListSelectOperation<Inventory> 
 {
-	int minimumQuanity;
+	int minimumQuantity;
 	int maximumQuantity;
 	
 	
@@ -44,9 +44,9 @@ public class QuantityRangeSelect extends ArrayListSelectOperation<Inventory>
 	}
 
 	
-	public void setRange(int minimumQuanity, int maximumQuantity)
+	public void setRange(int minimumQuantity, int maximumQuantity)
 	{
-		this.minimumQuanity = minimumQuanity;
+		this.minimumQuantity = minimumQuantity;
 		this.maximumQuantity = maximumQuantity;
 	}
 	
@@ -58,7 +58,7 @@ public class QuantityRangeSelect extends ArrayListSelectOperation<Inventory>
 		{
 			// standard JDBC
 			PreparedStatement ps = getPreparedStatement();
-			ps.setInt(1, minimumQuanity);
+			ps.setInt(1, minimumQuantity);
 			ps.setInt(2, maximumQuantity);
 		}
 		catch (SQLException e)

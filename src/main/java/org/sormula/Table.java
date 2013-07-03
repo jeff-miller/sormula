@@ -851,7 +851,7 @@ public class Table<R> implements TypeTranslatorMap, TransactionListener
      * Table&lt;Order&gt; table = database.getTable(Order.class);
      *  
      * // quantityExceeds is the name of a Where annotation on Order that filters quantity >= ?
-     * int bigOrderCount = table.selectCount("quanityExceeds", 100);
+     * int bigOrderCount = table.selectCount("quantityExceeds", 100);
      * </pre></blockquote>
      * @param whereConditionName name of where condition to use; empty string to count all rows in table
      * @param parameters parameter values for where condition

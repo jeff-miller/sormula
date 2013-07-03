@@ -141,17 +141,17 @@ public class ActiveRecordExample
      * Select all inventory with quantity in a range. Part and quantity are logged for
      * each row selected.
      * 
-     * @param minimumQuanity select rows with quantity of at least this amount
+     * @param minimumQuantity select rows with quantity of at least this amount
      * @param maximumQuantity select rows with quantity no more than this amount
      * @see QuantityRangeSelect
      */
-    public void selectByRange(int minimumQuanity, int maximumQuantity) throws Exception
+    public void selectByRange(int minimumQuantity, int maximumQuantity) throws Exception
     {
-        System.out.println("selectByRange " + minimumQuanity + " " + maximumQuantity);
+        System.out.println("selectByRange " + minimumQuantity + " " + maximumQuantity);
 
         // select
         List<Inventory> results = Inventory.table.selectAllCustom(
-                "where quantity between ? and ?", minimumQuanity, maximumQuantity);
+                "where quantity between ? and ?", minimumQuantity, maximumQuantity);
         
         // show results
         for (Inventory inventory: results)
@@ -165,13 +165,13 @@ public class ActiveRecordExample
      * Select all inventory with quantity in a range. Part and quantity are logged for
      * each row selected. Uses explicit active database instead of a default.
      * 
-     * @param minimumQuanity select rows with quantity of at least this amount
+     * @param minimumQuantity select rows with quantity of at least this amount
      * @param maximumQuantity select rows with quantity no more than this amount
      * @see QuantityRangeSelect
      */
-    public void selectByRange2(int minimumQuanity, int maximumQuantity) throws Exception
+    public void selectByRange2(int minimumQuantity, int maximumQuantity) throws Exception
     {
-        System.out.println("selectByRange2 " + minimumQuanity + " " + maximumQuantity);
+        System.out.println("selectByRange2 " + minimumQuantity + " " + maximumQuantity);
         
         // use a specific active data base (data source) instead of default
         ActiveTable<Inventory> table = new ActiveTable<Inventory>(
@@ -179,7 +179,7 @@ public class ActiveRecordExample
 
         // select
         List<Inventory> results = table.selectAllCustom(
-                "where quantity between ? and ?", minimumQuanity, maximumQuantity);
+                "where quantity between ? and ?", minimumQuantity, maximumQuantity);
         
         // show results
         for (Inventory inventory: results)

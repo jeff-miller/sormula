@@ -50,9 +50,10 @@ public class SormulaTestParent
     List<SormulaTestChildN> childList;
     
     // tests 1 to 1 relationship
-    @OneToOneCascade // default is primary key select
-        // optional in 3.1 selects=@SelectCascade() 
-        // optional in 3.1 sourceParameterFieldNames="child1Id"
+    @OneToOneCascade
+        // (selects=@SelectCascade(sourceParameterFieldNames="childId")) // default is primary key select
+        // TODO optional in 3.1 selects=@SelectCascade() 
+        // TODO optional in 3.1 sourceParameterFieldNames="childId"
     SormulaTestChild1 child;
     
     // tests general cascade and map type

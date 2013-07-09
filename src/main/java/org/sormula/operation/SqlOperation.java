@@ -1192,6 +1192,8 @@ public abstract class SqlOperation<R>
 
     
     /**
+     * TODO don't need this if {@link #getWhereTranslator()} is public
+     * TODO making {@link #getWhereTranslator()} public may break any class that overrode it since the signature in subclass will be protected (error to reduce visibility)
      * Gets the {@link ColumnTranslator} objects used by the current where condition.
      * 
      * @return list of {@link ColumnTranslator} or empty list if no where condition
@@ -1202,7 +1204,18 @@ public abstract class SqlOperation<R>
         if (whereTranslator != null) return whereTranslator.getColumnTranslatorList();
         else return Collections.emptyList();
     }
+
     
+    /**
+     * TODO
+     * @param whereTranslator
+     * @since 3.1
+     */
+    public void setWhereTranslator2(AbstractWhereTranslator<R> whereTranslator)
+    {
+        this.whereTranslator = whereTranslator;
+    }
+
 
     /**
      * Gets the next JDBC parameter number used by {@link PreparedStatement} to set parameters.

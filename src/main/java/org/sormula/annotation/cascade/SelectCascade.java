@@ -68,9 +68,11 @@ public @interface SelectCascade
      * Use "#" to use field names defined by {@link #targetWhereName()}. Since "#" is default,
      * naming source and target fields the same allows sourceParameterFieldNames to be omitted.
      * 
+     * "#primary" to use primary key fields? TODO
+     * 
      * @return field names of fields to be used as parameters; "#" to use field names from target where condition 
      */
-    String[] sourceParameterFieldNames() default "#";
+     String[] sourceParameterFieldNames() default "#targetFieldNames"; // TODO or "#primaryKeyFields"?
 
     
     /**
@@ -81,7 +83,11 @@ public @interface SelectCascade
      * target row that correspond to primary key(s) in source row.
      * 
      * @return where condition name of target row; "primaryKey" to select by
-     * primary key; empty string will select all rows
+     * primary key; empty string will select all rows; 
+     * 
+     * "#automatic" means TODO
+     * source is {@link #sourceParameterFieldNames()} or if "#", then use source primary keys (TODO note # is ambiguous) use "#pk" or "#primaryKey"?
+     * target is cascade foreign key value, if "#" then use same name as source, if "" then?
      */
     String targetWhereName() default "primaryKey"; 
     

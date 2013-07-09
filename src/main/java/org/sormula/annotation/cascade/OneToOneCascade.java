@@ -58,13 +58,14 @@ public @interface OneToOneCascade
      * Select cascade operations that will select target rows. The default is primary key select.
      * Typical values would be:
      * <ul>
+     * TODO update
      * <li>@SelectCascade(operation=ScalarSelectOperation.class, sourceParameterFieldNames="...")</li>
      * <li>@SelectCascade(operation=ArrayListSelectOperation.class)</li>
      * </ul>
      * 
      * @return select annotations for cascade; use empty array for no select cascade
      */
-    SelectCascade[] selects() default @SelectCascade(operation=ScalarSelectOperation.class);
+    SelectCascade[] selects() default @SelectCascade(operation=ScalarSelectOperation.class, sourceParameterFieldNames="#targetFieldNames", targetWhereName="primaryKey"); // operation ok, TODO (specify target or other?)
     
     
     /**

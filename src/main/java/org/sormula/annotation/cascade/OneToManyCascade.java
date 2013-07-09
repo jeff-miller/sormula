@@ -92,7 +92,7 @@ public @interface OneToManyCascade
      * 
      * @return select annotations for cascade; use empty array for no select cascade
      */
-    SelectCascade[] selects();
+    SelectCascade[] selects() default @SelectCascade(sourceParameterFieldNames="#primaryKeyFields", targetWhereName="#sourceFieldNames");  
     
     
     /**

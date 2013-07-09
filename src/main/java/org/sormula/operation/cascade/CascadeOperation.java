@@ -26,6 +26,7 @@ import org.sormula.Table;
 import org.sormula.annotation.cascade.Cascade;
 import org.sormula.annotation.cascade.OneToManyCascade;
 import org.sormula.annotation.cascade.OneToOneCascade;
+import org.sormula.log.ClassLogger;
 import org.sormula.operation.OperationException;
 import org.sormula.operation.SqlOperation;
 import org.sormula.reflect.ReflectException;
@@ -44,6 +45,7 @@ import org.sormula.translator.RowTranslator;
  */
 public abstract class CascadeOperation<S, T>
 {
+    private static final ClassLogger log = new ClassLogger();
     Table<S> sourceTable;
     SormulaField<S, ?> targetField;
     Table<T> targetTable;
@@ -53,7 +55,7 @@ public abstract class CascadeOperation<S, T>
     String foreignKeyReferenceFieldName;
     S sourceRow;
     List<SormulaField<S, Object>> sourceKeyFieldList;
-    List<SormulaField<T, Object>> targetForeignKeyFieldList;
+    List<SormulaField<T, Object>> targetForeignKeyFieldList; // TODO add protected getter, check other fields
     SormulaField<T, Object> targetForeignReferenceField;
     int keyFieldCount;
     String[] requiredCascades;
@@ -126,7 +128,7 @@ public abstract class CascadeOperation<S, T>
 	 * @return target (child) row foreign key fields; null means don't update foreign key values
 	 * @since 3.0
 	 */
-	public String[] getForeignKeyFieldNames()
+	public String[] getForeignKeyFieldNames() // TODO deprecate and add consistent method name
     {
         return foreignKeyValueFieldNames;
     }
@@ -148,7 +150,7 @@ public abstract class CascadeOperation<S, T>
         if (foreignKeyFieldNames != null && foreignKeyFieldNames.length > 0) 
             this.foreignKeyValueFieldNames = foreignKeyFieldNames;
         else 
-            this.foreignKeyReferenceFieldName = null;
+            this.foreignKeyValueFieldNames = null;
     }
 
 
@@ -370,6 +372,10 @@ public abstract class CascadeOperation<S, T>
                     {
                         // target foreign key field exists for corresponding source primary key field
                         // add each to parallel lists
+                        if (log.isDebugEnabled())
+                        {
+                            log.debug(sct.getField() + " maps to foreign key " + tct.getField());
+                        }
                         sourceKeyFieldList.add(new SormulaField<S, Object>(sct.getField()));
                         targetForeignKeyFieldList.add(new SormulaField<T, Object>(tct.getField()));
                     }
@@ -385,6 +391,7 @@ public abstract class CascadeOperation<S, T>
                 throw new OperationException("error creating method access for Cascade", e);
             }
             
+            // provides quick test if any mapping is needed
             keyFieldCount = sourceKeyFieldList.size();
         }
     }
@@ -419,6 +426,11 @@ public abstract class CascadeOperation<S, T>
             {
                 Field field = getTargetTable().getRowTranslator().getDeclaredField(targetFieldName);
                 targetForeignReferenceField = new SormulaField<T, Object>(field);
+                
+                if (log.isDebugEnabled())
+                {
+                    log.debug(getSourceTable().getRowClass() + " maps to foreign key reference " + field);
+                }
             }
             catch (ReflectException e)
             {

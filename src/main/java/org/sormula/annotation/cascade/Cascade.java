@@ -78,7 +78,7 @@ public @interface Cascade
      * 
      * @return select annotations for cascade
      */
-    SelectCascade[] selects() default {};
+    SelectCascade[] selects() default {}; // TODO don't specify defaults for general purpose cascade?
     
     
     /**

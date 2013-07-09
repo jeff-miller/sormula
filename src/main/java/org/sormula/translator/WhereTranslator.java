@@ -30,6 +30,19 @@ import org.sormula.annotation.WhereField;
 public class WhereTranslator<R> extends AbstractWhereTranslator<R>
 {
     /**
+     * TODO
+     * @param rowTranslator
+     * @throws TranslatorException
+     * @since 3.1
+     */
+    public WhereTranslator(RowTranslator<R> rowTranslator, int initialCapacity) throws TranslatorException
+    {
+        super(rowTranslator);
+        initColumnTranslatorList(initialCapacity);
+    }
+
+    
+    /**
      * Constructs for where annotation. 
      * 
      * @param rowTranslator row translator for where condition

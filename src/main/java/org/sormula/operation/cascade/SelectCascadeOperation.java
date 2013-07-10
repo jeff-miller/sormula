@@ -390,8 +390,9 @@ public class SelectCascadeOperation<S, T> extends CascadeOperation<S, T>
 
     
     /**
-     * TODO
-     * @throws OperationException
+     * Configures the {@link WhereTranslator} to use for cascade.
+     * 
+     * @throws OperationException if error
      * @since 3.1
      */
     protected void prepareWhere() throws OperationException    

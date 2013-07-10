@@ -82,36 +82,37 @@ public abstract class ModifyCascadeOperation<S, T> extends CascadeOperation<S, T
     public void cascade(S sourceRow) throws OperationException
     {
         super.cascade(sourceRow);
+        SormulaField<S, ?> tf = getTargetField();
         
         try
         {
-            if (log.isDebugEnabled()) log.debug("cascade() " + getTargetField().getField());
-            Object value = getTargetField().invokeGetMethod(sourceRow);
+            if (log.isDebugEnabled()) log.debug("cascade() " + tf.getField());
+            Object value = tf.invokeGetMethod(sourceRow);
             
             if (value != null)
             {
-                if (targetField.isScalar())
+                if (tf.isScalar())
                 {
                     // non collection/map type
                     @SuppressWarnings("unchecked") // target field type is not known at compile time
                     T row = (T)value;
                     modifyOperation.setRow(row);
                 }
-                else if (targetField.isArray())
+                else if (tf.isArray())
                 {
                     // array
                     @SuppressWarnings("unchecked") // target field type is not known at compile time
                     T[] array = (T[])value;
                     modifyOperation.setRows(array);
                 }
-                else if (targetField.isCollection())
+                else if (tf.isCollection())
                 {
                     // collection
                     @SuppressWarnings("unchecked") // target field type is not known at compile time
                     Collection<T> collection = (Collection<T>)value;
                     modifyOperation.setRows(collection);
                 }
-                else if (targetField.isMap())
+                else if (tf.isMap())
                 {
                     // collection
                     @SuppressWarnings("unchecked") // target field type is not known at compile time
@@ -120,7 +121,7 @@ public abstract class ModifyCascadeOperation<S, T> extends CascadeOperation<S, T
                 }
                 else
                 {
-                    throw new OperationException("unknown operation type for target field " + targetField.getField().getType()); 
+                    throw new OperationException("unknown operation type for target field " + tf.getField().getType()); 
                 }
             
                 setForeignKeyValues(modifyOperation.getRows());
@@ -135,7 +136,7 @@ public abstract class ModifyCascadeOperation<S, T> extends CascadeOperation<S, T
         catch (ReflectException e)
         {
             throw new OperationException("error getting value from " + 
-                    getTargetField().getCanonicalGetMethodName(), e);
+                    tf.getCanonicalGetMethodName(), e);
         }
     }
 

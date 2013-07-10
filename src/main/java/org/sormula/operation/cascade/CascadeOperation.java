@@ -55,7 +55,7 @@ public abstract class CascadeOperation<S, T>
     String foreignKeyReferenceFieldName;
     S sourceRow;
     List<SormulaField<S, Object>> sourceKeyFieldList;
-    List<SormulaField<T, Object>> targetForeignKeyFieldList; // TODO add protected getter, check other fields
+    List<SormulaField<T, Object>> targetForeignKeyFieldList;
     SormulaField<T, Object> targetForeignReferenceField;
     int keyFieldCount;
     String[] requiredCascades;
@@ -520,5 +520,15 @@ public abstract class CascadeOperation<S, T>
             // foreign key mapping is desired
             for (T t : rows) setForeignKeyReference(t);
         }
+    }
+
+
+    /**
+     * @return list of foreign key fields or null if none
+     * @since 3.1
+     */
+    protected List<SormulaField<T, Object>> getTargetForeignKeyFieldList()
+    {
+        return targetForeignKeyFieldList;
     }
 }

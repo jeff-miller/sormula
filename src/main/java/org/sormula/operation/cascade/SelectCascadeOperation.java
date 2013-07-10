@@ -223,10 +223,10 @@ public class SelectCascadeOperation<S, T> extends CascadeOperation<S, T>
             try
             {
                 RowTranslator<T> targetRowTranslator = getTargetTable().getRowTranslator();
-                WhereTranslator<T> whereTranslator = new WhereTranslator<T>(targetRowTranslator, targetForeignKeyFieldList.size());
+                WhereTranslator<T> whereTranslator = new WhereTranslator<T>(targetRowTranslator, getTargetForeignKeyFieldList().size());
                 
                 // for all foreign key fields in target
-                for (SormulaField<T, Object> tfk : targetForeignKeyFieldList)
+                for (SormulaField<T, Object> tfk : getTargetForeignKeyFieldList())
                 {
                     // look up target column translator of same name
                     ColumnTranslator<T> ctTarget = targetRowTranslator.getColumnTranslator(tfk.getField().getName());
@@ -276,9 +276,10 @@ public class SelectCascadeOperation<S, T> extends CascadeOperation<S, T>
         }
         
         // verify scalar field is compatible with target table row type (this test may not be necessary?)
-        if (targetField.isScalar() && !targetField.isClass(getTargetTable().getRowTranslator().getRowClass()))
+        SormulaField<S, ?> tf = getTargetField();
+        if (tf.isScalar() && !tf.isClass(getTargetTable().getRowTranslator().getRowClass()))
         {
-        	throw new OperationException(targetField.getClass().getName() + " is not assignable from " +
+        	throw new OperationException(tf.getClass().getName() + " is not assignable from " +
         			getTargetTable().getRowTranslator().getRowClass().getName());
         }
     }
@@ -410,7 +411,7 @@ public class SelectCascadeOperation<S, T> extends CascadeOperation<S, T>
         {
             // create array to hold all elements of collection
             @SuppressWarnings("unchecked") // target not known at compile time
-            T[] array = (T[])Array.newInstance(targetField.getField().getType().getComponentType(), c.size());
+            T[] array = (T[])Array.newInstance(getTargetField().getField().getType().getComponentType(), c.size());
             
             // copy elements into array
             c.toArray(array);
@@ -420,7 +421,7 @@ public class SelectCascadeOperation<S, T> extends CascadeOperation<S, T>
         }
         catch (Exception e)
         {
-            throw new OperationException("error creating new array for target field " + targetField.getField(), e);
+            throw new OperationException("error creating new array for target field " + getTargetField().getField(), e);
         }
     }
 }

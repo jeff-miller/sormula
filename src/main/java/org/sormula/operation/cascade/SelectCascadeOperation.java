@@ -223,10 +223,10 @@ public class SelectCascadeOperation<S, T> extends CascadeOperation<S, T>
             try
             {
                 RowTranslator<T> targetRowTranslator = getTargetTable().getRowTranslator();
-                WhereTranslator<T> whereTranslator = new WhereTranslator<T>(targetRowTranslator, getTargetForeignKeyFieldList().size());
+                WhereTranslator<T> whereTranslator = new WhereTranslator<T>(targetRowTranslator, getTargetForeignKeyValueFieldList().size());
                 
                 // for all foreign key fields in target
-                for (SormulaField<T, Object> tfk : getTargetForeignKeyFieldList())
+                for (SormulaField<T, Object> tfk : getTargetForeignKeyValueFieldList())
                 {
                     // look up target column translator of same name
                     ColumnTranslator<T> ctTarget = targetRowTranslator.getColumnTranslator(tfk.getField().getName());

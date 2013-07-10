@@ -30,9 +30,8 @@ import org.sormula.operation.SqlOperation;
 
 /**
  * Cascade annotation for a one to one relationship between source row and 
- * target row. Insert, update, and delete cascades default to standard primary key operations. Select
- * cascade must be defined since {@link SelectCascade#sourceParameterFieldNames()} are not known
- * by default. For more complex cascade relationships, use {@link Cascade}.
+ * target row. All cascades default to standard primary key operations. 
+ * For more complex cascade relationships, use {@link Cascade}.
  * <p>
  * More than one operation is allowed per field even though it is not likely that you would
  * need more than one. {@link #selects()}, {@link #updates()}, {@link #inserts()},
@@ -58,14 +57,15 @@ public @interface OneToOneCascade
      * Select cascade operations that will select target rows. The default is primary key select.
      * Typical values would be:
      * <ul>
-     * TODO update
+     * <li>@SelectCascade</li>
      * <li>@SelectCascade(operation=ScalarSelectOperation.class, sourceParameterFieldNames="...")</li>
      * <li>@SelectCascade(operation=ArrayListSelectOperation.class)</li>
      * </ul>
      * 
      * @return select annotations for cascade; use empty array for no select cascade
      */
-    SelectCascade[] selects() default @SelectCascade(operation=ScalarSelectOperation.class, sourceParameterFieldNames="#targetFieldNames", targetWhereName="primaryKey"); // operation ok, TODO (specify target or other?)
+    SelectCascade[] selects() default @SelectCascade(
+            operation=ScalarSelectOperation.class, sourceParameterFieldNames="#targetFieldNames", targetWhereName="primaryKey");
     
     
     /**
@@ -118,8 +118,9 @@ public @interface OneToOneCascade
      * <p>
      * If explicit fields are named, then they must be in same order as source row primary key fields.
      * 
-     * @return names of foreign key fields in child (target) row; "#" means use
-     * same foreign key names as source (parent) field names; empty array means no foreign keys are defined 
+     * @return names of foreign key fields in child (target) row; 
+     * "#" means target foreign key names are same as source (parent) primary key field names; 
+     * empty array means no foreign keys are defined 
      * 
      * @since 3.0
      */
@@ -139,8 +140,9 @@ public @interface OneToOneCascade
      * name is parent class simple name (begins with lower case). For example: SomeParent (source) of
      * SomeChild (target) will use SomeChild.someParent field and invoke SomeChild.setSomeParent(SomeParent). 
      * 
-     * @return name of foreign key reference field in child (target) row; "class" means use
-     * source (parent) class name; empty string means no foreign key reference is defined 
+     * @return name of foreign key reference field in child (target) row; 
+     * "class" means target field name is same as source (parent) class name;
+     * empty string means no foreign key reference is defined 
      * 
      * @since 3.0
      */

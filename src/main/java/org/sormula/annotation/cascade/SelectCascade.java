@@ -36,7 +36,8 @@ import org.sormula.operation.cascade.lazy.SimpleLazySelector;
 
 
 /**
- * Used within a {@link Cascade} annotation to define a cascade select operation.
+ * Used within a {@link OneToOneCascade}, {@link OneToManyCascade}, or {@link Cascade} annotation 
+ * to define a cascade select operation.
  * 
  * @since 1.0
  * @author Jeff Miller
@@ -65,14 +66,15 @@ public @interface SelectCascade
      * where condition on target row with {@link #targetWhereName()} or in same order 
      * as primary key fields of target row if primary key is used as where condition.
      * <p>
-     * Use "#" to use field names defined by {@link #targetWhereName()}. Since "#" is default,
-     * naming source and target fields the same allows sourceParameterFieldNames to be omitted.
+     * "#primaryKeyFields" means source parameter fields are source primary key fields
+     * <p>
+     * "#targetFieldNames" means source parameter field names are the same names as defined by {@link #targetWhereName()}. 
      * 
-     * "#primary" to use primary key fields? TODO
-     * 
-     * @return field names of fields to be used as parameters; "#" to use field names from target where condition 
+     * @return field names of fields to be used as parameters; 
+     * "#primaryKeyFields" to get source values from source primary keys;
+     * "#targetFieldNames" to get source values from source fields named in {@link #targetWhereName()}.
      */
-     String[] sourceParameterFieldNames() default "#targetFieldNames"; // TODO or "#primaryKeyFields"?
+     String[] sourceParameterFieldNames() default "#targetFieldNames"; 
 
     
     /**
@@ -81,13 +83,21 @@ public @interface SelectCascade
      * for primary key. An empty string indicates no where condition (select all).
      * Typically is the name of the where condition that uses foreign key(s) in
      * target row that correspond to primary key(s) in source row.
-     * 
-     * @return where condition name of target row; "primaryKey" to select by
-     * primary key; empty string will select all rows; 
-     * 
-     * "#automatic" means TODO
-     * source is {@link #sourceParameterFieldNames()} or if "#", then use source primary keys (TODO note # is ambiguous) use "#pk" or "#primaryKey"?
-     * target is cascade foreign key value, if "#" then use same name as source, if "" then?
+     * <p>
+     * "#sourceFieldNames" means use a where condition that uses fields defined by
+     * {@link #sourceParameterFieldNames()}. If more than one field, then AND operand is used to
+     * combine them. Name target foreign key fields the same as source field to use this symbolic name.
+     * <p>
+     * "#foreignKeyValueFields" means to use a where condition with fields defined by
+     * {@link OneToOneCascade#foreignKeyValueFields()}, or {@link OneToManyCascade#foreignKeyValueFields()},
+     * or {@link Cascade#foreignKeyValueFields()}. If more than one field, then AND operand is used to
+     * combine them.
+     *  
+     * @return where condition name of target row; 
+     * "primaryKey" to select by primary key; 
+     * empty string will select all rows;
+     * "#sourceFieldNames" to select by target fields named same as {@link #sourceParameterFieldNames()};
+     * "#foreignKeyValueFields" to select by target foreign key fields  
      */
     String targetWhereName() default "primaryKey"; 
     

@@ -22,7 +22,6 @@ import org.sormula.SormulaException;
 import org.sormula.Table;
 import org.sormula.annotation.cascade.OneToManyCascade;
 import org.sormula.annotation.cascade.SelectCascade;
-import org.sormula.log.ClassLogger;
 import org.sormula.tests.DatabaseTest;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
@@ -38,7 +37,6 @@ import org.testng.annotations.Test;
 @Test(singleThreaded=true, groups="cascade.select", dependsOnGroups="cascade.insert")
 public class SelectTest extends DatabaseTest<SormulaSymParent>
 {
-    private static final ClassLogger log = new ClassLogger();
     @BeforeClass
     public void setUp() throws Exception
     {
@@ -94,13 +92,11 @@ public class SelectTest extends DatabaseTest<SormulaSymParent>
             List<SormulaSymChild> children = parent.getChildList();
             int count = childTable.selectCount("byParent", parent.getParentId());
             
-            log.info("test parentId="+parent.getParentId()); // TODO
             if (children.size() > 0)
             {
                 // verify all rows selected
                 for (SormulaSymChild c: children)
                 { 
-                    log.info("test childId="+c.getChildId()); // TODO
                     assert c.getParentId() == parent.getParentId() : "Sym: child parent id != parent id";
                 }
                 assert count == children.size() : "Sym: wrong number of children read from cascade";

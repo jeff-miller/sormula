@@ -423,34 +423,4 @@ public class SelectCascadeOperation<S, T> extends CascadeOperation<S, T>
             throw new OperationException("error creating new array for target field " + targetField.getField(), e);
         }
     }
-    
-    
-    /**
-     * TODO remove
-     * move to base class?
-     * @return
-     * @since 3.1
-     *
-    protected List<String> createCommonFieldNames()
-    {
-        Field[] sourceFields = getSourceTable().getRowTranslator().getDeclaredFields();
-        Field[] targetFields = getTargetTable().getRowTranslator().getDeclaredFields();
-        List<String> commonFieldNames = new ArrayList<String>(sourceFields.length);
-
-        for (Field sf : sourceFields)
-        {
-            for (Field tf : targetFields)
-            {
-                if (sf.getName().equals(tf.getName()))
-                {
-                    // found fields in source and target with same name
-                    commonFieldNames.add(sf.getName());
-                    break; // start looking for next name 
-                }
-            }
-        }
-        
-        return commonFieldNames;
-    }
-    */
 }

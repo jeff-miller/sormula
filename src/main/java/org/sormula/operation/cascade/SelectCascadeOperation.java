@@ -188,9 +188,11 @@ public class SelectCascadeOperation<S, T> extends CascadeOperation<S, T>
         String targetWhereName = selectCascadeAnnotation.targetWhereName();
         if (targetWhereName.equals("#sourceFieldNames"))
         {
+            // use source fields
+            if (log.isDebugEnabled()) log.debug(targetWhereName + " where condition for " + getTargetTable().getRowClass());
             try
             {
-                List<ColumnTranslator<S>> primaryKeyColumnTranslators = 
+                List<ColumnTranslator<S>> primaryKeyColumnTranslators = // TODO don't assume primary keys
                         getSourceTable().getRowTranslator().getPrimaryKeyWhereTranslator().getColumnTranslatorList();
                 RowTranslator<T> targetRowTranslator = getTargetTable().getRowTranslator();
                 WhereTranslator<T> whereTranslator = new WhereTranslator<T>(targetRowTranslator, primaryKeyColumnTranslators.size());
@@ -199,6 +201,7 @@ public class SelectCascadeOperation<S, T> extends CascadeOperation<S, T>
                 for (ColumnTranslator<S> ctSource : primaryKeyColumnTranslators)
                 {
                     // look up target column translator of same name
+                    if (log.isDebugEnabled()) log.debug("add field " + ctSource.getField());
                     ColumnTranslator<T> ctTarget = targetRowTranslator.getColumnTranslator(ctSource.getField().getName());
                     if (ctTarget != null)
                     {
@@ -206,7 +209,9 @@ public class SelectCascadeOperation<S, T> extends CascadeOperation<S, T>
                     }
                     else
                     {
-                        throw new OperationException("TODO");
+                        // not likely since super.prepare() would have detected this condition
+                        throw new OperationException("source field named, " + ctSource.getField().getName() + 
+                                ", does not exist in target, " + getTargetTable().getRowClass());
                     }
                 }
                 
@@ -214,12 +219,13 @@ public class SelectCascadeOperation<S, T> extends CascadeOperation<S, T>
             }
             catch (TranslatorException e)
             {
-                log.error("TODO", e); // move?
+                throw new OperationException("error creating where translator for " + targetWhereName);
             }
         }
         else if (targetWhereName.equals("#foreignKeyValueFields"))
         {
             // use target foreign keys, initialized in super.prepare()
+            if (log.isDebugEnabled()) log.debug(targetWhereName + " where condition for " + getTargetTable().getRowClass());
             try
             {
                 RowTranslator<T> targetRowTranslator = getTargetTable().getRowTranslator();
@@ -229,6 +235,7 @@ public class SelectCascadeOperation<S, T> extends CascadeOperation<S, T>
                 for (SormulaField<T, Object> tfk : getTargetForeignKeyValueFieldList())
                 {
                     // look up target column translator of same name
+                    if (log.isDebugEnabled()) log.debug("add field " + tfk.getField());
                     ColumnTranslator<T> ctTarget = targetRowTranslator.getColumnTranslator(tfk.getField().getName());
                     if (ctTarget != null)
                     {
@@ -236,7 +243,9 @@ public class SelectCascadeOperation<S, T> extends CascadeOperation<S, T>
                     }
                     else
                     {
-                        throw new OperationException("TODO");
+                        // not likely since super.prepare() would have detected this condition
+                        throw new OperationException("target foreign key field named, " + tfk.getField().getName() + 
+                                ", does not exist in target, " + getTargetTable().getRowClass());
                     }
                 }
                 
@@ -244,7 +253,7 @@ public class SelectCascadeOperation<S, T> extends CascadeOperation<S, T>
             }
             catch (TranslatorException e)
             {
-                log.error("TODO", e); // move?
+                throw new OperationException("error creating where translator for " + targetWhereName);
             }
         }
         else

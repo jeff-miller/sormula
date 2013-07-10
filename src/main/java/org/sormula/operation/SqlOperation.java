@@ -23,7 +23,6 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
 
 import org.sormula.Database;
@@ -45,7 +44,6 @@ import org.sormula.operation.monitor.OperationTime;
 import org.sormula.reflect.ReflectException;
 import org.sormula.reflect.SormulaField;
 import org.sormula.translator.AbstractWhereTranslator;
-import org.sormula.translator.ColumnTranslator;
 import org.sormula.translator.RowTranslator;
 import org.sormula.translator.TranslatorException;
 import org.sormula.translator.TypeTranslator;
@@ -1170,10 +1168,11 @@ public abstract class SqlOperation<R>
 
     
     /**
-     * Gets the translator to map row object values into where condition.
+     * Use public access {@link #getWhereTranslator2()}.
      * 
      * @return where translator or null if none
      */
+    @Deprecated // plan to make public in future, keep protected for now to avoid breaking subclasses
     protected AbstractWhereTranslator<R> getWhereTranslator()
     {
         return whereTranslator;
@@ -1181,10 +1180,11 @@ public abstract class SqlOperation<R>
     
     
     /**
-     * Sets the translator to map row object values into where condition.
+     * Use public access {@link #setWhereTranslator2(AbstractWhereTranslator)}.
      * 
      * @param whereTranslator where translator or null if none
      */
+    @Deprecated // plan to make public in future, keep protected for now to avoid breaking subclasses
     protected void setWhereTranslator(AbstractWhereTranslator<R> whereTranslator)
     {
         this.whereTranslator = whereTranslator;
@@ -1192,23 +1192,27 @@ public abstract class SqlOperation<R>
 
     
     /**
-     * TODO don't need this if {@link #getWhereTranslator()} is public
-     * TODO making {@link #getWhereTranslator()} public may break any class that overrode it since the signature in subclass will be protected (error to reduce visibility)
-     * Gets the {@link ColumnTranslator} objects used by the current where condition.
+     * Gets the translator to map row object values into where condition.
+     * <p>
+     * Changing {@link #getWhereTranslator()} to public may break any class that overrode it since
+     * the signature in subclass will be protected (error to reduce visibility).
      * 
-     * @return list of {@link ColumnTranslator} or empty list if no where condition
+     * @return where translator or null if none
      * @since 3.1
      */
-    public List<ColumnTranslator<R>> getWhereColumnTranslators()
+    public AbstractWhereTranslator<R> getWhereTranslator2()
     {
-        if (whereTranslator != null) return whereTranslator.getColumnTranslatorList();
-        else return Collections.emptyList();
+        return whereTranslator;
     }
 
     
     /**
-     * TODO
-     * @param whereTranslator
+     * Sets the translator to map row object values into where condition.
+     * <p>
+     * Changing {@link #setWhereTranslator()} to public may break any class that overrode it since
+     * the signature in subclass will be protected (error to reduce visibility).
+     * 
+     * @param whereTranslator where translator or null if none
      * @since 3.1
      */
     public void setWhereTranslator2(AbstractWhereTranslator<R> whereTranslator)

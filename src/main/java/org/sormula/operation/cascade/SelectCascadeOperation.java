@@ -328,7 +328,7 @@ public class SelectCascadeOperation<S, T> extends CascadeOperation<S, T>
                         log.debug("source parameter field names from target where condition " + selectOperation.getWhereConditionName());
                     }
                     
-                    List<ColumnTranslator<T>> whereColumnTranslators = selectOperation.getWhereColumnTranslators();
+                    List<ColumnTranslator<T>> whereColumnTranslators = selectOperation.getWhereTranslator2().getColumnTranslatorList();
                     parameterFieldNames = new String[whereColumnTranslators.size()];
                     int i = 0;
                     for (ColumnTranslator<T> ct : whereColumnTranslators)

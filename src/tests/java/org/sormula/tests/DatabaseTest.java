@@ -41,7 +41,7 @@ import org.sormula.log.ClassLogger;
 
 
 /** 
- * Base class for all sormula tests. 
+ * Base class for all sormula tests. TODO simplify tests and examples with new features
  * 
  * @author Jeff Miller
  */

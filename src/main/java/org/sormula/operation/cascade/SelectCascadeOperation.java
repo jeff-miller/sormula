@@ -184,86 +184,31 @@ public class SelectCascadeOperation<S, T> extends CascadeOperation<S, T>
         super.prepare();
         selectOperation = (ScalarSelectOperation<T>)createOperation();
         
-        // where (note: this was moved prior to prepareParameterFields() so that prepareParameterFields() can get fields from where translator)
-        String targetWhereName = selectCascadeAnnotation.targetWhereName();
-        if (targetWhereName.equals("#sourceFieldNames"))
+        if (!isSourceTargetFieldNames())
         {
-            // use source fields
-            if (log.isDebugEnabled()) log.debug(targetWhereName + " where condition for " + getTargetTable().getRowClass());
-            try
-            {
-                List<ColumnTranslator<S>> primaryKeyColumnTranslators = // TODO don't assume primary keys
-                        getSourceTable().getRowTranslator().getPrimaryKeyWhereTranslator().getColumnTranslatorList();
-                RowTranslator<T> targetRowTranslator = getTargetTable().getRowTranslator();
-                WhereTranslator<T> whereTranslator = new WhereTranslator<T>(targetRowTranslator, primaryKeyColumnTranslators.size());
-                
-                // for all primary key columns in source
-                for (ColumnTranslator<S> ctSource : primaryKeyColumnTranslators)
-                {
-                    // look up target column translator of same name
-                    if (log.isDebugEnabled()) log.debug("add field " + ctSource.getField());
-                    ColumnTranslator<T> ctTarget = targetRowTranslator.getColumnTranslator(ctSource.getField().getName());
-                    if (ctTarget != null)
-                    {
-                        whereTranslator.addColumnTranslator(ctTarget);
-                    }
-                    else
-                    {
-                        // not likely since super.prepare() would have detected this condition
-                        throw new OperationException("source field named, " + ctSource.getField().getName() + 
-                                ", does not exist in target, " + getTargetTable().getRowClass());
-                    }
-                }
-                
-                selectOperation.setWhereTranslator2(whereTranslator);
-            }
-            catch (TranslatorException e)
-            {
-                throw new OperationException("error creating where translator for " + targetWhereName);
-            }
+            // selectCascadeAnnotation.sourceParameterFieldNames() are NOT defined by selectCascadeAnnotation.targetWhereName()
+            // prepareWhere() will need parameter fields if selectCascadeAnnotation.targetWhereName()="#sourceFieldNames"
+            // so do in this order
+            prepareParameterFields();
+            prepareWhere();
         }
-        else if (targetWhereName.equals("#foreignKeyValueFields"))
+        else if (!isWhereSourceFieldNames()) 
         {
-            // use target foreign keys, initialized in super.prepare()
-            if (log.isDebugEnabled()) log.debug(targetWhereName + " where condition for " + getTargetTable().getRowClass());
-            try
-            {
-                RowTranslator<T> targetRowTranslator = getTargetTable().getRowTranslator();
-                WhereTranslator<T> whereTranslator = new WhereTranslator<T>(targetRowTranslator, getTargetForeignKeyValueFieldList().size());
-                
-                // for all foreign key fields in target
-                for (SormulaField<T, Object> tfk : getTargetForeignKeyValueFieldList())
-                {
-                    // look up target column translator of same name
-                    if (log.isDebugEnabled()) log.debug("add field " + tfk.getField());
-                    ColumnTranslator<T> ctTarget = targetRowTranslator.getColumnTranslator(tfk.getField().getName());
-                    if (ctTarget != null)
-                    {
-                        whereTranslator.addColumnTranslator(ctTarget);
-                    }
-                    else
-                    {
-                        // not likely since super.prepare() would have detected this condition
-                        throw new OperationException("target foreign key field named, " + tfk.getField().getName() + 
-                                ", does not exist in target, " + getTargetTable().getRowClass());
-                    }
-                }
-                
-                selectOperation.setWhereTranslator2(whereTranslator);
-            }
-            catch (TranslatorException e)
-            {
-                throw new OperationException("error creating where translator for " + targetWhereName);
-            }
+            // target names may be needed in prepareParameterFields() so do in this order
+
+            // selectCascadeAnnotation.targetWhereName() are NOT defined by selectCascadeAnnotation.sourceParameterFieldNames()
+            // prepareParameterFields() will be need target fields if selectCascadeAnnotation.sourceParameterFieldNames()="#targetFieldNames"
+            // so do in this order
+            prepareWhere();
+            prepareParameterFields();
         }
         else
         {
-            // use where defined by annotation
-            selectOperation.setWhere(targetWhereName);
+            // source and target are circularly defined
+            throw new OperationException(selectCascadeAnnotation.sourceParameterFieldNames()[0] + " and " +
+                    selectCascadeAnnotation.targetWhereName() + " are circular configurations for " + 
+                    getTargetField().getField());
         }
-        
-        // parameter fields to read 
-        prepareParameterFields();
         
         // order by
         selectOperation.setOrderBy(selectCascadeAnnotation.targetOrderByName());
@@ -292,6 +237,48 @@ public class SelectCascadeOperation<S, T> extends CascadeOperation<S, T>
         			getTargetTable().getRowTranslator().getRowClass().getName());
         }
     }
+    
+    
+    /**
+     * @return true if {@link SelectCascade#sourceParameterFieldNames()} is "#primaryKeyFields"
+     * @since 3.1
+     */
+    public boolean isSourcePrimaryKeyFields()
+    {
+        String[] parameterFieldNames = selectCascadeAnnotation.sourceParameterFieldNames();
+        return parameterFieldNames.length > 0 && parameterFieldNames[0].equals("#primaryKeyFields");
+    }
+    
+    
+    /**
+     * @return true if {@link SelectCascade#sourceParameterFieldNames()} is "#targetFieldNames"
+     * @since 3.1
+     */
+    public boolean isSourceTargetFieldNames()
+    {
+        String[] parameterFieldNames = selectCascadeAnnotation.sourceParameterFieldNames();
+        return parameterFieldNames.length > 0 && parameterFieldNames[0].equals("#targetFieldNames");
+    }
+    
+    
+    /**
+     * @return true if {@link SelectCascade#targetWhereName()} is "#sourceFieldNames"
+     * @since 3.1
+     */
+    public boolean isWhereSourceFieldNames()
+    {
+        return selectCascadeAnnotation.targetWhereName().equals("#sourceFieldNames");
+    }
+    
+    
+    /**
+     * @return true if {@link SelectCascade#targetWhereName()} is "#foreignKeyValueFields"
+     * @since 3.1
+     */
+    public boolean isWhereForeignKeyValueFields()
+    {
+        return selectCascadeAnnotation.targetWhereName().equals("#foreignKeyValueFields");
+    }
 
 
     /**
@@ -309,58 +296,56 @@ public class SelectCascadeOperation<S, T> extends CascadeOperation<S, T>
         
         try
         {
-            String[] parameterFieldNames = selectCascadeAnnotation.sourceParameterFieldNames();
+            String[] parameterFieldNames;
             
-            if (parameterFieldNames.length > 0)
+            if (isSourcePrimaryKeyFields())
             {
-                if (parameterFieldNames[0].equals("#primaryKeyFields"))
+                // use fields from primary keys
+                if (log.isDebugEnabled())
                 {
-                    // use fields from target where
-                    if (log.isDebugEnabled())
-                    {
-                        log.debug("source parameter field names are source primary keys");
-                    }
-                    
-                    List<ColumnTranslator<S>> primaryKeyColumnTranslators = sourceRowTranslator.getPrimaryKeyWhereTranslator().getColumnTranslatorList();
-                    parameterFieldNames = new String[primaryKeyColumnTranslators.size()];
-                    int i = 0;
-                    for (ColumnTranslator<S> ct : primaryKeyColumnTranslators)
-                    {
-                        parameterFieldNames[i++] = ct.getColumnName();
-                    }
-                }
-                else if (parameterFieldNames[0].equals("#targetFieldNames"))
-                {
-                    // use fields from target where
-                    if (log.isDebugEnabled())
-                    {
-                        log.debug("source parameter field names from target where condition " + selectOperation.getWhereConditionName());
-                    }
-                    
-                    List<ColumnTranslator<T>> whereColumnTranslators = selectOperation.getWhereTranslator2().getColumnTranslatorList();
-                    parameterFieldNames = new String[whereColumnTranslators.size()];
-                    int i = 0;
-                    for (ColumnTranslator<T> ct : whereColumnTranslators)
-                    {
-                        parameterFieldNames[i++] = ct.getColumnName();
-                    }
-                }
-                else
-                {
-                    // use fields from annotation
-                    if (log.isDebugEnabled())
-                    {
-                        log.debug("source parameter field names from cascade sourceParameterFieldNames=" + 
-                                Arrays.asList(parameterFieldNames));
-                    }
+                    log.debug("source parameter field names are source primary keys");
                 }
                 
-                parameterFields = new ArrayList<SormulaField<S, ?>>(parameterFieldNames.length);
-                for (int i = 0; i < parameterFieldNames.length; ++i)
+                List<ColumnTranslator<S>> primaryKeyColumnTranslators = sourceRowTranslator.getPrimaryKeyWhereTranslator().getColumnTranslatorList();
+                parameterFieldNames = new String[primaryKeyColumnTranslators.size()];
+                int i = 0;
+                for (ColumnTranslator<S> ct : primaryKeyColumnTranslators)
                 {
-                    parameterFields.add(new SormulaField<S, Object>(
-                            sourceRowTranslator.getDeclaredField(parameterFieldNames[i])));
+                    parameterFieldNames[i++] = ct.getColumnName();
                 }
+            }
+            else if (isSourceTargetFieldNames())
+            {
+                // use fields from target where
+                if (log.isDebugEnabled())
+                {
+                    log.debug("source parameter field names from target where condition " + selectOperation.getWhereConditionName());
+                }
+                
+                List<ColumnTranslator<T>> whereColumnTranslators = selectOperation.getWhereTranslator2().getColumnTranslatorList();
+                parameterFieldNames = new String[whereColumnTranslators.size()];
+                int i = 0;
+                for (ColumnTranslator<T> ct : whereColumnTranslators)
+                {
+                    parameterFieldNames[i++] = ct.getColumnName();
+                }
+            }
+            else
+            {
+                // use fields from annotation
+                parameterFieldNames = selectCascadeAnnotation.sourceParameterFieldNames();
+                if (log.isDebugEnabled())
+                {
+                    log.debug("source parameter field names from cascade sourceParameterFieldNames=" + 
+                            Arrays.asList(parameterFieldNames));
+                }
+            }
+            
+            parameterFields = new ArrayList<SormulaField<S, ?>>(parameterFieldNames.length);
+            for (int i = 0; i < parameterFieldNames.length; ++i)
+            {
+                parameterFields.add(new SormulaField<S, Object>(
+                        sourceRowTranslator.getDeclaredField(parameterFieldNames[i])));
             }
         }
         catch (ReflectException e)
@@ -379,7 +364,7 @@ public class SelectCascadeOperation<S, T> extends CascadeOperation<S, T>
      */
     protected void setParameters(S sourceRow) throws OperationException
     {
-        if (parameterFields != null)
+        if (parameterFields.size() > 0)
         {
             // at least one parameter (zero parameters are allowed)
         
@@ -400,6 +385,80 @@ public class SelectCascadeOperation<S, T> extends CascadeOperation<S, T>
             }
             
             selectOperation.setParameters(parameters);
+        }
+    }
+
+    
+    /**
+     * TODO
+     * @throws OperationException
+     * @since 3.1
+     */
+    protected void prepareWhere() throws OperationException    
+    {
+        try
+        {
+            if (isWhereSourceFieldNames())
+            {
+                if (log.isDebugEnabled()) log.debug("#sourceFieldNames where condition for " + getTargetTable().getRowClass());
+                RowTranslator<T> targetRowTranslator = getTargetTable().getRowTranslator();
+                WhereTranslator<T> whereTranslator = new WhereTranslator<T>(targetRowTranslator, parameterFields.size());
+                
+                // for all source parameter fields
+                for (SormulaField<S, ?> spf : parameterFields)
+                {
+                    // look up target column translator of same name
+                    if (log.isDebugEnabled()) log.debug("add field " + spf.getField().getName());
+                    ColumnTranslator<T> ctTarget = targetRowTranslator.getColumnTranslator(spf.getField().getName());
+                    if (ctTarget != null)
+                    {
+                        whereTranslator.addColumnTranslator(ctTarget);
+                    }
+                    else
+                    {
+                        // not likely since super.prepare() would have detected this condition
+                        throw new OperationException("source field named, " + spf.getField().getName() + 
+                                ", does not exist in target, " + getTargetTable().getRowClass());
+                    }
+                }
+                
+                selectOperation.setWhereTranslator2(whereTranslator);
+            }
+            else if (isWhereForeignKeyValueFields())
+            {
+                if (log.isDebugEnabled()) log.debug("#foreignKeyValueFields where condition for " + getTargetTable().getRowClass());
+                RowTranslator<T> targetRowTranslator = getTargetTable().getRowTranslator();
+                WhereTranslator<T> whereTranslator = new WhereTranslator<T>(targetRowTranslator, getTargetForeignKeyValueFieldList().size());
+                
+                // for all foreign key fields in target
+                for (SormulaField<T, Object> tfk : getTargetForeignKeyValueFieldList())
+                {
+                    // look up target column translator of same name
+                    if (log.isDebugEnabled()) log.debug("add field " + tfk.getField());
+                    ColumnTranslator<T> ctTarget = targetRowTranslator.getColumnTranslator(tfk.getField().getName());
+                    if (ctTarget != null)
+                    {
+                        whereTranslator.addColumnTranslator(ctTarget);
+                    }
+                    else
+                    {
+                        // not likely since super.prepare() would have detected this condition
+                        throw new OperationException("target foreign key field named, " + tfk.getField().getName() + 
+                                ", does not exist in target, " + getTargetTable().getRowClass());
+                    }
+                }
+                
+                selectOperation.setWhereTranslator2(whereTranslator);
+            }
+            else
+            {
+                // use where defined by annotation
+                selectOperation.setWhere(selectCascadeAnnotation.targetWhereName());
+            }
+        }
+        catch (TranslatorException e)
+        {
+            throw new OperationException("error creating where translator for " + selectCascadeAnnotation.targetWhereName());
         }
     }
     

@@ -1209,7 +1209,7 @@ public abstract class SqlOperation<R>
     /**
      * Sets the translator to map row object values into where condition.
      * <p>
-     * Changing {@link #setWhereTranslator()} to public may break any class that overrode it since
+     * Changing {@link #setWhereTranslator(AbstractWhereTranslator)} to public may break any class that overrode it since
      * the signature in subclass will be protected (error to reduce visibility).
      * 
      * @param whereTranslator where translator or null if none

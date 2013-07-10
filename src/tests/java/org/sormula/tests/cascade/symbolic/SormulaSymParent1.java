@@ -35,6 +35,7 @@ public class SormulaSymParent1 extends SormulaSymParent
     // tests 1 to many relationship
     @OneToManyCascade(foreignKeyValueFields="#", 
             selects=@SelectCascade(sourceParameterFieldNames="#targetFieldNames", targetWhereName="byParent"))
+            // test circular error message selects=@SelectCascade(sourceParameterFieldNames="#targetFieldNames", targetWhereName="#sourceFieldNames"))
     List<SormulaSymChild> childList;
     
     

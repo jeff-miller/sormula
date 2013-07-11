@@ -20,8 +20,6 @@ import org.sormula.annotation.Column;
 import org.sormula.annotation.Row;
 import org.sormula.annotation.Where;
 import org.sormula.annotation.cascade.OneToOneCascade;
-import org.sormula.annotation.cascade.SelectCascade;
-import org.sormula.operation.ScalarSelectOperation;
 
 
 /**
@@ -38,12 +36,10 @@ public class OrderItem
     String productId;
 
     @OneToOneCascade(name="standard",
-            selects=@SelectCascade(operation=ScalarSelectOperation.class, sourceParameterFieldNames="productId"),
             readOnly=true) // don't modify products when OrderItem is modified
     Product product;
 
     @OneToOneCascade(name="product-orders",
-            selects=@SelectCascade(operation=ScalarSelectOperation.class, sourceParameterFieldNames="orderId"),
             readOnly=true) // don't modify order when OrderItemOrder is modified
     Order order;
     

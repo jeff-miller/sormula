@@ -21,8 +21,6 @@ import java.util.List;
 import org.sormula.annotation.Column;
 import org.sormula.annotation.Row;
 import org.sormula.annotation.cascade.OneToManyCascade;
-import org.sormula.annotation.cascade.SelectCascade;
-import org.sormula.operation.ArrayListSelectOperation;
 
 
 /**
@@ -36,8 +34,6 @@ public class Product
     String description;
 
     @OneToManyCascade(name="product-orders",
-            selects=@SelectCascade(operation=ArrayListSelectOperation.class,
-            targetWhereName="whereProduct", sourceParameterFieldNames="productId"),
             readOnly=true) // don't modify orders when product is modfied
     List<OrderItem> orderItems;
     

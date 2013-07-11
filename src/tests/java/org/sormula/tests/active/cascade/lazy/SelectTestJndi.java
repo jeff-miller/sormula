@@ -85,13 +85,13 @@ public class SelectTestJndi extends ActiveDatabaseTest<SormulaTestParentLazyAR>
             assert parent.childList.size() == 0 : "LazyAR 1:n children were selected prematurely";
             List<SormulaTestChildNLazyAR> children = parent.getChildList();
             assert children == parent.getChildList() : "LazyAR children were selected twice";
-            int countN = childNTable.<Integer>selectCount("id", "byParent", parent.getId());
+            int countN = childNTable.<Integer>selectCount("id", "byParent", parent.getParentId());
             if (children.size() > 0)
             {
                 // verify all rows selected
                 for (SormulaTestChildNLazyAR c: children)
                 { 
-                    assert c.getParentId() == parent.getId() : "LazyAR 1:n child parent id != parent id";
+                    assert c.getParentId() == parent.getParentId() : "LazyAR 1:n child parent id != parent id";
                 }
                 assert countN == children.size() : "LazyAR 1:n wrong number of children read from cascade";
             }

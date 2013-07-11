@@ -39,7 +39,7 @@ import org.sormula.operation.SqlOperation;
  * <p>
  * More than one operation is allowed per field even though it is not likely that you would
  * need more than one. {@link #selects()}, {@link #updates()}, {@link #inserts()},
- * and {@link #deletes()} accepts arrays which allow an empty array to mean "do nothing". 
+ * {@link #deletes()}, and {@link #saves()} accepts arrays which allow an empty array to mean "do nothing". 
  * 
  * @since 1.0
  * @author Jeff Miller
@@ -78,7 +78,7 @@ public @interface OneToManyCascade
      * </pre></blockquote>
      * 
      * @return class of field that is involved in cascade; Object.class to indicate that class is
-     * to be obtained from scalar field at runtime by relfection
+     * to be obtained from field at runtime by relfection
      */
     Class<?> targetClass() default Object.class;
     

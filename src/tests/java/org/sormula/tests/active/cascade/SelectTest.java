@@ -70,7 +70,7 @@ public class SelectTest extends ActiveDatabaseTest<SormulaTestParentAR>
             if (child != null)
             {
                 // verify child was selected
-                assert child.getId() == parent.getChild1Id() : "AR 1:1 child id != parent child1 id";
+                assert child.getChild1Id() == parent.getChild1Id() : "AR 1:1 child id != parent child1 id";
                 assert child1Table.select(parent.getChild1Id()) != null : "AR 1:1 child cacasade error";
                 
                 // verify that child was attached

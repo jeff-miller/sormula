@@ -14,30 +14,28 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.sormula.examples.manytomany.inherited;
-
-import java.util.List;
-
-import org.sormula.annotation.Row;
-import org.sormula.annotation.cascade.OneToManyCascade;
+package org.sormula.operation;
 
 
 /**
- * Product table row class with cascade relationship to {@link OrderItemOrder}.
+ * Indicates a field name was not found in a class.
+ * 
+ * @since 3.1
+ * @author Jeff Miller
  */
-@Row(tableName="Product", inhertedFields=true)
-public class ProductOrderItems extends SimpleProduct
+public class MissingFieldException extends OperationException
 {
-    @OneToManyCascade(readOnly=true) // don't modify orders when product is modfied
-    List<OrderItemOrder> orderItems;
-    
-    
-    public List<OrderItemOrder> getOrderItems()
+    private static final long serialVersionUID = 1L;
+
+
+    /**
+     * Constructs for field and class where field is expected.
+     * 
+     * @param fieldName name of field not found
+     * @param rowClass class where field name was searched
+     */
+    public MissingFieldException(String fieldName, Class<?> rowClass)
     {
-        return orderItems;
-    }
-    public void setOrderItems(List<OrderItemOrder> orderItems)
-    {
-        this.orderItems = orderItems;
+        super("field named, " + fieldName + ", does not exist in " + rowClass);
     }
 }

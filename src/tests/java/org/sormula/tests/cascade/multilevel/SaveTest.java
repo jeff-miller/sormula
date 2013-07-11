@@ -66,7 +66,7 @@ public class SaveTest extends DatabaseTest<SormulaTestLevel1>
         int lastNode2Index = node1Children.size() - 1;
         SormulaTestLevel2 node2 = node1Children.get(lastNode2Index); 
         SormulaTestLevel2 newNode2 = new SormulaTestLevel2(22222,
-        		"new node2 to insert with children of " + node2.getId());
+        		"new node2 to insert with children of " + node2.getLevel2Id());
         node1.add(newNode2);
         
         // move node2 children to newNode2
@@ -78,16 +78,16 @@ public class SaveTest extends DatabaseTest<SormulaTestLevel1>
         table1.save(node1);
         
         // verify that node2 22222 was inserted
-        SormulaTestLevel2 node2Test = table2.select(newNode2.getId());
-        assert node2Test != null : "node2 " + newNode2.getId() + " was not inserted";
-        assert node2Test.getParentId() == node1.getId() : "node2 " + newNode2.getId() + " wrong parent";
+        SormulaTestLevel2 node2Test = table2.select(newNode2.getLevel2Id());
+        assert node2Test != null : "node2 " + newNode2.getLevel2Id() + " was not inserted";
+        assert node2Test.getParentId() == node1.getLevel1Id() : "node2 " + newNode2.getLevel2Id() + " wrong parent";
         
         // verify child node3 exist and have parent 22222
         for (SormulaTestLevel3 node3Test: node2Test.getChildList())
         {
-        	SormulaTestLevel3 node3 = table3.select(node3Test.getId());
-        	assert node3 != null && node3.getParentId() == newNode2.getId() : 
-        		"node3 " + node3Test.getId() + " updated with wrong parent";
+        	SormulaTestLevel3 node3 = table3.select(node3Test.getLevel3Id());
+        	assert node3 != null && node3.getParentId() == newNode2.getLevel2Id() : 
+        		"node3 " + node3Test.getLevel3Id() + " updated with wrong parent";
         }
         	
         commit();
@@ -114,9 +114,9 @@ public class SaveTest extends DatabaseTest<SormulaTestLevel1>
         table1.save(node1);
         
         // verify that node3 33333 was inserted
-        SormulaTestLevel3 node3Test = table3.select(node3.getId());
-        assert node3Test != null : "node3 " + node3.getId() + " was not inserted";
-        assert node3Test.getParentId() == node2.getId() : "node3 " + node3.getId() + " wrong parent";
+        SormulaTestLevel3 node3Test = table3.select(node3.getLevel3Id());
+        assert node3Test != null : "node3 " + node3.getLevel3Id() + " was not inserted";
+        assert node3Test.getParentId() == node2.getLevel2Id() : "node3 " + node3.getLevel3Id() + " wrong parent";
         
         commit();
     }
@@ -141,22 +141,22 @@ public class SaveTest extends DatabaseTest<SormulaTestLevel1>
         table1.save(node1);
         
         // confirm node1 was inserted
-        SormulaTestLevel1 node1Test = table1.select(node1.getId());
-        assert node1Test != null : " node1 " + node1.getId() + " was not saved";
+        SormulaTestLevel1 node1Test = table1.select(node1.getLevel1Id());
+        assert node1Test != null : " node1 " + node1.getLevel1Id() + " was not saved";
         
         // confirm node2 was inserted
-        SormulaTestLevel2 node2Test = table2.select(node2.getId());
-        assert node2Test != null : " node2 " + node2.getId() + " was not saved";
+        SormulaTestLevel2 node2Test = table2.select(node2.getLevel2Id());
+        assert node2Test != null : " node2 " + node2.getLevel2Id() + " was not saved";
         
         // confirm node3 was inserted
-        SormulaTestLevel3 node3Test = table3.select(node3.getId());
-        assert node3Test != null : " node3 " + node3.getId() + " was not saved";
+        SormulaTestLevel3 node3Test = table3.select(node3.getLevel3Id());
+        assert node3Test != null : " node3 " + node3.getLevel3Id() + " was not saved";
         
         // confirm all nodes selected from cascade
         SormulaTestLevel2 node1Child = node1Test.getChildList().get(0);
-        assert node1Child != null && node1Child.getId() == node2.getId() : " node2 not selected";
+        assert node1Child != null && node1Child.getLevel2Id() == node2.getLevel2Id() : " node2 not selected";
         SormulaTestLevel3 node2Child = node2Test.getChildList().get(0);
-        assert node2Child != null && node2Child.getId() == node3.getId() : " node3 not selected";
+        assert node2Child != null && node2Child.getLevel3Id() == node3.getLevel3Id() : " node3 not selected";
         
         commit();
     }

@@ -38,7 +38,7 @@ public class SormulaParentNFK
     
     // tests 1 to many relationship
     @OneToManyCascade( 
-            selects=@SelectCascade(sourceParameterFieldNames="id", targetWhereName="byParent"),
+            selects=@SelectCascade(sourceParameterFieldNames="parentId", targetWhereName="byParent"),
             inserts=@InsertCascade(setForeignKeyValues=false), // test no foreign key value change
             foreignKeyValueFields="#")
     List<SormulaChildNFK> childList;

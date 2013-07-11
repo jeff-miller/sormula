@@ -42,7 +42,7 @@ public class InsertTestReadOnlyCascade extends DatabaseTest<SormulaTestParentRea
         createTable(SormulaTestParentReadOnlyCascade.class, 
                 "CREATE TABLE " + getSchemaPrefix() + 
                 SormulaTestParentReadOnlyCascade.class.getAnnotation(Row.class).tableName() + " (" +
-                " id INTEGER NOT NULL PRIMARY KEY," +
+                " parentid INTEGER NOT NULL PRIMARY KEY," +
                 " child1id INTEGER," +
                 " description VARCHAR(60)" +
                 ")"

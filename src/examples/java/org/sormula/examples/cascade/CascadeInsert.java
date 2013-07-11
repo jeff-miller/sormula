@@ -46,7 +46,7 @@ public class CascadeInsert extends ExampleBase
         String tableName = getSchemaPrefix() + "student4";
         dropTable(tableName);
         createTable("CREATE TABLE " + tableName + 
-                "(id INTEGER NOT NULL PRIMARY KEY," +
+                "(studentid INTEGER NOT NULL PRIMARY KEY," +
                 " firstname VARCHAR(30)," +
                 " lastname VARCHAR(30)," +
                 " graduationdate TIMESTAMP)" 
@@ -82,7 +82,7 @@ public class CascadeInsert extends ExampleBase
         Student4 student;
         
         student = new Student4();
-        student.setId(9999);
+        student.setStudentId(9999);
         student.setFirstName("John");
         student.setLastName("Miller");
         list.add(student);
@@ -93,7 +93,7 @@ public class CascadeInsert extends ExampleBase
         student.setEnrollment(enrollment);
         
         student = new Student4();
-        student.setId(8888);
+        student.setStudentId(8888);
         student.setFirstName("John");
         student.setLastName("Smith");
         list.add(student);
@@ -105,7 +105,7 @@ public class CascadeInsert extends ExampleBase
         student.setEnrollment(enrollment);
         
         student = new Student4();
-        student.setId(7777);
+        student.setStudentId(7777);
         student.setFirstName("Rita");
         student.setLastName("Miller");
         student.setGraduationDate(new GregorianCalendar(2000, 11, 31).getTime());
@@ -120,7 +120,7 @@ public class CascadeInsert extends ExampleBase
     {
         Enrolled enrolled = new Enrolled();
         enrolled.setEnrolledId(enrolledId++);
-        enrolled.setStudentId(student.getId());
+        enrolled.setStudentId(student.getStudentId());
         enrolled.setCourseId(202);
         enrolled.setYr(2011);
         enrolled.setSemester(1);
@@ -132,7 +132,7 @@ public class CascadeInsert extends ExampleBase
     {
         Enrolled enrolled = new Enrolled();
         enrolled.setEnrolledId(enrolledId++);
-        enrolled.setStudentId(student.getId());
+        enrolled.setStudentId(student.getStudentId());
         enrolled.setCourseId(601);
         enrolled.setYr(2012);
         enrolled.setSemester(2);

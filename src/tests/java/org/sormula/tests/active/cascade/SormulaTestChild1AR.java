@@ -25,11 +25,11 @@ import org.sormula.annotation.Row;
  * 
  * @author Jeff Miller
  */
-@Row(primaryKeyFields="id")
+@Row(primaryKeyFields="child1Id")
 public class SormulaTestChild1AR extends ActiveRecord<SormulaTestChild1AR>
 {
     private static final long serialVersionUID = 1L;
-    int id;
+    int child1Id;
     String description;
     
     
@@ -38,20 +38,20 @@ public class SormulaTestChild1AR extends ActiveRecord<SormulaTestChild1AR>
     }
 
     
-    public SormulaTestChild1AR(int id, String description)
+    public SormulaTestChild1AR(int child1Id, String description)
     {
-        this.id = id;
+        this.child1Id = child1Id;
         this.description = description;
     }
     
     
-    public int getId()
+    public int getChild1Id()
     {
-        return id;
+        return child1Id;
     }
-    public void setId(int id)
+    public void setChild1Id(int id)
     {
-        this.id = id;
+        this.child1Id = id;
     }
     
     

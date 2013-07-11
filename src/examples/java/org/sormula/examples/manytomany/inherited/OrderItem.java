@@ -19,8 +19,6 @@ package org.sormula.examples.manytomany.inherited;
 import org.sormula.annotation.Row;
 import org.sormula.annotation.Where;
 import org.sormula.annotation.cascade.OneToOneCascade;
-import org.sormula.annotation.cascade.SelectCascade;
-import org.sormula.operation.ScalarSelectOperation;
 
 
 /**
@@ -31,8 +29,7 @@ import org.sormula.operation.ScalarSelectOperation;
 @Row(inhertedFields=true)
 public class OrderItem extends SimpleOrderItem
 {
-    @OneToOneCascade(selects=@SelectCascade(operation=ScalarSelectOperation.class, sourceParameterFieldNames="productId"),
-            readOnly=true) // don't modify products when OrderItem is modified
+    @OneToOneCascade(readOnly=true) // don't modify products when OrderItem is modified
     SimpleProduct product;
     
     

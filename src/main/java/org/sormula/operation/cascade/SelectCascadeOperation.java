@@ -17,6 +17,7 @@
 package org.sormula.operation.cascade;
 
 import java.lang.reflect.Array;
+import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -28,6 +29,7 @@ import org.sormula.Table;
 import org.sormula.annotation.cascade.SelectCascade;
 import org.sormula.log.ClassLogger;
 import org.sormula.operation.MapSelectOperation;
+import org.sormula.operation.MissingFieldException;
 import org.sormula.operation.OperationException;
 import org.sormula.operation.ScalarSelectOperation;
 import org.sormula.operation.SelectOperation;
@@ -344,8 +346,9 @@ public class SelectCascadeOperation<S, T> extends CascadeOperation<S, T>
             parameterFields = new ArrayList<SormulaField<S, ?>>(parameterFieldNames.length);
             for (int i = 0; i < parameterFieldNames.length; ++i)
             {
-                parameterFields.add(new SormulaField<S, Object>(
-                        sourceRowTranslator.getDeclaredField(parameterFieldNames[i])));
+                Field f = sourceRowTranslator.getDeclaredField(parameterFieldNames[i]);
+                if (f != null) parameterFields.add(new SormulaField<S, Object>(f));
+                else throw new MissingFieldException(parameterFieldNames[i], getSourceTable().getRowClass());
             }
         }
         catch (ReflectException e)

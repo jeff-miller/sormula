@@ -37,16 +37,18 @@ public class SormulaTestParentLazyAR extends ActiveRecord<SormulaTestParentLazyA
     private static final long serialVersionUID = 1L;
     
     @Column(primaryKey=true)
-    int id;
+    int parentId;
     String description;
     int child1Id;
     
     // tests 1 to many relationship
-    @OneToManyCascade(// optional in v1.9 targetClass=SormulaTestChildNLazyAR.class, 
-            selects=@SelectCascade(sourceParameterFieldNames="id", targetWhereName="byParent", lazy=true))
+    @OneToManyCascade(selects=@SelectCascade(
+            sourceParameterFieldNames="#primaryKeyFields", targetWhereName="#sourceFieldNames", lazy=true))
     List<SormulaTestChildNLazyAR> childList;
     
     // tests 1 to 1 relationship
+    // note: sourceParameterFieldNames could be omitted if SormulaTestChild1LazyAR.id and
+    // SormulaTestParentLazyAR.child1Id were the same name
     @OneToOneCascade(selects=@SelectCascade(sourceParameterFieldNames="child1Id", lazy=true)) 
     SormulaTestChild1LazyAR child;
 
@@ -57,10 +59,10 @@ public class SormulaTestParentLazyAR extends ActiveRecord<SormulaTestParentLazyA
     }
 
     
-    public SormulaTestParentLazyAR(int id, String description)
+    public SormulaTestParentLazyAR(int parentId, String description)
     {
         this();
-        this.id = id;
+        this.parentId = parentId;
         this.description = description;
     }
 
@@ -68,17 +70,17 @@ public class SormulaTestParentLazyAR extends ActiveRecord<SormulaTestParentLazyA
     public void add(SormulaTestChildNLazyAR child)
     {
         childList.add(child);
-        child.setParentId(id);
+        child.setParentId(parentId);
     }
 
     
-    public int getId()
+    public int getParentId()
     {
-        return id;
+        return parentId;
     }
-    public void setId(int id)
+    public void setParentId(int id)
     {
-        this.id = id;
+        this.parentId = id;
     }
     
     

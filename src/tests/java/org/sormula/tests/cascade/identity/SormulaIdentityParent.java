@@ -21,7 +21,6 @@ import java.util.List;
 
 import org.sormula.annotation.Column;
 import org.sormula.annotation.cascade.OneToManyCascade;
-import org.sormula.annotation.cascade.SelectCascade;
 
 
 /**
@@ -36,9 +35,7 @@ public class SormulaIdentityParent
     String description;
     
     // tests 1 to many relationship
-    @OneToManyCascade( 
-            selects=@SelectCascade(sourceParameterFieldNames="parentId", targetWhereName="byParent"),
-            foreignKeyValueFields="#", foreignKeyReferenceField="parent")
+    @OneToManyCascade(foreignKeyValueFields="#", foreignKeyReferenceField="parent")
     List<SormulaIdentityChildN> childList;
     
     

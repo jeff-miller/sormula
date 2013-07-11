@@ -35,7 +35,7 @@ import org.sormula.operation.SqlOperation;
  * <p>
  * More than one operation is allowed per field even though it is not likely that you would
  * need more than one. {@link #selects()}, {@link #updates()}, {@link #inserts()},
- * and {@link #deletes()} accepts arrays which allow an empty array to mean "do nothing". 
+ * {@link #deletes()}, and {@link #saves()} accepts arrays which allow an empty array to mean "do nothing". 
  * 
  * @since 1.0
  * @author Jeff Miller

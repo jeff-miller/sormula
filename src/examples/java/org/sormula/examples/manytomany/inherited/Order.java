@@ -21,8 +21,6 @@ import java.util.List;
 
 import org.sormula.annotation.Row;
 import org.sormula.annotation.cascade.OneToManyCascade;
-import org.sormula.annotation.cascade.SelectCascade;
-import org.sormula.operation.ArrayListSelectOperation;
 
 
 /**
@@ -31,7 +29,7 @@ import org.sormula.operation.ArrayListSelectOperation;
 @Row(tableName="\"order\"", inhertedFields=true)
 public class Order extends SimpleOrder
 {
-    @OneToManyCascade(selects=@SelectCascade(operation=ArrayListSelectOperation.class, sourceParameterFieldNames="orderId"))
+    @OneToManyCascade
     List<OrderItem> orderItems;
 
     

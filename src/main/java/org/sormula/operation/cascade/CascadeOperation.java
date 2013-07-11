@@ -27,6 +27,7 @@ import org.sormula.annotation.cascade.Cascade;
 import org.sormula.annotation.cascade.OneToManyCascade;
 import org.sormula.annotation.cascade.OneToOneCascade;
 import org.sormula.log.ClassLogger;
+import org.sormula.operation.MissingFieldException;
 import org.sormula.operation.OperationException;
 import org.sormula.operation.SqlOperation;
 import org.sormula.reflect.ReflectException;
@@ -438,7 +439,8 @@ public abstract class CascadeOperation<S, T>
             try
             {
                 Field field = getTargetTable().getRowTranslator().getDeclaredField(targetFieldName);
-                targetForeignReferenceField = new SormulaField<T, Object>(field);
+                if (field != null) targetForeignReferenceField = new SormulaField<T, Object>(field);
+                else throw new MissingFieldException(targetFieldName, getTargetTable().getRowClass());
                 
                 if (log.isDebugEnabled())
                 {

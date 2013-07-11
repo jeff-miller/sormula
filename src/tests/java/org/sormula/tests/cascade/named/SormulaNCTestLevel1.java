@@ -46,7 +46,7 @@ public class SormulaNCTestLevel1
             foreignKeyValueFields="parentId")
     List<SormulaNCTestLevel2> childList;
     
-    // tests unused name
+    // tests unused name (and specific selectCascade parameters)
     @OneToOneCascade(name="other",
             selects=@SelectCascade(sourceParameterFieldNames="thing1Id", operation=ScalarSelectOperation.class))
     SormulaNCThing thing1;

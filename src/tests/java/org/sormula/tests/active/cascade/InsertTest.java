@@ -55,7 +55,7 @@ public class InsertTest extends ActiveDatabaseTest<SormulaTestParentAR>
         child1.openDatabase();
         child1.createTable(SormulaTestChild1AR.class, 
                 "CREATE TABLE " + getSchemaPrefix() + SormulaTestChild1AR.class.getSimpleName() + " (" +
-                " id INTEGER NOT NULL PRIMARY KEY," +
+                " child1id INTEGER NOT NULL PRIMARY KEY," +
                 " description VARCHAR(60)" +
                 ")"
             );
@@ -103,8 +103,8 @@ public class InsertTest extends ActiveDatabaseTest<SormulaTestParentAR>
         
         // verify that child was inserted
         ActiveTable<SormulaTestChild1AR> child1Table = new ActiveTable<SormulaTestChild1AR>(activeDatabase, SormulaTestChild1AR.class);
-        SormulaTestChild1AR c1 = child1Table.select(child1.getId());
-        assert c1 != null : "child " + child1.getId() + " was not inserted";
+        SormulaTestChild1AR c1 = child1Table.select(child1.getChild1Id());
+        assert c1 != null : "child " + child1.getChild1Id() + " was not inserted";
         
         // verify that child was attached
         assert child1.getActiveDatabase() == activeDatabase : "child was not attached to active database";

@@ -21,7 +21,6 @@ import java.util.List;
 
 import org.sormula.annotation.Column;
 import org.sormula.annotation.cascade.OneToManyCascade;
-import org.sormula.annotation.cascade.SelectCascade;
 
 
 /**
@@ -31,23 +30,22 @@ import org.sormula.annotation.cascade.SelectCascade;
 public class Student4
 {
     @Column(primaryKey=true)
-    int id;
+    int studentId;
     String firstName;
     String lastName;
     Date graduationDate;
     
-    @OneToManyCascade(targetClass=Enrolled.class, // targetClass is optional in v1.9 
-            selects=@SelectCascade(sourceParameterFieldNames="id", targetWhereName="studentSearch"))
+    @OneToManyCascade
     List<Enrolled> enrollment;
     
     
-    public int getId()
+    public int getStudentId()
     {
-        return id;
+        return studentId;
     }
-    public void setId(int id)
+    public void setStudentId(int studentId)
     {
-        this.id = id;
+        this.studentId = studentId;
     }
     
     
@@ -94,6 +92,6 @@ public class Student4
     @Override
     public String toString()
     {
-        return id + " " + firstName + " " + lastName;
+        return studentId + " " + firstName + " " + lastName;
     }
 }

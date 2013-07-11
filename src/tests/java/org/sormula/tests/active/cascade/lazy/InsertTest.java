@@ -41,7 +41,7 @@ public class InsertTest extends ActiveDatabaseTest<SormulaTestParentLazyAR>
         openDatabase();
         createTable(SormulaTestParentLazyAR.class, 
             "CREATE TABLE " + getSchemaPrefix() + SormulaTestParentLazyAR.class.getSimpleName() + " (" +
-            " id INTEGER NOT NULL PRIMARY KEY," +
+            " parentid INTEGER NOT NULL PRIMARY KEY," +
             " child1id INTEGER," +
             " description VARCHAR(60)" +
             ")"

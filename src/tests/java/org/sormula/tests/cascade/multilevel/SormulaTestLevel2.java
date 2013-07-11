@@ -30,17 +30,17 @@ import org.sormula.annotation.cascade.SelectCascade;
  * 
  * @author Jeff Miller
  */
-@Row(primaryKeyFields="id")
+@Row(primaryKeyFields="level2Id")
 @Where(name="byParent", fieldNames="parentId")
 public class SormulaTestLevel2
 {
-    int id;
+    int level2Id;
     int parentId;
     String description;
     
     // tests 1 to many relationship
     @OneToManyCascade( 
-            selects=@SelectCascade(sourceParameterFieldNames="id", targetWhereName="byParent"))
+            selects=@SelectCascade(sourceParameterFieldNames="level2Id", targetWhereName="byParent"))
     List<SormulaTestLevel3> childList;
     
     
@@ -50,10 +50,10 @@ public class SormulaTestLevel2
     }
 
     
-    public SormulaTestLevel2(int id, String description)
+    public SormulaTestLevel2(int level2Id, String description)
     {
         this();
-        this.id = id;
+        this.level2Id = level2Id;
         this.description = description;
     }
 
@@ -61,17 +61,17 @@ public class SormulaTestLevel2
     public void add(SormulaTestLevel3 child)
     {
         childList.add(child);
-        child.setParentId(id);
+        child.setParentId(level2Id);
     }
     
     
-    public int getId()
+    public int getLevel2Id()
     {
-        return id;
+        return level2Id;
     }
-    public void setId(int id)
+    public void setLevel2Id(int level2Id)
     {
-        this.id = id;
+        this.level2Id = level2Id;
     }
     
     

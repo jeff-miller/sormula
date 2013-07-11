@@ -18,7 +18,6 @@ package org.sormula.tests.cascade.identity;
 
 import org.sormula.annotation.Column;
 import org.sormula.annotation.Transient;
-import org.sormula.annotation.Where;
 
 
 /**
@@ -26,7 +25,6 @@ import org.sormula.annotation.Where;
  * 
  * @author Jeff Miller
  */
-@Where(name="byParent", fieldNames="parentId")
 public class SormulaIdentityChildN
 {
     @Column(identity=true)

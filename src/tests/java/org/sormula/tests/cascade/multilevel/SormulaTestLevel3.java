@@ -26,11 +26,11 @@ import org.sormula.annotation.Where;
  * 
  * @author Jeff Miller
  */
-@Row(primaryKeyFields="id")
+@Row(primaryKeyFields="level3Id")
 @Where(name="byParent", fieldNames="parentId")
 public class SormulaTestLevel3
 {
-    int id;
+    int level3Id;
     int parentId;
     String description;
     
@@ -40,20 +40,20 @@ public class SormulaTestLevel3
     }
 
     
-    public SormulaTestLevel3(int id, String description)
+    public SormulaTestLevel3(int level3Id, String description)
     {
-        this.id = id;
+        this.level3Id = level3Id;
         this.description = description;
     }
 
     
-    public int getId()
+    public int getLevel3Id()
     {
-        return id;
+        return level3Id;
     }
-    public void setId(int id)
+    public void setLevel3Id(int level3Id)
     {
-        this.id = id;
+        this.level3Id = level3Id;
     }
     
     

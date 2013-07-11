@@ -23,7 +23,6 @@ import org.sormula.active.ActiveRecord;
 import org.sormula.annotation.Row;
 import org.sormula.annotation.cascade.OneToManyCascade;
 import org.sormula.annotation.cascade.OneToOneCascade;
-import org.sormula.annotation.cascade.SelectCascade;
 
 
 /**
@@ -40,14 +39,13 @@ public class SormulaTestParentAR extends ActiveRecord<SormulaTestParentAR>
     int child1Id;
     
     // tests 1 to many relationship
-    @OneToManyCascade(// optional in v1.9 targetClass=SormulaTestChildNAR.class, 
-            selects=@SelectCascade(sourceParameterFieldNames="parentId", targetWhereName="byParent"),
+    @OneToManyCascade( 
+            // not needed with version 3.1 selects=@SelectCascade(sourceParameterFieldNames="parentId", targetWhereName="byParent"),
             foreignKeyValueFields="#") // tests foreignKeyValueFields for ActiveRecord
     List<SormulaTestChildNAR> childList;
     
     // tests 1 to 1 relationship
-    @OneToOneCascade(
-            selects=@SelectCascade(sourceParameterFieldNames="child1Id"))
+    @OneToOneCascade // sourceParameterFieldNames of "child1Id" is obtained by defaults for OneToOneCascade
     SormulaTestChild1AR child;
 
     

@@ -51,7 +51,7 @@ public class SormulaTestParentLazy4 implements LazySelectable
     
     
     // tests general cascade and map type
-    @Cascade(// optional in v1.9 targetClass=SormulaTestChildLazy.class,
+    @Cascade(
     		selects=@SelectCascade(operation=HashMapSelectOperation.class, sourceParameterFieldNames="id", targetWhereName="byParent", targetKeyMethodName="getId", lazy=true),
 			inserts=@InsertCascade(),
             updates=@UpdateCascade(),

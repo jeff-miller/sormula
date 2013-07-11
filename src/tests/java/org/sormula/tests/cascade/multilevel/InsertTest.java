@@ -39,7 +39,7 @@ public class InsertTest extends DatabaseTest<SormulaTestLevel1>
         openDatabase();
         createTable(SormulaTestLevel1.class, 
             "CREATE TABLE " + getSchemaPrefix() + SormulaTestLevel1.class.getSimpleName() + " (" +
-            " id INTEGER NOT NULL PRIMARY KEY," +
+            " level1id INTEGER NOT NULL PRIMARY KEY," +
             " description VARCHAR(60)" +
             ")"
         );
@@ -49,7 +49,7 @@ public class InsertTest extends DatabaseTest<SormulaTestLevel1>
         child2.openDatabase();
         child2.createTable(SormulaTestLevel2.class, 
                 "CREATE TABLE " + getSchemaPrefix() + SormulaTestLevel2.class.getSimpleName() + " (" +
-                " id INTEGER NOT NULL PRIMARY KEY," +
+                " level2id INTEGER NOT NULL PRIMARY KEY," +
                 " parentid INTEGER NOT NULL," +
                 " description VARCHAR(60)" +
                 ")"
@@ -61,7 +61,7 @@ public class InsertTest extends DatabaseTest<SormulaTestLevel1>
         child3.openDatabase();
         child3.createTable(SormulaTestLevel3.class, 
                 "CREATE TABLE " + getSchemaPrefix() + SormulaTestLevel3.class.getSimpleName() + " (" +
-                " id INTEGER NOT NULL PRIMARY KEY," +
+                " level3id INTEGER NOT NULL PRIMARY KEY," +
                 " parentid INTEGER NOT NULL," +
                 " description VARCHAR(60)" +
                 ")"
@@ -95,13 +95,13 @@ public class InsertTest extends DatabaseTest<SormulaTestLevel1>
         // level 2 nodes
         for (int i = 1; i <= 5; ++i)
         {
-            SormulaTestLevel2 node2 = new SormulaTestLevel2(level2BaseId + i, "Child of parent " + node1.getId());
+            SormulaTestLevel2 node2 = new SormulaTestLevel2(level2BaseId + i, "Child of parent " + node1.getLevel1Id());
             node1.add(node2);
             
             // level 3 nodes
             for (int j = 1; j <= 3; ++j)
             {
-                SormulaTestLevel3 node3 = new SormulaTestLevel3(level3BaseId + i*10 + j, "Child of parent " + node2.getId());
+                SormulaTestLevel3 node3 = new SormulaTestLevel3(level3BaseId + i*10 + j, "Child of parent " + node2.getLevel2Id());
                 node2.add(node3);
             }
         }
@@ -118,16 +118,16 @@ public class InsertTest extends DatabaseTest<SormulaTestLevel1>
         // test level 2 children
         for (SormulaTestLevel2 node2: node1.getChildList())
         {
-            select2.setParameters(node2.getId());
+            select2.setParameters(node2.getLevel2Id());
             select2.execute();
-            assert select2.readNext() != null : "level 2 child " + node2.getId() + " was not inserted"; 
+            assert select2.readNext() != null : "level 2 child " + node2.getLevel2Id() + " was not inserted"; 
             
             // test level 3 children
             for (SormulaTestLevel3 node3: node2.getChildList())
             {
-                select3.setParameters(node3.getId());
+                select3.setParameters(node3.getLevel3Id());
                 select3.execute();
-                assert select3.readNext() != null : "level 3 child " + node3.getId() + " was not inserted"; 
+                assert select3.readNext() != null : "level 3 child " + node3.getLevel3Id() + " was not inserted"; 
             }
         }
         

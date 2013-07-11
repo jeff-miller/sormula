@@ -17,14 +17,12 @@
 package org.sormula.examples.cascade;
 
 import org.sormula.annotation.Column;
-import org.sormula.annotation.Where;
 
 
 /**
  * Row class for cascade example. Enrolled is many side of 1 to many relationship with {@link Student4}.
  * See {@link CascadeInsert} for table definition.
  */
-@Where(name="studentSearch", fieldNames="studentId")
 public class Enrolled
 {
     @Column(primaryKey=true)

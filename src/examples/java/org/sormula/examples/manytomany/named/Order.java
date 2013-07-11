@@ -24,8 +24,6 @@ import java.util.List;
 import org.sormula.annotation.Column;
 import org.sormula.annotation.Row;
 import org.sormula.annotation.cascade.OneToManyCascade;
-import org.sormula.annotation.cascade.SelectCascade;
-import org.sormula.operation.ArrayListSelectOperation;
 
 
 /**
@@ -40,8 +38,8 @@ public class Order
     int orderId;
     Date orderDate;
 
-    @OneToManyCascade(name="standard",
-            selects=@SelectCascade(operation=ArrayListSelectOperation.class, sourceParameterFieldNames="orderId"))
+    // select joins on orderId fields
+    @OneToManyCascade(name="standard")
     List<OrderItem> orderItems;
     
     

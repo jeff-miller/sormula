@@ -17,21 +17,16 @@
 package org.sormula.examples.manytomany.inherited;
 
 import org.sormula.annotation.Row;
-import org.sormula.annotation.Where;
 import org.sormula.annotation.cascade.OneToOneCascade;
-import org.sormula.annotation.cascade.SelectCascade;
-import org.sormula.operation.ScalarSelectOperation;
 
 
 /**
  * Order item table row class with cascade relationship to {@link SimpleOrder}.
  */
-@Where(name="whereProduct", fieldNames="productId")
 @Row(tableName="orderitem", inhertedFields=true)
 public class OrderItemOrder extends SimpleOrderItem
 {
-    @OneToOneCascade(selects=@SelectCascade(operation=ScalarSelectOperation.class, sourceParameterFieldNames="orderId"),
-            readOnly=true) // don't modify order when OrderItemOrder is modified
+    @OneToOneCascade(readOnly=true) // don't modify order when OrderItemOrder is modified
     SimpleOrder order;
     
     

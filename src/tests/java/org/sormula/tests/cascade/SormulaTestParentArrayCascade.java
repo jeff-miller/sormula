@@ -27,20 +27,18 @@ import org.sormula.operation.HashMapSelectOperation;
  * 
  * @author Jeff Miller
  */
-@Row(tableName="SormulaTestParentAC", primaryKeyFields="id")
+@Row(tableName="SormulaTestParentAC", primaryKeyFields="parentId")
 public class SormulaTestParentArrayCascade
 {
-    int id;
+    int parentId;
     String description;
     
     // tests 1 to many relationship where selected list gets converted to array
-    @OneToManyCascade( 
-            selects=@SelectCascade(sourceParameterFieldNames="id", targetWhereName="byParent"))
+    @OneToManyCascade
     SormulaTestChildNArrayCascade[] children;
     
     // tests 1 to many relationship where selected map gets converted to array
-    @OneToManyCascade( 
-            selects=@SelectCascade(sourceParameterFieldNames="id", targetWhereName="byParent", 
+    @OneToManyCascade(selects=@SelectCascade(targetWhereName="byParent", 
                 operation=HashMapSelectOperation.class, targetKeyMethodName="getId"))
     SormulaTestChildNArrayCascade[] children2;
     
@@ -50,20 +48,20 @@ public class SormulaTestParentArrayCascade
     }
 
     
-    public SormulaTestParentArrayCascade(int id, String description)
+    public SormulaTestParentArrayCascade(int parentId, String description)
     {
-        this.id = id;
+        this.parentId = parentId;
         this.description = description;
     }
 
     
-    public int getId()
+    public int getParentId()
     {
-        return id;
+        return parentId;
     }
-    public void setId(int id)
+    public void setParentId(int parentId)
     {
-        this.id = id;
+        this.parentId = parentId;
     }
     
     
@@ -85,7 +83,7 @@ public class SormulaTestParentArrayCascade
     {
         if (children != null)
         {
-            for (SormulaTestChildNArrayCascade child: children) child.setParentId(id);
+            for (SormulaTestChildNArrayCascade child: children) child.setParentId(parentId);
         }
         
         this.children = children;
@@ -100,7 +98,7 @@ public class SormulaTestParentArrayCascade
     {
         if (children2 != null)
         {
-            for (SormulaTestChildNArrayCascade child: children2) child.setParentId(id);
+            for (SormulaTestChildNArrayCascade child: children2) child.setParentId(parentId);
         }
         
         this.children2 = children2;

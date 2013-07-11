@@ -58,13 +58,13 @@ public class SelectTestArrayCascade extends DatabaseTest<SormulaTestParentArrayC
         {
             // verify 1 to many from list to array
             SormulaTestChildNArrayCascade[] children = parent.getChildren();
-            int countN = childNTable.selectCount("byParent", parent.getId());
+            int countN = childNTable.selectCount("byParent", parent.getParentId());
             if (children.length > 0)
             {
                 // verify all rows selected
                 for (SormulaTestChildNArrayCascade c: children)
                 { 
-                    assert c.getParentId() == parent.getId() : "1:n child parent id != parent id";
+                    assert c.getParentId() == parent.getParentId() : "1:n child parent id != parent id";
                 }
                 assert countN == children.length : "1:n wrong number of children read from list cascade";
             }
@@ -81,7 +81,7 @@ public class SelectTestArrayCascade extends DatabaseTest<SormulaTestParentArrayC
                 // verify all rows selected
                 for (SormulaTestChildNArrayCascade c: children2)
                 { 
-                    assert c.getParentId() == parent.getId() : "1:n child parent id != parent id";
+                    assert c.getParentId() == parent.getParentId() : "1:n child parent id != parent id";
                 }
                 assert countN == children2.length : "1:n wrong number of children read from map cascade";
             }

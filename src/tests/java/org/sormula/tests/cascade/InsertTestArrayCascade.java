@@ -41,7 +41,7 @@ public class InsertTestArrayCascade extends DatabaseTest<SormulaTestParentArrayC
         createTable(SormulaTestParentArrayCascade.class, 
                 "CREATE TABLE " + getSchemaPrefix() + 
                 SormulaTestParentArrayCascade.class.getAnnotation(Row.class).tableName() + " (" +
-                " id INTEGER NOT NULL PRIMARY KEY," +
+                " parentid INTEGER NOT NULL PRIMARY KEY," +
                 " description VARCHAR(60)" +
                 ")"
             );

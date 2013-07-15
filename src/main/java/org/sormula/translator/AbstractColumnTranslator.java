@@ -62,14 +62,14 @@ public abstract class AbstractColumnTranslator<R, T> implements ColumnTranslator
     {
         try
         {
-            if (log.isDebugEnabled()) log.debug(field.getDeclaringClass().getCanonicalName() + "#" + field.getName() + " column="+columnName + 
+            if (log.isDebugEnabled()) log.debug(field + " column="+columnName + 
                     " translator is "+columnTranslatorClass.getCanonicalName());
             Constructor<? extends ColumnTranslator> constructor = columnTranslatorClass.getConstructor(Field.class, String.class);
             return constructor.newInstance(field, columnName);
         }
         catch (Exception e)
         {
-            throw new TranslatorException("error creating translator for " + field.getDeclaringClass().getCanonicalName() + "#" + field.getName(), e);
+            throw new TranslatorException("error creating translator for " + field, e);
         }
     }
     

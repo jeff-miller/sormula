@@ -349,7 +349,6 @@ public class RowTranslator<R> extends ColumnsTranslator<R>
     @SuppressWarnings("unchecked") // field types are only known at runtime 
     protected void initColumnTranslators() throws TranslatorException
     {
-        Class<R> rowClass = getRowClass();
         Field[] fields = getDeclaredFields();
         initColumnTranslatorList(fields.length);
         cascadeFieldList = new ArrayList<Field>(4);
@@ -444,8 +443,7 @@ public class RowTranslator<R> extends ColumnsTranslator<R>
                     }
                     else
                     {
-                        throw new TranslatorException("more than one identity column declared at " + 
-                                rowClass.getCanonicalName()+ "#" + f.getName());
+                        throw new TranslatorException("more than one identity column declared at " + f);
                     }
                 }
             }

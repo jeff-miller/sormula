@@ -74,7 +74,7 @@ public class PrimaryKeyWhereTranslator<R> extends AbstractWhereTranslator<R>
             Field firstField = null;
             
             // for all fields
-            for (Field f: rowTranslator.getDeclaredFields())
+            for (Field f: rowTranslator.getDeclaredFields()) // TODO don't look at all, use rowTranslator.getColumnTranslatorList() 
             {
                 if (Modifier.isStatic(f.getModifiers())) continue; // static are never primary keys
                 if (f.isAnnotationPresent(Transient.class)) continue; // transient are never primary keys

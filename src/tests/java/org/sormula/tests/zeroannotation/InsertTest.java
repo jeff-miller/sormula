@@ -17,6 +17,8 @@
 package org.sormula.tests.zeroannotation;
 
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 import org.sormula.SormulaException;
 import org.sormula.tests.DatabaseTest;
@@ -44,11 +46,23 @@ public class InsertTest extends DatabaseTest<ZeroAnnotationTest>
         openDatabase();
         createTable(ZeroAnnotationTest.class, 
             "CREATE TABLE " + getSchemaPrefix() + ZeroAnnotationTest.class.getSimpleName() + " (" +
-            " id INTEGER NOT NULL PRIMARY KEY," +
+            " zatid INTEGER NOT NULL PRIMARY KEY," +
             " type SMALLINT," +
-            " description VARCHAR(30)" +
+            " description VARCHAR(30)," +
+            " childid INTEGER NOT NULL" +
             ")"
         );
+
+        // child table
+        DatabaseTest<ZeroAnnotationChild> child = new DatabaseTest<ZeroAnnotationChild>();
+        child.openDatabase();
+        child.createTable(ZeroAnnotationChild.class, 
+                "CREATE TABLE " + getSchemaPrefix() + ZeroAnnotationChild.class.getSimpleName() + " (" +
+                " childid INTEGER NOT NULL PRIMARY KEY," +
+                " zatid INTEGER NOT NULL," +
+                ")"
+            );
+        child.closeDatabase();
     }
     
     
@@ -72,10 +86,50 @@ public class InsertTest extends DatabaseTest<ZeroAnnotationTest>
     public void insertCollection() throws SormulaException
     {
         ArrayList<ZeroAnnotationTest> list = new ArrayList<ZeroAnnotationTest>();
+        int childId = 1;
         
-        for (int i = 101; i < 200; ++i)
+        for (int zatId = 101; zatId < 200; ++zatId)
         {
-            list.add(new ZeroAnnotationTest(i, 2, "Insert collection " + i));
+            ZeroAnnotationTest zat = new ZeroAnnotationTest(zatId, 2, "Insert collection " + zatId);
+            list.add(zat);
+            
+            // add test children for each default cascade
+            switch (zatId % 4) // insure only 1 parent for a child
+            {
+                case 0:
+                    // list
+                    List<ZeroAnnotationChild> testList = zat.getTestList();
+                    for (int i = 0; i < 3; ++i)
+                    {
+                        testList.add(new ZeroAnnotationChild(childId++, zatId));
+                    }
+                    break;
+                    
+                case 1:
+                    // map
+                    Map<Integer, ZeroAnnotationChild> testMap = zat.getTestMap();
+                    for (int i = 0; i < 3; ++i)
+                    {
+                        ZeroAnnotationChild zac = new ZeroAnnotationChild(childId++, zatId);
+                        testMap.put(zac.hashCode(), zac);
+                    }
+                    break;
+                    
+                case 2:
+                    // array
+                    ZeroAnnotationChild[] testArray = new ZeroAnnotationChild[3];
+                    for (int i = 0; i < testArray.length; ++i)
+                    {
+                        testArray[i] = new ZeroAnnotationChild(childId++, zatId);
+                    }
+                    zat.setTestArray(testArray);// create only when array has values
+                    break;
+                    
+                case 3:
+                    // class
+                    zat.setTestChild(new ZeroAnnotationChild(childId++, zatId));
+                    break;
+            }
         }
         
         begin();

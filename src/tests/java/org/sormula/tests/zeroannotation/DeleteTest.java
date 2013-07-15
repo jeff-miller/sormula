@@ -61,7 +61,7 @@ public class DeleteTest extends DatabaseTest<ZeroAnnotationTest>
         assert getTable().delete(row) == 1 : "delete one row failed";
         
         // read row to confirm that delete applied
-        assert getTable().select(row.getId()) == null : "row was not deleted";
+        assert getTable().select(row.getZatId()) == null : "row was not deleted";
         
         commit();
     }
@@ -83,8 +83,8 @@ public class DeleteTest extends DatabaseTest<ZeroAnnotationTest>
         // confirm each row was deleted
         for (ZeroAnnotationTest r: set)
         {
-            ZeroAnnotationTest r2 = table.select(r.getId());
-            assert r2 == null : r.getId() + " was not deleted";
+            ZeroAnnotationTest r2 = table.select(r.getZatId());
+            assert r2 == null : r.getZatId() + " was not deleted";
         }
         
         commit();

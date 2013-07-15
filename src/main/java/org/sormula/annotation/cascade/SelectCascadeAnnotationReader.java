@@ -17,11 +17,11 @@ public class SelectCascadeAnnotationReader extends CascadeAnnotationReader
     /**
      * Constructs for a field.
      * 
-     * @param source field with select cascade annotation
+     * @param source field with select cascade annotation (or default cascade)
      */
     public SelectCascadeAnnotationReader(Field source)
     {
-        super(source);
+        super(source); // uses deprecated constructor for backward compatability (don't use new constructor)
         
         if (selectCascades == null)
         {
@@ -35,9 +35,17 @@ public class SelectCascadeAnnotationReader extends CascadeAnnotationReader
     /**
      * {@inheritDoc}
      */
+    @Deprecated
     protected void initOneToManyCascade()
     {
-        OneToManyCascade cascadeAnnotation = source.getAnnotation(OneToManyCascade.class);
+        initOneToManyCascade(source.getAnnotation(OneToManyCascade.class));
+    }
+    /**
+     * {@inheritDoc}
+     * @since 3.1
+     */
+    protected void initOneToManyCascade(OneToManyCascade cascadeAnnotation)
+    {
         init(cascadeAnnotation);
         initTargetClass(cascadeAnnotation.targetClass());
         selectCascades = cascadeAnnotation.selects();            
@@ -47,9 +55,17 @@ public class SelectCascadeAnnotationReader extends CascadeAnnotationReader
     /**
      * {@inheritDoc}
      */
+    @Deprecated
     protected void initOneToOneCascade()
     {
-        OneToOneCascade cascadeAnnotation = source.getAnnotation(OneToOneCascade.class);
+        initOneToOneCascade(source.getAnnotation(OneToOneCascade.class));
+    }
+    /**
+     * {@inheritDoc}
+     * @since 3.1
+     */
+    protected void initOneToOneCascade(OneToOneCascade cascadeAnnotation)
+    {
         init(cascadeAnnotation);
         initTargetClass(source.getType());
         selectCascades = cascadeAnnotation.selects();            
@@ -59,9 +75,17 @@ public class SelectCascadeAnnotationReader extends CascadeAnnotationReader
     /**
      * {@inheritDoc}
      */
+    @Deprecated
     protected void initCascade()
     {
-        Cascade cascadeAnnotation = source.getAnnotation(Cascade.class);
+        initCascade(source.getAnnotation(Cascade.class));
+    }
+    /**
+     * {@inheritDoc}
+     * @since 3.1
+     */
+    protected void initCascade(Cascade cascadeAnnotation)
+    {
         init(cascadeAnnotation);
         initTargetClass(cascadeAnnotation.targetClass());
         selectCascades = cascadeAnnotation.selects();

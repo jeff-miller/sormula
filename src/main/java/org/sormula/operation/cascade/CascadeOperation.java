@@ -124,7 +124,7 @@ public abstract class CascadeOperation<S, T>
 	
 
 	/**
-	 * Gets the field key value field names in target (child) rows.
+	 * Replaced with {@link #getForeignKeyValueFieldNames()}.
 	 * 
 	 * @return target (child) row foreign key fields; null means don't update foreign key values
 	 * @since 3.0

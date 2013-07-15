@@ -3,8 +3,12 @@ package org.sormula.annotation.cascade;
 import java.lang.reflect.Field;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
+import java.util.Collection;
+import java.util.Map;
 
 import org.sormula.log.ClassLogger;
+import org.sormula.operation.HashMapSelectOperation;
+import org.sormula.translator.TypeTranslatorMap;
 
 
 /**
@@ -16,7 +20,39 @@ import org.sormula.log.ClassLogger;
 abstract public class CascadeAnnotationReader
 {
     private static final ClassLogger log = new ClassLogger();
+    
+    @OneToOneCascade
+    static Object defaultOneToOneCascadeHolder;
+    static OneToOneCascade defaultOneToOneCascade;
+    
+    @OneToManyCascade
+    static Object defaultListOneToManyCascadeHolder;
+    static OneToManyCascade defaultListOneToManyCascade;
+    
+    @OneToManyCascade(selects=@SelectCascade(operation=HashMapSelectOperation.class,
+            sourceParameterFieldNames="#primaryKeyFields", targetWhereName="#sourceFieldNames"))
+    static Object defaultMapOneToManyCascadeHolder;
+    static OneToManyCascade defaultMapOneToManyCascade;
+    
+    static
+    {
+        try
+        {
+            defaultOneToOneCascade = CascadeAnnotationReader.class.getDeclaredField(
+                    "defaultOneToOneCascadeHolder").getAnnotation(OneToOneCascade.class);
+            defaultListOneToManyCascade = CascadeAnnotationReader.class.getDeclaredField(
+                    "defaultListOneToManyCascadeHolder").getAnnotation(OneToManyCascade.class);
+            defaultMapOneToManyCascade = CascadeAnnotationReader.class.getDeclaredField(
+                    "defaultMapOneToManyCascadeHolder").getAnnotation(OneToManyCascade.class);
+        }
+        catch (NoSuchFieldException e)
+        {
+            log.error("error initializing default cascade annotations", e);
+        }
+    }
+    
     Field source;
+    TypeTranslatorMap typeTranslatorMap;
     Class<?> targetClass;
     String[] foreignKeyValueFields;
     String foreignKeyReferenceField;
@@ -24,45 +60,103 @@ abstract public class CascadeAnnotationReader
     
     
     /**
-     * Constructs for a field.
+     * Constructs for a field. 
      * 
-     * @param source field with cascade annotation(s)
+     * @param source field with cascade annotation(s) (or default cascade)
      */
     public CascadeAnnotationReader(Field source)
     {
         this.source = source;
-        
         if (source.isAnnotationPresent(OneToManyCascade.class))
         {
-            initOneToManyCascade();
+            initOneToManyCascade(source.getAnnotation(OneToManyCascade.class)); 
         }
         else if (source.isAnnotationPresent(OneToOneCascade.class))
         {
-            initOneToOneCascade();
+            initOneToOneCascade(source.getAnnotation(OneToOneCascade.class));
         }
         else if (source.isAnnotationPresent(Cascade.class))
         {
-            initCascade();
+            initCascade(source.getAnnotation(Cascade.class));
+        }
+        else
+        {
+            // check if default cascade is applicable
+            Class<?> ft = source.getType();
+            
+            if (ft.isArray() || Collection.class.isAssignableFrom(ft))
+            {
+                // array or Collection
+                // one to many default 
+                if (log.isDebugEnabled()) log.debug("default OneToManyCascade for " + source);
+                initOneToManyCascade(defaultListOneToManyCascade);
+            }
+            else if (Map.class.isAssignableFrom(ft))
+            {
+                // Map
+                // one to many default 
+                if (log.isDebugEnabled()) log.debug("default OneToManyCascade for " + source);
+                initOneToManyCascade(defaultMapOneToManyCascade);
+            }
+            else
+            {
+                // one to one default
+                if (log.isDebugEnabled()) log.debug("default OneToOneCascade for " + source);
+                initOneToOneCascade(defaultOneToOneCascade);
+            }
         }
     }
     
     
     /**
-     * Initializes when {@link OneToManyCascade} is annotated on source field.
+     * Replaced by {@link #initOneToOneCascade(OneToOneCascade). Parameter allows default to be
+     * used when no cascade annotation is supplied.
      */
+    @Deprecated
     abstract protected void initOneToManyCascade();
     
     
     /**
-     * Initializes when {@link OneToOneCascade} is annotated on source field.
+     * Replaced by {@link #initOneToOneCascade(OneToOneCascade)}. Parameter allows default to be
+     * used when no cascade annotation is supplied.
      */
+    @Deprecated
     abstract protected void initOneToOneCascade();
     
     
     /**
-     * Initializes when {@link Cascade} is annotated on source field.
+     * Replaced by {@link #initOneToOneCascade(OneCascade)}. Parameter allows default to be
+     * used when no cascade annotation is supplied.
      */
+    @Deprecated
     abstract protected void initCascade();
+    
+    
+    /**
+     * Initializes when {@link OneToManyCascade} is annotated on source field (or implied
+     * as default when no annotation is used).
+     * @param cascacdeAnnotation annotation to use for cascade
+     * @since 3.1
+     */
+    abstract protected void initOneToManyCascade(OneToManyCascade cascacdeAnnotation);
+    
+    
+    /**
+     * Initializes when {@link OneToOneCascade} is annotated on source field (or implied
+     * as default when no annotation is used).
+     * @param cascacdeAnnotation annotation to use for cascade
+     * @since 3.1
+     */
+    abstract protected void initOneToOneCascade(OneToOneCascade cascacdeAnnotation);
+    
+    
+    /**
+     * Initializes when {@link Cascade} is annotated on source field (or implied
+     * as default when no annotation is used).
+     * @param cascacdeAnnotation annotation to use for cascade
+     * @since 3.1
+     */
+    abstract protected void initCascade(Cascade cascacdeAnnotation);
     
     
     /**

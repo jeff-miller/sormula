@@ -66,9 +66,9 @@ public class SelectTest extends DatabaseTest<ZeroAnnotationTest>
     	ZeroAnnotationTest row = getRandom();
         
         // select by primary key
-    	ZeroAnnotationTest selected = getTable().select(row.getId());
+    	ZeroAnnotationTest selected = getTable().select(row.getZatId());
         
-        assert selected != null && row.getId() == selected.getId() : "select by primary key failed";
+        assert selected != null && row.getZatId() == selected.getZatId() : "select by primary key failed";
         
         commit();
     }

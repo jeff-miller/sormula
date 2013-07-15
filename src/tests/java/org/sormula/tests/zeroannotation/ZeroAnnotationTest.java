@@ -16,6 +16,12 @@
  */
 package org.sormula.tests.zeroannotation;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+
 
 /**
  * Row class with no annotations. First column is primary key when no annotation is specified.
@@ -35,9 +41,22 @@ package org.sormula.tests.zeroannotation;
  */
 public class ZeroAnnotationTest
 {
-    int id; // this is primary key by default on JVM's that reflect fields in order of declaration
+    int zatId; // this is primary key by default on JVM's that reflect this field first (most JVM's do)
     int type;
     String description;
+
+    // tests default OneToManyCascade for a List
+    List<ZeroAnnotationChild> testList;
+
+    // tests default OneToManyCascade for a Map
+    Map<Integer, ZeroAnnotationChild> testMap; 
+
+    // tests default OneToManyCascade for an array
+    ZeroAnnotationChild[] testArray;
+
+    // tests default OneToOneCascade for a class
+    int childId; // required for OneToOneCascade since default is primaryKey select
+    ZeroAnnotationChild testChild;
     
     
     public ZeroAnnotationTest()
@@ -47,19 +66,23 @@ public class ZeroAnnotationTest
     
     public ZeroAnnotationTest(int id, int type, String description)
     {
-        this.id = id;
+        this.zatId = id;
         this.type = type;
         this.description = description;
+        
+        testList = new ArrayList<ZeroAnnotationChild>();
+        testMap = new HashMap<Integer, ZeroAnnotationChild>();
+        // init in test only when used to avoid array with nulls testArray = new ZeroAnnotationChild[3];
     }
     
     
-    public int getId()
+    public int getZatId()
     {
-        return id;
+        return zatId;
     }
-    public void setId(int id)
+    public void setZatId(int zatId)
     {
-        this.id = id;
+        this.zatId = zatId;
     }
     
     
@@ -80,5 +103,57 @@ public class ZeroAnnotationTest
     public void setType(int type)
     {
         this.type = type;
+    }
+    
+    
+    public List<ZeroAnnotationChild> getTestList()
+    {
+        return testList;
+    }
+    public void setTestList(List<ZeroAnnotationChild> testList)
+    {
+        this.testList = testList;
+    }
+
+
+    public Map<Integer, ZeroAnnotationChild> getTestMap()
+    {
+        return testMap;
+    }
+    public void setTestMap(Map<Integer, ZeroAnnotationChild> testMap)
+    {
+        this.testMap = testMap;
+    }
+
+
+    public ZeroAnnotationChild[] getTestArray()
+    {
+        return testArray;
+    }
+    public void setTestArray(ZeroAnnotationChild[] testArray)
+    {
+        this.testArray = testArray;
+    }
+
+
+    public int getChildId()
+    {
+        return childId;
+    }
+    public void setChildId(int childId)
+    {
+        this.childId = childId;
+    }
+
+
+    public ZeroAnnotationChild getTestChild()
+    {
+        return testChild;
+    }
+    public void setTestChild(ZeroAnnotationChild testChild)
+    {
+        this.testChild = testChild;
+        if (testChild != null) childId = testChild.getChildId();
+        else childId = 0;
     }
 }

@@ -17,7 +17,7 @@ public class SaveCascadeAnnotationReader extends CascadeAnnotationReader
     /**
      * Constructs for a field.
      * 
-     * @param source field with save cascade annotation
+     * @param source field with save cascade annotation (or default cascade)
      */
     public SaveCascadeAnnotationReader(Field source)
     {
@@ -31,14 +31,22 @@ public class SaveCascadeAnnotationReader extends CascadeAnnotationReader
         
         checkDefaultTargetClass();
     }
-    
+
     
     /**
      * {@inheritDoc}
      */
+    @Deprecated
     protected void initOneToManyCascade()
     {
-        OneToManyCascade cascadeAnnotation = source.getAnnotation(OneToManyCascade.class);
+        initOneToManyCascade(source.getAnnotation(OneToManyCascade.class));
+    }
+    /**
+     * {@inheritDoc}
+     * @since 3.1
+     */
+    protected void initOneToManyCascade(OneToManyCascade cascadeAnnotation)
+    {
         init(cascadeAnnotation);
         
         if (!cascadeAnnotation.readOnly())
@@ -52,9 +60,17 @@ public class SaveCascadeAnnotationReader extends CascadeAnnotationReader
     /**
      * {@inheritDoc}
      */
+    @Deprecated
     protected void initOneToOneCascade()
     {
-        OneToOneCascade cascadeAnnotation = source.getAnnotation(OneToOneCascade.class);
+        initOneToOneCascade(source.getAnnotation(OneToOneCascade.class));
+    }
+    /**
+     * {@inheritDoc}
+     * @since 3.1
+     */
+    protected void initOneToOneCascade(OneToOneCascade cascadeAnnotation)
+    {
         init(cascadeAnnotation);
         
         if (!cascadeAnnotation.readOnly())
@@ -68,9 +84,17 @@ public class SaveCascadeAnnotationReader extends CascadeAnnotationReader
     /**
      * {@inheritDoc}
      */
+    @Deprecated
     protected void initCascade()
     {
-        Cascade cascadeAnnotation = source.getAnnotation(Cascade.class);
+        initCascade(source.getAnnotation(Cascade.class));
+    }
+    /**
+     * {@inheritDoc}
+     * @since 3.1
+     */
+    protected void initCascade(Cascade cascadeAnnotation)
+    {
         init(cascadeAnnotation);
         initTargetClass(cascadeAnnotation.targetClass());
         saveCascades = cascadeAnnotation.saves();

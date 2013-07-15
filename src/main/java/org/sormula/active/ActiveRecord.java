@@ -260,7 +260,7 @@ public abstract class ActiveRecord<R extends ActiveRecord<? super R>> implements
                 pendingLazySelectFieldNames = new HashSet<String>();
                 
                 // for all fields
-                for (Field field: rowTranslator.getDeclaredFields()) 
+                for (Field field: rowTranslator.getCascadeFieldList()) 
                 {
                     SelectCascadeAnnotationReader scar = new SelectCascadeAnnotationReader(field);
                     SelectCascade[] selectCascades = scar.getSelectCascades();

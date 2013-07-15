@@ -65,7 +65,7 @@ public class UpdateTest extends DatabaseTest<ZeroAnnotationTest>
         assert getTable().update(row) == 1 : "update one row failed";
         
         // read row to confirm that updates applied
-        ZeroAnnotationTest row2 = getTable().select(row.getId());
+        ZeroAnnotationTest row2 = getTable().select(row.getZatId());
         assert row2 != null && row2.getType() == row.getType() && row2.getDescription().equals(row.getDescription()) :
             " updated row not same";
         
@@ -95,7 +95,7 @@ public class UpdateTest extends DatabaseTest<ZeroAnnotationTest>
         // confirm each row was updated
         for (ZeroAnnotationTest r: set)
         {
-            ZeroAnnotationTest r2 = table.select(r.getId());
+            ZeroAnnotationTest r2 = table.select(r.getZatId());
             assert r2 != null && r2.getType() == r.getType() : "update collection failed";
         }
         

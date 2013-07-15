@@ -585,7 +585,7 @@ public class Table<R> implements TypeTranslatorMap, TransactionListener
             lazySelectCascadeFields = new ArrayList<Field>();
             
             // for all fields
-            for (Field field: rowTranslator.getDeclaredFields())
+            for (Field field: rowTranslator.getCascadeFieldList())
             {
                 SelectCascadeAnnotationReader scar = new SelectCascadeAnnotationReader(field);
                 SelectCascade[] selectCascades = scar.getSelectCascades();

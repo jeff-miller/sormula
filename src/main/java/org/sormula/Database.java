@@ -752,6 +752,8 @@ public class Database implements TypeTranslatorMap
      */
     public TypeTranslator<?> getTypeTranslator(Class<?> typeClass)
     {
+        if (log.isDebugEnabled()) log.debug("getting typeTranslator for " + 
+                typeClass + " is " + getTypeTranslator(typeClass.getCanonicalName()));
         return getTypeTranslator(typeClass.getCanonicalName());
     }
     

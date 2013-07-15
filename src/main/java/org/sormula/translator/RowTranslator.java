@@ -55,8 +55,18 @@ import org.sormula.translator.standard.StandardColumnTranslator;
 
 /**
  * Translates a row to prepared statement and from result set. {@link ColumnTranslator} objects
- * are created for each column based upon annotations on row class. If no annotation exists for a member then
- * column name is same as member name and {@link StandardColumnTranslator} is used.
+ * are created for each column based upon annotations on row class.
+ * <p> 
+ * If no {@link Column} annotation exists for a field, then column name is same as field
+ * name and {@link StandardColumnTranslator} is used.
+ * <p>
+ * If any of the following are true, then field is assumed to be cascaded:<br>
+ * <ul>
+ * <li>field is a Collection</li>
+ * <li>field is an array</li>
+ * <li>field is a Map</li>
+ * <li>field is a class that has no {@link TypeTranslator}</li>
+ * </ul>
  * 
  * @since 1.0
  * @author Jeff Miller
@@ -73,6 +83,7 @@ public class RowTranslator<R> extends ColumnsTranslator<R>
     ColumnTranslator<R> identityColumnTranslator;
     boolean inheritedFields;
     boolean zeroRowCountPostExecute;
+    List<Field> cascadeFieldList;
     
     
     /**
@@ -341,6 +352,7 @@ public class RowTranslator<R> extends ColumnsTranslator<R>
         Class<R> rowClass = getRowClass();
         Field[] fields = getDeclaredFields();
         initColumnTranslatorList(fields.length);
+        cascadeFieldList = new ArrayList<Field>(4);
         
         // for all fields
         for (Field f: fields)
@@ -350,13 +362,14 @@ public class RowTranslator<R> extends ColumnsTranslator<R>
             if (f.isAnnotationPresent(Transient.class))
             {
                 // transient column, don't translate
-            	if (log.isDebugEnabled()) log.debug("transient " + rowClass.getCanonicalName() + "#" + f.getName());
+            	if (log.isDebugEnabled()) log.debug("transient " + f);
             }
             else if (f.isAnnotationPresent(Cascade.class) ||
                      f.isAnnotationPresent(OneToManyCascade.class) ||
                      f.isAnnotationPresent(OneToOneCascade.class))
             {
-                if (log.isDebugEnabled()) log.debug("cascade " + rowClass.getCanonicalName() + "#" + f.getName());
+                if (log.isDebugEnabled()) log.debug("explicit cascade for " + f);
+                cascadeFieldList.add(f);
             }
             else 
             {
@@ -383,7 +396,7 @@ public class RowTranslator<R> extends ColumnsTranslator<R>
                 }
                 else
                 {
-                    // no Column annotation for field
+                    // no Column annotation for field, use standard column translator
                     columnTranslatorClass = (Class<? extends ColumnTranslator>)StandardColumnTranslator.class;
                 }
                 
@@ -396,7 +409,6 @@ public class RowTranslator<R> extends ColumnsTranslator<R>
                 // create column translator
                 ColumnTranslator<R> translator = (ColumnTranslator<R>)
                     AbstractColumnTranslator.newInstance(columnTranslatorClass, f, columnName);
-                addColumnTranslator(translator);
 
                 if (translator instanceof AbstractColumnTranslator) 
                 {
@@ -404,10 +416,23 @@ public class RowTranslator<R> extends ColumnsTranslator<R>
                     
                     if (typeTranslator != null)
                     {
+                        addColumnTranslator(translator); // do this only if has type translator
                         if (log.isDebugEnabled()) log.debug("set type translator=" + typeTranslator + " on column translator=" + translator);
                         // set type translator for subclasses of AbstractColumnTranslator 
                         ((AbstractColumnTranslator)translator).setTypeTranslator(typeTranslator);
                     }
+                    else
+                    {
+                        // no type translator (likely a non primative class, map, list, array)
+                        // assume default cascade
+                        if (log.isDebugEnabled()) log.debug("default cascade for " + f);
+                        cascadeFieldList.add(f);
+                    }
+                }
+                else
+                {
+                    // assume some non sormula custom translator
+                    addColumnTranslator(translator);
                 }
                 
                 if (translator.isIdentity())
@@ -428,6 +453,24 @@ public class RowTranslator<R> extends ColumnsTranslator<R>
     }
     
     
+    /**
+     * Gets list of fields that are to be cascaded. Fields are in this list if 
+     * they have a cascade annotation or if they have the following:<br>
+     * <ul>
+     * <li>field is Collection</li>
+     * <li>field is a Map</li>
+     * <li>field is an array</li>
+     * <li>field is a class that has no {@link TypeTranslator}</li>
+     * </ul>
+     * @return list of fields that should be cascaded
+     * @since 3.1
+     */
+    public List<Field> getCascadeFieldList()
+    {
+        return cascadeFieldList;
+    }
+
+
     /**
      * Process {@link UnusedColumns} annotations.
      * 

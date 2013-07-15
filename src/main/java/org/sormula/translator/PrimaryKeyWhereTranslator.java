@@ -17,11 +17,9 @@
 package org.sormula.translator;
 
 import java.lang.reflect.Field;
-import java.lang.reflect.Modifier;
 
 import org.sormula.annotation.Column;
 import org.sormula.annotation.Row;
-import org.sormula.annotation.Transient;
 
 
 /**
@@ -74,11 +72,9 @@ public class PrimaryKeyWhereTranslator<R> extends AbstractWhereTranslator<R>
             Field firstField = null;
             
             // for all fields
-            for (Field f: rowTranslator.getDeclaredFields()) // TODO don't look at all, use rowTranslator.getColumnTranslatorList() 
+            for (ColumnTranslator<R> ct : rowTranslator.getColumnTranslatorList()) 
             {
-                if (Modifier.isStatic(f.getModifiers())) continue; // static are never primary keys
-                if (f.isAnnotationPresent(Transient.class)) continue; // transient are never primary keys
-                
+                Field f = ct.getField();
                 if (firstField == null) firstField = f;
                 
                 Column columnAnnotation = f.getAnnotation(Column.class);

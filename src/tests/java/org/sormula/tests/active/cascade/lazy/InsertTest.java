@@ -27,6 +27,8 @@ import org.testng.annotations.Test;
 
 
 /**
+ * TODO fix db not closed in one or more tests in this package
+ * 
  * Inserts test records for org.sormula.tests.active.cascade.lazy. 
  * No update or delete tests since they are tested in other packages.
  * 

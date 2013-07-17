@@ -9,6 +9,7 @@ JDK 5/6     JDK 7       comments
                         - OneToManyCascade has default SelectCascade for simplified configuration
                         - OneToOneCascade has default SelectCascade for simplified configuration
                         - add non-identity insert methods to active record package
+                        - fix connection leak for active record lazy selects
 3.0-jdk1.5  3.0-jdk1.7  - caching
                         - TransactionListener
                         - row annotations have precendence over table annotations 

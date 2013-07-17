@@ -57,14 +57,14 @@ public class SelectTest extends ActiveDatabaseTest<SormulaTestParentLazyAR>
         ActiveTable<SormulaTestParentLazyAR> parentTable = new ActiveTable<SormulaTestParentLazyAR>(activeDatabase, SormulaTestParentLazyAR.class);
         ActiveTable<SormulaTestChild1LazyAR> child1Table = new ActiveTable<SormulaTestChild1LazyAR>(activeDatabase, SormulaTestChild1LazyAR.class);
         ActiveTable<SormulaTestChildNLazyAR> childNTable = new ActiveTable<SormulaTestChildNLazyAR>(activeDatabase, SormulaTestChildNLazyAR.class);
-        
+
         // for each parent 
         for (SormulaTestParentLazyAR parent : parentTable.selectAll())
         {
             // verify 1 to 1
             boolean childSelectedEarly = parent.child != null;
             SormulaTestChild1LazyAR child = parent.getChild();
-            
+
             if (child != null)
             {
                 assert !childSelectedEarly : "LazyAR child was selected prematurely";
@@ -79,7 +79,6 @@ public class SelectTest extends ActiveDatabaseTest<SormulaTestParentLazyAR>
                 // verify no child in db
                 assert child1Table.select(parent.getChild1Id()) == null : "LazyAR 1:1 child row not read";
             }
-            
             
             // verify 1 to many
             assert parent.childList.size() == 0 : "LazyAR 1:n children were selected prematurely";

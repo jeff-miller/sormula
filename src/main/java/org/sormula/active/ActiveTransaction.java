@@ -1,7 +1,6 @@
 package org.sormula.active;
 
 import java.sql.Connection;
-import java.sql.SQLException;
 
 import org.sormula.SormulaException;
 import org.sormula.active.operation.OperationDatabase;
@@ -200,17 +199,8 @@ public class ActiveTransaction
     protected void close() throws ActiveException
     {
         activeDatabase.setActiveTransaction(null);
-        
-        try
-        {
-            OperationDatabase od = operationTransaction.getOperationDatabase();
-            od.logTimings();
-            Connection connection = od.getConnection();
-            if (connection != null) connection.close();
-        }
-        catch (SQLException e)
-        {
-            throw new ActiveException("error closing connection", e);
-        }
+        OperationDatabase od = operationTransaction.getOperationDatabase();
+        od.logTimings();
+        od.close();
     }
 }

@@ -16,7 +16,6 @@
  */
 package org.sormula.tests.active.cascade.lazy;
 
-import org.sormula.SormulaException;
 import org.sormula.active.ActiveDatabase;
 import org.sormula.active.ActiveTable;
 import org.sormula.tests.DatabaseTest;
@@ -27,8 +26,6 @@ import org.testng.annotations.Test;
 
 
 /**
- * TODO fix db not closed in one or more tests in this package
- * 
  * Inserts test records for org.sormula.tests.active.cascade.lazy. 
  * No update or delete tests since they are tested in other packages.
  * 
@@ -108,7 +105,7 @@ public class InsertTest extends ActiveDatabaseTest<SormulaTestParentLazyAR>
     
     
     @Test
-    public void insertOneToManyListLazyAR() throws SormulaException
+    public void insertOneToManyListLazyAR()
     {
         insertOneToManyListLazyAR(205, 2500);
         insertOneToManyListLazyAR(204, 2400);
@@ -116,7 +113,7 @@ public class InsertTest extends ActiveDatabaseTest<SormulaTestParentLazyAR>
         insertOneToManyListLazyAR(202, 2200);
         insertOneToManyListLazyAR(201, 2100);
     }
-    void insertOneToManyListLazyAR(int parentId, int childId) throws SormulaException
+    void insertOneToManyListLazyAR(int parentId, int childId) 
     {
         ActiveDatabase activeDatabase = getActiveDatabase();
         SormulaTestParentLazyAR parent = new SormulaTestParentLazyAR(parentId, "LazyAR Insert parent " + parentId);

@@ -22,6 +22,7 @@ import org.sormula.Database;
 import org.sormula.SormulaException;
 import org.sormula.Table;
 import org.sormula.active.ActiveDatabase;
+import org.sormula.active.ActiveException;
 import org.sormula.active.ActiveRecord;
 import org.sormula.annotation.ExplicitTypeAnnotationReader;
 import org.sormula.log.ClassLogger;
@@ -102,5 +103,26 @@ public class OperationDatabase extends Database
         }
 
         return table;
+    }
+
+
+    /**
+     * Closes connection and then invokes {@link Database#close()}.
+     */
+    @Override
+    public void close()
+    {
+        // super.close() will not close connection since this was created with connection constructor
+        // so close connection now
+        try
+        {
+            getConnection().close();
+        }
+        catch (SQLException e)
+        {
+            throw new ActiveException("error closing connection", e);
+        }
+        
+        super.close();
     }
 }

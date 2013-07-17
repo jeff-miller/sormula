@@ -29,6 +29,7 @@ import org.sormula.Table;
 import org.sormula.annotation.Column;
 import org.sormula.annotation.Row;
 import org.sormula.operation.SqlOperation;
+import org.sormula.translator.TypeTranslator;
 
 
 /**
@@ -40,6 +41,8 @@ import org.sormula.operation.SqlOperation;
  * More than one operation is allowed per field even though it is not likely that you would
  * need more than one. {@link #selects()}, {@link #updates()}, {@link #inserts()},
  * {@link #deletes()}, and {@link #saves()} accepts arrays which allow an empty array to mean "do nothing". 
+ * 
+ * TODO explain default for unnannotated List, array, and Map
  * 
  * @since 1.0
  * @author Jeff Miller

@@ -248,20 +248,29 @@ public abstract class ActiveRecord<R extends ActiveRecord<? super R>> implements
             RowTranslator<R> rowTranslator;
             try
             {
-                OperationDatabase odb;
-                ActiveTransaction activeTransaction = activeDatabase.getActiveTransaction(); 
+                OperationDatabase odb = null;
+                ActiveTransaction activeTransaction = activeDatabase.getActiveTransaction();
+
                 if (activeTransaction != null)
                 {
                     // transaction in progress, use operation database from it
                     odb = activeTransaction.getOperationTransaction().getOperationDatabase();
+                    rowTranslator = odb.getTable(getRecordClass()).getRowTranslator();
                 }
                 else
                 {
                     // no transaction, create temporary operation database
-                    odb = new OperationDatabase(activeDatabase);
+                    try
+                    {
+                        odb = new OperationDatabase(activeDatabase);
+                        rowTranslator = odb.getTable(getRecordClass()).getRowTranslator();
+                    }
+                    finally
+                    {
+                        // close temporary odb
+                        if (odb != null) odb.close();
+                    }
                 }
-                
-                rowTranslator = odb.getTable(getRecordClass()).getRowTranslator();
             }
             catch (Exception e)
             {

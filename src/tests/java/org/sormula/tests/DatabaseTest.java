@@ -190,6 +190,7 @@ public class DatabaseTest<R>
         if (dataSourceName == null)
         {
             // use connection
+            if (log.isDebugEnabled()) log.info("open sormula database with connection");
             dataSourceDatabase = false;
             Connection connection = getConnection();
             database = new TestDatabase(connection, schema);
@@ -197,6 +198,7 @@ public class DatabaseTest<R>
         else if (dataSourceName.equals(""))
         {
             // use data source directly (not through JNDI)
+            if (log.isDebugEnabled()) log.info("open sormula database with TestDataSource");
             dataSourceDatabase = true;
             dataSource = new TestDataSource(this); // simulated data source
             database = new TestDatabase(dataSource, schema);
@@ -204,6 +206,7 @@ public class DatabaseTest<R>
         else 
         {
             // use data source from JNDI
+            if (log.isDebugEnabled()) log.info("open sormula database via JNDI");
             dataSourceDatabase = true;
             dataSource = new TestDataSource(this); // simulated data source
             InitialContext ic = new InitialContext();
@@ -250,7 +253,7 @@ public class DatabaseTest<R>
 
         // drop table if already exists from previous test
         dropTable(table.getQualifiedTableName());
-        log.debug("existing table " + table.getQualifiedTableName() + " was dropped before creating new version");
+        if (log.isDebugEnabled()) log.debug("existing table " + table.getQualifiedTableName() + " was dropped before creating new version");
 
         if (ddl != null) createTable(ddl);
     }
@@ -268,7 +271,7 @@ public class DatabaseTest<R>
         begin();
         try
         {
-            log.debug(ddl);
+            if (log.isDebugEnabled()) log.debug(ddl);
             Connection connection = getConnection();
             Statement statement = connection.createStatement();
             statement.executeUpdate(ddl);
@@ -279,7 +282,7 @@ public class DatabaseTest<R>
         }
         catch (SormulaException e)
         {
-            log.error("error creating table using " + ddl, e);
+            if (log.isDebugEnabled()) log.error("error creating table using " + ddl, e);
             rollback();
         }
     }
@@ -292,7 +295,7 @@ public class DatabaseTest<R>
         try
         {
         	String ddl = "DROP TABLE " + qualifiedTableName;
-        	log.debug(ddl);
+        	if (log.isDebugEnabled()) log.debug(ddl);
             Statement statement = connection.createStatement();
             statement.executeUpdate(ddl);
             statement.close();
@@ -301,7 +304,7 @@ public class DatabaseTest<R>
         catch (SQLException e)
         {
             // ignore table does not exist exception
-            log.debug("exception dropping " + qualifiedTableName + " :" + e.getMessage());
+            if (log.isDebugEnabled()) log.debug("exception dropping " + qualifiedTableName + " :" + e.getMessage());
         }
         finally
         {
@@ -320,13 +323,16 @@ public class DatabaseTest<R>
             {
                 // database instance created without data source 
                 // database.close() only closes connection if data source used
+                if (log.isDebugEnabled()) log.info("close connection");
                 database.getConnection().close();
             }
             
+            if (log.isDebugEnabled()) log.info("close sormula database");
             database.close();
             
             if (sqlShutdown.length() > 0)
             {
+                if (log.isDebugEnabled()) log.info("execute sqlShutdown=" + sqlShutdown);
                 Connection connection = getConnection();
                 Statement statement = connection.createStatement();
                 statement.execute(sqlShutdown);
@@ -337,6 +343,7 @@ public class DatabaseTest<R>
             
             if (driverShutdown.length() > 0)
             {
+                if (log.isDebugEnabled()) log.info("execute driverShutdown=" + driverShutdown);
                 DriverManager.getConnection(driverShutdown);
             }
         }

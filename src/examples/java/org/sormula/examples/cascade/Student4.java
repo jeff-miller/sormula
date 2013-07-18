@@ -20,7 +20,6 @@ import java.util.Date;
 import java.util.List;
 
 import org.sormula.annotation.Column;
-import org.sormula.annotation.cascade.OneToManyCascade;
 
 
 /**
@@ -35,7 +34,7 @@ public class Student4
     String lastName;
     Date graduationDate;
     
-    @OneToManyCascade
+    // not required since version 3.1 @OneToManyCascade
     List<Enrolled> enrollment;
     
     

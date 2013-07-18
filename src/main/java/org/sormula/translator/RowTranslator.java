@@ -416,13 +416,20 @@ public class RowTranslator<R> extends ColumnsTranslator<R>
                     if (typeTranslator != null)
                     {
                         addColumnTranslator(translator); // do this only if has type translator
-                        if (log.isDebugEnabled()) log.debug("set type translator=" + typeTranslator + " on column translator=" + translator);
+                        if (log.isDebugEnabled()) log.debug(f + " set type translator=" + typeTranslator + " on column translator=" + translator.getClass());
                         // set type translator for subclasses of AbstractColumnTranslator 
                         ((AbstractColumnTranslator)translator).setTypeTranslator(typeTranslator);
+                    }
+                    else if (columnAnnotation != null)
+                    {
+                        // custom column with no TypeTranslator but assume ColumnTranslator exists
+                        if (log.isDebugEnabled()) log.debug(f + " custom AbstractColumnTranslator " + translator.getClass());
+                        addColumnTranslator(translator);
                     }
                     else
                     {
                         // no type translator (likely a non primative class, map, list, array)
+                        // and no Column annotation
                         // assume default cascade
                         if (log.isDebugEnabled()) log.debug("default cascade for " + f);
                         cascadeFieldList.add(f);
@@ -431,6 +438,7 @@ public class RowTranslator<R> extends ColumnsTranslator<R>
                 else
                 {
                     // assume some non sormula custom translator
+                    if (log.isDebugEnabled()) log.debug(f + " custom ColumnTranslator " + translator.getClass());
                     addColumnTranslator(translator);
                 }
                 

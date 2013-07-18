@@ -29,7 +29,6 @@ import org.sormula.Table;
 import org.sormula.annotation.Column;
 import org.sormula.annotation.Row;
 import org.sormula.operation.SqlOperation;
-import org.sormula.translator.TypeTranslator;
 
 
 /**
@@ -41,8 +40,65 @@ import org.sormula.translator.TypeTranslator;
  * More than one operation is allowed per field even though it is not likely that you would
  * need more than one. {@link #selects()}, {@link #updates()}, {@link #inserts()},
  * {@link #deletes()}, and {@link #saves()} accepts arrays which allow an empty array to mean "do nothing". 
- * 
- * TODO explain default for unnannotated List, array, and Map
+ * </p>
+ * <p>
+ * OneToManyCascade is the default for non-static, non-transient fields that are {@link Collection},
+ * {@link Map}, or array. For example:
+ * <blockquote><pre>
+   public class SomeParent
+   {
+       {@literal @}Column(primaryKey=true)
+       int someParentId;
+
+       List&lt;SomeChild&gt; someChildList; // defaults to {@literal @}OneToManyCascade
+       ...
+   }
+   
+   // equivalent to
+   public class SomeParent
+   {
+       {@literal @}Column(primaryKey=true)
+       int someParentId;
+       
+       {@literal @}OneToManyCascade
+       List&lt;SomeChild&gt; someChildList;
+       ...
+   }
+   
+   public class SomeChild
+   {
+       {@literal @}Column(primaryKey=true)
+       int someChildId;
+       int someParentId; // required foreign key name must be same as parent primary key for default OneToManyCascade
+       ...
+   }
+ * </pre></blockquote>
+ * </p>
+ * For a {@link Map}, the default cascade parameters are:
+ * <blockquote><pre>
+   public class SomeParent
+   {
+       {@literal @}Column(primaryKey=true)
+       int someParentId;
+
+       Map&lt;Integer, SomeChild&gt; someChildList; // defaults to {@literal @}OneToManyCascade
+       ...
+   }
+   
+   // equivalent to
+   public class SomeParent
+   {
+       {@literal @}Column(primaryKey=true)
+       int someParentId;
+       
+       // uses SomeChild.hashCode for map key
+       {@literal @}OneToManyCascade(selects=@SelectCascade(operation=HashMapSelectOperation.class,
+            sourceParameterFieldNames="#primaryKeyFields", targetWhereName="#sourceFieldNames"))
+       Map&lt;Integer, SomeChild&gt; someChildList;
+       ...
+   }
+ * </pre></blockquote>
+ * </p>
  * 
  * @since 1.0
  * @author Jeff Miller

@@ -109,7 +109,7 @@ abstract public class CascadeAnnotationReader
     
     
     /**
-     * Replaced by {@link #initOneToOneCascade(OneToOneCascade). Parameter allows default to be
+     * Replaced by {@link #initOneToManyCascade(OneToManyCascade)}. Parameter allows default to be
      * used when no cascade annotation is supplied.
      */
     @Deprecated
@@ -125,7 +125,7 @@ abstract public class CascadeAnnotationReader
     
     
     /**
-     * Replaced by {@link #initOneToOneCascade(OneCascade)}. Parameter allows default to be
+     * Replaced by {@link #initCascade(Cascade)}. Parameter allows default to be
      * used when no cascade annotation is supplied.
      */
     @Deprecated

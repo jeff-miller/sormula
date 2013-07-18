@@ -37,8 +37,42 @@ import org.sormula.translator.TypeTranslator;
  * More than one operation is allowed per field even though it is not likely that you would
  * need more than one. {@link #selects()}, {@link #updates()}, {@link #inserts()},
  * {@link #deletes()}, and {@link #saves()} accepts arrays which allow an empty array to mean "do nothing". 
- * 
- * TODO explain default for unnannotated class with no {@link TypeTranslator}
+ * <p>
+ * OneToOneCascade is the default for non-static, non-transient fields that do not have a
+ * {@link TypeTranslator} defined. For example:
+ * <blockquote><pre>
+   public class SomeParent
+   {
+       {@literal @}Column(primaryKey=true)
+       int someParentId;
+   
+       int someChildId; // must be same as child primary key since default OneToOneCascade is primaryKey select
+
+       SomeChild someChild; // defaults to {@literal @}OneToOneCascade
+       ...
+   }
+   
+   // equivalent to
+   public class SomeParent
+   {
+       {@literal @}Column(primaryKey=true)
+       int someParentId;
+
+       int someChildId; // must be same as child primary key since default OneToOneCascade is primaryKey select
+       
+       {@literal @}OneToOneCascade
+       SomeChild someChild;
+       ...
+   }
+   
+   public class SomeChild
+   {
+       {@literal @}Column(primaryKey=true)
+       int someChildId;
+       ...
+   }
+ * </pre></blockquote>
+ * </p>
  * 
  * @since 1.0
  * @author Jeff Miller

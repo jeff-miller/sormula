@@ -84,6 +84,7 @@ public class InsertTest extends DatabaseTest<SormulaTestLevel1>
         begin();
         insertMultiLevel(101, 210, 3100);
         insertMultiLevel(102, 220, 3200);
+        insertMultiLevel(104, 240, 3400);
         insertMultiLevel(103, 230, 3300);
         commit();
     }

@@ -211,7 +211,7 @@ public abstract class AbstractWhereTranslator<R> extends ColumnsTranslator<R>
                 }
                 else
                 {
-                    // non Collection operand
+                    // not a Collection 
                     phrase.append("(?)");
                 }
             }

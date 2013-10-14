@@ -283,7 +283,7 @@ public abstract class ModifyOperation<R> extends SqlOperation<R>
                             ++allRowsAffected;
                             cacheAuthority = true;
                             
-                            if (isCascade())
+                            if (isCascading())
                             {
                                 // target tables must be cascaded now for consistency
                                 preExecuteCascade(row);
@@ -297,7 +297,7 @@ public abstract class ModifyOperation<R> extends SqlOperation<R>
                         // cache will not modify database for row
                         if (log.isDebugEnabled()) log.debug("write parameters from row=" + row);
                         setNextParameter(1);
-                        if (isCascade()) preExecuteCascade(row);
+                        if (isCascading()) preExecuteCascade(row);
                         preExecute(row);
                         operationTime.startWriteTime();
                         writeColumns(row);
@@ -317,7 +317,7 @@ public abstract class ModifyOperation<R> extends SqlOperation<R>
                             // or when zeroRowCountPostExecute is true
                             postExecute(row);
                             
-                            if (isCascade()) postExecuteCascade(row);
+                            if (isCascading()) postExecuteCascade(row);
                         }
                         
                         if (isCached() && updateCount > 0)

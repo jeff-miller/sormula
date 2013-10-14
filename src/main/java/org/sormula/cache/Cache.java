@@ -161,8 +161,8 @@ public interface Cache<R>
      * consitent with what is stored in cache. Row is added to cache if appropriate.
      * 
      * @param row that was selected
-     * @return cached row if row parameter if row already exists in cache; row parameter
-     * if no row exists in cache for primary key(s) 
+     * @return cached row if row parameter if row already exists in cache; null if row
+     * has been deleted 
      * @throws CacheException if error
      */
 	public R selected(R row) throws CacheException;

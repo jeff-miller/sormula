@@ -76,7 +76,10 @@ public abstract class SelectOperation<R, C> extends ScalarSelectOperation<R> imp
     
     
     /**
-     * {@inheritDoc}
+     * Creates iterator for results of this operation.
+     * 
+     * @return {@link SelectIterator}
+     * 
      * @since 3.0
      */
     public Iterator<R> iterator()

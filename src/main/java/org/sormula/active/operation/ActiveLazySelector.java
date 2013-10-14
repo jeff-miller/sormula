@@ -70,6 +70,9 @@ public class ActiveLazySelector<R extends ActiveRecord<? super R>> extends Activ
                 SelectCascadeOperation<R, ?> operation = new SelectCascadeOperation(getTable(), targetField, targetTable, c);
                 try
                 {
+                    // does it make sense to allow filters for lazy selects since filter must be specified when ActiveRecord#checkLazySelects is invoked?
+                    // operation.setSelectCascadeFilters(selectCascadeFilters);
+                    
                     if (c.setForeignKeyValues()) operation.setForeignKeyFieldNames(scar.getForeignKeyValueFields());
                     if (c.setForeignKeyReference()) operation.setForeignKeyReferenceFieldName(scar.getForeignKeyReferenceField());
                     operation.prepare();

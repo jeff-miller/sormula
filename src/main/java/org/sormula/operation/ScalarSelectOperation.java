@@ -36,6 +36,7 @@ import org.sormula.log.ClassLogger;
 import org.sormula.operation.cascade.CascadeOperation;
 import org.sormula.operation.cascade.SelectCascadeOperation;
 import org.sormula.operation.cascade.lazy.LazySelectable;
+import org.sormula.operation.filter.SelectCascadeFilter;
 import org.sormula.operation.monitor.OperationTime;
 import org.sormula.reflect.SormulaField;
 import org.sormula.translator.OrderByTranslator;
@@ -64,8 +65,10 @@ public class ScalarSelectOperation<R> extends SqlOperation<R>
     int rowsReadCount;
     boolean lazySelectsCascades;
     boolean notifyLazySelects;
-    boolean readFromCache; // set by execute() if cache hit
+    boolean cacheContainsPrimaryKey; // set by execute() if cache hit
     boolean executed;
+    SelectCascadeFilter<?>[] selectCascadeFilters;
+    SelectCascadeFilter<R> filter;
     
     
     /**
@@ -182,7 +185,7 @@ public class ScalarSelectOperation<R> extends SqlOperation<R>
     public void execute() throws OperationException
     {
         executed = true;
-        readFromCache = false;
+        cacheContainsPrimaryKey = false;
         initOperationTime();
         setNextParameter(1);
         rowsReadCount = 0;
@@ -205,7 +208,7 @@ public class ScalarSelectOperation<R> extends SqlOperation<R>
                 try
                 {
                     if (log.isDebugEnabled()) log.debug("execute() check cache " + table.getRowClass());
-                    readFromCache = table.getCache().contains(parameters);
+                    cacheContainsPrimaryKey = table.getCache().contains(parameters);
                 }
                 catch (CacheException e)
                 {
@@ -214,7 +217,7 @@ public class ScalarSelectOperation<R> extends SqlOperation<R>
             }
         }
         
-        if (!readFromCache)
+        if (!cacheContainsPrimaryKey)
         {
             // query database
             prepareCheck();
@@ -293,65 +296,120 @@ public class ScalarSelectOperation<R> extends SqlOperation<R>
      */
     public R readNext() throws OperationException
     {
+        if (!executed) throw new OperationException("execute() method must be invoked prior to readNext()");
+        
         R row = null;
         
         try
         {
-            if (readFromCache)
+            if (cacheContainsPrimaryKey)
             {
-                if (rowsReadCount == 0) // readNext() returns null after 1st invocation
+                // read from cache using primary key 
+                if (rowsReadCount == 0) // readNext() returns null after 1st invocation because only 1 row with primary key
                 {
                     // return value from most recent execute()
                     row = table.getCache().select(parameters);
-                    rowsReadCount = 1;
+                    
+                    // test for filter pass 
+                    if (filter != null)
+                    {
+                        if (!filter.accept(this, row, false) ||
+                            (isCascading() && !filter.accept(this, row, true)) )
+                        {
+                            // don't use this row based upon filter response
+                            row = null;
+                        }
+                    }
                 }
             }
             else
             {
                 // select from result set
-            
+                
                 // include resultSet.next() in read time but don't include cascade
                 // times since that would cause cascade timings summed twice into total
                 operationTime.startReadTime();
                 
-                if (resultSet.next() && rowsReadCount < maximumRowsRead)
+                if (rowsReadCount < maximumRowsRead && resultSet.next())
                 {
+                    //  within maximum and at least one more row
+                    boolean complete = false;
                     row = table.newRow();
                     
-                    if (notifyLazySelects) 
+                    while (!complete)
                     {
-                        // inform row of pending select cascades
-                        LazySelectable lazySelectCascadeRow = (LazySelectable)row;
-                        lazySelectCascadeRow.pendingLazySelects(table.getDatabase());
-                    }
-                    
-                    operationTime.pause();
-                    if (isCascade()) preReadCascade(row);
-                    preRead(row);
-                    operationTime.resume();
-                    
-                    rowTranslator.read(resultSet, 1, row);
-                    ++rowsReadCount;
-                    operationTime.stop();
-                    
-                    postRead(row);
-                    if (isCascade()) postReadCascade(row);
-                    
-                    if (isCached())
-                    {
-                        // now that row has been selected, key is known, check if cache has newer
-                        R cachedRow = table.getCache().selected(row);
+                        if (notifyLazySelects) 
+                        {
+                            // inform row of pending select cascades
+                            LazySelectable lazySelectCascadeRow = (LazySelectable)row;
+                            lazySelectCascadeRow.pendingLazySelects(table.getDatabase());
+                        }
                         
-                        if (cachedRow != null)
+                        operationTime.pause();
+                        if (isCascading()) preReadCascade(row);
+                        preRead(row);
+                        
+                        operationTime.resume();
+                        rowTranslator.read(resultSet, 1, row);
+                        operationTime.stop();
+                        postRead(row);
+                        
+                        if (isCached())
                         {
-                            // assume cached row is authority
-                            row = cachedRow;
-                        }   
-                        else
+                            // now that row has been selected, key is known, check if cache has newer
+                            R cachedRow = table.getCache().selected(row);
+                            
+                            if (cachedRow != null)
+                            {
+                                // assume cached row is authority
+                                row = cachedRow;
+                            }   
+                            else
+                            {
+                                // cache indicates row has been deleted, dont use it, try next row
+                                if (log.isDebugEnabled()) log.debug("selected deleted row, select next");
+                                row = null;
+                            }
+                        }
+
+                        if (row != null)  
                         {
-                            // cache indicates row has been deleted, dont use it, read next row
-                            if (log.isDebugEnabled()) log.debug("selected deleted row, select next");
-                            row = readNext();
+                            // row has not been deleted in cache
+                            
+                            // test for filter pass
+                            if (filter == null || filter.accept(this, row, false))
+                            {
+                                // no filter or passes filter 
+                                if (isCascading()) 
+                                {
+                                    if (!isCached()) postReadCascade(row); // only cascade non-cached rows
+                                    complete = filter == null || filter.accept(this, row, true);
+                                }
+                                else
+                                {
+                                    // exit loop
+                                    complete = true;
+                                }
+                            }
+                            else
+                            {
+                                // did not pass filter
+                                if (log.isDebugEnabled()) log.info("row did not pass filter " + row);
+                            }
+                        }
+                    
+                        if (!complete)
+                        {
+                            // did not get desired row, try next row
+                            operationTime.startReadTime(); // see comment above concerning startReadTime
+                            
+                            if (!resultSet.next())
+                            {
+                                // no more rows
+                                complete = true; // exit loop
+                                row = null; // return null if no more rows
+                                operationTime.cancel(); // see comment below concerning cancel                                
+                            }
                         }
                     }
                 }
@@ -367,6 +425,8 @@ public class ScalarSelectOperation<R> extends SqlOperation<R>
         {
             throw new OperationException("readNext() error", e);
         }
+        
+        if (row != null) ++rowsReadCount;
         
         return row;
     }
@@ -487,6 +547,61 @@ public class ScalarSelectOperation<R> extends SqlOperation<R>
     public boolean isNotifyLazySelects()
     {
         return notifyLazySelects;
+    }
+
+
+    /**
+     * Sets filter to be used for selected rows. Cascade filters allow you to write filter
+     * algroithms in Java (instead of SQL). Sometimes it is easier and more powerful to write 
+     * filtering in Java instead of SQL joins and SQL where conditions. For example, a filter 
+     * allows a graph of objects to be read with selective pruning of nodes.
+     * <p>
+     * The filters set with this method will be used on all cascades that result from this
+     * operation.
+     * <p> 
+     * Note: if table is cached, then cache will contain filtered rows. For subsequent selects, you 
+     * may want to clear cache with {@link Table#getCache()#evictAll()} or start with new instance of {@link Table}
+     * to avoid reading filtered rows.
+     * 
+     * @param selectCascadeFilters filter(s) to use or null for none
+     * @since 3.1
+     */
+    @SuppressWarnings("unchecked")
+    public void setSelectCascadeFilters(SelectCascadeFilter<?>... selectCascadeFilters)
+    {
+        this.selectCascadeFilters = selectCascadeFilters;
+        
+        if (selectCascadeFilters != null)
+        {
+            // find filter for this operation (linear search ok since small number?)
+            String objectClassName = Object.class.getName(); // wildcard match
+            String rowClassName = rowTranslator.getRowClass().getName();
+            filter = null;
+            for (SelectCascadeFilter<?> f : selectCascadeFilters)
+            {
+                String filterRowClassName = f.getRowClass().getName();
+                
+                if (filterRowClassName.equals(rowClassName)     // use filter for row class  
+                 || filterRowClassName.equals(objectClassName)) // use filter for all classes
+                {
+                    // found
+                    filter = (SelectCascadeFilter<R>)f;
+                    break;
+                }
+            }
+        }
+    }
+    
+
+    /**
+     * Gets the select filters used for this operation.
+     * 
+     * @return filters used; null for none
+     * @since 3.1
+     */
+    public SelectCascadeFilter<?>[] getSelectCascadeFilters()
+    {
+        return selectCascadeFilters;
     }
 
 
@@ -640,6 +755,7 @@ public class ScalarSelectOperation<R> extends SqlOperation<R>
                     if (log.isDebugEnabled()) log.debug("prepare cascade " + c.operation());
                     @SuppressWarnings("unchecked") // target field type is not known at compile time
                     SelectCascadeOperation<R, ?> operation = new SelectCascadeOperation(getTable(), targetField, targetTable, c);
+                    operation.setSelectCascadeFilters(selectCascadeFilters);
                     if (c.setForeignKeyValues()) operation.setForeignKeyFieldNames(car.getForeignKeyValueFields());
                     if (c.setForeignKeyReference()) operation.setForeignKeyReferenceFieldName(car.getForeignKeyReferenceField());
 

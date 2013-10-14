@@ -73,6 +73,13 @@ public @interface SelectCascade
      * @return field names of fields to be used as parameters; 
      * "#primaryKeyFields" to get source values from source primary keys;
      * "#targetFieldNames" to get source values from source fields named in {@link #targetWhereName()}.
+     * 
+     * these 2 add unnecessary complexity? no need for indirection with named parameter since field names are more direct
+     * nothing sets value of $name using setParameter("name", value)?
+     * TODO $name look up value in feeder for key=name
+     * TODO $#targetFieldNames look up in feeder key= source fields named in {@link #targetWhereName()}
+     * 
+     * or pass namedParameterMap to each cascade level?
      */
      String[] sourceParameterFieldNames() default "#targetFieldNames"; 
 
@@ -97,7 +104,7 @@ public @interface SelectCascade
      * "primaryKey" to select by primary key; 
      * empty string will select all rows;
      * "#sourceFieldNames" to select by target fields named same as {@link #sourceParameterFieldNames()};
-     * "#foreignKeyValueFields" to select by target foreign key fields  
+     * "#foreignKeyValueFields" to select by target foreign key value fields  
      */
     String targetWhereName() default "primaryKey"; 
     

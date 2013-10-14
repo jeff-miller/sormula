@@ -54,6 +54,17 @@ public @interface WhereField
     
     
     /**
+     * name of parameter in {@link SqlOperation#setParameter(String name, Object value)}
+     * TODO
+     * 
+     * specifiy only if name() is ambiguous
+     * @return
+     * @since 3.1
+     */
+    String parameterName() default ""; // TODO if "" then use name()
+    
+    
+    /**
      * SQL comparison operator to use in condition "column-name comparisonOperator ?". Example
      * operators are: "=", "<", "<=", ">", ">=", "LIKE", "<>", "IN", "NOT IN". For "IS NULL" use
      * operator="IS" and operand="NULL".

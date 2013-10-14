@@ -4,12 +4,14 @@ JDK 5/6     JDK 7       comments
 ------------------------------------------------------------------------------------------------------------
 3.1-jdk1.5  3.1-jdk1.7  - SelectCascade#sourceParameterFieldNames can be symbolic name of "#primaryKeyFields" 
                           or "#targetFieldNames" instead of specific fields
-						- SelectCascade#targetWhereName can be symbolic name of "#sourceFieldNames" or 
-						  "#foreignKeyValueFields" instead of a specific where condition 
+                        - SelectCascade#targetWhereName can be symbolic name of "#sourceFieldNames" or 
+                          "#foreignKeyValueFields" instead of a specific where condition 
                         - OneToManyCascade has default SelectCascade for simplified configuration
                         - OneToOneCascade has default SelectCascade for simplified configuration
                         - add non-identity insert methods to active record package
                         - fix connection leak for active record lazy selects
+                        - SelectCascadeFilter allows filtering algorithms to be written in Java and
+                          applied as rows are read from the database 
 3.0-jdk1.5  3.0-jdk1.7  - caching
                         - TransactionListener
                         - row annotations have precendence over table annotations 

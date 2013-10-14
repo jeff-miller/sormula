@@ -16,6 +16,7 @@
 		<antcall target="ComplexDelete"/>
 		<antcall target="ComplexInsert"/>
 		<antcall target="ComplexSelect"/>
+		<antcall target="FilterSelect"/>
 		<antcall target="ComplexUpdate"/>
 		<antcall target="ManyToManyInsert1"/>
 		<antcall target="ManyToManySelect1"/>
@@ -80,6 +81,10 @@
     </target>
     <target name="CascadeDelete" description="Runs example">
         <antcall target="run-example"><param name="class" value="org.sormula.examples.cascade.CascadeDelete"/></antcall>
+    </target>
+
+	<target name="FilterSelect" description="Runs example">
+        <antcall target="run-example"><param name="class" value="org.sormula.examples.filter.FilterSelect"/></antcall>
     </target>
 
     <target name="ManyToManyInsert1" description="Runs example in org.sormula.examples.manytomany.inherited">

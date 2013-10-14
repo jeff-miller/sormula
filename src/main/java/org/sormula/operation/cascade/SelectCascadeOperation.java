@@ -33,6 +33,7 @@ import org.sormula.operation.MissingFieldException;
 import org.sormula.operation.OperationException;
 import org.sormula.operation.ScalarSelectOperation;
 import org.sormula.operation.SelectOperation;
+import org.sormula.operation.filter.SelectCascadeFilter;
 import org.sormula.reflect.ReflectException;
 import org.sormula.reflect.SormulaField;
 import org.sormula.translator.ColumnTranslator;
@@ -56,6 +57,7 @@ public class SelectCascadeOperation<S, T> extends CascadeOperation<S, T>
 	SelectCascade selectCascadeAnnotation;
 	ScalarSelectOperation<T> selectOperation;
 	List<SormulaField<S, ?>> parameterFields;
+	SelectCascadeFilter<?>[] selectCascadeFilters;
 	
 	
     /**
@@ -90,6 +92,33 @@ public class SelectCascadeOperation<S, T> extends CascadeOperation<S, T>
     }
 
     
+    /**
+     * Sets the filter(s) to be used by this cascade. Typically this method is invoked by
+     * a {@link SelectOperation} with the fitlers used by the {@link SelectOperation}.
+     *  
+     * @param selectCascadeFilters select filters to use or null if none
+     * @since 3.1
+     * @see ScalarSelectOperation#setSelectCascadeFilters(SelectCascadeFilter...)
+     */
+    public void setSelectCascadeFilters(SelectCascadeFilter<?>... selectCascadeFilters)
+    {
+        this.selectCascadeFilters = selectCascadeFilters;
+    }
+    
+
+    /**
+     * Gets the select filters used by this cascade.
+     * 
+     * @return select filters to use or null if none
+     * @since 3.1
+     * @see ScalarSelectOperation#getSelectCascadeFilters()
+     */
+    public SelectCascadeFilter<?>[] getSelectCascadeFilters()
+    {
+        return selectCascadeFilters;
+    }
+    
+
     /**
      * {@inheritDoc}
      */
@@ -186,6 +215,9 @@ public class SelectCascadeOperation<S, T> extends CascadeOperation<S, T>
         super.prepare();
         selectOperation = (ScalarSelectOperation<T>)createOperation();
         
+        // filter 
+        selectOperation.setSelectCascadeFilters(selectCascadeFilters);
+        
         if (!isSourceTargetFieldNames())
         {
             // selectCascadeAnnotation.sourceParameterFieldNames() are NOT defined by selectCascadeAnnotation.targetWhereName()
@@ -263,6 +295,13 @@ public class SelectCascadeOperation<S, T> extends CascadeOperation<S, T>
     }
     
     
+    public boolean isSourceCriteria() // TODO name? Criteria has meaning in ORM world
+    {
+        // TODO
+        return false;
+    }
+    
+    
     /**
      * @return true if {@link SelectCascade#targetWhereName()} is "#sourceFieldNames"
      * @since 3.1
@@ -298,7 +337,7 @@ public class SelectCascadeOperation<S, T> extends CascadeOperation<S, T>
         
         try
         {
-            String[] parameterFieldNames;
+            String[] parameterFieldNames = null;
             
             if (isSourcePrimaryKeyFields())
             {
@@ -313,7 +352,7 @@ public class SelectCascadeOperation<S, T> extends CascadeOperation<S, T>
                 int i = 0;
                 for (ColumnTranslator<S> ct : primaryKeyColumnTranslators)
                 {
-                    parameterFieldNames[i++] = ct.getColumnName();
+                    parameterFieldNames[i++] = ct.getField().getName();
                 }
             }
             else if (isSourceTargetFieldNames())
@@ -329,8 +368,12 @@ public class SelectCascadeOperation<S, T> extends CascadeOperation<S, T>
                 int i = 0;
                 for (ColumnTranslator<T> ct : whereColumnTranslators)
                 {
-                    parameterFieldNames[i++] = ct.getColumnName();
+                    parameterFieldNames[i++] = ct.getField().getName();
                 }
+            }
+            else if (isSourceCriteria())
+            {
+                // TODO
             }
             else
             {
@@ -343,12 +386,20 @@ public class SelectCascadeOperation<S, T> extends CascadeOperation<S, T>
                 }
             }
             
-            parameterFields = new ArrayList<SormulaField<S, ?>>(parameterFieldNames.length);
-            for (int i = 0; i < parameterFieldNames.length; ++i)
+            if (parameterFieldNames != null)
             {
-                Field f = sourceRowTranslator.getDeclaredField(parameterFieldNames[i]);
-                if (f != null) parameterFields.add(new SormulaField<S, Object>(f));
-                else throw new MissingFieldException(parameterFieldNames[i], getSourceTable().getRowClass());
+                parameterFields = new ArrayList<SormulaField<S, ?>>(parameterFieldNames.length);
+                for (int i = 0; i < parameterFieldNames.length; ++i)
+                {
+                    // TODO if name starts with "$" look up in criteria object
+                    Field f = sourceRowTranslator.getDeclaredField(parameterFieldNames[i]);
+                    if (f != null) parameterFields.add(new SormulaField<S, Object>(f));
+                    else throw new MissingFieldException(parameterFieldNames[i], getSourceTable().getRowClass());
+                }
+            }
+            else
+            {
+                // TODO may not need to do anything here if handled above 
             }
         }
         catch (ReflectException e)
@@ -367,27 +418,34 @@ public class SelectCascadeOperation<S, T> extends CascadeOperation<S, T>
      */
     protected void setParameters(S sourceRow) throws OperationException
     {
-        if (parameterFields.size() > 0)
+        if (parameterFields != null)
         {
-            // at least one parameter (zero parameters are allowed)
-        
-            // need Object[] for setParameters(Object...)
-            Object[] parameters = new Object[parameterFields.size()];
-            int i = 0;
-            
-            try
+            if (parameterFields.size() > 0)
             {
-                for (SormulaField<S, ?> f: parameterFields)
+                // at least one parameter (zero parameters are allowed)
+            
+                // need Object[] for setParameters(Object...)
+                Object[] parameters = new Object[parameterFields.size()];
+                int i = 0;
+                
+                try
                 {
-                    parameters[i++] = f.invokeGetMethod(sourceRow);
+                    for (SormulaField<S, ?> f: parameterFields)
+                    {
+                        parameters[i++] = f.invokeGetMethod(sourceRow);
+                    }
                 }
+                catch (ReflectException e)
+                {
+                    throw new OperationException("error getting parameter value", e);
+                }
+                
+                selectOperation.setParameters(parameters);
             }
-            catch (ReflectException e)
-            {
-                throw new OperationException("error getting parameter value", e);
-            }
-            
-            selectOperation.setParameters(parameters);
+        }
+        else
+        {
+            // set from criteria TODO
         }
     }
 

@@ -310,6 +310,9 @@ abstract public class AbstractLazySelector<R> implements LazySelectable, Seriali
                     SelectCascadeOperation<R, ?> operation = new SelectCascadeOperation(sourceTable, targetField, targetTable, c);
                     try
                     {
+                        // does it make sense to allow filters for lazy selects since filter must be specified when AbstractLazySelector#checkLazySelects is invoked?
+                        // operation.setSelectCascadeFilters(selectCascadeFilters);
+                        
                         if (c.setForeignKeyValues()) operation.setForeignKeyFieldNames(scar.getForeignKeyValueFields());
                         if (c.setForeignKeyReference()) operation.setForeignKeyReferenceFieldName(scar.getForeignKeyReferenceField());
                         operation.prepare();

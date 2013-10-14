@@ -835,6 +835,7 @@ public class Table<R> implements TypeTranslatorMap, TransactionListener
      * @return count of all rows in table
      * @throws SormulaException if error
      */
+    @Deprecated
     public int selectCount() throws SormulaException
     {
         return selectCount("", new Object[0]); // new Object[0] parameter disambiguates the method to use
@@ -858,6 +859,7 @@ public class Table<R> implements TypeTranslatorMap, TransactionListener
      * @return count of all rows in table
      * @throws SormulaException if error
      */
+    @Deprecated
     public int selectCount(String whereConditionName, Object...parameters) throws SormulaException
     {
         org.sormula.operation.SelectCountOperation<R> selectCountOperation = new SelectCountOperation<R>(this);

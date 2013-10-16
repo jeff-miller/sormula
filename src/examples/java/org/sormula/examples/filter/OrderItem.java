@@ -18,7 +18,6 @@ package org.sormula.examples.filter;
 
 import org.sormula.annotation.Column;
 import org.sormula.annotation.Row;
-import org.sormula.annotation.Where;
 import org.sormula.annotation.cascade.OneToOneCascade;
 
 
@@ -26,7 +25,6 @@ import org.sormula.annotation.cascade.OneToOneCascade;
  * Order item table row class with one to one relationships to {@link Product}.
  * Quantity is omitted for simplicity.
  */
-@Where(name="whereProduct", fieldNames="productId")
 @Row(tableName="orderitem")
 public class OrderItem
 {

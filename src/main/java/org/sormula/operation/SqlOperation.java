@@ -294,7 +294,6 @@ public abstract class SqlOperation<R>
         
         if (getParameters() != null)
         {
-            // TODO get from parameter source here?
 	        if (log.isDebugEnabled()) log.debug("writeParameters() parameters from objects");
 	        AbstractWhereTranslator<R> wt = getWhereTranslator();
 	        boolean inOperator = wt != null && wt.isCollectionOperand();
@@ -652,7 +651,17 @@ public abstract class SqlOperation<R>
         
         if (getPreparedStatement() == null)
         {
-            // first time, prepare sql
+            // first time
+            if (namedParameterMap != null) // TODO use getter?
+            {
+                // TODO init p based upon wt.getParameterName
+                // TODO needs to occur here so that prepare knows number of ? placeholders in where w1=?, w2=?, ...
+                // TODO but don't do this for cascace operations?
+                Object[] p = null;
+                setParameters(p);
+            }
+            
+            // prepare sql
             prepare();
         }
     }

@@ -41,6 +41,7 @@ public abstract class MapSelectOperation<K, R> extends SelectOperation<R, Map<K,
 	 * @param table select from this table
 	 * @throws OperationException if error
 	 */
+	// TODO deprecate this method and subclass methods? primary key selects only 1 row
     public MapSelectOperation(Table<R> table) throws OperationException
     {
         super(table);

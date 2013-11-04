@@ -150,6 +150,7 @@ public abstract class ModifyCascadeOperation<S, T> extends CascadeOperation<S, T
     {
         super.prepare();
         modifyOperation = (ModifyOperation<T>)createOperation();
+        modifyOperation.setNamedParameterMap(getNamedParameterMap()); // from source
     }
 
 

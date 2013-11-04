@@ -29,6 +29,7 @@ import org.sormula.operation.ArrayListSelectOperation;
 import org.sormula.operation.HashMapSelectOperation;
 import org.sormula.operation.MapSelectOperation;
 import org.sormula.operation.ScalarSelectOperation;
+import org.sormula.operation.SqlOperation;
 import org.sormula.operation.cascade.lazy.AbstractLazySelector;
 import org.sormula.operation.cascade.lazy.DurableLazySelector;
 import org.sormula.operation.cascade.lazy.LazySelectable;
@@ -69,17 +70,14 @@ public @interface SelectCascade
      * "#primaryKeyFields" means source parameter fields are source primary key fields
      * <p>
      * "#targetFieldNames" means source parameter field names are the same names as defined by {@link #targetWhereName()}. 
+     * <p>
+     * Any name that begins with dollar($) symbol indicates a named parameter so that $somename value is
+     * obtained with {@link SqlOperation#getParameter(String)} with a key of "somename". Named parameters set 
+     * at the top level operation of a cascading relationship are available at all levels of the cascade.
      * 
      * @return field names of fields to be used as parameters; 
      * "#primaryKeyFields" to get source values from source primary keys;
      * "#targetFieldNames" to get source values from source fields named in {@link #targetWhereName()}.
-     * 
-     * these 2 add unnecessary complexity? no need for indirection with named parameter since field names are more direct
-     * nothing sets value of $name using setParameter("name", value)?
-     * TODO $name look up value in feeder for key=name
-     * TODO $#targetFieldNames look up in feeder key= source fields named in {@link #targetWhereName()}
-     * 
-     * or pass namedParameterMap to each cascade level?
      */
      String[] sourceParameterFieldNames() default "#targetFieldNames"; 
 

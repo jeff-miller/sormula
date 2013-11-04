@@ -31,11 +31,12 @@ import org.sormula.Table;
 public abstract class ListSelectOperation<R> extends SelectOperation<R, List<R>>
 {
 	/**
-	 * Constructs for a table to select by primary key.
+	 * Constructs for a table to select by primary key. 
 	 * 
 	 * @param table select from this table
 	 * @throws OperationException if error
 	 */
+    // TODO deprecate this method and subclass methods? primary key selects only 1 row
     public ListSelectOperation(Table<R> table) throws OperationException
     {
         super(table);

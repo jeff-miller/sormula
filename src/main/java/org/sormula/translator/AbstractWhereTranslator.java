@@ -153,7 +153,7 @@ public abstract class AbstractWhereTranslator<R> extends ColumnsTranslator<R>
         return collectionOperand;
     }
 
-
+    
     /**
      * Creates column phrase with parameter placeholders and comparison operators like:<br> 
      * "c1 cop1 a1 bo2 c2 cop2 a2 bo3 c3 cop3 a3..." where cN is column name,

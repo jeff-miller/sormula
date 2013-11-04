@@ -190,6 +190,7 @@ public class InsertOperation<R> extends ModifyOperation<R>
                 if (log.isDebugEnabled()) log.debug("prepare cascade " + c.operation());
                 @SuppressWarnings("unchecked") // target field type is not known at compile time
                 CascadeOperation<R, ?> operation = new InsertCascadeOperation(getTable(), targetField, targetTable, c);
+                operation.setNamedParameterMap(getNamedParameterMap());
                 if (c.setForeignKeyValues()) operation.setForeignKeyFieldNames(car.getForeignKeyValueFields());
                 if (c.setForeignKeyReference()) operation.setForeignKeyReferenceFieldName(car.getForeignKeyReferenceField());
 

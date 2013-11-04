@@ -21,6 +21,7 @@ import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 
 import org.sormula.Table;
 import org.sormula.annotation.cascade.Cascade;
@@ -60,6 +61,7 @@ public abstract class CascadeOperation<S, T>
     SormulaField<T, Object> targetForeignReferenceField;
     int keyFieldCount;
     String[] requiredCascades;
+    Map<String, Object> namedParameterMap;
     
     
     /**
@@ -238,6 +240,36 @@ public abstract class CascadeOperation<S, T>
     public int getKeyFieldCount()
     {
         return keyFieldCount;
+    }
+    
+
+    /**
+     * Gets the map of named parameters.
+     * 
+     * @return map of name to value or null if no named parameters
+     * @since 3.1
+     * @see SqlOperation#getParameter(String)
+     * @see SqlOperation#setParameter(String, Object)
+     * @see SqlOperation#getNamedParameterMap()
+     */
+    public Map<String, Object> getNamedParameterMap()
+    {
+        return namedParameterMap;
+    }
+
+
+    /**
+     * Sets the map of named parameters. 
+     * 
+     * @param namedParameterMap map of name to value or null if no named parameters
+     * @since 3.1
+     * @see SqlOperation#getParameter(String)
+     * @see SqlOperation#setParameter(String, Object)
+     * @see SqlOperation#getNamedParameterMap()
+     */
+    public void setNamedParameterMap(Map<String, Object> namedParameterMap)
+    {
+        this.namedParameterMap = namedParameterMap;
     }
 
 

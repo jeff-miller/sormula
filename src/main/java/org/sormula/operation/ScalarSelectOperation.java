@@ -756,6 +756,7 @@ public class ScalarSelectOperation<R> extends SqlOperation<R>
                     @SuppressWarnings("unchecked") // target field type is not known at compile time
                     SelectCascadeOperation<R, ?> operation = new SelectCascadeOperation(getTable(), targetField, targetTable, c);
                     operation.setSelectCascadeFilters(selectCascadeFilters);
+                    operation.setNamedParameterMap(getNamedParameterMap());
                     if (c.setForeignKeyValues()) operation.setForeignKeyFieldNames(car.getForeignKeyValueFields());
                     if (c.setForeignKeyReference()) operation.setForeignKeyReferenceFieldName(car.getForeignKeyReferenceField());
 

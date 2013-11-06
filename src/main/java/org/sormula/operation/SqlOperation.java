@@ -131,9 +131,9 @@ public abstract class SqlOperation<R>
      * <p>
      * Named parameters are also looked up for cascades when 
      * {@link SelectCascade#sourceParameterFieldNames()} contains any field names that begin with dollar ($).
-     * Named parameter map is supplied for all cascade levels so that any level can get value from map.
+     * symbol. Named parameter map is supplied for all cascade levels so that any level can get value from map.
      * 
-     * @param name name of parameter (
+     * @param name name of parameter 
      * @param value value of named parameter
      * @since 3.1
      */

@@ -12,7 +12,9 @@ JDK 5/6     JDK 7       comments
                         - fix connection leak for active record lazy selects
                         - SelectCascadeFilter allows filtering algorithms to be written in Java and
                           applied as rows are read from the database 
-                        - named parameters
+                        - SqlOperation allowes named parameters with setParameter(String, Object)
+                        - SelectCascade#sourceParameterFieldNames can refer to a named parameter by prefixing
+                          name with dollar ($) symbol
 3.0-jdk1.5  3.0-jdk1.7  - caching
                         - TransactionListener
                         - row annotations have precendence over table annotations 

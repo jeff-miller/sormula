@@ -71,7 +71,7 @@ public @interface SelectCascade
      * <p>
      * "#targetFieldNames" means source parameter field names are the same names as defined by {@link #targetWhereName()}. 
      * <p>
-     * Any name that begins with dollar($) symbol indicates a named parameter so that $somename value is
+     * Any name that begins with dollar($) symbol indicates a named parameter. For example, $somename value is
      * obtained with {@link SqlOperation#getParameter(String)} with a key of "somename". Named parameters set 
      * at the top level operation of a cascading relationship are available at all levels of the cascade.
      * 

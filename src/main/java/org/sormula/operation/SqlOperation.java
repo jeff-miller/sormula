@@ -391,30 +391,38 @@ public abstract class SqlOperation<R>
     @SuppressWarnings("unchecked") // types are not known until runtime
     protected <T> void writeParameter(int parameterIndex, T parameter) throws Exception
     {
-        Class<T> parameterClass = (Class<T>)parameter.getClass(); // TODO parameter could be null?
-        
-        // look for translator in table
-        TypeTranslator<T> typeTranslator = (TypeTranslator<T>)table.getTypeTranslator(parameterClass);
-        
-        if (typeTranslator == null)
+        if (parameter != null)
         {
-            // no table-specific translator, use database
-            typeTranslator = (TypeTranslator<T>)table.getDatabase().getTypeTranslator(parameterClass);
-        }
-        
-        if (typeTranslator != null)
-        {
-            if (log.isDebugEnabled())
+            Class<T> parameterClass = (Class<T>)parameter.getClass(); 
+            
+            // look for translator in table
+            TypeTranslator<T> typeTranslator = (TypeTranslator<T>)table.getTypeTranslator(parameterClass);
+            
+            if (typeTranslator == null)
             {
-                log.debug("writeParameter() parameter type="+parameterClass + " value="+parameter);
+                // no table-specific translator, use database
+                typeTranslator = (TypeTranslator<T>)table.getDatabase().getTypeTranslator(parameterClass);
             }
             
-            typeTranslator.write(preparedStatement, parameterIndex, parameter);
+            if (typeTranslator != null)
+            {
+                if (log.isDebugEnabled())
+                {
+                    log.debug("writeParameter() parameter type="+parameterClass + " value="+parameter);
+                }
+                
+                typeTranslator.write(preparedStatement, parameterIndex, parameter);
+            }
+            else
+            {
+                throw new OperationException("no translator for parameter type="+parameterClass + 
+                        " index=" + parameterIndex + " value="+parameter);
+            }
         }
         else
         {
-            throw new OperationException("no translator for parameter type="+parameterClass + 
-                    " index=" + parameterIndex + " value="+parameter);
+            // TODO ?
+            preparedStatement.setObject(parameterIndex, null);
         }
     }
     

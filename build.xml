@@ -22,6 +22,8 @@
 		<antcall target="ManyToManySelect1"/>
 		<antcall target="ManyToManyInsert2"/>
 		<antcall target="ManyToManySelect2"/>
+		<antcall target="NamedParameterInsert"/>
+		<antcall target="NamedParameterSelect"/>
 		<antcall target="NameDelete"/>
 		<antcall target="NameInsert"/>
 		<antcall target="NameSelect"/>
@@ -99,6 +101,13 @@
     </target>
     <target name="ManyToManySelect2" description="Runs example in org.sormula.examples.manytomany.named">
         <antcall target="run-example"><param name="class" value="org.sormula.examples.manytomany.named.ManyToManySelect2"/></antcall>
+    </target>
+
+    <target name="NamedParameterInsert" description="Sets up tables for examples in org.sormula.examples.np">
+        <antcall target="run-example"><param name="class" value="org.sormula.examples.np.NamedParameterInsert"/></antcall>
+    </target>
+    <target name="NamedParameterSelect" description="Runs example to select using named parameters in org.sormula.examples.np">
+        <antcall target="run-example"><param name="class" value="org.sormula.examples.np.NamedParameterSelect"/></antcall>
     </target>
 
     <target name="BlobExample" description="Runs example">

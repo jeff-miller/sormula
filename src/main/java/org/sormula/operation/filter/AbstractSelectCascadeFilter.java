@@ -25,7 +25,7 @@ import org.sormula.operation.ScalarSelectOperation;
 
 
 /**
- * Base class for select cascade fitlers. Using reflection to determine the accept method to invoke
+ * Base class for select cascade fitlers. Uses reflection to determine the accept method to invoke
  * based upon the row runtime class type. Simplifies filter implementation by allowing you to
  * create a method for each row type to filter.
  * <p>
@@ -87,8 +87,8 @@ public abstract class AbstractSelectCascadeFilter implements SelectCascadeFilter
     
     /**
      * Invokes subclass accept method based upon row runtime class type. Since {@link #getRowClass()}
-     * returns Object.class to indicate all rows are filtered, then this method is invoked by
-     * {@link ScalarSelectOperation} to test for filtering. 
+     * returns Object.class to indicate all rows are filtered, then this method delegates to appropriate
+     * subclass accept method based upon runtime class of row parameter. 
      * 
      *  @return value returned by subclass accept method; true if no subclass method exists for
      *  row runtime class 

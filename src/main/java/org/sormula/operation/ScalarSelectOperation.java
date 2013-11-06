@@ -31,6 +31,7 @@ import org.sormula.annotation.Row;
 import org.sormula.annotation.Where;
 import org.sormula.annotation.cascade.SelectCascade;
 import org.sormula.annotation.cascade.SelectCascadeAnnotationReader;
+import org.sormula.cache.Cache;
 import org.sormula.cache.CacheException;
 import org.sormula.log.ClassLogger;
 import org.sormula.operation.cascade.CascadeOperation;
@@ -560,8 +561,8 @@ public class ScalarSelectOperation<R> extends SqlOperation<R>
      * operation.
      * <p> 
      * Note: if table is cached, then cache will contain filtered rows. For subsequent selects, you 
-     * may want to clear cache with {@link Table#getCache()#evictAll()} or start with new instance of {@link Table}
-     * to avoid reading filtered rows.
+     * may want to clear cache with {@link Table#getCache} and {@link Cache#evictAll()} or start with 
+     * new instance of {@link Table} to avoid reading filtered rows.
      * 
      * @param selectCascadeFilters filter(s) to use or null for none
      * @since 3.1

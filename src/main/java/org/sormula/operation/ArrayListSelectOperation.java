@@ -31,12 +31,13 @@ import org.sormula.Table;
 public class ArrayListSelectOperation<R> extends ListSelectOperation<R>
 {
 	/**
-	 * Constructs for a table by primary key. It is not likely that you want
-	 * to use this constructor since only one row will be selected.
+	 * Constructs for a table by primary key. It is unlikely that you will want
+	 * to use this constructor since at most one row will be selected.
 	 * 
 	 * @param table select from this table
 	 * @throws OperationException if error
 	 */
+    @Deprecated
     public ArrayListSelectOperation(Table<R> table) throws OperationException
     {
         super(table);

@@ -47,7 +47,6 @@ public abstract class SelectOperation<R, C> extends ScalarSelectOperation<R> imp
      * @param table select from this table
      * @throws OperationException if error
      */
- // TODO deprecate this method and subclass methods? primary key selects only 1 row
     public SelectOperation(Table<R> table) throws OperationException
     {
         super(table);

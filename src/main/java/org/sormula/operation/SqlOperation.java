@@ -421,7 +421,7 @@ public abstract class SqlOperation<R>
         }
         else
         {
-            // TODO ?
+            // null parameter
             preparedStatement.setObject(parameterIndex, null);
         }
     }

@@ -35,11 +35,13 @@ import org.sormula.Table;
 public class LinkedHashMapSelectOperation<K, R> extends MapSelectOperation<K, R>
 {
 	/**
-	 * Constructs for a table.
+	 * Constructs for a table to select by primary key. It is unlikely that you will want
+     * to use this constructor since at most one row will be selected.
 	 * 
 	 * @param table select from this table
 	 * @throws OperationException if error
 	 */
+    @Deprecated
     public LinkedHashMapSelectOperation(Table<R> table) throws OperationException
     {
         super(table);

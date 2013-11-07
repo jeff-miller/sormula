@@ -85,7 +85,7 @@ public class SelectTest extends DatabaseTest<SormulaTestNP1>
     protected void confirmByParent(List<SormulaTestNP2> results, int testId) throws SormulaException
     {
         Table<SormulaTestNP2> sormulaTestNP2Table = getDatabase().getTable(SormulaTestNP2.class);
-        assert results.size() == sormulaTestNP2Table.<Integer>selectCount("*", "byParent", testId) 
+        assert results.size() == sormulaTestNP2Table.<Integer>selectCount("level2Id", "byParent", testId) 
                 : "wrong number of rows selected";
         
         for (SormulaTestNP2 row : results)

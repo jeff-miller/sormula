@@ -59,7 +59,7 @@ public class InsertTest extends DatabaseTest<ZeroAnnotationTest>
         child.createTable(ZeroAnnotationChild.class, 
                 "CREATE TABLE " + getSchemaPrefix() + ZeroAnnotationChild.class.getSimpleName() + " (" +
                 " childid INTEGER NOT NULL PRIMARY KEY," +
-                " zatid INTEGER NOT NULL," +
+                " zatid INTEGER NOT NULL" +
                 ")"
             );
         child.closeDatabase();

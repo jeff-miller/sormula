@@ -24,6 +24,7 @@ import java.lang.reflect.Field;
 import java.sql.Connection;
 import java.sql.Statement;
 
+import org.sormula.Database;
 import org.sormula.Table;
 import org.sormula.translator.ColumnTranslator;
 import org.sormula.translator.NameTranslator;
@@ -88,7 +89,8 @@ public @interface Column
     
     
     /**
-     * Defines class that will read/write row members from/to database.
+     * Defines class that will read/write row members from/to database. See {@link Database#initTypeTranslatorMap}
+     * for default translators.
      * 
      * @return translator to use for reading and writing values from/to the database
      */

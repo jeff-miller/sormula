@@ -282,7 +282,7 @@ public class Database implements TypeTranslatorMap
      * 
      * @param connection JDBC connection
      * @param schema name of schema to be prefixed to table name in all table names in sql statements;
-     * {@link Connection#getCatalog()} is typically the schema name but catalog methods are inconsistently
+     * {@link Connection#getCatalog()} is typically the schema name but jdbc drivers are not consistent
      * @throws SormulaException if error
      */
     protected void init(Connection connection, String schema) throws SormulaException
@@ -302,8 +302,25 @@ public class Database implements TypeTranslatorMap
     /**
      * Invoked by constructor to initialize default type translators and type translators
      * annotated on {@link Database} class.
-     * 
-     * {@link Connection#getCatalog()} is typically the schema name but catalog methods are inconsistently
+     * <p>
+     * The default translators are:<br>
+     * <table>
+     * <tr><th>Field Type</th><th>Translator</th></tr>
+     * <tr><td>boolean / java.lang.Boolean</td><td>{@link BooleanTranslator}</td></tr>
+     * <tr><td>byte / java.lang.Byte</td><td>{@link ByteTranslator}</td></tr>
+     * <tr><td>double / java.lang.Double</td><td>{@link DoubleTranslator}</td></tr>
+     * <tr><td>float / java.lang.Float</td><td>{@link FloatTranslator}</td></tr>
+     * <tr><td>int / java.lang.Integer</td><td>{@link IntegerTranslator}</td></tr>
+     * <tr><td>long / java.lang.Long</td><td>{@link LongTranslator}</td></tr>
+     * <tr><td>short / java.lang.Short</td><td>{@link ShortTranslator}</td></tr>
+     * <tr><td>java.math.BigDecimal</td><td>{@link BigDecimalTranslator}</td></tr>
+     * <tr><td>java.lang.String</td><td>{@link StringTranslator}</td></tr>
+     * <tr><td>java.util.Date</td><td>{@link DateTranslator}</td></tr>
+     * <tr><td>java.sql.Date</td><td>{@link SqlDateTranslator}</td></tr>
+     * <tr><td>java.sql.Time</td><td>{@link SqlTimeTranslator}</td></tr>
+     * <tr><td>java.sql.Time</td><td>{@link SqlTimestampTranslator}</td></tr>
+     * <tr><td>java.util.GregorianCalendar</td><td>{@link GregorianCalendarTranslator}</td></tr>
+     * </table>
      * @throws SormulaException if error
      */
     protected void initTypeTranslatorMap() throws SormulaException

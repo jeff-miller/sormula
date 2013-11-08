@@ -56,9 +56,9 @@ public class SelectTest2 extends ActiveDatabaseTest<SormulaTestParentLazyAR2>
     public void cascadeSelectLazyAR2() throws SormulaException
     {
         ActiveDatabase activeDatabase = getActiveDatabase();
-        ActiveTable<SormulaTestParentLazyAR2> parentTable = new ActiveTable<SormulaTestParentLazyAR2>(activeDatabase, SormulaTestParentLazyAR2.class);
-        ActiveTable<SormulaTestChild1LazyAR> child1Table = new ActiveTable<SormulaTestChild1LazyAR>(activeDatabase, SormulaTestChild1LazyAR.class);
-        ActiveTable<SormulaTestChildNLazyAR> childNTable = new ActiveTable<SormulaTestChildNLazyAR>(activeDatabase, SormulaTestChildNLazyAR.class);
+        ActiveTable<SormulaTestParentLazyAR2> parentTable = new ActiveTable<>(activeDatabase, SormulaTestParentLazyAR2.class);
+        ActiveTable<SormulaTestChild1LazyAR> child1Table = new ActiveTable<>(activeDatabase, SormulaTestChild1LazyAR.class);
+        ActiveTable<SormulaTestChildNLazyAR> childNTable = new ActiveTable<>(activeDatabase, SormulaTestChildNLazyAR.class);
         
         // for each parent 
         for (SormulaTestParentLazyAR2 parent : parentTable.selectAll())

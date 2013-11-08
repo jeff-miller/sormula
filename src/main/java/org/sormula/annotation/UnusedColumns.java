@@ -37,7 +37,6 @@ import org.sormula.Table;
 public @interface UnusedColumns
 {
     /**
-     * Columns that are not used by row class. value() is the default and does not need to be specified. 
      * 
      * @return array of {@link UnusedColumn} annotations for row class
      */

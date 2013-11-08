@@ -47,7 +47,7 @@ public class InsertTest extends ActiveDatabaseTest<SormulaTestParentLazyAR>
         );
         
         // create child table for 1 to 1 relationship
-        DatabaseTest<SormulaTestChild1LazyAR> child1 = new DatabaseTest<SormulaTestChild1LazyAR>();
+        DatabaseTest<SormulaTestChild1LazyAR> child1 = new DatabaseTest<>();
         child1.openDatabase();
         child1.createTable(SormulaTestChild1LazyAR.class, 
                 "CREATE TABLE " + getSchemaPrefix() + SormulaTestChild1LazyAR.class.getSimpleName() + " (" +
@@ -58,7 +58,7 @@ public class InsertTest extends ActiveDatabaseTest<SormulaTestParentLazyAR>
         child1.closeDatabase();
         
         // create child table for 1 to n relationship
-        DatabaseTest<SormulaTestChildNLazyAR> childN = new DatabaseTest<SormulaTestChildNLazyAR>();
+        DatabaseTest<SormulaTestChildNLazyAR> childN = new DatabaseTest<>();
         childN.openDatabase();
         childN.createTable(SormulaTestChildNLazyAR.class, 
                 "CREATE TABLE " + getSchemaPrefix() + SormulaTestChildNLazyAR.class.getSimpleName() + " (" +
@@ -98,7 +98,7 @@ public class InsertTest extends ActiveDatabaseTest<SormulaTestParentLazyAR>
         assert parent.insert() == 1 : "insertOneToOneLazyAR did not insert parent";
         
         // verify that child was inserted
-        ActiveTable<SormulaTestChild1LazyAR> child1Table = new ActiveTable<SormulaTestChild1LazyAR>(activeDatabase, SormulaTestChild1LazyAR.class);
+        ActiveTable<SormulaTestChild1LazyAR> child1Table = new ActiveTable<>(activeDatabase, SormulaTestChild1LazyAR.class);
         SormulaTestChild1LazyAR c1 = child1Table.select(childId);
         assert c1 != null : "child " + childId + " was not inserted";
     }
@@ -128,7 +128,7 @@ public class InsertTest extends ActiveDatabaseTest<SormulaTestParentLazyAR>
         assert parent.insert() == 1 : "insertOneToManyListLazyAR did not insert parent";
         
         // verify that all children were inserted
-        ActiveTable<SormulaTestChildNLazyAR> childTable = new ActiveTable<SormulaTestChildNLazyAR>(activeDatabase, SormulaTestChildNLazyAR.class);
+        ActiveTable<SormulaTestChildNLazyAR> childTable = new ActiveTable<>(activeDatabase, SormulaTestChildNLazyAR.class);
         for (SormulaTestChildNLazyAR c: parent.getChildList())
         {
             // verify that child was inserted

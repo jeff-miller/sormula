@@ -45,7 +45,7 @@ import org.sormula.translator.RowTranslator;
  * @param <S> row class of table that is source of cascade
  * @param <T> row class of table that is target of cascade 
  */
-public abstract class CascadeOperation<S, T>
+public abstract class CascadeOperation<S, T> implements AutoCloseable
 {
     private static final ClassLogger log = new ClassLogger();
     Table<S> sourceTable;

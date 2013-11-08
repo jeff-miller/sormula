@@ -86,7 +86,7 @@ public class SelectTest extends DatabaseTest<SormulaTest4>
         assert table.insert(new SormulaTest4(6002, 0, "6002")) == 1 : "test row was not inserted";
         
         // test IN with constant operand
-        assert new ArrayListSelectOperation<SormulaTest4>(table, "idIn2").selectAll().size() == 2 :
+        assert new ArrayListSelectOperation<>(table, "idIn2").selectAll().size() == 2 :
             "IN (6001, 6002) operator did not work";
         
         commit();
@@ -99,7 +99,7 @@ public class SelectTest extends DatabaseTest<SormulaTest4>
         begin();
         int maxRows = getTable().selectCount() / 2;
         assert maxRows > 0 : "no rows to test";
-        ArrayListSelectOperation<SormulaTest4> s = new ArrayListSelectOperation<SormulaTest4>(getTable(), "");
+        ArrayListSelectOperation<SormulaTest4> s = new ArrayListSelectOperation<>(getTable(), "");
         s.setMaximumRowsRead(maxRows);
         assert maxRows == s.selectAll().size() : "setMaximumRowsRead failed";
         commit();
@@ -141,15 +141,16 @@ public class SelectTest extends DatabaseTest<SormulaTest4>
         }
         
         // sum with SQL using explict operation
-        SelectAggregateOperation<SormulaTest4, Integer> selectSum = 
-            new SelectAggregateOperation<SormulaTest4, Integer>(getTable(), "SUM", "id");
-        selectSum.setWhere("byType");
-        selectSum.setParameters(type);
-        selectSum.execute();
-        
-        // sums should be same
-        assert sum == selectSum.readAggregate() : "select aggregate sum failed";
-        selectSum.close();
+        try (SelectAggregateOperation<SormulaTest4, Integer> selectSum = 
+                new SelectAggregateOperation<>(getTable(), "SUM", "id"))
+        {
+            selectSum.setWhere("byType");
+            selectSum.setParameters(type);
+            selectSum.execute();
+            
+            // sums should be same
+            assert sum == selectSum.readAggregate() : "select aggregate sum failed";
+        }
 
         // test with table methods
         assert min == getTable().<Integer>selectMin("id", "byType", type) : "select aggregate min failed";
@@ -203,7 +204,7 @@ public class SelectTest extends DatabaseTest<SormulaTest4>
         assert expectedCount > 0 : "no rows meet expected condition to test";
         
         // select all type 3 rows
-        List<SormulaTest4> selectedList = new ArrayListSelectOperation<SormulaTest4>(getTable(), "byType").selectAll(3);
+        List<SormulaTest4> selectedList = new ArrayListSelectOperation<>(getTable(), "byType").selectAll(3);
 
         assert expectedCount == selectedList.size() : "simple select returned wrong number of rows";
         
@@ -236,9 +237,11 @@ public class SelectTest extends DatabaseTest<SormulaTest4>
         assert expectedCount > 0 : "no rows meet expected condition to test";
         
         // select all rows with "operation" in description
-        DescriptionSelect operation = new DescriptionSelect(getTable());
-        List<SormulaTest4> selectedList = operation.readAll();
-        operation.close();
+        List<SormulaTest4> selectedList;
+        try (DescriptionSelect operation = new DescriptionSelect(getTable()))
+        {
+            selectedList = operation.readAll();
+        }
         
         assert expectedCount == selectedList.size() : "select by operation wrong number of rows";
         
@@ -259,15 +262,14 @@ public class SelectTest extends DatabaseTest<SormulaTest4>
         
         // get all type 3 rows in id order
         List<SormulaTest4> type3List = getTable().selectAllWhereOrdered("byType", "obId", 3);
-        
-        // set up iterator to iterate type 3 rows
-        ArrayListSelectOperation<SormulaTest4> itop = new ArrayListSelectOperation<SormulaTest4>(getTable(), "byType");
-        itop.setParameters(3);
-        itop.setOrderBy("obId");
-        // optional itop.execute(); 
-        
-        try
+
+        try (ArrayListSelectOperation<SormulaTest4> itop = new ArrayListSelectOperation<>(getTable(), "byType"))
         {
+            // set up iterator to iterate type 3 rows
+            itop.setParameters(3);
+            itop.setOrderBy("obId");
+            // optional itop.execute(); 
+
             // iterate through type 3, compare to known list
             Iterator<SormulaTest4> type3Iterator = type3List.iterator();
             
@@ -284,10 +286,6 @@ public class SelectTest extends DatabaseTest<SormulaTest4>
             
             assert !type3Iterator.hasNext() : "reference list has more rows than SelectIterator";
         }
-        finally
-        {
-            itop.close();
-        }
         
         commit();
     }
@@ -300,18 +298,17 @@ public class SelectTest extends DatabaseTest<SormulaTest4>
         
         // get all type 3 rows in id order
         List<SormulaTest4> type3List = getTable().selectAllWhereOrdered("byType", "obId", 3);
-        
-        // set up iterator to iterate type 3 rows
-        ArrayListSelectOperation<SormulaTest4> itop = new ArrayListSelectOperation<SormulaTest4>(getTable(), "byType");
-        itop.setParameters(3);
-        itop.setOrderBy("obId");
-        // optional itop.execute(); 
-        
-        try
+
+        try (ArrayListSelectOperation<SormulaTest4> itop = new ArrayListSelectOperation<>(getTable(), "byType"))
         {
+            // set up iterator to iterate type 3 rows
+            itop.setParameters(3);
+            itop.setOrderBy("obId");
+            // optional itop.execute(); 
+        
             // iterate through type 3, compare to known list
             Iterator<SormulaTest4> type3Iterator = type3List.iterator();
-            SelectIterator<SormulaTest4> selectIterator = new SelectIterator<SormulaTest4>(itop);
+            SelectIterator<SormulaTest4> selectIterator = new SelectIterator<>(itop);
             
             while (selectIterator.hasNext()) // test with explicit iterator
             {
@@ -326,10 +323,6 @@ public class SelectTest extends DatabaseTest<SormulaTest4>
             }
             
             assert !type3Iterator.hasNext() : "reference list has more rows than SelectIterator";
-        }
-        finally
-        {
-            itop.close();
         }
         
         commit();
@@ -355,18 +348,19 @@ public class SelectTest extends DatabaseTest<SormulaTest4>
         assert expectedCount > 0 : "customSql no rows meet expected condition to test";
 
         // select with custom sql
-        ArrayListSelectOperation<SormulaTest4> operation = new ArrayListSelectOperation<SormulaTest4>(getTable(), "")
-        {
-            @Override
-            protected String getSql()
+        List<SormulaTest4> selectedList;
+        try (ArrayListSelectOperation<SormulaTest4> operation = new ArrayListSelectOperation<SormulaTest4>(getTable(), "")
             {
-                return getBaseSql() + " where type in(2,4,999)";
-            }
-        };
-        
-        operation.execute();
-        List<SormulaTest4> selectedList = operation.readAll();
-        operation.close();
+                @Override
+                protected String getSql()
+                {
+                    return getBaseSql() + " where type in(2,4,999)";
+                }
+            })
+        {        
+            operation.execute();
+            selectedList = operation.readAll();
+        }
         
         // confirm
         assert expectedCount == selectedList.size() : "customSql operation wrong number of rows";
@@ -384,16 +378,18 @@ public class SelectTest extends DatabaseTest<SormulaTest4>
     public void selectLinkedHashMap() throws SormulaException
     {
         begin();
+        Map<Integer, SormulaTest4> result;
         
-        LinkedHashMapSelectOperation<Integer, SormulaTest4> operation = 
-            new LinkedHashMapSelectOperation<Integer, SormulaTest4>(getTable(), "" /*select all*/);
-        operation.setGetKeyMethodName("getId");
-        
-        // select into map
-        operation.setOrderBy("ob2"); // by description
-        operation.execute();
-        Map<Integer, SormulaTest4> result = operation.readAll();
-        operation.close();
+        try (LinkedHashMapSelectOperation<Integer, SormulaTest4> operation = 
+            new LinkedHashMapSelectOperation<>(getTable(), "" /*select all*/))
+        {
+            operation.setGetKeyMethodName("getId");
+            
+            // select into map
+            operation.setOrderBy("ob2"); // by description
+            operation.execute();
+            result = operation.readAll();
+        }
         
         assert result.size() > 0 : "no rows selected";
         
@@ -417,10 +413,12 @@ public class SelectTest extends DatabaseTest<SormulaTest4>
         selectTestRows();
         
         // perform with different test sizes but same operation to test that correctly prepare 
-        ListSelectOperation<SormulaTest4> operation = new ArrayListSelectOperation<SormulaTest4>(getTable(), "idIn");
-        selectIn(operation, 5);
-        selectIn(operation, 7);
-        operation.close();
+        try (ListSelectOperation<SormulaTest4> operation = new ArrayListSelectOperation<>(getTable(), "idIn"))
+        {
+            selectIn(operation, 5);
+            selectIn(operation, 7);
+        }
+        
         commit();
     }
     
@@ -428,7 +426,7 @@ public class SelectTest extends DatabaseTest<SormulaTest4>
     protected void selectIn(ListSelectOperation<SormulaTest4> operation, int testFactor) throws SormulaException
     {
         // choose id's divisible by testFactor for in clause
-        Set<Integer> idSet = new HashSet<Integer>(getAll().size());
+        Set<Integer> idSet = new HashSet<>(getAll().size());
         for (SormulaTest4 r : getAll())
         {
             if (r.getId() % testFactor == 0)

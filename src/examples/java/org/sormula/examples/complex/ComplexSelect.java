@@ -16,8 +16,6 @@
  */
 package org.sormula.examples.complex;
 
-import java.sql.Connection;
-
 import org.sormula.Database;
 import org.sormula.SormulaException;
 import org.sormula.Table;
@@ -46,16 +44,17 @@ public class ComplexSelect extends ExampleBase
     {
         // init
         openDatabase();
-        Connection connection = getConnection();
-        Database database = new Database(connection, getSchema());
-        table = database.getTable(Student3.class);
         
-        selectRow();
-        selectAllRows();
-        selectWhere();
+        try (Database database = new Database(getConnection(), getSchema()))
+        {
+            table = database.getTable(Student3.class);
+            
+            selectRow();
+            selectAllRows();
+            selectWhere();
+        }
         
         // clean up
-        database.close();
         closeDatabase();
     }
     
@@ -77,19 +76,20 @@ public class ComplexSelect extends ExampleBase
     {
         String whereParameter = "John";
         System.out.println("select where first name = " + whereParameter);
-        ListSelectOperation<Student3> operation = new ArrayListSelectOperation<Student3>(table, "fn");
-        operation.setParameters(whereParameter);
         
-        System.out.println("read as a collection");
-        operation.execute();
-        for (Student3 s: operation.readAll())
-            System.out.println(s);
-        
-        System.out.println("read one row at a time");
-        operation.execute();
-        for (Student3 s = operation.readNext(); s != null; s = operation.readNext())
-            System.out.println(s);
-        
-        operation.close();
+        try (ListSelectOperation<Student3> operation = new ArrayListSelectOperation<>(table, "fn"))
+        {
+            operation.setParameters(whereParameter);
+            
+            System.out.println("read as a collection");
+            operation.execute();
+            for (Student3 s: operation.readAll())
+                System.out.println(s);
+            
+            System.out.println("read one row at a time");
+            operation.execute();
+            for (Student3 s = operation.readNext(); s != null; s = operation.readNext())
+                System.out.println(s);
+        }
     }
 }

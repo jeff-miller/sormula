@@ -66,7 +66,7 @@ public class ActiveCacheTest extends ActiveDatabaseTest<SormulaTestARCached>
     {
         // use CashedActiveDatabase to test annotation on it
         ActiveDatabase activeDatabase = new CashedActiveDatabase(getDataSource(), getSchema());
-        ActiveTable<SormulaTestARCached> table = new ActiveTable<SormulaTestARCached>(activeDatabase, SormulaTestARCached.class);
+        ActiveTable<SormulaTestARCached> table = new ActiveTable<>(activeDatabase, SormulaTestARCached.class);
 
         // test cache methods
         assert !table.isCached() && table.getCache() == null :

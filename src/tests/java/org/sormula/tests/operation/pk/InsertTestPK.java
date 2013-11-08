@@ -71,7 +71,7 @@ public class InsertTestPK extends DatabaseTest<SormulaTestPK>
     @Test
     public void insertCollection() throws SormulaException
     {
-        ArrayList<SormulaTestPK> list = new ArrayList<SormulaTestPK>();
+        ArrayList<SormulaTestPK> list = new ArrayList<>();
         
         for (int i = 101; i < 110; ++i)
         {

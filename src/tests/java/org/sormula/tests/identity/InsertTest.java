@@ -88,7 +88,7 @@ public class InsertTest extends DatabaseTest<IdentityTest>
         if (isTestIdentity())
         {
             begin();
-            ArrayList<IdentityTest> list = new ArrayList<IdentityTest>();
+            ArrayList<IdentityTest> list = new ArrayList<>();
             
             for (int i = 1; i < 10; ++i)
             {

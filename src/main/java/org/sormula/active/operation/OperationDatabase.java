@@ -96,7 +96,7 @@ public class OperationDatabase extends Database
         {
             // init row translator that sets the active database
             if (log.isDebugEnabled()) log.debug("create OperationTable for " + rowClass.getCanonicalName());
-            table = (Table<R>)new OperationTable<ActiveRecord>(this, (Class<ActiveRecord>)rowClass);
+            table = (Table<R>)new OperationTable<>(this, (Class<ActiveRecord>)rowClass);
 
             // add it for reuse
             addTable(table);

@@ -182,7 +182,7 @@ public class InsertOperation<R> extends ModifyOperation<R>
             if (log.isDebugEnabled()) log.debug("prepareCascades() for " + field.getName() + " cascade name=" + car.getName());
             Table<?> targetTable = getTargetTable(car.getTargetClass(), field);
             SormulaField<R, ?> targetField = createTargetField(field);
-            co = new ArrayList<CascadeOperation<R, ?>>(insertCascades.length);
+            co = new ArrayList<>(insertCascades.length);
             
             // for each cascade operation
             for (InsertCascade c: insertCascades)

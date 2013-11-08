@@ -206,7 +206,7 @@ public abstract class AbstractCache<R> implements Cache<R>
      */
     protected void initCommittedCache() throws CacheException
     {
-        committedCache = new HashMap<CacheKey, R>(cachedAnnotation.size());
+        committedCache = new HashMap<>(cachedAnnotation.size());
     }
     
     
@@ -220,7 +220,7 @@ public abstract class AbstractCache<R> implements Cache<R>
     {
         if (uncommittedCache == null)
         {
-            uncommittedCache = new HashMap<CacheKey, UncommittedRow<R>>(cachedAnnotation.size() / 2);
+            uncommittedCache = new HashMap<>(cachedAnnotation.size() / 2);
         }
         else
         {

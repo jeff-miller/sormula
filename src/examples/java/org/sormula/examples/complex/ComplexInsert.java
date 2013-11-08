@@ -16,7 +16,6 @@
  */
 package org.sormula.examples.complex;
 
-import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.GregorianCalendar;
@@ -57,16 +56,15 @@ public class ComplexInsert extends ExampleBase
                 " ssn INTEGER NOT NULL)"
         );
         
-        // init
-        Connection connection = getConnection();
-        Database database = new Database(connection, getSchema());
-        table = database.getTable(Student3.class);
-        
-        insertRow();
-        insertRows();
+        try (Database database = new Database(getConnection(), getSchema()))
+        {
+            table = database.getTable(Student3.class);
+            
+            insertRow();
+            insertRows();
+        }
         
         // clean up
-        database.close();
         closeDatabase();
     }
     
@@ -84,7 +82,7 @@ public class ComplexInsert extends ExampleBase
     
     void insertRows() throws SormulaException
     {
-        ArrayList<Student3> list = new ArrayList<Student3>();
+        ArrayList<Student3> list = new ArrayList<>();
         Student3 student;
         
         student = new Student3();

@@ -16,7 +16,6 @@
  */
 package org.sormula.examples.manytomany.inherited;
 
-import java.sql.Connection;
 import java.util.GregorianCalendar;
 
 import org.sormula.Database;
@@ -31,9 +30,6 @@ import org.sormula.examples.ExampleBase;
  */
 public class ManyToManyInsert1 extends ExampleBase
 {
-    Database database;
-    
-    
     public static void main(String[] args) throws Exception
     {
         new ManyToManyInsert1();
@@ -68,21 +64,19 @@ public class ManyToManyInsert1 extends ExampleBase
                 " description VARCHAR(30))" 
         );
         
-        // init
-        Connection connection = getConnection();
-        database = new Database(connection, getSchema());
-        
-        // examples
-        insertProducts();
-        insertOrders();
+        try (Database database = new Database(getConnection(), getSchema()))
+        {
+            // examples
+            insertProducts(database);
+            insertOrders(database);
+        }
         
         // clean up
-        database.close();
         closeDatabase();
     }
     
     
-    public void insertProducts() throws Exception
+    public void insertProducts(Database database) throws Exception
     {
         Table<SimpleProduct> productTable = database.getTable(SimpleProduct.class);
         
@@ -93,7 +87,7 @@ public class ManyToManyInsert1 extends ExampleBase
     }
     
     
-    public void insertOrders() throws Exception
+    public void insertOrders(Database database) throws Exception
     {
         Order order;
         Table<Order> orderTable = database.getTable(Order.class);

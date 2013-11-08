@@ -40,7 +40,6 @@ import org.sormula.operation.SqlOperation;
 public @interface OrderBys
 {
     /**
-     * Order by conditions. value() is the default and does not need to be specified. 
      * 
      * @return array of {@link OrderBy} annotations
      */

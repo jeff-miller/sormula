@@ -16,7 +16,6 @@
  */
 package org.sormula.examples.jodatime;
 
-import java.sql.Connection;
 import java.util.ArrayList;
 
 import org.joda.time.LocalDate;
@@ -57,17 +56,16 @@ public class LocalDateExample extends ExampleBase
                 " graduationdate TIMESTAMP)" 
         );
         
-        // init
-        Connection connection = getConnection();
-        Database database = new Database(connection, getSchema());
-        table = database.getTable(StudentLD.class);
-        
-        insertRow();
-        insertRows();
-        printAll(table.selectAll());
+        try (Database database = new Database(getConnection(), getSchema()))
+        {
+            table = database.getTable(StudentLD.class);
+            
+            insertRow();
+            insertRows();
+            printAll(table.selectAll());
+        }
         
         // clean up
-        database.close();
         closeDatabase();
     }
     
@@ -86,7 +84,7 @@ public class LocalDateExample extends ExampleBase
     
     void insertRows() throws SormulaException
     {
-        ArrayList<StudentLD> list = new ArrayList<StudentLD>();
+        ArrayList<StudentLD> list = new ArrayList<>();
         StudentLD student;
         
         student = new StudentLD();

@@ -55,7 +55,7 @@ public class SormulaTestParentLazyAR extends ActiveRecord<SormulaTestParentLazyA
     
     public SormulaTestParentLazyAR()
     {
-        childList = new ArrayList<SormulaTestChildNLazyAR>();
+        childList = new ArrayList<>();
     }
 
     

@@ -48,7 +48,7 @@ public class InsertTest extends DatabaseTest<SormulaTestParentLazy1>
         );
         
         // create child table for map relationship
-        DatabaseTest<SormulaTestChildLazy> childM = new DatabaseTest<SormulaTestChildLazy>();
+        DatabaseTest<SormulaTestChildLazy> childM = new DatabaseTest<>();
         childM.openDatabase();
         childM.createTable(SormulaTestChildLazy.class, 
                 "CREATE TABLE " + getSchemaPrefix() + SormulaTestChildLazy.class.getSimpleName() + " (" +
@@ -82,7 +82,7 @@ public class InsertTest extends DatabaseTest<SormulaTestParentLazy1>
     void insertOneToManyMap(int parentId, int childId) throws SormulaException
     {
         SormulaTestParentLazy1 parent = new SormulaTestParentLazy1(parentId, "Insert parent " + parentId);
-        Map<Integer, SormulaTestChildLazy> map = new HashMap<Integer, SormulaTestChildLazy>(50);
+        Map<Integer, SormulaTestChildLazy> map = new HashMap<>(50);
         parent.setChildMap(map);
         
         for (int i = 1; i <= 20; ++i)
@@ -96,13 +96,14 @@ public class InsertTest extends DatabaseTest<SormulaTestParentLazy1>
         
         // verify that all children were inserted
         Table<SormulaTestChildLazy> childTable = getDatabase().getTable(SormulaTestChildLazy.class);
-        ScalarSelectOperation<SormulaTestChildLazy> operation = new ScalarSelectOperation<SormulaTestChildLazy>(childTable);
-        for (SormulaTestChildLazy c: parent.getChildMap().values())
+        try (ScalarSelectOperation<SormulaTestChildLazy> operation = new ScalarSelectOperation<>(childTable))
         {
-            operation.setParameters(c.getId());
-            operation.execute();
-            assert operation.readNext() != null : "child " + c.getId() + " was not inserted"; 
+            for (SormulaTestChildLazy c: parent.getChildMap().values())
+            {
+                operation.setParameters(c.getId());
+                operation.execute();
+                assert operation.readNext() != null : "child " + c.getId() + " was not inserted"; 
+            }
         }
-        operation.close();
     }
 }

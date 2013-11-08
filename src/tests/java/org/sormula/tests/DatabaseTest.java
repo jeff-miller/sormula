@@ -442,7 +442,7 @@ public class DatabaseTest<R>
     public Set<R> getRandomSet()
     {
         int size = Math.min(10, all.size());
-        Set<R> set = new HashSet<R>(size * 2);
+        Set<R> set = new HashSet<>(size * 2);
         
         // choose random set
         for (int i = 0; i < size; ++i)
@@ -470,9 +470,10 @@ class JdbcProperties extends Properties
         
         // read db properties
         String jdbcPropertiesName = "jdbc/" + dbdir + "/jdbc.properties";
-        InputStream is = new FileInputStream(jdbcPropertiesName);
-        load(is);
-        is.close();
+        try (InputStream is = new FileInputStream(jdbcPropertiesName))
+        {
+            load(is);
+        }
         
         if (logProperties)
         {

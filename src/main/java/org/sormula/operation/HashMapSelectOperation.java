@@ -68,6 +68,6 @@ public class HashMapSelectOperation<K, R> extends MapSelectOperation<K, R>
     @Override
     protected Map<K, R> createReadAllCollection()
     {
-        return new HashMap<K, R>(getDefaultReadAllSize());
+        return new HashMap<>(getDefaultReadAllSize());
     }
 }

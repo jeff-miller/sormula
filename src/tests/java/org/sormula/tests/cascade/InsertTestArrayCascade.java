@@ -47,7 +47,7 @@ public class InsertTestArrayCascade extends DatabaseTest<SormulaTestParentArrayC
             );
             
             // create child table for 1 to n relationship
-            DatabaseTest<SormulaTestChildNArrayCascade> childN = new DatabaseTest<SormulaTestChildNArrayCascade>();
+            DatabaseTest<SormulaTestChildNArrayCascade> childN = new DatabaseTest<>();
             childN.openDatabase();
             childN.createTable(SormulaTestChildNArrayCascade.class, 
                     "CREATE TABLE " + getSchemaPrefix() + 
@@ -85,14 +85,16 @@ public class InsertTestArrayCascade extends DatabaseTest<SormulaTestParentArrayC
         
         // verify that all children were inserted
         Table<SormulaTestChildNArrayCascade> childTable = getDatabase().getTable(SormulaTestChildNArrayCascade.class);
-        ScalarSelectOperation<SormulaTestChildNArrayCascade> operation = new ScalarSelectOperation<SormulaTestChildNArrayCascade>(childTable);
-        for (SormulaTestChildNArrayCascade c: parent.getChildren())
+        
+        try (ScalarSelectOperation<SormulaTestChildNArrayCascade> operation = new ScalarSelectOperation<>(childTable))
         {
-            operation.setParameters(c.getId());
-            operation.execute();
-            assert operation.readNext() != null : "child " + c.getId() + " was not inserted"; 
+            for (SormulaTestChildNArrayCascade c: parent.getChildren())
+            {
+                operation.setParameters(c.getId());
+                operation.execute();
+                assert operation.readNext() != null : "child " + c.getId() + " was not inserted"; 
+            }
         }
-        operation.close();
         commit();
     }
 }

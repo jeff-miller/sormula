@@ -28,7 +28,7 @@ import org.sormula.annotation.Column;
  */
 public class Student4
 {
-    @Column(primaryKey=true)
+    @Column(primaryKey=true) // optional
     int studentId;
     String firstName;
     String lastName;

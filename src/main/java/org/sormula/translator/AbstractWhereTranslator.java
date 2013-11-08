@@ -59,7 +59,7 @@ public abstract class AbstractWhereTranslator<R> extends ColumnsTranslator<R>
     protected void initColumnTranslatorList(int columns)
     {
         super.initColumnTranslatorList(columns);
-        whereFieldExpressionList  = new ArrayList<WhereFieldExpression>(columns);
+        whereFieldExpressionList  = new ArrayList<>(columns);
     }
 
 

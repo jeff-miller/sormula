@@ -121,7 +121,7 @@ public class RowTranslator<R> extends ColumnsTranslator<R>
         
         initColumnTranslators();
         initUnusedColumnSql(rowClass);
-        primaryKeyWhereTranslator = new PrimaryKeyWhereTranslator<R>(this);
+        primaryKeyWhereTranslator = new PrimaryKeyWhereTranslator<>(this);
         
         if (log.isDebugEnabled())
         {
@@ -221,7 +221,7 @@ public class RowTranslator<R> extends ColumnsTranslator<R>
         else
         {
             // find recursively
-            List<Field[]> classHierarchyFields = new ArrayList<Field[]>();
+            List<Field[]> classHierarchyFields = new ArrayList<>();
             getDeclaredFields(rowClass, classHierarchyFields);
             
             // calculate return array length

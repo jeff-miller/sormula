@@ -66,6 +66,6 @@ public class ArrayListSelectOperation<R> extends ListSelectOperation<R>
     @Override
     protected ArrayList<R> createReadAllCollection()
     {
-        return new ArrayList<R>(getDefaultReadAllSize());
+        return new ArrayList<>(getDefaultReadAllSize());
     }
 }

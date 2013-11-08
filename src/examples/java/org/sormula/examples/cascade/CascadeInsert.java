@@ -16,7 +16,6 @@
  */
 package org.sormula.examples.cascade;
 
-import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.GregorianCalendar;
 
@@ -62,22 +61,20 @@ public class CascadeInsert extends ExampleBase
                 " yr INTEGER NOT NULL)"
         );
         
-        // init
-        Connection connection = getConnection();
-        Database database = new Database(connection, getSchema());
-        
-        table = database.getTable(Student4.class);
-        insertRows();
+        try (Database database = new Database(getConnection(), getSchema()))
+        {
+            table = database.getTable(Student4.class);
+            insertRows();
+        }
         
         // clean up
-        database.close();
         closeDatabase();
     }
     
     
     void insertRows() throws SormulaException
     {
-        ArrayList<Student4> list = new ArrayList<Student4>();
+        ArrayList<Student4> list = new ArrayList<>();
         ArrayList<Enrolled> enrollment;
         Student4 student;
         
@@ -88,7 +85,7 @@ public class CascadeInsert extends ExampleBase
         list.add(student);
         
         // courses for student
-        enrollment = new ArrayList<Enrolled>();
+        enrollment = new ArrayList<>();
         enrollment.add(enroll202(student));
         student.setEnrollment(enrollment);
         
@@ -99,7 +96,7 @@ public class CascadeInsert extends ExampleBase
         list.add(student);
         
         // courses for student
-        enrollment = new ArrayList<Enrolled>();
+        enrollment = new ArrayList<>();
         enrollment.add(enroll202(student));
         enrollment.add(enroll601(student));
         student.setEnrollment(enrollment);

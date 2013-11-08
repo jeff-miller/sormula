@@ -142,7 +142,7 @@ public class InsertTest extends CacheTest<SormulaCacheTestRW>
         begin();
         
         // insert cached rows
-        HashMap<Integer, SormulaCacheTestRW> testMap = new HashMap<Integer, SormulaCacheTestRW>();
+        HashMap<Integer, SormulaCacheTestRW> testMap = new HashMap<>();
         for (int id = 111; id < 115; ++id)
         {
             SormulaCacheTestRW test = insertTestRow(id);

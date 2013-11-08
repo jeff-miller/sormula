@@ -46,7 +46,7 @@ public class SormulaParentNFK
     
     public SormulaParentNFK()
     {
-        childList = new ArrayList<SormulaChildNFK>();
+        childList = new ArrayList<>();
     }
 
     

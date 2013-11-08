@@ -43,7 +43,7 @@ public class InsertTest extends DatabaseTest<SormulaParentNFK>
         );
         
         // create child table for 1 to n relationship
-        DatabaseTest<SormulaChildNFK> childN = new DatabaseTest<SormulaChildNFK>();
+        DatabaseTest<SormulaChildNFK> childN = new DatabaseTest<>();
         childN.openDatabase();
         childN.createTable(SormulaChildNFK.class, 
                 "CREATE TABLE " + getSchemaPrefix() + SormulaChildNFK.class.getSimpleName() + " (" +

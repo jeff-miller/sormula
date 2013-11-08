@@ -88,7 +88,7 @@ public class SelectAggregateOperation<R, T> extends ScalarSelectOperation<R>
             if (log.isDebugEnabled()) log.debug("columnTranslator.getColumnName()=" + columnTranslator.getColumnName());
             try
             {
-                sormulaField = new SormulaField<R, T>(columnTranslator.getField());
+                sormulaField = new SormulaField<>(columnTranslator.getField());
             }
             catch (ReflectException e)
             {

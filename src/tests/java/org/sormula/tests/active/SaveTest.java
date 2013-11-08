@@ -103,7 +103,7 @@ public class SaveTest extends ActiveDatabaseTest<SormulaTestAR>
     @Test
     public void saveCollectionAR()
     {
-        ArrayList<SormulaTestAR> list = new ArrayList<SormulaTestAR>();
+        ArrayList<SormulaTestAR> list = new ArrayList<>();
         
         for (int i = 8501; i < 8599; ++i)
         {

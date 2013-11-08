@@ -53,7 +53,7 @@ public class InsertTest extends DatabaseTest<SormulaFkTestLevel1>
         );
         
         // create level 2 table
-        DatabaseTest<SormulaFkTestLevel2> child2 = new DatabaseTest<SormulaFkTestLevel2>();
+        DatabaseTest<SormulaFkTestLevel2> child2 = new DatabaseTest<>();
         child2.openDatabase();
         if (isForeignKey()) foreignKeyDdl = ", FOREIGN KEY (parentid) REFERENCES " + getSchemaPrefix() + SormulaFkTestLevel1.class.getSimpleName() +"(id)";
         child2.createTable(SormulaFkTestLevel2.class, 
@@ -67,7 +67,7 @@ public class InsertTest extends DatabaseTest<SormulaFkTestLevel1>
         child2.closeDatabase();
         
         // create level 3 table
-        DatabaseTest<SormulaFkTestLevel3> child3 = new DatabaseTest<SormulaFkTestLevel3>();
+        DatabaseTest<SormulaFkTestLevel3> child3 = new DatabaseTest<>();
         child3.openDatabase();
         if (isForeignKey()) foreignKeyDdl = ", FOREIGN KEY (parentid) REFERENCES " + getSchemaPrefix() + SormulaFkTestLevel2.class.getSimpleName() +"(id)";
         child3.createTable(SormulaFkTestLevel3.class, 
@@ -122,27 +122,26 @@ public class InsertTest extends DatabaseTest<SormulaFkTestLevel1>
         
         // verify that all children were inserted
         Table<SormulaFkTestLevel2> child2Table = getDatabase().getTable(SormulaFkTestLevel2.class);
-        ScalarSelectOperation<SormulaFkTestLevel2> select2 = new ScalarSelectOperation<SormulaFkTestLevel2>(child2Table);
         Table<SormulaFkTestLevel3> child3Table = getDatabase().getTable(SormulaFkTestLevel3.class);
-        ScalarSelectOperation<SormulaFkTestLevel3> select3 = new ScalarSelectOperation<SormulaFkTestLevel3>(child3Table);
         
-        // test level 2 children
-        for (SormulaFkTestLevel2 node2: node1.getChildList())
+        try (ScalarSelectOperation<SormulaFkTestLevel2> select2 = new ScalarSelectOperation<>(child2Table);
+             ScalarSelectOperation<SormulaFkTestLevel3> select3 = new ScalarSelectOperation<>(child3Table))
         {
-            select2.setParameters(node2.getId());
-            select2.execute();
-            assert select2.readNext() != null : "level 2 child " + node2.getId() + " was not inserted"; 
-            
-            // test level 3 children
-            for (SormulaFkTestLevel3 node3: node2.getChildList())
+            // test level 2 children
+            for (SormulaFkTestLevel2 node2: node1.getChildList())
             {
-                select3.setParameters(node3.getId());
-                select3.execute();
-                assert select3.readNext() != null : "level 3 child " + node3.getId() + " was not inserted"; 
+                select2.setParameters(node2.getId());
+                select2.execute();
+                assert select2.readNext() != null : "level 2 child " + node2.getId() + " was not inserted"; 
+                
+                // test level 3 children
+                for (SormulaFkTestLevel3 node3: node2.getChildList())
+                {
+                    select3.setParameters(node3.getId());
+                    select3.execute();
+                    assert select3.readNext() != null : "level 3 child " + node3.getId() + " was not inserted"; 
+                }
             }
         }
-        
-        select2.close();
-        select3.close();
     }
 }

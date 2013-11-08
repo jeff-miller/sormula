@@ -64,7 +64,7 @@ public class SormulaNCTestLevel1
     
     public SormulaNCTestLevel1()
     {
-        childList = new ArrayList<SormulaNCTestLevel2>();
+        childList = new ArrayList<>();
     }
 
     

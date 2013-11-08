@@ -41,7 +41,7 @@ public class SormulaIdentityParent
     
     public SormulaIdentityParent()
     {
-        childList = new ArrayList<SormulaIdentityChildN>();
+        childList = new ArrayList<>();
     }
 
     

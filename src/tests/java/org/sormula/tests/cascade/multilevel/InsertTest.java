@@ -37,6 +37,14 @@ public class InsertTest extends DatabaseTest<SormulaTestLevel1>
     public void setUp() throws Exception
     {
         openDatabase();
+        
+        // drop tables from previous tests in proper order due to foreign key constraints
+        dropTable(getSchemaPrefix() + SormulaTestLevel3.class.getSimpleName());
+        dropTable(getSchemaPrefix() + SormulaTestLevel2.class.getSimpleName());
+        dropTable(getSchemaPrefix() + SormulaTestLevel1.class.getSimpleName());
+        
+        String foreignKeyDdl = ""; // some db's have problems with foreign key constraints
+        
         createTable(SormulaTestLevel1.class, 
             "CREATE TABLE " + getSchemaPrefix() + SormulaTestLevel1.class.getSimpleName() + " (" +
             " level1id INTEGER NOT NULL PRIMARY KEY," +
@@ -45,25 +53,29 @@ public class InsertTest extends DatabaseTest<SormulaTestLevel1>
         );
         
         // create level 2 table
-        DatabaseTest<SormulaTestLevel2> child2 = new DatabaseTest<SormulaTestLevel2>();
+        DatabaseTest<SormulaTestLevel2> child2 = new DatabaseTest<>();
         child2.openDatabase();
+        if (isForeignKey()) foreignKeyDdl = ", FOREIGN KEY (parentid) REFERENCES " + getSchemaPrefix() + SormulaTestLevel1.class.getSimpleName() +"(level1id)"; 
         child2.createTable(SormulaTestLevel2.class, 
                 "CREATE TABLE " + getSchemaPrefix() + SormulaTestLevel2.class.getSimpleName() + " (" +
                 " level2id INTEGER NOT NULL PRIMARY KEY," +
                 " parentid INTEGER NOT NULL," +
                 " description VARCHAR(60)" +
+                foreignKeyDdl +
                 ")"
             );
         child2.closeDatabase();
         
         // create level 3 table
-        DatabaseTest<SormulaTestLevel3> child3 = new DatabaseTest<SormulaTestLevel3>();
+        DatabaseTest<SormulaTestLevel3> child3 = new DatabaseTest<>();
         child3.openDatabase();
+        if (isForeignKey()) foreignKeyDdl = ", FOREIGN KEY (parentid) REFERENCES " + getSchemaPrefix() + SormulaTestLevel2.class.getSimpleName() +"(level2id)";
         child3.createTable(SormulaTestLevel3.class, 
                 "CREATE TABLE " + getSchemaPrefix() + SormulaTestLevel3.class.getSimpleName() + " (" +
                 " level3id INTEGER NOT NULL PRIMARY KEY," +
                 " parentid INTEGER NOT NULL," +
                 " description VARCHAR(60)" +
+                foreignKeyDdl +
                 ")"
             );
         child3.closeDatabase();
@@ -112,27 +124,26 @@ public class InsertTest extends DatabaseTest<SormulaTestLevel1>
         
         // verify that all children were inserted
         Table<SormulaTestLevel2> child2Table = getDatabase().getTable(SormulaTestLevel2.class);
-        ScalarSelectOperation<SormulaTestLevel2> select2 = new ScalarSelectOperation<SormulaTestLevel2>(child2Table);
         Table<SormulaTestLevel3> child3Table = getDatabase().getTable(SormulaTestLevel3.class);
-        ScalarSelectOperation<SormulaTestLevel3> select3 = new ScalarSelectOperation<SormulaTestLevel3>(child3Table);
         
-        // test level 2 children
-        for (SormulaTestLevel2 node2: node1.getChildList())
+        try (ScalarSelectOperation<SormulaTestLevel2> select2 = new ScalarSelectOperation<>(child2Table);
+             ScalarSelectOperation<SormulaTestLevel3> select3 = new ScalarSelectOperation<>(child3Table))        
         {
-            select2.setParameters(node2.getLevel2Id());
-            select2.execute();
-            assert select2.readNext() != null : "level 2 child " + node2.getLevel2Id() + " was not inserted"; 
-            
-            // test level 3 children
-            for (SormulaTestLevel3 node3: node2.getChildList())
+            // test level 2 children
+            for (SormulaTestLevel2 node2: node1.getChildList())
             {
-                select3.setParameters(node3.getLevel3Id());
-                select3.execute();
-                assert select3.readNext() != null : "level 3 child " + node3.getLevel3Id() + " was not inserted"; 
+                select2.setParameters(node2.getLevel2Id());
+                select2.execute();
+                assert select2.readNext() != null : "level 2 child " + node2.getLevel2Id() + " was not inserted"; 
+                
+                // test level 3 children
+                for (SormulaTestLevel3 node3: node2.getChildList())
+                {
+                    select3.setParameters(node3.getLevel3Id());
+                    select3.execute();
+                    assert select3.readNext() != null : "level 3 child " + node3.getLevel3Id() + " was not inserted"; 
+                }
             }
         }
-        
-        select2.close();
-        select3.close();
     }
 }

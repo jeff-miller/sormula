@@ -81,7 +81,7 @@ import org.sormula.translator.standard.StringTranslator;
  * @since 1.0
  * @author Jeff Miller
  */
-public class Database implements TypeTranslatorMap
+public class Database implements TypeTranslatorMap, AutoCloseable
 {
     private static final ClassLogger log = new ClassLogger();
     String dataSourceName;
@@ -289,10 +289,10 @@ public class Database implements TypeTranslatorMap
     {
         this.connection = connection;
         this.schema = schema;
-        tableMap = new HashMap<String, Table<?>>();
+        tableMap = new HashMap<>();
         transaction = initTransaction(connection);
-        nameTranslatorClasses = new ArrayList<Class<? extends NameTranslator>>(4);
-        operationTimeMap = new HashMap<String, OperationTime>();
+        nameTranslatorClasses = new ArrayList<>(4);
+        operationTimeMap = new HashMap<>();
         totalOperationTime = new OperationTime("Database totals");
         totalOperationTime.setDescription("All operations for database");
         initTypeTranslatorMap();
@@ -325,7 +325,7 @@ public class Database implements TypeTranslatorMap
      */
     protected void initTypeTranslatorMap() throws SormulaException
     {
-        typeTranslatorMap = new HashMap<String, TypeTranslator<?>>(50);
+        typeTranslatorMap = new HashMap<>(50);
         
         // standard primatives (used by RowTranslator#initColumnTranslators)
         putTypeTranslator("boolean", new BooleanTranslator());
@@ -535,7 +535,7 @@ public class Database implements TypeTranslatorMap
         if (table == null && create)
         {
             // default
-            table = new Table<R>(this, rowClass);
+            table = new Table<>(this, rowClass);
             addTable(table);
         }
 
@@ -709,7 +709,7 @@ public class Database implements TypeTranslatorMap
 	    if (operationTimeMap.size() > 0)
 	    {
     	    log.info("logTimings:");
-    	    ArrayList<String> timingIdList = new ArrayList<String>(operationTimeMap.keySet());
+    	    ArrayList<String> timingIdList = new ArrayList<>(operationTimeMap.keySet());
     	    Collections.sort(timingIdList);
     	    
     	    for (String timingId: timingIdList)

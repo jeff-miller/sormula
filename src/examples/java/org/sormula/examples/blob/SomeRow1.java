@@ -16,7 +16,6 @@
  */
 package org.sormula.examples.blob;
 
-import org.sormula.annotation.Column;
 import org.sormula.annotation.ImplicitType;
 import org.sormula.annotation.Row;
 
@@ -27,8 +26,7 @@ import org.sormula.annotation.Row;
 @Row(tableName="blobexample")
 public class SomeRow1
 {
-    @Column(primaryKey=true)
-    int id;
+    int id; // defaults to @Column(primaryKey=true)
     
     @ImplicitType(translator=WidgetTanslator1.class)
     Widget widget;

@@ -128,7 +128,7 @@ public abstract class ActiveRecord<R extends ActiveRecord<? super R>> implements
      */
     public static <R extends ActiveRecord<? super R>> ActiveTable<R> table(Class<R> recordClass) throws ActiveException
     {
-        return new ActiveTable<R>(recordClass);
+        return new ActiveTable<>(recordClass);
     }
     
     
@@ -281,7 +281,7 @@ public abstract class ActiveRecord<R extends ActiveRecord<? super R>> implements
             {
                 // initialize upon first request
                 if (log.isDebugEnabled()) log.debug("checkLazySelects() determine lazy fields");
-                pendingLazySelectFieldNames = new HashSet<String>();
+                pendingLazySelectFieldNames = new HashSet<>();
                 
                 // for all fields
                 for (Field field: rowTranslator.getCascadeFieldList()) 

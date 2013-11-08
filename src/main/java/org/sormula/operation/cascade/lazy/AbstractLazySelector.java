@@ -292,7 +292,7 @@ abstract public class AbstractLazySelector<R> implements LazySelectable, Seriali
             
             // init loop variables
             SelectCascadeAnnotationReader scar = new SelectCascadeAnnotationReader(field);
-            SormulaField<R, ?> targetField = new SormulaField<R, Object>(scar.getSource());
+            SormulaField<R, ?> targetField = new SormulaField<>(scar.getSource());
             Table<?> targetTable = getDatabase().getTable(scar.getTargetClass());
             
             begin();
@@ -306,9 +306,8 @@ abstract public class AbstractLazySelector<R> implements LazySelectable, Seriali
                     @SuppressWarnings("unchecked") // source field type is not known at compile time
                     Table<R> sourceTable = (Table<R>)getDatabase().getTable(field.getDeclaringClass());
                     
-                    @SuppressWarnings("unchecked") // target field type is not known at compile time
-                    SelectCascadeOperation<R, ?> operation = new SelectCascadeOperation(sourceTable, targetField, targetTable, c);
-                    try
+                    try (@SuppressWarnings("unchecked") // target field type is not known at compile time
+                         SelectCascadeOperation<R, ?> operation = new SelectCascadeOperation(sourceTable, targetField, targetTable, c))
                     {
                         // does it make sense to allow filters for lazy selects since filter must be specified when AbstractLazySelector#checkLazySelects is invoked?
                         // operation.setSelectCascadeFilters(selectCascadeFilters);
@@ -317,10 +316,6 @@ abstract public class AbstractLazySelector<R> implements LazySelectable, Seriali
                         if (c.setForeignKeyReference()) operation.setForeignKeyReferenceFieldName(scar.getForeignKeyReferenceField());
                         operation.prepare();
                         operation.cascade(source);
-                    }
-                    finally
-                    {
-                        operation.close();
                     }
                 }
             }
@@ -359,7 +354,7 @@ abstract public class AbstractLazySelector<R> implements LazySelectable, Seriali
             
             // create map of field name to field for all that contain lazy select cascade
             List<Field> lazyFields = getDatabase().getTable(source.getClass()).getLazySelectCascadeFields();
-            pendingLazySelectFields = new HashMap<String, Field>(lazyFields.size() * 2);
+            pendingLazySelectFields = new HashMap<>(lazyFields.size() * 2);
             for (Field f: lazyFields) pendingLazySelectFields.put(f.getName(), f);
         }
         catch (SormulaException e)

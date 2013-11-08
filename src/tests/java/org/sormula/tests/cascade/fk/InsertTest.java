@@ -55,7 +55,7 @@ public class InsertTest extends DatabaseTest<SormulaFKTestParent>
         );
         
         // create child table for 1 to n relationship
-        DatabaseTest<SormulaFKTestChildN> childN = new DatabaseTest<SormulaFKTestChildN>();
+        DatabaseTest<SormulaFKTestChildN> childN = new DatabaseTest<>();
         childN.openDatabase();
         if (isForeignKey()) foreignKeyDdl = ", FOREIGN KEY (parentid) REFERENCES " + getSchemaPrefix() + SormulaFKTestParent.class.getSimpleName() +"(parentid)"; 
         childN.createTable(SormulaFKTestChildN.class, 
@@ -69,7 +69,7 @@ public class InsertTest extends DatabaseTest<SormulaFKTestParent>
         childN.closeDatabase();
         
         // create child table for map relationship
-        DatabaseTest<SormulaFKTestChildM> childM = new DatabaseTest<SormulaFKTestChildM>();
+        DatabaseTest<SormulaFKTestChildM> childM = new DatabaseTest<>();
         childM.openDatabase();
         if (isForeignKey()) foreignKeyDdl = ", FOREIGN KEY (parentid) REFERENCES " + getSchemaPrefix() + SormulaFKTestParent.class.getSimpleName() +"(parentid)"; 
         childM.createTable(SormulaFKTestChildM.class, 
@@ -134,7 +134,7 @@ public class InsertTest extends DatabaseTest<SormulaFKTestParent>
     void insertOneToManyMap(int parentId, int childId) throws SormulaException
     {
         SormulaFKTestParent parent = new SormulaFKTestParent(parentId, "Insert parent " + parentId);
-        Map<Integer, SormulaFKTestChildM> map = new HashMap<Integer, SormulaFKTestChildM>(50);
+        Map<Integer, SormulaFKTestChildM> map = new HashMap<>(50);
         parent.setChildMap(map);
         
         for (int i = 1; i <= 20; ++i)

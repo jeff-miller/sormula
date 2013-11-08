@@ -23,7 +23,6 @@
  * All select operations are derived from 
  * {@link org.sormula.operation.SelectOperation}. Insert, update, and, delete 
  * operations are derived from {@link org.sormula.operation.ModifyOperation}. 
- * 
  * For example:
  * <p>
  * Select all students by type 3 ("byType" is name of Where annotation on Student):

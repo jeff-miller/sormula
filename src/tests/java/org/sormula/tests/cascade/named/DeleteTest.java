@@ -75,27 +75,26 @@ public class DeleteTest extends DatabaseTest<SormulaNCTestLevel1>
         Table<SormulaNCTestLevel2> table2 = getDatabase().getTable(SormulaNCTestLevel2.class);
         Table<SormulaNCTestLevel3> table3 = getDatabase().getTable(SormulaNCTestLevel3.class);
         Table<SormulaNCThing> thingTable = getDatabase().getTable(SormulaNCThing.class);
-        ScalarSelectOperation<SormulaNCTestLevel2> select2 = new ScalarSelectOperation<SormulaNCTestLevel2>(table2);
-        ScalarSelectOperation<SormulaNCTestLevel3> select3 = new ScalarSelectOperation<SormulaNCTestLevel3>(table3);
         
-        // test level 2 children
-        for (SormulaNCTestLevel2 node2: node1.getChildList())
+        try (ScalarSelectOperation<SormulaNCTestLevel2> select2 = new ScalarSelectOperation<>(table2);
+             ScalarSelectOperation<SormulaNCTestLevel3> select3 = new ScalarSelectOperation<>(table3))
         {
-            select2.setParameters(node2.getId());
-            select2.execute();
-            assert select2.readNext() == null : "level 2 child " + node2.getId() + " was not deleted"; 
-            
-            // test level 3 children
-            for (SormulaNCTestLevel3 node3: node2.getChildList())
+            // test level 2 children
+            for (SormulaNCTestLevel2 node2: node1.getChildList())
             {
-                select3.setParameters(node3.getId());
-                select3.execute();
-                assert select3.readNext() == null : "level 3 child " + node3.getId() + " was not deleted"; 
+                select2.setParameters(node2.getId());
+                select2.execute();
+                assert select2.readNext() == null : "level 2 child " + node2.getId() + " was not deleted"; 
+                
+                // test level 3 children
+                for (SormulaNCTestLevel3 node3: node2.getChildList())
+                {
+                    select3.setParameters(node3.getId());
+                    select3.execute();
+                    assert select3.readNext() == null : "level 3 child " + node3.getId() + " was not deleted"; 
+                }
             }
         }
-        
-        select2.close();
-        select3.close();
         
         if (requiredCascades.length == 1 && requiredCascades[0].equals("*")) // wildcard means all cascades should be used
         {

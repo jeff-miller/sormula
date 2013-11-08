@@ -28,8 +28,8 @@ import org.sormula.annotation.Wheres;
  * @author Jeff Miller
  */
 @Wheres({
-    @Where(name="manf", fieldNames="manufacturerId"),
-    @Where(name="partNumberIn", whereFields=@WhereField(name="partNumber", comparisonOperator="IN"))
+    @Where(name="manf", fieldNames="manufacturerId"), // where manf=?
+    @Where(name="partNumberIn", whereFields=@WhereField(name="partNumber", comparisonOperator="IN")) // where partnumber in (?, ?, ...)
 })
 public class Inventory extends ActiveRecord<Inventory> 
 {

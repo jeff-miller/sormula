@@ -53,7 +53,7 @@ public class SormulaTestParentReadOnlyCascade
     
     public SormulaTestParentReadOnlyCascade()
     {
-        childList = new ArrayList<SormulaTestChildNReadOnlyCascade>();
+        childList = new ArrayList<>();
     }
 
     

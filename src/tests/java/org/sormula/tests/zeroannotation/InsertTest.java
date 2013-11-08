@@ -85,7 +85,7 @@ public class InsertTest extends DatabaseTest<ZeroAnnotationTest>
     @Test
     public void insertCollection() throws SormulaException
     {
-        ArrayList<ZeroAnnotationTest> list = new ArrayList<ZeroAnnotationTest>();
+        ArrayList<ZeroAnnotationTest> list = new ArrayList<>();
         int childId = 1;
         
         for (int zatId = 101; zatId < 200; ++zatId)

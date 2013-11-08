@@ -39,7 +39,6 @@ import org.sormula.operation.SqlOperation;
 public @interface Wheres
 {
     /**
-     * Where conditions. value() is the default and does not need to be specified.
      * 
      * @return array of {@link Where} annotations for a row class
      */

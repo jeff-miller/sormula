@@ -16,8 +16,6 @@
  */
 package org.sormula.examples.manytomany.inherited;
 
-import java.sql.Connection;
-
 import org.sormula.Database;
 import org.sormula.SormulaException;
 import org.sormula.examples.ExampleBase;
@@ -31,9 +29,6 @@ import org.sormula.examples.ExampleBase;
  */
 public class ManyToManySelect1 extends ExampleBase
 {
-    Database database;
-    
-    
     public static void main(String[] args) throws Exception
     {
         new ManyToManyInsert1(); // create table and rows
@@ -45,20 +40,20 @@ public class ManyToManySelect1 extends ExampleBase
     {
         // init
         openDatabase();
-        Connection connection = getConnection();
-        database = new Database(connection, getSchema());
         
-        // examples
-        selectOrders();
-        selectOrdersForProducts();
+        try (Database database = new Database(getConnection(), getSchema()))
+        {
+            // examples
+            selectOrders(database);
+            selectOrdersForProducts(database);
+        }
         
         // clean up
-        database.close();
         closeDatabase();
     }
     
     
-    void selectOrders() throws SormulaException
+    void selectOrders(Database database) throws SormulaException
     {
         System.out.println("\nOrders and their products obtained with Order class:");
         
@@ -76,7 +71,7 @@ public class ManyToManySelect1 extends ExampleBase
     }
     
     
-    void selectOrdersForProducts() throws SormulaException
+    void selectOrdersForProducts(Database database) throws SormulaException
     {
         System.out.println("\nProducts and their orders obtained with ProductOrderItems class:");
         

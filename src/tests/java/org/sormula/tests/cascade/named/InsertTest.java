@@ -59,7 +59,7 @@ public class InsertTest extends DatabaseTest<SormulaNCTestLevel1>
         );
         
         // create level 2 table
-        DatabaseTest<SormulaNCTestLevel2> child2 = new DatabaseTest<SormulaNCTestLevel2>();
+        DatabaseTest<SormulaNCTestLevel2> child2 = new DatabaseTest<>();
         child2.openDatabase();
         if (isForeignKey()) foreignKeyDdl = ", FOREIGN KEY (parentid) REFERENCES " + getSchemaPrefix() + SormulaNCTestLevel1.class.getSimpleName() +"(id)";
         child2.createTable(SormulaNCTestLevel2.class, 
@@ -73,7 +73,7 @@ public class InsertTest extends DatabaseTest<SormulaNCTestLevel1>
         child2.closeDatabase();
         
         // create level 3 table
-        DatabaseTest<SormulaNCTestLevel3> child3 = new DatabaseTest<SormulaNCTestLevel3>();
+        DatabaseTest<SormulaNCTestLevel3> child3 = new DatabaseTest<>();
         child3.openDatabase();
         if (isForeignKey()) foreignKeyDdl = ", FOREIGN KEY (parentid) REFERENCES " + getSchemaPrefix() + SormulaNCTestLevel2.class.getSimpleName() +"(id)";
         child3.createTable(SormulaNCTestLevel3.class, 
@@ -87,7 +87,7 @@ public class InsertTest extends DatabaseTest<SormulaNCTestLevel1>
         child3.closeDatabase();
         
         // thing table
-        DatabaseTest<SormulaNCThing> thing = new DatabaseTest<SormulaNCThing>();
+        DatabaseTest<SormulaNCThing> thing = new DatabaseTest<>();
         thing.openDatabase();
         thing.createTable(SormulaNCThing.class, 
                 "CREATE TABLE " + getSchemaPrefix() + SormulaNCThing.class.getSimpleName() + " (" +
@@ -153,27 +153,26 @@ public class InsertTest extends DatabaseTest<SormulaNCTestLevel1>
         Table<SormulaNCTestLevel2> table2 = getDatabase().getTable(SormulaNCTestLevel2.class);
         Table<SormulaNCTestLevel3> table3 = getDatabase().getTable(SormulaNCTestLevel3.class);
         Table<SormulaNCThing> thingTable = getDatabase().getTable(SormulaNCThing.class);
-        ScalarSelectOperation<SormulaNCTestLevel2> select2 = new ScalarSelectOperation<SormulaNCTestLevel2>(table2);
-        ScalarSelectOperation<SormulaNCTestLevel3> select3 = new ScalarSelectOperation<SormulaNCTestLevel3>(table3);
         
-        // test level 2 children
-        for (SormulaNCTestLevel2 node2: node1.getChildList())
+        try (ScalarSelectOperation<SormulaNCTestLevel2> select2 = new ScalarSelectOperation<>(table2);
+             ScalarSelectOperation<SormulaNCTestLevel3> select3 = new ScalarSelectOperation<>(table3))
         {
-            select2.setParameters(node2.getId());
-            select2.execute();
-            assert select2.readNext() != null : "level 2 child " + node2.getId() + " was not inserted"; 
-            
-            // test level 3 children
-            for (SormulaNCTestLevel3 node3: node2.getChildList())
+            // test level 2 children
+            for (SormulaNCTestLevel2 node2: node1.getChildList())
             {
-                select3.setParameters(node3.getId());
-                select3.execute();
-                assert select3.readNext() != null : "level 3 child " + node3.getId() + " was not inserted"; 
+                select2.setParameters(node2.getId());
+                select2.execute();
+                assert select2.readNext() != null : "level 2 child " + node2.getId() + " was not inserted"; 
+                
+                // test level 3 children
+                for (SormulaNCTestLevel3 node3: node2.getChildList())
+                {
+                    select3.setParameters(node3.getId());
+                    select3.execute();
+                    assert select3.readNext() != null : "level 3 child " + node3.getId() + " was not inserted"; 
+                }
             }
         }
-        
-        select2.close();
-        select3.close();
         
         if (requiredCascades.length == 1 && requiredCascades[0].equals("*")) // wildcard means all cascades should be used
         {

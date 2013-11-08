@@ -16,7 +16,6 @@
  */
 package org.sormula.examples.basic;
 
-import java.sql.Connection;
 import java.util.List;
 
 import org.sormula.Database;
@@ -41,16 +40,17 @@ public class BasicDelete extends ExampleBase
     {
         // init
         openDatabase();
-        Connection connection = getConnection();
-        Database database = new Database(connection, getSchema());
-        table = database.getTable(Student.class);
         
-        deleteByPrimaryKey();
-        deleteRow();
-        deleteRows();
+        try (Database database = new Database(getConnection(), getSchema()))
+        {
+            table = database.getTable(Student.class);
+            
+            deleteByPrimaryKey();
+            deleteRow();
+            deleteRows();
+        }
         
         // clean up
-        database.close();
         closeDatabase();
     }
     

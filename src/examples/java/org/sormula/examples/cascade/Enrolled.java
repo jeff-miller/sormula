@@ -16,7 +16,6 @@
  */
 package org.sormula.examples.cascade;
 
-import org.sormula.annotation.Column;
 
 
 /**
@@ -25,8 +24,7 @@ import org.sormula.annotation.Column;
  */
 public class Enrolled
 {
-    @Column(primaryKey=true)
-    int enrolledId;
+    int enrolledId; // defaults to @Column(primaryKey=true)
     int studentId;
     int courseId;
     int yr;

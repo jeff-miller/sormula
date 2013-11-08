@@ -62,7 +62,7 @@ import org.sormula.translator.WhereTranslator;
  * @author Jeff Miller
  * @param <R> class type which contains members for columns of a row in a table
  */
-public abstract class SqlOperation<R>
+public abstract class SqlOperation<R> implements AutoCloseable
 {
     private static final ClassLogger log = new ClassLogger();
     private static NoOperationTime noOperationTime = new NoOperationTime();
@@ -236,8 +236,8 @@ public abstract class SqlOperation<R>
     {
         this.readOnly = readOnly;
     }
-
-
+    
+    
     /**
      * Gets the number of seconds the driver will wait for a Statement object to execute.
      *   
@@ -804,7 +804,7 @@ public abstract class SqlOperation<R>
                 if (cascadeOperations == null)
                 {
                     // create only if needed so that no penalty for pre/postExecuteCascade and no memory usage
-                    cascadeOperations = new ArrayList<CascadeOperation<R,?>>();
+                    cascadeOperations = new ArrayList<>();
                 }
             
                 cascadeOperations.addAll(fieldCascades);
@@ -888,7 +888,7 @@ public abstract class SqlOperation<R>
         
         try
         {
-            targetField = new SormulaField<R, Object>(field);
+            targetField = new SormulaField<>(field);
         }
         catch (ReflectException e)
         {
@@ -1019,7 +1019,7 @@ public abstract class SqlOperation<R>
                 
                 if (whereAnnotation != null)
                 {
-                    setWhereTranslator(new WhereTranslator<R>(table.getRowTranslator(), whereAnnotation));
+                    setWhereTranslator(new WhereTranslator<>(table.getRowTranslator(), whereAnnotation));
                 }
                 else
                 {

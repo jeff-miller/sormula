@@ -17,7 +17,6 @@
 package org.sormula.examples.blob;
 
 import java.sql.Blob;
-import java.sql.Connection;
 
 import org.sormula.Database;
 import org.sormula.SormulaException;
@@ -26,8 +25,8 @@ import org.sormula.examples.ExampleBase;
 
 /**
  * Inserts a row into a table and then selects the row from a table where {@link Widget} 
- * field is stored as a blob. {@link WidgetColumnTranslator1} and {@link WidgetColumnTranslator2}
- * are custom column translators that converts {@link Widget} objects to/from {@link Blob}.
+ * field is stored as a blob. {@link WidgetTanslator1} and {@link WidgetColumnTranslator2}
+ * are custom column translators that convert {@link Widget} objects to/from {@link Blob}.
  */
 public class BlobExample extends ExampleBase
 {
@@ -52,10 +51,7 @@ public class BlobExample extends ExampleBase
                 " widget BLOB)"
         );
         
-        // init
-        Connection connection = getConnection();
-        database = new Database(connection, getSchema());
-        
+        database = new Database(getConnection(), getSchema());
         insert1();
         select1();
         insert2();

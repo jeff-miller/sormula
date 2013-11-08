@@ -318,7 +318,7 @@ public class Database implements TypeTranslatorMap
      * <tr><td>java.util.Date</td><td>{@link DateTranslator}</td></tr>
      * <tr><td>java.sql.Date</td><td>{@link SqlDateTranslator}</td></tr>
      * <tr><td>java.sql.Time</td><td>{@link SqlTimeTranslator}</td></tr>
-     * <tr><td>java.sql.Time</td><td>{@link SqlTimestampTranslator}</td></tr>
+     * <tr><td>java.sql.Timestamp</td><td>{@link SqlTimestampTranslator}</td></tr>
      * <tr><td>java.util.GregorianCalendar</td><td>{@link GregorianCalendarTranslator}</td></tr>
      * </table>
      * @throws SormulaException if error

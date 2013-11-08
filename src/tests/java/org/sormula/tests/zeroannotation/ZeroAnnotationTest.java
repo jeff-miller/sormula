@@ -70,8 +70,8 @@ public class ZeroAnnotationTest
         this.type = type;
         this.description = description;
         
-        testList = new ArrayList<ZeroAnnotationChild>();
-        testMap = new HashMap<Integer, ZeroAnnotationChild>();
+        testList = new ArrayList<>();
+        testMap = new HashMap<>();
         // init in test only when used to avoid array with nulls testArray = new ZeroAnnotationChild[3];
     }
     

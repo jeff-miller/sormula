@@ -86,7 +86,7 @@ public class SelectTest extends DatabaseTest<SormulaTestLevel1>
     protected void filterTest(SelectCascadeFilter<?>... selectCascadeFilters) throws SormulaException
     {
         ArrayListSelectOperation<SormulaTestLevel1> filteredSelectOperation = 
-                new ArrayListSelectOperation<SormulaTestLevel1>(getTable(), "");
+                new ArrayListSelectOperation<>(getTable(), "");
         filteredSelectOperation.setSelectCascadeFilters(selectCascadeFilters);
         List<SormulaTestLevel1> filteredSelectOperationResults = filteredSelectOperation.selectAll();
         //logGraph(filteredSelectOperationResults, "from db");
@@ -136,20 +136,20 @@ public class SelectTest extends DatabaseTest<SormulaTestLevel1>
         
         // filter level 1 children
         List<SormulaTestLevel1> unfiltered1 = getTable().selectAll();
-        List<SormulaTestLevel1> filtered1 = new ArrayList<SormulaTestLevel1>(unfiltered1.size());
+        List<SormulaTestLevel1> filtered1 = new ArrayList<>(unfiltered1.size());
 
         for (SormulaTestLevel1 row1 : unfiltered1)
         {
             // filter level 2 children
             List<SormulaTestLevel2> unfiltered2 = row1.getChildList();
-            List<SormulaTestLevel2> filtered2 = new ArrayList<SormulaTestLevel2>(unfiltered2.size());
+            List<SormulaTestLevel2> filtered2 = new ArrayList<>(unfiltered2.size());
             row1.setChildList(filtered2);
 
             for (SormulaTestLevel2 row2 : unfiltered2)
             {
                 // filter level 3 children
                 List<SormulaTestLevel3> unfiltered3 = row2.getChildList();
-                List<SormulaTestLevel3> filtered3 = new ArrayList<SormulaTestLevel3>(unfiltered3.size()); 
+                List<SormulaTestLevel3> filtered3 = new ArrayList<>(unfiltered3.size()); 
                 row2.setChildList(filtered3);
             
                 for (SormulaTestLevel3 row3 : unfiltered3)

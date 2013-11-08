@@ -351,7 +351,7 @@ public class RowTranslator<R> extends ColumnsTranslator<R>
     {
         Field[] fields = getDeclaredFields();
         initColumnTranslatorList(fields.length);
-        cascadeFieldList = new ArrayList<Field>(4);
+        cascadeFieldList = new ArrayList<>(4);
         
         // for all fields
         for (Field f: fields)

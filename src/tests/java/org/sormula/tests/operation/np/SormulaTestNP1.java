@@ -44,7 +44,7 @@ public class SormulaTestNP1
     
     public SormulaTestNP1()
     {
-        childList = new ArrayList<SormulaTestNP2>();
+        childList = new ArrayList<>();
     }
 
     

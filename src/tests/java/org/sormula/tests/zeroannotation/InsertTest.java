@@ -54,7 +54,7 @@ public class InsertTest extends DatabaseTest<ZeroAnnotationTest>
         );
 
         // child table
-        DatabaseTest<ZeroAnnotationChild> child = new DatabaseTest<ZeroAnnotationChild>();
+        DatabaseTest<ZeroAnnotationChild> child = new DatabaseTest<>();
         child.openDatabase();
         child.createTable(ZeroAnnotationChild.class, 
                 "CREATE TABLE " + getSchemaPrefix() + ZeroAnnotationChild.class.getSimpleName() + " (" +

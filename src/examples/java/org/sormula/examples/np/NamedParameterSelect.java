@@ -64,7 +64,7 @@ public class NamedParameterSelect extends ExampleBase
         System.out.println("\nOrders and their products obtained with named parameter $description:");
         
         Table<Order> ordertTable = database.getTable(Order.class);
-        ArrayListSelectOperation<Order> selectOperation = new ArrayListSelectOperation<Order>(ordertTable, "" /* all */);
+        ArrayListSelectOperation<Order> selectOperation = new ArrayListSelectOperation<>(ordertTable, "" /* all */);
         
         // selects only products with description of "Product D"
         // $description in OrderItem @OneToOneCascade(...sourceParameterFieldNames={"productId", "$description"
@@ -91,7 +91,7 @@ public class NamedParameterSelect extends ExampleBase
         System.out.println("\nOrders as old as " + minimumAge + ":");
         
         Table<Order> ordertTable = database.getTable(Order.class);
-        ArrayListSelectOperation<Order> selectOperation = new ArrayListSelectOperation<Order>(ordertTable, "asOldAs");
+        ArrayListSelectOperation<Order> selectOperation = new ArrayListSelectOperation<>(ordertTable, "asOldAs");
         selectOperation.setParameter("orderDate", minimumAge); // operand for @WhereField(name="orderDate", ...
         
         for (Order o : selectOperation.selectAll())

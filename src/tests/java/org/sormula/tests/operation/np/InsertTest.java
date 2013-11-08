@@ -45,7 +45,7 @@ public class InsertTest extends DatabaseTest<SormulaTestNP1>
         );
         
         // create level 2 table
-        DatabaseTest<SormulaTestNP2> child2 = new DatabaseTest<SormulaTestNP2>();
+        DatabaseTest<SormulaTestNP2> child2 = new DatabaseTest<>();
         child2.openDatabase();
         child2.createTable(SormulaTestNP2.class, 
                 "CREATE TABLE " + getSchemaPrefix() + SormulaTestNP2.class.getSimpleName() + " (" +
@@ -93,7 +93,7 @@ public class InsertTest extends DatabaseTest<SormulaTestNP1>
         
         // verify that all children were inserted
         Table<SormulaTestNP2> child2Table = getDatabase().getTable(SormulaTestNP2.class);
-        ScalarSelectOperation<SormulaTestNP2> select2 = new ScalarSelectOperation<SormulaTestNP2>(child2Table);
+        ScalarSelectOperation<SormulaTestNP2> select2 = new ScalarSelectOperation<>(child2Table);
         
         // test level 2 children
         for (SormulaTestNP2 node2: node1.getChildList())

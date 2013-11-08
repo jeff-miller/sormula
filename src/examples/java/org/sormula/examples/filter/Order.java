@@ -51,7 +51,7 @@ public class Order
     public Order(int orderId)
     {
         this.orderId = orderId;
-        orderItems = new ArrayList<OrderItem>();
+        orderItems = new ArrayList<>();
     }
 
 

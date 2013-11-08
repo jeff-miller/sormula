@@ -48,7 +48,7 @@ public abstract class AbstractSelectCascadeFilter implements SelectCascadeFilter
     public AbstractSelectCascadeFilter()
     {
         // build map of row type name (of 2nd parameter) to method
-        acceptMethods = new HashMap<String, Method>();
+        acceptMethods = new HashMap<>();
 
         // for all methods in this class
         for (Method m : getClass().getMethods())

@@ -44,7 +44,7 @@ public class InsertTest extends DatabaseTest<SormulaSymParent>
         );
         
         // create child table for 1 to n relationship
-        DatabaseTest<SormulaSymChild> child = new DatabaseTest<SormulaSymChild>();
+        DatabaseTest<SormulaSymChild> child = new DatabaseTest<>();
         child.openDatabase();
         child.createTable(SormulaSymChild.class, 
                 "CREATE TABLE " + getSchemaPrefix() + SormulaSymChild.class.getSimpleName() + " (" +

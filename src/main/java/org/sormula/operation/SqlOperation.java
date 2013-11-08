@@ -139,7 +139,7 @@ public abstract class SqlOperation<R> implements AutoCloseable
      */
     public void setParameter(String name, Object value)
     {
-        if (namedParameterMap == null) namedParameterMap = new HashMap<String, Object>();
+        if (namedParameterMap == null) namedParameterMap = new HashMap<>();
         namedParameterMap.put(name, value);
     }
 

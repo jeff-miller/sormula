@@ -46,7 +46,7 @@ public class SormulaSymParent3 extends SormulaSymParent
     public SormulaSymParent3(int parentId, String description)
     {
         super(parentId, description);
-        childList = new ArrayList<SormulaSymChild>();
+        childList = new ArrayList<>();
     }
 
 

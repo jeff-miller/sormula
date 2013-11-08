@@ -12,7 +12,7 @@ JDK 5/6     JDK 7       comments
                         - fix connection leak for active record lazy selects
                         - SelectCascadeFilter allows filtering algorithms to be written in Java and
                           applied as rows are read from the database 
-                        - SqlOperation allowes named parameters with setParameter(String, Object)
+                        - SqlOperation allows named parameters with setParameter(String, Object)
                         - SelectCascade#sourceParameterFieldNames can refer to a named parameter by prefixing
                           name with dollar ($) symbol
 3.0-jdk1.5  3.0-jdk1.7  - caching
@@ -41,8 +41,7 @@ JDK 5/6     JDK 7       comments
 1.9.3       2.3.3       - save cascades to all levels
 1.9.2       2.3.2       - TypeTranslator can be used for primative
 1.9.1       2.3.1       - update examples
-1.9         2.3         - batch, JNDI, cascade array types, optional cascade targetClass, 
-                          query cancel, query timeout
+1.9         2.3         - batch, JNDI, cascade array types, optional cascade targetClass, query cancel, query timeout
 1.8         2.2         - lazy cascade, name translators
 1.7.1       2.1.1       - improved active record transaction
 1.7         2.1         - active record

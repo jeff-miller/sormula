@@ -86,7 +86,7 @@ public class InsertTest extends ActiveDatabaseTest<SormulaTestARNI>
         {
             // insert collection with known id's
             int[] ids = {2001, 2007, 2003};
-            ArrayList<SormulaTestARNI> list = new ArrayList<SormulaTestARNI>(ids.length);
+            ArrayList<SormulaTestARNI> list = new ArrayList<>(ids.length);
             
             for (int id : ids)
             {
@@ -113,7 +113,7 @@ public class InsertTest extends ActiveDatabaseTest<SormulaTestARNI>
         {
             // insert collection with known id's
             int[] ids = {3001, 3007, 3003};
-            ArrayList<SormulaTestARNI> list = new ArrayList<SormulaTestARNI>(ids.length);
+            ArrayList<SormulaTestARNI> list = new ArrayList<>(ids.length);
             
             for (int id : ids)
             {

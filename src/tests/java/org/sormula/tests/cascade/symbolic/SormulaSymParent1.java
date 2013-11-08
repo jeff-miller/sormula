@@ -47,7 +47,7 @@ public class SormulaSymParent1 extends SormulaSymParent
     public SormulaSymParent1(int parentId, String description)
     {
         super(parentId, description);
-        childList = new ArrayList<SormulaSymChild>();
+        childList = new ArrayList<>();
     }
 
 

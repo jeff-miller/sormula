@@ -1,1 +1,1 @@
-java -cp .;sormula-3.0-jdk1.5.jar;hsqldb-j5-2.2.4.jar ActiveRecordExample
+java -cp .;sormula-3.1-jdk1.5.jar;hsqldb-j5-2.2.4.jar ActiveRecordExample

@@ -20,6 +20,7 @@ import java.util.GregorianCalendar;
 
 import org.sormula.annotation.Column;
 import org.sormula.annotation.Transient;
+import org.sormula.annotation.Where;
 import org.sormula.translator.standard.BooleanYNColumnTranslator;
 
 
@@ -27,12 +28,13 @@ import org.sormula.translator.standard.BooleanYNColumnTranslator;
  * Row class for {@link ColumnTranslatorTest}.
  * @author Jeff Miller
  */
+@Where(name="forTestSting1", fieldNames="testString1")
 public class SormulaTest1
 {
     boolean testBoolean1;
     Boolean testBoolean2;
     
-    @Column(translator=BooleanYNColumnTranslator.class)
+    @Column(translator=BooleanYNColumnTranslator.class) // equivalent to @ImplicitType(translator=BooleanYNTranslator)
     boolean testBooleanYN1;
     @Column(translator=BooleanYNColumnTranslator.class)
     Boolean testBooleanYN2;

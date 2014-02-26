@@ -19,6 +19,7 @@ package org.sormula.translator.standard;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Timestamp;
+import java.sql.Types;
 import java.util.GregorianCalendar;
 
 import org.sormula.Database;
@@ -40,7 +41,8 @@ public class GregorianCalendarTranslator implements TypeTranslator<GregorianCale
      */
     public void write(PreparedStatement preparedStatement, int parameterIndex, GregorianCalendar parameter) throws Exception
     {
-        preparedStatement.setTimestamp(parameterIndex, new Timestamp(parameter.getTimeInMillis()));
+        if (parameter == null) preparedStatement.setNull(parameterIndex, Types.TIMESTAMP);
+        else                   preparedStatement.setTimestamp(parameterIndex, new Timestamp(parameter.getTimeInMillis()));
     }
     
     
@@ -49,8 +51,19 @@ public class GregorianCalendarTranslator implements TypeTranslator<GregorianCale
      */
     public GregorianCalendar read(ResultSet resultSet, int columnIndex) throws Exception
     {
-        GregorianCalendar gc = new GregorianCalendar();
-        gc.setTimeInMillis(resultSet.getTimestamp(columnIndex).getTime());
+        GregorianCalendar gc;
+        
+        Timestamp t = resultSet.getTimestamp(columnIndex);
+        if (t == null)
+        {
+            gc = null;
+        }
+        else
+        {
+            gc = new GregorianCalendar();
+            gc.setTimeInMillis(t.getTime());
+        }
+        
         return gc;
     }
 }

@@ -18,6 +18,7 @@ package org.sormula.translator.standard;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.Types;
 
 import org.sormula.Database;
 import org.sormula.translator.TypeTranslator;
@@ -37,7 +38,8 @@ public class BooleanTranslator implements TypeTranslator<Boolean>
      */
     public void write(PreparedStatement preparedStatement, int parameterIndex, Boolean parameter) throws Exception
     {
-        preparedStatement.setBoolean(parameterIndex, parameter);
+        if (parameter == null) preparedStatement.setNull(parameterIndex, Types.BOOLEAN);
+        else                   preparedStatement.setBoolean(parameterIndex, parameter);
     }
     
     
@@ -46,6 +48,8 @@ public class BooleanTranslator implements TypeTranslator<Boolean>
      */
     public Boolean read(ResultSet resultSet, int columnIndex) throws Exception
     {
-        return resultSet.getBoolean(columnIndex);
+        Boolean b = resultSet.getBoolean(columnIndex);
+        if (resultSet.wasNull()) b = null;
+        return b;
     }
 }

@@ -18,6 +18,7 @@ package org.sormula.translator.standard;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.Types;
 import java.util.Date;
 
 import org.sormula.Database;
@@ -39,8 +40,8 @@ public class DateTranslator implements TypeTranslator<Date>
      */
     public void write(PreparedStatement preparedStatement, int parameterIndex, Date parameter) throws Exception
     {
-        if (parameter != null) preparedStatement.setTimestamp(parameterIndex, new java.sql.Timestamp(parameter.getTime()));
-        else                   preparedStatement.setTimestamp(parameterIndex, null);
+        if (parameter == null) preparedStatement.setNull(parameterIndex, Types.TIMESTAMP); 
+        else                   preparedStatement.setTimestamp(parameterIndex, new java.sql.Timestamp(parameter.getTime()));
         
     }
     
@@ -51,8 +52,7 @@ public class DateTranslator implements TypeTranslator<Date>
     public Date read(ResultSet resultSet, int columnIndex) throws Exception
     {
         java.sql.Timestamp sqlTimestamp = resultSet.getTimestamp(columnIndex);
-        
-        if (sqlTimestamp != null) return new java.util.Date(sqlTimestamp.getTime());
-        else                      return null;
+        if (sqlTimestamp == null) return null;
+        else                      return new java.util.Date(sqlTimestamp.getTime());
     }
 }

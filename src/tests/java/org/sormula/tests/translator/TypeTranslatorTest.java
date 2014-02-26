@@ -61,6 +61,7 @@ public class TypeTranslatorTest extends DatabaseTest<SormulaTestTT>
             "CREATE TABLE " + getSchemaPrefix() + SormulaTestTT.class.getSimpleName() + " (" +
             " testbooleanyesno1 CHAR(1)," +
             " testbooleanyesno2 CHAR(1)," +
+            " testbooleanyesno3 CHAR(1)," +
             " testinteger INTEGER," +
             " testdate TIMESTAMP," +
             " teststring VARCHAR(10)" +
@@ -83,6 +84,7 @@ public class TypeTranslatorTest extends DatabaseTest<SormulaTestTT>
         
         inserted.setTestBooleanYesNo1(false);
         inserted.setTestBooleanYesNo2(true);
+        inserted.setTestBooleanYesNo3(null);
         inserted.setTestInteger(1234567890);
         inserted.setTestString("abcdefghij");
         inserted.setTestDate(new java.util.Date(System.currentTimeMillis()));
@@ -104,6 +106,7 @@ public class TypeTranslatorTest extends DatabaseTest<SormulaTestTT>
          
         assert inserted.isTestBooleanYesNo1() == selected.isTestBooleanYesNo1() : "testBooleanYN1" + message;
         assert inserted.getTestBooleanYesNo2() == selected.getTestBooleanYesNo2() : "testBooleanYN2" + message;
+        assert selected.getTestBooleanYesNo3() == null : "testBooleanYN3 should be null";
         assert inserted.getTestInteger() == selected.getTestInteger() : "testInteger" + message;
         assert inserted.getTestString().equals(selected.getTestString()) : "testString" + message;
         assert inserted.getTestDate().equals(selected.getTestDate()) : "testDate" + message;

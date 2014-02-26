@@ -2,6 +2,8 @@ Version History
 
 JDK 5/6     JDK 7       comments
 ------------------------------------------------------------------------------------------------------------
+3.2-jdk1.5  3.2-jdk1.7  - org.sormula.translator.standard translators can read/write null non-primative types
+ 
 3.1-jdk1.5  3.1-jdk1.7  - SelectCascade#sourceParameterFieldNames can be symbolic name of "#primaryKeyFields" 
                           or "#targetFieldNames" instead of specific fields
                         - SelectCascade#targetWhereName can be symbolic name of "#sourceFieldNames" or 
@@ -15,6 +17,7 @@ JDK 5/6     JDK 7       comments
                         - SqlOperation allowes named parameters with setParameter(String, Object)
                         - SelectCascade#sourceParameterFieldNames can refer to a named parameter by prefixing
                           name with dollar ($) symbol
+
 3.0-jdk1.5  3.0-jdk1.7  - caching
                         - TransactionListener
                         - row annotations have precendence over table annotations 
@@ -37,6 +40,7 @@ JDK 5/6     JDK 7       comments
                         - add many-to-many examples
                         - named cascades (see org.sormula.tests.cascade.named for example)
                         - non-identity inserts for tables with identity columns
+                        
 1.9.3       2.3.3       - save cascades to all levels
 1.9.2       2.3.2       - TypeTranslator can be used for primative
 1.9.1       2.3.1       - update examples

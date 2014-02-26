@@ -26,6 +26,7 @@ public class SormulaTestLong
 {
     long testLong1;
     Long testLong2;
+    Long testLong3;
     
     public long getTestLong1()
     {
@@ -42,5 +43,13 @@ public class SormulaTestLong
     public void setTestLong2(Long testLong2)
     {
         this.testLong2 = testLong2;
+    }
+    public Long getTestLong3()
+    {
+        return testLong3;
+    }
+    public void setTestLong3(Long testLong3)
+    {
+        this.testLong3 = testLong3;
     }
 }

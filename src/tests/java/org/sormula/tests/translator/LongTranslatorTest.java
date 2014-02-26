@@ -50,7 +50,8 @@ public class LongTranslatorTest extends DatabaseTest<SormulaTestLong>
             createTable(SormulaTestLong.class, 
                 "CREATE TABLE " + getSchemaPrefix() + SormulaTestLong.class.getSimpleName() + " (" +
                 " testLong1 BIGINT," +
-                " testLong2 BIGINT" +
+                " testLong2 BIGINT," +
+                " testLong3 BIGINT" +
                 ")"
             );
         }
@@ -76,6 +77,7 @@ public class LongTranslatorTest extends DatabaseTest<SormulaTestLong>
             inserted = new SormulaTestLong();
             inserted.setTestLong1(123456789012345678L);
             inserted.setTestLong2(-123456789012345678L);
+            inserted.setTestLong3(null);
             assert getTable().insert(inserted) == 1 : "1 row not inserted";
             commit();
         }
@@ -98,6 +100,7 @@ public class LongTranslatorTest extends DatabaseTest<SormulaTestLong>
             String message = " column inserted != selected";
             assert inserted.getTestLong1() == selected.getTestLong1()     : "testLong1" + message;
             assert inserted.getTestLong2().equals(selected.getTestLong2()): "testLong2" + message;
+            assert selected.getTestLong3() == null : "testLong3 should be null";
             commit();
         }
         else

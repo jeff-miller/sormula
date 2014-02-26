@@ -90,7 +90,8 @@ public class ExampleBase
             properties.list(System.out);
             
             // get connection
-            Class.forName(properties.getProperty("jdbc.driver"));
+            String jdbcDriver = properties.getProperty("jdbc.driver");
+            if (jdbcDriver != null) Class.forName(jdbcDriver); // optional for most drivers since jdk1.6 
             String url = properties.getProperty("jdbc.url");
             String user = properties.getProperty("jdbc.user", "");
             String password = properties.getProperty("jdbc.password", "");

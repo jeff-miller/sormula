@@ -1220,6 +1220,7 @@ public abstract class SqlOperation<R>
         {
             RowTranslator<R> rowTranslator = getTable().getRowTranslator();
             rowTranslator.setIncludeIdentityColumns(includeIdentityColumns);
+            rowTranslator.setIncludeReadOnlyColumns(false);
             setNextParameter(rowTranslator.write(preparedStatement, getNextParameter(), row));
         }
         catch (Exception e)

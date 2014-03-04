@@ -137,6 +137,7 @@ public class UpdateOperation<R> extends ModifyOperation<R>
         String tableName = getTable().getQualifiedTableName();
         RowTranslator<R> rowTranslator = getTable().getRowTranslator();
         rowTranslator.setIncludeIdentityColumns(isIncludeIdentityColumns()); // usually false for updates that have identity column
+        rowTranslator.setIncludeReadOnlyColumns(false);
         String columnParameterPhrase = rowTranslator.createColumnParameterPhrase();
         
         StringBuilder sql = new StringBuilder(columnParameterPhrase.length() +  tableName.length() + 50);

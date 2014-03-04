@@ -44,6 +44,7 @@ public abstract class AbstractColumnTranslator<R, T> implements ColumnTranslator
     SormulaField<R, T> sormulaField;
     TypeTranslator<T> typeTranslator;
     boolean identity;
+    boolean readOnly;
     
     
     /**
@@ -89,7 +90,11 @@ public abstract class AbstractColumnTranslator<R, T> implements ColumnTranslator
         {
             sormulaField = new SormulaField<R, T>(field);
             Column columnAnnotation = field.getAnnotation(Column.class);
-            setIdentity(columnAnnotation != null && columnAnnotation.identity());
+            if (columnAnnotation != null)
+            {
+                setIdentity(columnAnnotation.identity());
+                setReadOnly(columnAnnotation.readOnly());
+            }
         }
         catch (ReflectException e)
         {
@@ -152,6 +157,19 @@ public abstract class AbstractColumnTranslator<R, T> implements ColumnTranslator
     public void setIdentity(boolean identity)
     {
         this.identity = identity;
+    }
+
+
+    /**
+     * {@inheritDoc}
+     */
+    public boolean isReadOnly()
+    {
+        return readOnly;
+    }
+    public void setReadOnly(boolean readOnly)
+    {
+        this.readOnly = readOnly;
     }
 
 

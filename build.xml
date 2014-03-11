@@ -30,8 +30,8 @@
 		<antcall target="NameUpdate"/>
 		<antcall target="LocalDateExample"/>
 	</target>
-    <target name="BasicInsertZ" description="Runs example">
-        <antcall target="run-example"><param name="class" value="com.something.test.BasicInsertZ"/></antcall>
+    <target name="BenchmarkSuite" description="Runs comparisons of Sormula vs. plain JDBC">
+        <antcall target="run-example"><param name="class" value="org.sormula.examples.benchmark.BenchmarkSuite"/></antcall>
     </target>
     <target name="BasicInsert" description="Runs example">
         <antcall target="run-example"><param name="class" value="org.sormula.examples.basic.BasicInsert"/></antcall>
@@ -122,6 +122,7 @@
         <echo>Run ${class}</echo>
         <java classname="${class}">
             <sysproperty key="dbdir" value="${db.dir}"/>
+        	<sysproperty key="seed" value="${seed}"/>
         	<sysproperty key="java.library.path" value="jdbc/${db.dir}"/> <!-- for type 2 JDBC drivers -->
             <classpath refid="examples.libpath"/>
             <classpath>

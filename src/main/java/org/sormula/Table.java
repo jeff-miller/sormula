@@ -157,9 +157,17 @@ public class Table<R> implements TypeTranslatorMap, TransactionListener
         nameTranslators = initNameTranslators(rowAnnotation);
         rowTranslator = initRowTranslator(rowAnnotation);
         tableName = initTableName(rowAnnotation);
-        cache = initCache();
+        cache = initCache(); 
+        database.getTransaction().addListener(this); 
         
-        database.getTransaction().addListener(this);
+        // TODO
+        /*
+        if (database.getTransaction().isActive())
+        {
+            // cache must be opened for use since transaction notify was invoked prior to this table creation
+            begin(database.getTransaction());
+        }
+        */
         
         if (log.isDebugEnabled())
         {
@@ -433,7 +441,8 @@ public class Table<R> implements TypeTranslatorMap, TransactionListener
             {
                 throw new CacheException("error creating cache", e);
             }
-            
+        
+            // TODO this should be moved as a separate from initCache
             if (database.getTransaction().isActive())
             {
                 // cache must be opened for use since transaction notify was invoked prior to this table creation
@@ -1427,6 +1436,7 @@ public class Table<R> implements TypeTranslatorMap, TransactionListener
     public void begin(Transaction transaction)
     {
         if (log.isDebugEnabled()) log.debug("begin(transaction) " + getQualifiedTableName());
+        
         if (cache != null)
         {
             try

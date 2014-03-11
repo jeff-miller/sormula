@@ -42,11 +42,56 @@ public class ExampleBase
     String schema;
     String sqlShutdown;
     String driverShutdown;
+    String url;
+    String user;
+    String password;
     
     
+    /**
+     * Gets the connection that was created with {@link #openDatabase()}. Connection will be closed
+     * when {@link #closeDatabase()} is invoked. Connection is defined
+     * in /jdbc/DB/jdbc.properties file.
+     * 
+     * @return jdbc connection  
+     */
     protected Connection getConnection()
     {
         return connection;
+    }
+    
+    
+    /**
+     * Creates a new database connection. Connection must be closed by caller. Connection is defined
+     * in /jdbc/DB/jdbc.properties file. The {@link #openDatabase()} must be invoked prior to using this
+     * method.
+     * 
+     * @return jdbc connection 
+     */
+    public Connection createConnection()
+    {
+        Connection c;
+        
+        try
+        {
+            if (user.length() == 0 && password.length() == 0)
+            {
+                // no user and password
+                log.info("get connection url=" + url);
+                c = DriverManager.getConnection(url);
+            }
+            else
+            {
+                log.info("get connection url=" + url + " user=" + user + " password=" + password);
+                c = DriverManager.getConnection(url, user, password); 
+            }
+        }
+        catch (SQLException e)
+        {
+            log.error("error creating connection for " + url);
+            c = null;
+        }
+        
+        return c;
     }
     
     
@@ -92,26 +137,15 @@ public class ExampleBase
             // get connection
             String jdbcDriver = properties.getProperty("jdbc.driver");
             if (jdbcDriver != null) Class.forName(jdbcDriver); // optional for most drivers since jdk1.6 
-            String url = properties.getProperty("jdbc.url");
-            String user = properties.getProperty("jdbc.user", "");
-            String password = properties.getProperty("jdbc.password", "");
+            url = properties.getProperty("jdbc.url");
+            user = properties.getProperty("jdbc.user", "");
+            password = properties.getProperty("jdbc.password", "");
             
             // shutdown commands
             sqlShutdown = properties.getProperty("jdbc.shutdown.sql", "");
             driverShutdown = properties.getProperty("jdbc.shutdown.driver", "");
             
-            if (user.length() == 0 && password.length() == 0)
-            {
-                // no user and password
-                log.info("get connection url=" + url);
-                connection = DriverManager.getConnection(url);
-            }
-            else
-            {
-                log.info("get connection url=" + url + " user=" + user + " password=" + password);
-                connection = DriverManager.getConnection(url, user, password); 
-            }
-            
+            connection = createConnection();
             schema = properties.getProperty("jdbc.schema", "");
         }
         else

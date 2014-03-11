@@ -26,8 +26,8 @@ import org.sormula.log.ClassLogger;
 
 /**
  * Simple transaction interface for {@link Connection}. This class is not required for
- * any sormula programming and is only used by {@link Database} as a convenience. Other 
- * transaction mechanisms are compatible with sormula.
+ * most sormula programming and is only used by {@link Database} as a convenience. Other 
+ * transaction mechanisms are compatible with sormula. This is required for cached tables.
  * 
  * @author Jeff Miller
  */

@@ -160,14 +160,11 @@ public class Table<R> implements TypeTranslatorMap, TransactionListener
         cache = initCache(); 
         database.getTransaction().addListener(this); 
         
-        // TODO
-        /*
         if (database.getTransaction().isActive())
         {
             // cache must be opened for use since transaction notify was invoked prior to this table creation
             begin(database.getTransaction());
         }
-        */
         
         if (log.isDebugEnabled())
         {
@@ -440,13 +437,6 @@ public class Table<R> implements TypeTranslatorMap, TransactionListener
             catch (Exception e)
             {
                 throw new CacheException("error creating cache", e);
-            }
-        
-            // TODO this should be moved as a separate from initCache
-            if (database.getTransaction().isActive())
-            {
-                // cache must be opened for use since transaction notify was invoked prior to this table creation
-                begin(database.getTransaction());
             }
         }
 

@@ -39,10 +39,6 @@ public class SormulaBenchmarkMultiResource extends SormulaBenchmarkThread
     {
         elapsedTime.start();
         createDatabase();
-        
-        //TODO remove 
-        database.getTable(Benchmark.class); // force table creation prior to begin transaction
-        
         database.getTransaction().begin();
     }
 

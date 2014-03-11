@@ -18,6 +18,7 @@ package org.sormula.examples.benchmark;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -34,16 +35,28 @@ public class BenchmarkSuite extends ExampleBase
     private static final ClassLogger log = new ClassLogger();
     long seed;
     AtomicInteger idGenerator; // assumes this is only application that is inserting
+    int maximumOperations;
+    int maximumRowsPerOperation;
     
     
     public static void main(String[] args) throws Exception
     {
-        new BenchmarkSuite();
+        if (args.length < 2)
+        {
+            new BenchmarkSuite(100, 200);
+        }
+        else
+        {
+            new BenchmarkSuite(Integer.parseInt(args[0]), Integer.parseInt(args[1]));
+        }
     }
     
     
-    public BenchmarkSuite() throws Exception
+    public BenchmarkSuite(int maximumOperations, int maximumRowsPerOperation) throws Exception
     {
+        this.maximumOperations = maximumOperations;
+        this.maximumRowsPerOperation = maximumRowsPerOperation;
+        
         openDatabase();
         initTable();
         initSeed();
@@ -67,13 +80,13 @@ public class BenchmarkSuite extends ExampleBase
     
     public int getMaximumOperations()
     {
-        return 100; // TODO
+        return maximumOperations;
     }
     
     
     public int getMaximumRowsPerOperation()
     {
-        return 100; // TODO
+        return maximumRowsPerOperation;
     }
     
     
@@ -85,8 +98,8 @@ public class BenchmarkSuite extends ExampleBase
                 "(id INTEGER PRIMARY KEY," +
                 " description VARCHAR(60)," +
                 " integer2 INTEGER," +
-                " boolean1 CHAR(1)," +
-                " boolean2 CHAR(1)," +
+                " boolean1 VARCHAR(5)," +
+                " boolean2 VARCHAR(5)," +
                 " float1 DECIMAL(6,2)," +
                 " float2 DECIMAL(6,2)," +
                 " double1 DECIMAL(8,3)," +
@@ -134,12 +147,12 @@ public class BenchmarkSuite extends ExampleBase
         benchmarkThreads.add(new JdbcBenchmarkSingleResource(this));
         Collections.shuffle(benchmarkThreads); // random order
         
-        // perform in separate loops so that similar things occur at the same time  
-        log.info("open benchmark threads");
-        for (BenchmarkThread bt : benchmarkThreads) bt.open();
-
-        log.info("normalize benchmark threads");
-        for (BenchmarkThread bt : benchmarkThreads) bt.normalize();
+        // perform in separate loops so that similar things occur at the similar times  
+        for (BenchmarkThread bt : benchmarkThreads)
+        {
+            bt.open();
+            bt.normalize();
+        }
 
         log.info("start benchmark threads");
         for (BenchmarkThread bt : benchmarkThreads) bt.start();
@@ -147,7 +160,6 @@ public class BenchmarkSuite extends ExampleBase
         log.info("wait for benchmark threads");
         for (BenchmarkThread bt : benchmarkThreads) bt.join();
         
-        log.info("close benchmark threads");
         for (BenchmarkThread bt : benchmarkThreads) bt.close();
         
         // verify all benchmarks are the same
@@ -177,7 +189,19 @@ public class BenchmarkSuite extends ExampleBase
         database.close();
         if (!sameCounts) log.warn("row counts are not the same; benchmarks did not perform same operations?");
 
-        // show elapsed time
+        // show fastest to slowest elapsed time
+        Collections.sort(benchmarkThreads, new Comparator<BenchmarkThread>() {
+            public int compare(BenchmarkThread o1, BenchmarkThread o2)
+            {
+                long t1 = o1.getElapsedTime().getTime();
+                long t2 = o2.getElapsedTime().getTime();
+                if (t1 > t2) return 1;
+                if (t1 < t2) return -1;
+                return 0;
+            }
+        });
+        
+        log.info("fastest to slowest:");
         for (BenchmarkThread bt : benchmarkThreads)
         {
             ElapsedTime elapsedTime = bt.getElapsedTime();

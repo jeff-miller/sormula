@@ -134,8 +134,7 @@ public abstract class SormulaBenchmarkThread extends BenchmarkThread
 }
 
 
-//TODO set cache sizes, other props
-@Cached(type=ReadOnlyCache.class)
+@Cached(type=ReadOnlyCache.class, size=100)
 class ROCacheDatabase extends Database
 {
     public ROCacheDatabase(Connection connection)
@@ -145,7 +144,7 @@ class ROCacheDatabase extends Database
 }
 
 
-@Cached(type=ReadWriteCache.class)
+@Cached(type=ReadWriteCache.class, size=100)
 class RWCacheDatabase extends Database
 {
     public RWCacheDatabase(Connection connection)

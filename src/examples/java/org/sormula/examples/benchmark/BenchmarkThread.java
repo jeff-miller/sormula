@@ -71,7 +71,7 @@ public abstract class BenchmarkThread extends Thread
         try
         {
             int maximumOperations = benchmarkSuite.getMaximumOperations();
-            for (int i = 0; i < maximumOperations; ++i)
+            for (int i = 1; i <= maximumOperations; ++i)
             {
                 int quantity = suiteRandom.nextInt(benchmarkSuite.getMaximumRowsPerOperation()); 
             

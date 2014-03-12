@@ -37,7 +37,8 @@ import org.sormula.log.ClassLogger;
 public class ExampleBase
 {
     private static final ClassLogger log = new ClassLogger();
-    
+
+    Properties jdbcProperties;
     Connection connection;
     String schema;
     String sqlShutdown;
@@ -114,6 +115,12 @@ public class ExampleBase
     }
     
     
+    protected String getBooleanDDL()
+    {
+        return jdbcProperties.getProperty("booleanDDL", "").trim();
+    }
+    
+    
     /**
      * Gets a jdbc connection based upon values in jdbc/ddd/jdbc.properties (ddd is
      * value of environment variable dbdir.
@@ -129,24 +136,24 @@ public class ExampleBase
         {
             // read db properties
             InputStream is = new FileInputStream("jdbc/" + dbdir + "/jdbc.properties");
-            Properties properties = new Properties();
-            properties.load(is);
+            jdbcProperties = new Properties();
+            jdbcProperties.load(is);
             is.close();
-            properties.list(System.out);
+            jdbcProperties.list(System.out);
             
             // get connection
-            String jdbcDriver = properties.getProperty("jdbc.driver");
+            String jdbcDriver = jdbcProperties.getProperty("jdbc.driver");
             if (jdbcDriver != null) Class.forName(jdbcDriver); // optional for most drivers since jdk1.6 
-            url = properties.getProperty("jdbc.url");
-            user = properties.getProperty("jdbc.user", "");
-            password = properties.getProperty("jdbc.password", "");
+            url = jdbcProperties.getProperty("jdbc.url");
+            user = jdbcProperties.getProperty("jdbc.user", "");
+            password = jdbcProperties.getProperty("jdbc.password", "");
             
             // shutdown commands
-            sqlShutdown = properties.getProperty("jdbc.shutdown.sql", "");
-            driverShutdown = properties.getProperty("jdbc.shutdown.driver", "");
+            sqlShutdown = jdbcProperties.getProperty("jdbc.shutdown.sql", "");
+            driverShutdown = jdbcProperties.getProperty("jdbc.shutdown.driver", "");
             
             connection = createConnection();
-            schema = properties.getProperty("jdbc.schema", "");
+            schema = jdbcProperties.getProperty("jdbc.schema", "");
         }
         else
         {

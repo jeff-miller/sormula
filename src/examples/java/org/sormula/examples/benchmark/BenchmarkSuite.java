@@ -98,8 +98,8 @@ public class BenchmarkSuite extends ExampleBase
                 "(id INTEGER PRIMARY KEY," +
                 " description VARCHAR(60)," +
                 " integer2 INTEGER," +
-                " boolean1 VARCHAR(5)," +
-                " boolean2 VARCHAR(5)," +
+                " boolean1 " + getBooleanDDL() + "," + 
+                " boolean2 " + getBooleanDDL() + "," + 
                 " float1 DECIMAL(6,2)," +
                 " float2 DECIMAL(6,2)," +
                 " double1 DECIMAL(8,3)," +

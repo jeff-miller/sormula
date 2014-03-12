@@ -156,6 +156,17 @@ public class DatabaseTest<R>
         else return testIdentity; // custom
     }
     
+    
+    public String getBooleanDDL()
+    {
+        return jdbcProperties.getString("booleanDDL").trim();
+    }
+    public boolean isBooleanDDL()
+    {
+        String booleanDDL = getBooleanDDL().toUpperCase();
+        return booleanDDL.startsWith("BIT") || booleanDDL.startsWith("BOOLEAN");
+    }
+    
 
     public boolean isUseTransacation()
     {

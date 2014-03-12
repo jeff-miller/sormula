@@ -44,8 +44,8 @@ public class ColumnTranslatorTest extends DatabaseTest<SormulaTest1>
         openDatabase();
         createTable(SormulaTest1.class, 
             "CREATE TABLE " + getSchemaPrefix() + SormulaTest1.class.getSimpleName() + " (" +
-            " testBoolean1 VARCHAR(5)," +
-            " testBoolean2 VARCHAR(5)," +
+            " testBoolean1 " + getBooleanDDL() + "," +
+            " testBoolean2 " + getBooleanDDL() + "," +
             " testBooleanYN1 CHAR(1)," +
             " testBooleanYN2 CHAR(1)," +
             " testByte1 SMALLINT," +
@@ -184,6 +184,14 @@ public class ColumnTranslatorTest extends DatabaseTest<SormulaTest1>
         SormulaTest1 inserted = new SormulaTest1();
         inserted.setTestString1("nullTest"); // id for select
         
+        if (!isBooleanDDL())
+        {
+            // don't test null for non boolean column types 
+            // nulls cause exception since BooleanTranslator uses Types.BOOLEAN
+            log.info("skipping null boolean tests");
+            inserted.setTestBoolean2(false);
+        }
+        
         // insert row with null for non primatives 
         getTable().insert(inserted);
         
@@ -191,7 +199,7 @@ public class ColumnTranslatorTest extends DatabaseTest<SormulaTest1>
         assert selected != null : "no test row";
 
         String message = " should be null";
-        assert selected.getTestBoolean2() == null : "testBoolean2 " + message;
+        if (isBooleanDDL()) assert selected.getTestBoolean2() == null : "testBoolean2 " + message;
         assert selected.getTestBooleanYN2() == null : "testBooleanYN2 " + message;
         assert selected.getTestByte2() == null : "testByte2 " + message;
         assert selected.getTestDouble2() == null : "testDouble2 " + message;

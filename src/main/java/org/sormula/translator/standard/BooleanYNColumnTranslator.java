@@ -19,7 +19,6 @@ package org.sormula.translator.standard;
 import java.lang.reflect.Field;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.Types;
 
 import org.sormula.annotation.Column;
 import org.sormula.translator.AbstractColumnTranslator;
@@ -61,7 +60,7 @@ public class BooleanYNColumnTranslator<R> extends AbstractColumnTranslator<R, Bo
     public void write(PreparedStatement preparedStatement, int parameterIndex, R row) throws Exception
     {
         Boolean b = getSormulaField().invokeGetMethod(row);
-        if (b == null) preparedStatement.setNull(parameterIndex, Types.BOOLEAN);
+        if (b == null) preparedStatement.setString(parameterIndex, null);
         else           preparedStatement.setString(parameterIndex, b ? "Y" : "N");
     }
     

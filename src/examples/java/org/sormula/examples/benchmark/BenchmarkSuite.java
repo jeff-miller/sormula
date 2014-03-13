@@ -66,6 +66,20 @@ public class BenchmarkSuite extends ExampleBase
     }
     
     
+    @Override
+    public String getSchema() // protected to public interface
+    {
+        return super.getSchema();
+    }
+    
+    
+    @Override
+    public String getSchemaPrefix() // protected to public interface
+    {
+        return super.getSchemaPrefix();
+    }
+
+
     public long getSeed()
     {
         return seed;
@@ -166,7 +180,7 @@ public class BenchmarkSuite extends ExampleBase
         boolean sameCounts = true;
         int remainingCheck = -1;
         int updatedCheck = -1;
-        Database database = new Database(getConnection());
+        Database database = new Database(getConnection(), getSchema());
         Table<Benchmark> benchmarkTable = new Table<Benchmark>(database, Benchmark.class);
         for (BenchmarkThread bt : benchmarkThreads)
         {

@@ -68,15 +68,15 @@ public abstract class SormulaBenchmarkThread extends BenchmarkThread
         switch (cacheType)
         {
             case NONE:
-                database = new Database(getConnection());
+                database = new Database(getConnection(), benchmarkSuite.getSchema());
                 break;
                 
             case READ_ONLY:
-                database = new ROCacheDatabase(getConnection());
+                database = new ROCacheDatabase(getConnection(), benchmarkSuite.getSchema());
                 break;
                 
             case READ_WRITE:
-                database = new RWCacheDatabase(getConnection());
+                database = new RWCacheDatabase(getConnection(), benchmarkSuite.getSchema());
                 break;
         }
     }
@@ -137,9 +137,9 @@ public abstract class SormulaBenchmarkThread extends BenchmarkThread
 @Cached(type=ReadOnlyCache.class, size=100)
 class ROCacheDatabase extends Database
 {
-    public ROCacheDatabase(Connection connection)
+    public ROCacheDatabase(Connection connection, String schema)
     {
-        super(connection);
+        super(connection, schema);
     }
 }
 
@@ -147,8 +147,8 @@ class ROCacheDatabase extends Database
 @Cached(type=ReadWriteCache.class, size=100)
 class RWCacheDatabase extends Database
 {
-    public RWCacheDatabase(Connection connection)
+    public RWCacheDatabase(Connection connection, String schema)
     {
-        super(connection);
+        super(connection, schema);
     }
 }

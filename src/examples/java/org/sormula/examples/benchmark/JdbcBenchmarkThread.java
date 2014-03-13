@@ -29,11 +29,14 @@ import java.util.List;
  */
 public abstract class JdbcBenchmarkThread extends BenchmarkThread
 {
-    static final String SELECT_COLUMNS = "SELECT id, description, integer2, boolean1, boolean2, float1, float2, double1, double2, short1, short2, javaDate, sqlDate, sqlTimestamp FROM Benchmark";
+    String select;
+    
     
     public JdbcBenchmarkThread(BenchmarkSuite benchmarkSuite, String benchmarkName)
     {
         super(benchmarkSuite, benchmarkName);
+        select = "SELECT id, description, integer2, boolean1, boolean2, float1, float2, double1, double2, short1, short2, javaDate, sqlDate, sqlTimestamp FROM " +
+                benchmarkSuite.getSchemaPrefix() + "Benchmark";
     }
 
 
@@ -55,7 +58,7 @@ public abstract class JdbcBenchmarkThread extends BenchmarkThread
     
     protected PreparedStatement prepareSelectForDescription() throws SQLException
     {
-        return getConnection().prepareStatement(SELECT_COLUMNS + " WHERE description = ?");
+        return getConnection().prepareStatement(select + " WHERE description = ?");
     }
     
     
@@ -89,7 +92,7 @@ public abstract class JdbcBenchmarkThread extends BenchmarkThread
         List<Benchmark> benchmarks = new ArrayList<Benchmark>(ids.size());
         
         // select one at-a-time since size may be too big for IN operator 
-        PreparedStatement ps = getConnection().prepareStatement(SELECT_COLUMNS + " WHERE id=?");
+        PreparedStatement ps = getConnection().prepareStatement(select + " WHERE id=?");
         for (Integer id : ids)
         {
             ps.setInt(1, id);
@@ -137,7 +140,8 @@ public abstract class JdbcBenchmarkThread extends BenchmarkThread
     protected PreparedStatement prepareInsert() throws SQLException
     {
         return getConnection().prepareStatement(
-                "INSERT INTO Benchmark(id, description, integer2, boolean1, boolean2, float1, float2, double1, double2, short1, short2, javaDate, sqlDate, sqlTimestamp) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+                "INSERT INTO " + benchmarkSuite.getSchemaPrefix() + 
+                "Benchmark(id, description, integer2, boolean1, boolean2, float1, float2, double1, double2, short1, short2, javaDate, sqlDate, sqlTimestamp) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
     }
     
     
@@ -151,7 +155,8 @@ public abstract class JdbcBenchmarkThread extends BenchmarkThread
     protected PreparedStatement prepareUpdate() throws SQLException
     {
         return getConnection().prepareStatement(
-                "UPDATE Benchmark SET id=?, description=?, integer2=?, boolean1=?, boolean2=?, float1=?, float2=?, double1=?, double2=?, short1=?, short2=?, javaDate=?, sqlDate=?, sqlTimestamp=? WHERE id = ?");
+                "UPDATE " + benchmarkSuite.getSchemaPrefix() +
+                "Benchmark SET id=?, description=?, integer2=?, boolean1=?, boolean2=?, float1=?, float2=?, double1=?, double2=?, short1=?, short2=?, javaDate=?, sqlDate=?, sqlTimestamp=? WHERE id = ?");
     }
     
     
@@ -187,7 +192,7 @@ public abstract class JdbcBenchmarkThread extends BenchmarkThread
     
     protected PreparedStatement prepareDelete() throws SQLException
     {
-        return getConnection().prepareStatement("DELETE FROM Benchmark WHERE id = ?");
+        return getConnection().prepareStatement("DELETE FROM " + benchmarkSuite.getSchemaPrefix() + "Benchmark WHERE id = ?");
     }
     
     

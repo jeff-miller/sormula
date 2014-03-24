@@ -22,6 +22,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 
+import org.sormula.Database;
+import org.sormula.Table;
 import org.sormula.log.ClassLogger;
 import org.sormula.operation.monitor.ElapsedTime;
 
@@ -33,7 +35,7 @@ import org.sormula.operation.monitor.ElapsedTime;
 public abstract class BenchmarkThread extends Thread
 {
     private static final ClassLogger log = new ClassLogger();
-    public static final Integer UPDATE_MARKER = 1234567890;
+    static final Integer UPDATE_MARKER = 1234567890;
     
     BenchmarkSuite benchmarkSuite;
     String benchmarkName;
@@ -42,6 +44,8 @@ public abstract class BenchmarkThread extends Thread
     Connection connection;
     ElapsedTime elapsedTime;
     List<Integer> insertedIds;
+    int remainingCount;
+    int updatedCount;
     
     
     public BenchmarkThread(BenchmarkSuite benchmarkSuite, String benchmarkName)
@@ -79,22 +83,22 @@ public abstract class BenchmarkThread extends Thread
                 switch (suiteRandom.nextInt(4))
                 {
                     case 0:
-                        log.info(i + " select " + quantity + " " + benchmarkName);
+                        if (log.isDebugEnabled()) log.debug(i + " select " + quantity + " " + benchmarkName);
                         select(quantity);
                         break;
                         
                     case 1:
-                        log.info(i + " insert " + quantity + " " + benchmarkName);
+                        if (log.isDebugEnabled()) log.debug(i + " insert " + quantity + " " + benchmarkName);
                         insert(quantity);
                         break;
                         
                     case 2:
-                        log.info(i + " update " + quantity + " " + benchmarkName);
+                        if (log.isDebugEnabled()) log.debug(i + " update " + quantity + " " + benchmarkName);
                         update(quantity);
                         break;
                         
                     case 3:
-                        log.info(i + " delete " + quantity + " " + benchmarkName);
+                        if (log.isDebugEnabled()) log.debug(i + " delete " + quantity + " " + benchmarkName);
                         delete(quantity);
                         break;
                 }
@@ -102,6 +106,8 @@ public abstract class BenchmarkThread extends Thread
                 // attempt random distribution of thread execution 
                 //Thread.sleep(threadRandom.nextInt(1000));
                 Thread.yield();
+                
+                if (i % 50 == 0) log.info("completed " + i + " " + benchmarkName);
             }
         }
         catch (Exception e)
@@ -122,17 +128,39 @@ public abstract class BenchmarkThread extends Thread
         return elapsedTime;
     }
 
+    
+    public void selectCounts() throws Exception
+    {
+        Database database = new Database(getConnection(), benchmarkSuite.getSchema());
+        Table<Benchmark> benchmarkTable = new Table<Benchmark>(database, Benchmark.class);
+        remainingCount = benchmarkTable.<Integer>selectCount("id", "forDescription", benchmarkName);
+        updatedCount   = benchmarkTable.<Integer>selectCount("id", "forUpdateMarker", benchmarkName, UPDATE_MARKER);
+        database.close();
+    }
+    
+
+    public int getRemainingCount()
+    {
+        return remainingCount;
+    }
+
+
+    public int getUpdatedCount()
+    {
+        return updatedCount;
+    }
+
 
     public void open() throws Exception
     {
-        log.info("open() " + benchmarkName);
+        if (log.isDebugEnabled()) log.debug("open() " + benchmarkName);
         connection = benchmarkSuite.createConnection();
     }
     
     
     public void close() throws Exception
     {
-        log.info("close() " + benchmarkName);
+        if (log.isDebugEnabled()) log.debug("close() " + benchmarkName);
         connection.close();
     }
     
@@ -141,7 +169,7 @@ public abstract class BenchmarkThread extends Thread
     {
         // do 1 each operation without timing to avoid skewing time from
         // classloading for threads that are the first to use classes common to all threads
-        log.info("normalize() " + benchmarkName);
+        if (log.isDebugEnabled()) log.debug("normalize() " + benchmarkName);
         insert(1);
         select(1);
         update(1);

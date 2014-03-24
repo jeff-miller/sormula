@@ -22,8 +22,6 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import org.sormula.Database;
-import org.sormula.Table;
 import org.sormula.examples.ExampleBase;
 import org.sormula.examples.benchmark.SormulaBenchmarkThread.CacheType;
 import org.sormula.log.ClassLogger;
@@ -37,6 +35,7 @@ public class BenchmarkSuite extends ExampleBase
     AtomicInteger idGenerator; // assumes this is only application that is inserting
     int maximumOperations;
     int maximumRowsPerOperation;
+    List<BenchmarkThread> benchmarkThreads;
     
     
     public static void main(String[] args) throws Exception
@@ -58,10 +57,9 @@ public class BenchmarkSuite extends ExampleBase
         this.maximumRowsPerOperation = maximumRowsPerOperation;
         
         openDatabase();
-        initTable();
         initSeed();
-        idGenerator = new AtomicInteger(1001);
-        runBenchmarks();
+        runBenchmarksConcurrent();
+        runBenchmarksSingleThreaded();
         closeDatabase();        
     }
     
@@ -144,22 +142,37 @@ public class BenchmarkSuite extends ExampleBase
     }
     
     
-    protected void runBenchmarks() throws Exception
+    protected void runBenchmarksSingleThreaded() throws Exception
     {
-        // NOTE: each thread will use same seed so each will perform the same 
-        // operations in the same order for the same quantities
+        // run each benchmark serially
+        String type = "single-threaded benchmarks";
+        log.info("--- " + type + " ---");
+        createBenchmarks();
         
-        log.info("create benchmark threads");
-        List<BenchmarkThread> benchmarkThreads = new ArrayList<BenchmarkThread>();
-        benchmarkThreads.add(new SormulaBenchmarkMultiResource(this, CacheType.NONE));
-        benchmarkThreads.add(new SormulaBenchmarkMultiResource(this, CacheType.READ_ONLY));
-        benchmarkThreads.add(new SormulaBenchmarkMultiResource(this, CacheType.READ_WRITE)); 
-        benchmarkThreads.add(new JdbcBenchmarkMultiResource(this));
-        benchmarkThreads.add(new SormulaBenchmarkSingleResource(this, CacheType.NONE));
-        benchmarkThreads.add(new SormulaBenchmarkSingleResource(this, CacheType.READ_ONLY));
-        benchmarkThreads.add(new SormulaBenchmarkSingleResource(this, CacheType.READ_WRITE));
-        benchmarkThreads.add(new JdbcBenchmarkSingleResource(this));
-        Collections.shuffle(benchmarkThreads); // random order
+        for (BenchmarkThread bt : benchmarkThreads)
+        {
+            idGenerator = new AtomicInteger(1001);
+            initTable();
+            bt.open();
+            bt.normalize();
+            bt.run();
+            bt.selectCounts();
+            bt.close();
+        }            
+        
+        checkCounts();
+        logTimes(type);
+    }
+    
+    
+    protected void runBenchmarksConcurrent() throws Exception
+    {
+        // run benchmarks concurrently
+        String type = "concurrent benchmarks";
+        log.info("--- " + type + " ---");
+        idGenerator = new AtomicInteger(1001);
+        createBenchmarks();
+        initTable();
         
         // perform in separate loops so that similar things occur at the similar times  
         for (BenchmarkThread bt : benchmarkThreads)
@@ -174,35 +187,57 @@ public class BenchmarkSuite extends ExampleBase
         log.info("wait for benchmark threads");
         for (BenchmarkThread bt : benchmarkThreads) bt.join();
         
-        for (BenchmarkThread bt : benchmarkThreads) bt.close();
-        
-        // verify all benchmarks are the same
-        boolean sameCounts = true;
-        int remainingCheck = -1;
-        int updatedCheck = -1;
-        Database database = new Database(getConnection(), getSchema());
-        Table<Benchmark> benchmarkTable = new Table<Benchmark>(database, Benchmark.class);
         for (BenchmarkThread bt : benchmarkThreads)
         {
-            int remaining = benchmarkTable.<Integer>selectCount("id", "forDescription", bt.getBenchmarkName());
-            int updated   = benchmarkTable.<Integer>selectCount("id", "forUpdateMarker", 
-                    bt.getBenchmarkName(), BenchmarkThread.UPDATE_MARKER);
-            log.info("remaining=" + remaining + " updated=" + updated + " " + bt.getBenchmarkName());
+            bt.selectCounts();
+            bt.close();
+        }
+
+        checkCounts();
+        logTimes(type);
+    }
+    
+    
+    protected void createBenchmarks()
+    {
+        // NOTE: each thread will use same seed so each will perform the same 
+        // operations in the same order for the same quantities
+        benchmarkThreads = new ArrayList<BenchmarkThread>();
+        benchmarkThreads.add(new SormulaBenchmarkMultiResource(this, CacheType.NONE));
+        benchmarkThreads.add(new SormulaBenchmarkMultiResource(this, CacheType.READ_ONLY));
+        benchmarkThreads.add(new SormulaBenchmarkMultiResource(this, CacheType.READ_WRITE)); 
+        benchmarkThreads.add(new JdbcBenchmarkMultiResource(this));
+        benchmarkThreads.add(new SormulaBenchmarkSingleResource(this, CacheType.NONE));
+        benchmarkThreads.add(new SormulaBenchmarkSingleResource(this, CacheType.READ_ONLY));
+        benchmarkThreads.add(new SormulaBenchmarkSingleResource(this, CacheType.READ_WRITE));
+        benchmarkThreads.add(new JdbcBenchmarkSingleResource(this));
+        Collections.shuffle(benchmarkThreads); // random order
+    }
+    
+    
+    protected void checkCounts() throws Exception
+    {
+        // verify all benchmarks are the same
+        boolean sameCounts = true;
+        BenchmarkThread reference = benchmarkThreads.get(0);
+
+        for (BenchmarkThread bt : benchmarkThreads)
+        {
+            log.debug("remaining=" + bt.getRemainingCount() + " updated=" + bt.getUpdatedCount() + " " + bt.getBenchmarkName());
             
-            if (remainingCheck == -1)
-            {
-                // first
-                remainingCheck = remaining;
-                updatedCheck = updated;
-            }
-            else if (remainingCheck != remaining || updatedCheck != updated)
+            if (reference.getRemainingCount() != bt.getRemainingCount() || 
+                reference.getUpdatedCount()   != bt.getUpdatedCount())
             {
                 sameCounts = false;
             }
         }
-        database.close();
+        
         if (!sameCounts) log.warn("row counts are not the same; benchmarks did not perform same operations?");
-
+    }
+    
+    
+    protected void logTimes(String message)
+    {
         // show fastest to slowest elapsed time
         Collections.sort(benchmarkThreads, new Comparator<BenchmarkThread>() {
             public int compare(BenchmarkThread o1, BenchmarkThread o2)
@@ -215,11 +250,14 @@ public class BenchmarkSuite extends ExampleBase
             }
         });
         
-        log.info("fastest to slowest:");
+        log.info(message + " fastest to slowest:");
+        long fastest = benchmarkThreads.get(0).getElapsedTime().getTime();
         for (BenchmarkThread bt : benchmarkThreads)
         {
             ElapsedTime elapsedTime = bt.getElapsedTime();
-            log.info(elapsedTime.getFormattedTime() + " " + elapsedTime.getName());
+            log.info(elapsedTime.getFormattedTime() +
+                    String.format(" %3.1f", (double)elapsedTime.getTime() / fastest) + // relative to fastest
+                    " " + elapsedTime.getName());
         }
     }
 }

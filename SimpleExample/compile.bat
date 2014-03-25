@@ -1,1 +1,1 @@
-javac -cp sormula-3.1-jdk1.5.jar *.java
+javac -cp sormula-3.2-jdk1.5.jar *.java

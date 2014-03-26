@@ -76,12 +76,10 @@ public abstract class WritableCache<R> extends AbstractCache<R>
     public void write() throws CacheException
     {
         if (log.isDebugEnabled()) log.debug("write()");
-        WriteOperations<R> writeOperations = null;
 
-        try
+        try (WriteOperations<R> writeOperations = new WriteOperations<R>(this))
         {
             // init
-            writeOperations = new WriteOperations<R>(this);
             writeOperations.open();
             
             // write to database
@@ -89,11 +87,6 @@ public abstract class WritableCache<R> extends AbstractCache<R>
             {
                 ((UncommittedWritableRow<R>)uncommittedRow).write(writeOperations);
             }
-        }
-        finally
-        {
-            // clean up
-            if (writeOperations!= null) writeOperations.close();
         }
     }
 }

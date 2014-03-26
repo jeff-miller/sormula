@@ -37,7 +37,7 @@ import org.sormula.operation.UpdateOperation;
  *
  * @param <R> cached row type
  */
-public class WriteOperations<R>
+public class WriteOperations<R> implements AutoCloseable
 {
     WritableCache<R> writableCache;
     InsertOperation<R> insertOperation; 

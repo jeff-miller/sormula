@@ -57,6 +57,15 @@ public interface ColumnTranslator<R>
     
     
     /**
+     * Gets the readonly status. True indicates that column should not be modified.
+     * 
+     * @return true if column will not be written to database
+     * @since 3.2
+     */
+    public boolean isReadOnly();
+    
+    
+    /**
      * Reads column value from result set and sets in row object.
      * 
      * @param resultSet read column from this result set

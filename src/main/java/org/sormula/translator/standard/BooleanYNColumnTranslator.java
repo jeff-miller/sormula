@@ -20,12 +20,25 @@ import java.lang.reflect.Field;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
+import org.sormula.annotation.Column;
 import org.sormula.translator.AbstractColumnTranslator;
 
 
 /**
  * Translates a boolean field using {@link PreparedStatement#setString(int, String)} and {@link ResultSet#getString(int)}.
  * "Y" is used for true and "N" is used for false.
+ * <p>
+ * Use this to overrided the standard translator attribute, translator in {@link Column} annotation:
+ * <blockquote><pre>
+ * &#64;Column(translator=BooleanYNColumnTranslator.class) 
+ * boolean someBoolean;
+ * </pre></blockquote>
+ * 
+ * An alternative is to use {@link BooleanYNTranslator}:
+ * <blockquote><pre>
+ * &#64;ImplicitType(translator=BooleanYNTranslator.class) 
+ * boolean someBoolean;
+ * </pre></blockquote>
  * 
  * @since 1.0
  * @author Jeff Miller
@@ -46,7 +59,9 @@ public class BooleanYNColumnTranslator<R> extends AbstractColumnTranslator<R, Bo
      */
     public void write(PreparedStatement preparedStatement, int parameterIndex, R row) throws Exception
     {
-        preparedStatement.setString(parameterIndex, getSormulaField().invokeGetMethod(row) ? "Y" : "N");
+        Boolean b = getSormulaField().invokeGetMethod(row);
+        if (b == null) preparedStatement.setString(parameterIndex, null);
+        else           preparedStatement.setString(parameterIndex, b ? "Y" : "N");
     }
     
     
@@ -55,7 +70,13 @@ public class BooleanYNColumnTranslator<R> extends AbstractColumnTranslator<R, Bo
      */
     public void read(ResultSet resultSet, int columnIndex, R row) throws Exception
     {
-        String b = resultSet.getString(columnIndex);
-        getSormulaField().invokeSetMethod(row, b != null && b.equals("Y") ? true : false);
+        Boolean b;
+        
+        String yn = resultSet.getString(columnIndex);
+        if (yn == null)          b = null;
+        else if (yn.equals("Y")) b = true;
+        else                     b = false;
+        
+        getSormulaField().invokeSetMethod(row, b);
     }
 }

@@ -89,6 +89,15 @@ public @interface Column
     
     
     /**
+     * Indicates that column is never modified.
+     * 
+     * @return true if column is only read from database but never written to database
+     * @since 3.2
+     */
+    boolean readOnly() default false;
+    
+    
+    /**
      * Defines class that will read/write row members from/to database. See {@link Database#initTypeTranslatorMap}
      * for default translators.
      * 

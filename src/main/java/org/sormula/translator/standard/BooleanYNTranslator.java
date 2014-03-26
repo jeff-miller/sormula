@@ -37,7 +37,8 @@ public class BooleanYNTranslator implements TypeTranslator<Boolean>
      */
     public void write(PreparedStatement preparedStatement, int parameterIndex, Boolean parameter) throws Exception
     {
-        preparedStatement.setString(parameterIndex, parameter ? "Y" : "N");
+        if (parameter == null) preparedStatement.setString(parameterIndex, null);
+        else                   preparedStatement.setString(parameterIndex, parameter ? "Y" : "N");
     }
     
     
@@ -46,7 +47,13 @@ public class BooleanYNTranslator implements TypeTranslator<Boolean>
      */
     public Boolean read(ResultSet resultSet, int columnIndex) throws Exception
     {
-        String b = resultSet.getString(columnIndex);
-        return (b != null && b.equals("Y") ? true : false);
+        Boolean b;
+        
+        String yn = resultSet.getString(columnIndex);
+        if (yn == null)          b = null;
+        else if (yn.equals("Y")) b = true;
+        else                     b = false;
+        
+        return b;
     }
 }

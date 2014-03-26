@@ -50,7 +50,8 @@ public class TimeTranslatorTest extends DatabaseTest<SormulaTestTime>
             openDatabase();
             createTable(SormulaTestTime.class, 
                 "CREATE TABLE " + getSchemaPrefix() + SormulaTestTime.class.getSimpleName() + " (" +
-                " testSqlTime TIME " +
+                " testSqlTime1 TIME, " +
+                " testSqlTime2 TIME " +
                 ")"
             );
         }
@@ -74,7 +75,8 @@ public class TimeTranslatorTest extends DatabaseTest<SormulaTestTime>
         {
             begin();
             inserted = new SormulaTestTime();
-            inserted.setTestSqlTime(new java.sql.Time(13*60*60*1000L + 25*60*1000L + 11*1000L));
+            inserted.setTestSqlTime1(new java.sql.Time(13*60*60*1000L + 25*60*1000L + 11*1000L));
+            inserted.setTestSqlTime2(null);
             assert getTable().insert(inserted) == 1 : "1 row not inserted";
             commit();
         }
@@ -95,7 +97,8 @@ public class TimeTranslatorTest extends DatabaseTest<SormulaTestTime>
             assert list.size() == 1 : "unexpected row count";
             SormulaTestTime selected = list.get(0);
             String message = " column inserted != selected";
-            assert inserted.getTestSqlTime().equals(selected.getTestSqlTime()) : "testSqlTime" + message;
+            assert inserted.getTestSqlTime1().equals(selected.getTestSqlTime1()) : "testSqlTime1" + message;
+            assert selected.getTestSqlTime2() == null : "testSqlTime2 should be null";
             commit();
         }
         else

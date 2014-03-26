@@ -667,6 +667,7 @@ public class ScalarSelectOperation<R> extends SqlOperation<R>
         String tableName = getTable().getQualifiedTableName();
         RowTranslator<R> rowTranslator = getTable().getRowTranslator();
         rowTranslator.setIncludeIdentityColumns(isIncludeIdentityColumns()); // usually true for selects
+        rowTranslator.setIncludeReadOnlyColumns(true);
         String selectColumnPhrase = rowTranslator.createColumnPhrase(); 
         StringBuilder sql = new StringBuilder(selectColumnPhrase.length() + tableName.length() + 50);
         

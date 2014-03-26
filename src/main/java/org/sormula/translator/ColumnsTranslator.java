@@ -41,6 +41,7 @@ public class ColumnsTranslator<R>
     List<ColumnTranslator<R>> columnTranslatorList;
     Map<String, ColumnTranslator<R>> columnTranslatorMap; // key is field name
     boolean includeIdentityColumns;
+    boolean includeReadOnlyColumns;
     
     
     /**
@@ -80,6 +81,31 @@ public class ColumnsTranslator<R>
     
     
     /**
+     * Tests if readonly columns are used by this translator. Default is false. Typically
+     * it is false except for select operations.
+     * 
+     * @return true to include all columns; false to include only non readonly columns
+     * @since 3.2
+     */
+    public boolean isIncludeReadOnlyColumns()
+    {
+        return includeReadOnlyColumns;
+    }
+
+
+    /**
+     * Sets when to use readonly columns.
+     * 
+     * @param includeReadOnlyColumns true to include all columns; false to include only non readonly columns
+     * @since 3.2
+     */
+    public void setIncludeReadOnlyColumns(boolean includeReadOnlyColumns)
+    {
+        this.includeReadOnlyColumns = includeReadOnlyColumns;
+    }
+
+
+    /**
      * Initializes objects to hold all column information.
      * 
      * @param columns approximatenumber of columns that will be in translator (used as initial capacity)
@@ -112,7 +138,7 @@ public class ColumnsTranslator<R>
         {
             for (ColumnTranslator<R> c: columnTranslatorList)
             {
-                if (includeIdentityColumns || !c.isIdentity())
+                if (isIncluded(c))
                 {
                     if (log.isDebugEnabled()) log.debug("read() result set parameter " + p);
                     c.read(resultSet, p, row);
@@ -148,7 +174,7 @@ public class ColumnsTranslator<R>
         {
             for (ColumnTranslator<R> c: columnTranslatorList)
             {
-                if (includeIdentityColumns || !c.isIdentity())
+                if (isIncluded(c))
                 {
                     if (log.isDebugEnabled()) log.debug("write() parameter " + p);
                     c.write(preparedStatement, p, row);
@@ -212,7 +238,7 @@ public class ColumnsTranslator<R>
         
         for (ColumnTranslator<R> c: columnTranslatorList)
         {
-            if (includeIdentityColumns || !c.isIdentity())
+            if (isIncluded(c))
             {
                 phrase.append(c.getColumnName());
                 phrase.append(", ");
@@ -241,7 +267,7 @@ public class ColumnsTranslator<R>
         
         for (ColumnTranslator<R> c: columnTranslatorList)
         {
-            if (includeIdentityColumns || !c.isIdentity())
+            if (isIncluded(c))
             {
                 phrase.append(c.getColumnName());
                 phrase.append("=?, ");
@@ -269,7 +295,7 @@ public class ColumnsTranslator<R>
         
         for (ColumnTranslator<R> c: columnTranslatorList)
         {
-            if (includeIdentityColumns || !c.isIdentity())
+            if (isIncluded(c))
             {
                 phrase.append("?");
                 phrase.append(", ");
@@ -294,5 +320,21 @@ public class ColumnsTranslator<R>
     public List<ColumnTranslator<R>> getColumnTranslatorList()
     {
         return columnTranslatorList;
+    }
+    
+    
+    /**
+     * Tests if a column should be used. Checks the following methods to determine
+     * result: {@link #isIncludeIdentityColumns()}, {@link ColumnTranslator#isIdentity()},
+     * {@link #isIncludeReadOnlyColumns()}, {@link ColumnTranslator#isReadOnly()}
+     * 
+     * @param columnTranslator column to test
+     * @return true if column should be used by translator
+     * @since 3.2
+     */
+    protected boolean isIncluded(ColumnTranslator<R> columnTranslator)
+    {
+        return (!columnTranslator.isIdentity() || includeIdentityColumns) &&
+               (!columnTranslator.isReadOnly() || includeReadOnlyColumns);
     }
 }

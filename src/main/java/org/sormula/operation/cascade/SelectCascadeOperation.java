@@ -18,7 +18,6 @@ package org.sormula.operation.cascade;
 
 import java.lang.reflect.Array;
 import java.lang.reflect.Field;
-import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -252,12 +251,12 @@ public class SelectCascadeOperation<S, T> extends CascadeOperation<S, T>
         	// map select operations need method that gets key from row
         	try
         	{
-	        	Method keyMethod = getTargetTable().getRowTranslator().getRowClass().getMethod(
+        	    ((MapSelectOperation)selectOperation).setGetKeyMethodName(
 	        			selectCascadeAnnotation.targetKeyMethodName());
-	        	((MapSelectOperation)selectOperation).setGetKeyMethod(keyMethod);
         	}
-        	catch (NoSuchMethodException e)
+        	catch (OperationException e) 
         	{
+        	    // new OperationException is redundant but message clarifies source of problem
         		throw new OperationException("error getting key method in SelectCascade.keyMethodName()=" +
         		        selectCascadeAnnotation.targetKeyMethodName(), e);
         	}

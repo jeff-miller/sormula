@@ -49,6 +49,8 @@ public abstract class AbstractWhereTranslator<R> extends ColumnsTranslator<R>
     {
         super(rowTranslator.getRowClass());
         this.rowTranslator = rowTranslator;
+        setIncludeIdentityColumns(true);    // default is true; set here for clarity
+        setIncludeReadOnlyColumns(true);    // default is false; must always use read only in where clause
     }
     
     

@@ -35,6 +35,8 @@ public class SormulaTestTT
     
     Boolean testBooleanYesNo2;
     
+    Boolean testBooleanYesNo3; // for null test
+    
     int testInteger;
     String testString;
     
@@ -54,6 +56,14 @@ public class SormulaTestTT
     public void setTestBooleanYesNo2(Boolean testBooleanYesNo2)
     {
         this.testBooleanYesNo2 = testBooleanYesNo2;
+    }
+    public Boolean getTestBooleanYesNo3()
+    {
+        return testBooleanYesNo3;
+    }
+    public void setTestBooleanYesNo3(Boolean testBooleanYesNo3)
+    {
+        this.testBooleanYesNo3 = testBooleanYesNo3;
     }
     public int getTestInteger()
     {

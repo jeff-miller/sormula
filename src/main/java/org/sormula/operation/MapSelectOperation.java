@@ -66,9 +66,13 @@ public abstract class MapSelectOperation<K, R> extends SelectOperation<R, Map<K,
     /**
      * Gets the method of class R that obtains key of type K from a row. Used by
      * {@link #add(Object)} to add a row to the map.
+     * <p>
+     * This method is deprecated because java.lang.reflect.MethodHandle will be used in future
+     * versions.
      *  
      * @return method that supplies map key value for a row; default is {@link Object#hashCode()}
      */
+    @Deprecated
     public Method getGetKeyMethod() 
     {
 		return getKeyMethod;
@@ -79,9 +83,13 @@ public abstract class MapSelectOperation<K, R> extends SelectOperation<R, Map<K,
      * Sets the get key method. See {@link #getGetKeyMethod()} for details. The default
      * is {@link #hashCode()}. Use this method or {@link #setGetKeyMethodName(String)} to define 
      * the get key method  or override {@link #getKey(Object)}.
+     * <p>
+     * This method is deprecated because java.lang.reflect.MethodHandle will be used in future
+     * versions.
      * 
      * @param getKeyMethod row method that gets map key 
      */
+    @Deprecated
 	public void setGetKeyMethod(Method getKeyMethod) 
 	{
 		this.getKeyMethod = getKeyMethod;
@@ -100,7 +108,7 @@ public abstract class MapSelectOperation<K, R> extends SelectOperation<R, Map<K,
 	{
         try
         {
-            setGetKeyMethod(getTable().getRowTranslator().getRowClass().getMethod(getKeyMethodName));
+            getKeyMethod = getTable().getRowTranslator().getRowClass().getMethod(getKeyMethodName);
         }
         catch (NoSuchMethodException e)
         {

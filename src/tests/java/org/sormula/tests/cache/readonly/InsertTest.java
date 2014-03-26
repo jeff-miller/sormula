@@ -19,6 +19,7 @@ package org.sormula.tests.cache.readonly;
 import java.util.HashMap;
 
 import org.sormula.SormulaException;
+import org.sormula.Table;
 import org.sormula.tests.cache.CacheTest;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
@@ -53,6 +54,23 @@ public class InsertTest extends CacheTest<SormulaCacheTestRO>
     public void tearDown() throws Exception
     {
         closeDatabase();
+    }
+    
+    
+    @Test
+    public void tableAfterTransactionStart() throws SormulaException
+    {
+        // test that cached table can be created after transaction begins
+        begin();
+        SormulaCacheTestRO test = new SormulaCacheTestRO(999, 999, "transaction new Table");
+        
+        // create new Table instance (don't get existing)
+        Table<SormulaCacheTestRO> table = new Table<SormulaCacheTestRO>(getDatabase(), SormulaCacheTestRO.class);
+        
+        // this will throw IllegalCacheStateException prior to bug fix
+        table.insert(test);
+        
+        commit();
     }
     
     

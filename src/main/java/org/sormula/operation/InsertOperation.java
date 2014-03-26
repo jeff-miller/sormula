@@ -143,7 +143,8 @@ public class InsertOperation<R> extends ModifyOperation<R>
     {
         String tableName = getTable().getQualifiedTableName();
         RowTranslator<R> rowTranslator = getTable().getRowTranslator();
-        rowTranslator.setIncludeIdentityColumns(isIncludeIdentityColumns()); // usually false for inserts that have identity columns 
+        rowTranslator.setIncludeIdentityColumns(isIncludeIdentityColumns()); // usually false for inserts that have identity columns
+        rowTranslator.setIncludeReadOnlyColumns(false);
         String columnPhrase = rowTranslator.createColumnPhrase();
         String unusedColumnNames = rowTranslator.getUnusedColumnInsertNamesSql();
         String parameterPhrase = rowTranslator.createParameterPhrase();

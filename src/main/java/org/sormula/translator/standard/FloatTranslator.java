@@ -18,6 +18,7 @@ package org.sormula.translator.standard;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.Types;
 
 import org.sormula.Database;
 import org.sormula.translator.TypeTranslator;
@@ -37,7 +38,8 @@ public class FloatTranslator implements TypeTranslator<Float>
      */
     public void write(PreparedStatement preparedStatement, int parameterIndex, Float parameter) throws Exception
     {
-        preparedStatement.setFloat(parameterIndex, parameter);
+        if (parameter == null) preparedStatement.setNull(parameterIndex, Types.FLOAT);
+        else                   preparedStatement.setFloat(parameterIndex, parameter);
     }
     
     
@@ -46,6 +48,8 @@ public class FloatTranslator implements TypeTranslator<Float>
      */
     public Float read(ResultSet resultSet, int columnIndex) throws Exception
     {
-        return resultSet.getFloat(columnIndex);
+        Float f = resultSet.getFloat(columnIndex);
+        if (resultSet.wasNull()) f = null;
+        return f;
     }
 }

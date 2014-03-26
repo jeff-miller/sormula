@@ -51,7 +51,8 @@ public class BigDecimalTranslatorTest extends DatabaseTest<SormulaTestBD>
             openDatabase();
             createTable(SormulaTestBD.class, 
                 "CREATE TABLE " + getSchemaPrefix() + SormulaTestBD.class.getSimpleName() + " (" +
-                " testBigDecimal DECIMAL(18,8)" + // firebird only allows max precesion of 18
+                " testBigDecimal1 DECIMAL(18,8)," + // firebird only allows max precesion of 18
+                " testBigDecimal2 DECIMAL(18,8)"  + // firebird only allows max precesion of 18
                 ")"
             );
         }
@@ -75,7 +76,8 @@ public class BigDecimalTranslatorTest extends DatabaseTest<SormulaTestBD>
         {
             begin();
             inserted = new SormulaTestBD();
-            inserted.setTestBigDecimal(new BigDecimal("1234567890.01234567"));
+            inserted.setTestBigDecimal1(new BigDecimal("1234567890.01234567"));
+            inserted.setTestBigDecimal2(null);
             assert getTable().insert(inserted) == 1 : "1 row not inserted";
             commit();
         }
@@ -96,7 +98,8 @@ public class BigDecimalTranslatorTest extends DatabaseTest<SormulaTestBD>
             assert list.size() == 1 : "unexpected row count";
             SormulaTestBD selected = list.get(0);
             String message = " column inserted != selected";
-            assert inserted.getTestBigDecimal().equals(selected.getTestBigDecimal()) : "testBigDecimal" + message;
+            assert inserted.getTestBigDecimal1().equals(selected.getTestBigDecimal1()) : "testBigDecimal1" + message;
+            assert selected.getTestBigDecimal2() == null : "testBigDecimal2 should be null";
             commit();
         }
         else

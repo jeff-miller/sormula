@@ -18,6 +18,7 @@ package org.sormula.translator.standard;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.Types;
 
 import org.sormula.Database;
 import org.sormula.translator.TypeTranslator;
@@ -37,7 +38,8 @@ public class ShortTranslator implements TypeTranslator<Short>
      */
     public void write(PreparedStatement preparedStatement, int parameterIndex, Short parameter) throws Exception
     {
-        preparedStatement.setShort(parameterIndex, parameter);
+        if (parameter == null) preparedStatement.setNull(parameterIndex, Types.SMALLINT);
+        else                   preparedStatement.setShort(parameterIndex, parameter);
     }
     
     
@@ -46,6 +48,8 @@ public class ShortTranslator implements TypeTranslator<Short>
      */
     public Short read(ResultSet resultSet, int columnIndex) throws Exception
     {
-        return resultSet.getShort(columnIndex);
+        Short s = resultSet.getShort(columnIndex);
+        if (resultSet.wasNull()) s = null;
+        return s;
     }
 }

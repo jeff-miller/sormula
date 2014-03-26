@@ -25,15 +25,24 @@ import java.math.BigDecimal;
  */
 public class SormulaTestBD
 {
-    BigDecimal testBigDecimal;
+    BigDecimal testBigDecimal1;
+    BigDecimal testBigDecimal2;
     
     
-    public BigDecimal getTestBigDecimal()
+    public BigDecimal getTestBigDecimal1()
     {
-        return testBigDecimal;
+        return testBigDecimal1;
     }
-    public void setTestBigDecimal(BigDecimal testBigDecimal)
+    public void setTestBigDecimal1(BigDecimal testBigDecimal1)
     {
-        this.testBigDecimal = testBigDecimal;
+        this.testBigDecimal1 = testBigDecimal1;
+    }
+    public BigDecimal getTestBigDecimal2()
+    {
+        return testBigDecimal2;
+    }
+    public void setTestBigDecimal2(BigDecimal testBigDecimal2)
+    {
+        this.testBigDecimal2 = testBigDecimal2;
     }
 }

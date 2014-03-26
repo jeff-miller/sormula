@@ -156,6 +156,17 @@ public class DatabaseTest<R>
         else return testIdentity; // custom
     }
     
+    
+    public String getBooleanDDL()
+    {
+        return jdbcProperties.getString("booleanDDL").trim();
+    }
+    public boolean isBooleanDDL()
+    {
+        String booleanDDL = getBooleanDDL().toUpperCase();
+        return booleanDDL.startsWith("BIT") || booleanDDL.startsWith("BOOLEAN");
+    }
+    
 
     public boolean isUseTransacation()
     {
@@ -175,7 +186,8 @@ public class DatabaseTest<R>
     public void openDatabase(String dataSourceName) throws Exception
     {
         // get connection
-        Class.forName(jdbcProperties.getString("jdbc.driver"));
+        String jdbcDriver = jdbcProperties.getString("jdbc.driver");
+        if (jdbcDriver.length() > 0) Class.forName(jdbcDriver); // optional for most drivers since jdk1.6 
         schema = jdbcProperties.getString("jdbc.schema");
         url = jdbcProperties.getString("jdbc.url");
         user = jdbcProperties.getString("jdbc.user");

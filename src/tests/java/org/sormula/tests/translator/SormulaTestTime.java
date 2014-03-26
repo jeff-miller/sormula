@@ -24,14 +24,23 @@ package org.sormula.tests.translator;
  */
 public class SormulaTestTime
 {
-    java.sql.Time testSqlTime;
+    java.sql.Time testSqlTime1;
+    java.sql.Time testSqlTime2;
     
-    public java.sql.Time getTestSqlTime()
+    public java.sql.Time getTestSqlTime1()
     {
-        return testSqlTime;
+        return testSqlTime1;
     }
-    public void setTestSqlTime(java.sql.Time testSqlTime)
+    public void setTestSqlTime1(java.sql.Time testSqlTime1)
     {
-        this.testSqlTime = testSqlTime;
+        this.testSqlTime1 = testSqlTime1;
+    }
+    public java.sql.Time getTestSqlTime2()
+    {
+        return testSqlTime2;
+    }
+    public void setTestSqlTime2(java.sql.Time testSqlTime2)
+    {
+        this.testSqlTime2 = testSqlTime2;
     }
 }

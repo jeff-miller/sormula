@@ -37,16 +37,62 @@ import org.sormula.log.ClassLogger;
 public class ExampleBase
 {
     private static final ClassLogger log = new ClassLogger();
-    
+
+    Properties jdbcProperties;
     Connection connection;
     String schema;
     String sqlShutdown;
     String driverShutdown;
+    String url;
+    String user;
+    String password;
     
     
+    /**
+     * Gets the connection that was created with {@link #openDatabase()}. Connection will be closed
+     * when {@link #closeDatabase()} is invoked. Connection is defined
+     * in /jdbc/DB/jdbc.properties file.
+     * 
+     * @return jdbc connection  
+     */
     protected Connection getConnection()
     {
         return connection;
+    }
+    
+    
+    /**
+     * Creates a new database connection. Connection must be closed by caller. Connection is defined
+     * in /jdbc/DB/jdbc.properties file. The {@link #openDatabase()} must be invoked prior to using this
+     * method.
+     * 
+     * @return jdbc connection 
+     */
+    public Connection createConnection()
+    {
+        Connection c;
+        
+        try
+        {
+            if (user.length() == 0 && password.length() == 0)
+            {
+                // no user and password
+                log.info("get connection url=" + url);
+                c = DriverManager.getConnection(url);
+            }
+            else
+            {
+                log.info("get connection url=" + url + " user=" + user + " password=" + password);
+                c = DriverManager.getConnection(url, user, password); 
+            }
+        }
+        catch (SQLException e)
+        {
+            log.error("error creating connection for " + url);
+            c = null;
+        }
+        
+        return c;
     }
     
     
@@ -69,6 +115,12 @@ public class ExampleBase
     }
     
     
+    protected String getBooleanDDL()
+    {
+        return jdbcProperties.getProperty("booleanDDL", "").trim();
+    }
+    
+    
     /**
      * Gets a jdbc connection based upon values in jdbc/ddd/jdbc.properties (ddd is
      * value of environment variable dbdir.
@@ -83,37 +135,25 @@ public class ExampleBase
         if (dbdir != null)
         {
             // read db properties
-            Properties properties;
-            try (InputStream is = new FileInputStream("jdbc/" + dbdir + "/jdbc.properties"))
-            {
-                properties = new Properties();
-                properties.load(is);
-            }
-            properties.list(System.out);
+            InputStream is = new FileInputStream("jdbc/" + dbdir + "/jdbc.properties");
+            jdbcProperties = new Properties();
+            jdbcProperties.load(is);
+            is.close();
+            jdbcProperties.list(System.out);
             
             // get connection
-            Class.forName(properties.getProperty("jdbc.driver"));
-            String url = properties.getProperty("jdbc.url");
-            String user = properties.getProperty("jdbc.user", "");
-            String password = properties.getProperty("jdbc.password", "");
+            String jdbcDriver = jdbcProperties.getProperty("jdbc.driver");
+            if (jdbcDriver != null) Class.forName(jdbcDriver); // optional for most drivers since jdk1.6 
+            url = jdbcProperties.getProperty("jdbc.url");
+            user = jdbcProperties.getProperty("jdbc.user", "");
+            password = jdbcProperties.getProperty("jdbc.password", "");
             
             // shutdown commands
-            sqlShutdown = properties.getProperty("jdbc.shutdown.sql", "");
-            driverShutdown = properties.getProperty("jdbc.shutdown.driver", "");
+            sqlShutdown = jdbcProperties.getProperty("jdbc.shutdown.sql", "");
+            driverShutdown = jdbcProperties.getProperty("jdbc.shutdown.driver", "");
             
-            if (user.length() == 0 && password.length() == 0)
-            {
-                // no user and password
-                log.info("get connection url=" + url);
-                connection = DriverManager.getConnection(url);
-            }
-            else
-            {
-                log.info("get connection url=" + url + " user=" + user + " password=" + password);
-                connection = DriverManager.getConnection(url, user, password); 
-            }
-            
-            schema = properties.getProperty("jdbc.schema", "");
+            connection = createConnection();
+            schema = jdbcProperties.getProperty("jdbc.schema", "");
         }
         else
         {

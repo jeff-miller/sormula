@@ -17,7 +17,6 @@
 package org.sormula.tests.translator;
 
 import java.util.GregorianCalendar;
-import java.util.List;
 
 import org.sormula.SormulaException;
 import org.sormula.log.ClassLogger;
@@ -37,7 +36,6 @@ import org.testng.annotations.Test;
 public class ColumnTranslatorTest extends DatabaseTest<SormulaTest1>
 {
 	private static final ClassLogger log = new ClassLogger();
-    SormulaTest1 inserted;
     
     
     @BeforeClass
@@ -46,8 +44,8 @@ public class ColumnTranslatorTest extends DatabaseTest<SormulaTest1>
         openDatabase();
         createTable(SormulaTest1.class, 
             "CREATE TABLE " + getSchemaPrefix() + SormulaTest1.class.getSimpleName() + " (" +
-            " testBoolean1 VARCHAR(5)," +
-            " testBoolean2 VARCHAR(5)," +
+            " testBoolean1 " + getBooleanDDL() + "," +
+            " testBoolean2 " + getBooleanDDL() + "," +
             " testBooleanYN1 CHAR(1)," +
             " testBooleanYN2 CHAR(1)," +
             " testByte1 SMALLINT," +
@@ -79,10 +77,9 @@ public class ColumnTranslatorTest extends DatabaseTest<SormulaTest1>
     }
     
     
-    @Test
-    public void insertTest() throws SormulaException
+    protected SormulaTest1 insertTest() throws SormulaException
     {
-        inserted = new SormulaTest1();
+        SormulaTest1 inserted = new SormulaTest1();
         
         // primatives and object equivalents
         inserted.setTestBoolean1(true);
@@ -114,16 +111,19 @@ public class ColumnTranslatorTest extends DatabaseTest<SormulaTest1>
         begin();
         assert getTable().insert(inserted) == 1 : "1 row not inserted";
         commit();
+        
+        return inserted;
     }
     
     
-    @Test(dependsOnMethods="insertTest")
+    @Test //(dependsOnMethods="insertTest")
     public void selectTest() throws SormulaException
     {
+        SormulaTest1 inserted = insertTest(); // use this instead, dependsOnMethods caused problems
+        
         begin();
-        List<SormulaTest1> list = getTable().selectAll();
-        assert list.size() == 1 : "unexpected row count";
-        SormulaTest1 selected = list.get(0);
+        SormulaTest1 selected = getTable().selectWhere("forTestSting1", inserted.getTestString1());
+        assert selected != null : "no test row";
         String message = " column inserted != selected";
          
         // primitive column tests
@@ -171,6 +171,46 @@ public class ColumnTranslatorTest extends DatabaseTest<SormulaTest1>
         assert inserted.getTestSqlDate()     .equals(selected.getTestSqlDate())      : "testSqlDate" + message;
         assert inserted.getTestSqlTimestamp().equals(selected.getTestSqlTimestamp()) : "testSqlTimestamp" + message;
         assert inserted.getTestGc()          .equals(selected.getTestGc())           : "testGc" + message;
+        commit();
+    }
+    
+    
+    @Test
+    public void nullTest() throws Exception
+    {
+        begin();
+        
+        // non primative members will be null
+        SormulaTest1 inserted = new SormulaTest1();
+        inserted.setTestString1("nullTest"); // id for select
+        
+        if (!isBooleanDDL())
+        {
+            // don't test null for non boolean column types 
+            // nulls cause exception since BooleanTranslator uses Types.BOOLEAN
+            log.info("skipping null boolean tests");
+            inserted.setTestBoolean2(false);
+        }
+        
+        // insert row with null for non primatives 
+        getTable().insert(inserted);
+        
+        SormulaTest1 selected = getTable().selectWhere("forTestSting1", inserted.getTestString1());
+        assert selected != null : "no test row";
+
+        String message = " should be null";
+        if (isBooleanDDL()) assert selected.getTestBoolean2() == null : "testBoolean2 " + message;
+        assert selected.getTestBooleanYN2() == null : "testBooleanYN2 " + message;
+        assert selected.getTestByte2() == null : "testByte2 " + message;
+        assert selected.getTestDouble2() == null : "testDouble2 " + message;
+        assert selected.getTestFloat2() == null : "testFloat2" + message;
+        assert selected.getTestInteger2() == null : "testInteger2" + message;
+        assert selected.getTestShort2() == null : "testShort2" + message;
+        assert selected.getTestGc() == null : "testGc" + message;
+        // DateTranslator null is tested in selectTest()
+        assert selected.getTestSqlDate() == null : "testSqlDate" + message;
+        assert selected.getTestSqlTimestamp() == null : "testSqlTimestamp" + message;
+        
         commit();
     }
 }

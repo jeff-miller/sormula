@@ -14,42 +14,52 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.sormula.tests.translator;
+package org.sormula.tests.column.roid;
 
+import org.sormula.annotation.Column;
 
 
 /**
- * Row class for {@link LongTranslatorTest}.
+ * Row class for testing column that is identity and read only.
+ * 
  * @author Jeff Miller
  */
-public class SormulaTestLong
+public class ColumnTestRoid
 {
-    long testLong1;
-    Long testLong2;
-    Long testLong3;
+    @Column(identity=true, readOnly=true) // a common combination
+    int id;
     
-    public long getTestLong1()
+    String description;
+    
+    
+    public ColumnTestRoid()
     {
-        return testLong1;
     }
-    public void setTestLong1(long testLong1)
+
+    
+    public ColumnTestRoid(int id, String description)
     {
-        this.testLong1 = testLong1;
+        this.id = id;
+        this.description = description;
     }
-    public Long getTestLong2()
+    
+    
+    public int getId()
     {
-        return testLong2;
+        return id;
     }
-    public void setTestLong2(Long testLong2)
+    public void setId(int id)
     {
-        this.testLong2 = testLong2;
+        this.id = id;
     }
-    public Long getTestLong3()
+
+
+    public String getDescription()
     {
-        return testLong3;
+        return description;
     }
-    public void setTestLong3(Long testLong3)
+    public void setDescription(String description)
     {
-        this.testLong3 = testLong3;
+        this.description = description;
     }
 }

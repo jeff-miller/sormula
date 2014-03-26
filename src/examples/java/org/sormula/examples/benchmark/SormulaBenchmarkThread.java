@@ -85,14 +85,14 @@ public abstract class SormulaBenchmarkThread extends BenchmarkThread
     protected ListSelectOperation<Benchmark> createSelectForDescription() throws SormulaException
     {
         // select only from records inserted by this benchmark thread
-        return new ArrayListSelectOperation<Benchmark>(
+        return new ArrayListSelectOperation<>(
                 database.getTable(Benchmark.class), "forDescription");
     }
     
     
     protected List<Benchmark> selectLikeBenchmarkName(ListSelectOperation<Benchmark> selectOperation, int quantity) throws SormulaException
     {
-        List<Benchmark> benchmarks = new ArrayList<Benchmark>(quantity);
+        List<Benchmark> benchmarks = new ArrayList<>(quantity);
         selectOperation.setParameters(getBenchmarkName());
         selectOperation.execute();
         
@@ -116,18 +116,19 @@ public abstract class SormulaBenchmarkThread extends BenchmarkThread
     
     protected List<Benchmark> selectBenchmarks(List<Integer> ids) throws SormulaException
     {
-        List<Benchmark> benchmarks = new ArrayList<Benchmark>(ids.size());
+        List<Benchmark> benchmarks = new ArrayList<>(ids.size());
         
         // select one at-a-time since size may be too big for IN operator
-        ScalarSelectOperation<Benchmark> selectById = new ScalarSelectOperation<Benchmark>(
-                database.getTable(Benchmark.class));
-        for (Integer id : ids)
+        try (ScalarSelectOperation<Benchmark> selectById = new ScalarSelectOperation<>(
+                database.getTable(Benchmark.class)))
         {
-            selectById.setParameters(id);
-            selectById.execute();
-            benchmarks.add(selectById.readNext());
+            for (Integer id : ids)
+            {
+                selectById.setParameters(id);
+                selectById.execute();
+                benchmarks.add(selectById.readNext());
+            }
         }
-        selectById.close();
         
         return benchmarks;
     }

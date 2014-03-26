@@ -60,7 +60,7 @@ public class InsertTest extends DatabaseTest<ColumnTestRow>
     public void insertReadOnly() throws SormulaException
     {
         begin();
-        ArrayList<ColumnTestRow> list = new ArrayList<ColumnTestRow>();
+        ArrayList<ColumnTestRow> list = new ArrayList<>();
         
         for (int i = 1; i < 10; ++i)
         {

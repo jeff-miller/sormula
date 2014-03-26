@@ -51,10 +51,10 @@ public class SormulaBenchmarkSingleResource extends SormulaBenchmarkThread
         elapsedTime.start();
         createDatabase();
         Table<Benchmark> table = database.getTable(Benchmark.class);
-        insertOperation = new InsertOperation<Benchmark>(table);
+        insertOperation = new InsertOperation<>(table);
         selectOperation = createSelectForDescription();
-        updateOperation = new UpdateOperation<Benchmark>(table);
-        deleteOperation = new DeleteOperation<Benchmark>(table);
+        updateOperation = new UpdateOperation<>(table);
+        deleteOperation = new DeleteOperation<>(table);
         elapsedTime.stop();
     }
 

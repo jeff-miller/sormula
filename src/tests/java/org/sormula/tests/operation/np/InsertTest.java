@@ -93,16 +93,15 @@ public class InsertTest extends DatabaseTest<SormulaTestNP1>
         
         // verify that all children were inserted
         Table<SormulaTestNP2> child2Table = getDatabase().getTable(SormulaTestNP2.class);
-        ScalarSelectOperation<SormulaTestNP2> select2 = new ScalarSelectOperation<>(child2Table);
-        
-        // test level 2 children
-        for (SormulaTestNP2 node2: node1.getChildList())
+        try (ScalarSelectOperation<SormulaTestNP2> select2 = new ScalarSelectOperation<>(child2Table))
         {
-            select2.setParameters(node2.getLevel2Id());
-            select2.execute();
-            assert select2.readNext() != null : "level 2 child " + node2.getLevel2Id() + " was not inserted"; 
+            // test level 2 children
+            for (SormulaTestNP2 node2: node1.getChildList())
+            {
+                select2.setParameters(node2.getLevel2Id());
+                select2.execute();
+                assert select2.readNext() != null : "level 2 child " + node2.getLevel2Id() + " was not inserted"; 
+            }
         }
-        
-        select2.close();
     }
 }

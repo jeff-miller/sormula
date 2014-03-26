@@ -35,9 +35,10 @@ public class JdbcBenchmarkMultiResource extends JdbcBenchmarkThread
     protected void select(int quantity) throws Exception
     {
         beginOperation();
-        PreparedStatement selectStatement = prepareSelectForDescription();
-        selectForBenchmarkName(selectStatement, quantity);
-        selectStatement.close();
+        try (PreparedStatement selectStatement = prepareSelectForDescription())
+        {
+            selectForBenchmarkName(selectStatement, quantity);
+        }
         endOperation();
     }
     
@@ -46,9 +47,10 @@ public class JdbcBenchmarkMultiResource extends JdbcBenchmarkThread
     {
         List<Benchmark> benchmarks = newBenchmarks(quantity);
         beginOperation();
-        PreparedStatement insertStatement = prepareInsert();
-        for (Benchmark b : benchmarks) insert(insertStatement, b);
-        insertStatement.close();
+        try (PreparedStatement insertStatement = prepareInsert())
+        {
+            for (Benchmark b : benchmarks) insert(insertStatement, b);
+        }
         endOperation();
     }
     
@@ -59,9 +61,10 @@ public class JdbcBenchmarkMultiResource extends JdbcBenchmarkThread
         beginOperation();
         List<Benchmark> benchmarks = selectBenchmarks(randomIds);
         setUpdateMarker(benchmarks);
-        PreparedStatement updateStatement = prepareUpdate();
-        for (Benchmark b : benchmarks) update(updateStatement, b);
-        updateStatement.close();
+        try (PreparedStatement updateStatement = prepareUpdate())
+        {
+            for (Benchmark b : benchmarks) update(updateStatement, b);
+        }
         endOperation();
     }
 
@@ -71,9 +74,10 @@ public class JdbcBenchmarkMultiResource extends JdbcBenchmarkThread
         List<Integer> randomIds = removeRandomIds(quantity);
         beginOperation();
         List<Benchmark> benchmarks = selectBenchmarks(randomIds);
-        PreparedStatement deleteStatement = prepareDelete();
-        for (Benchmark b : benchmarks) delete(deleteStatement, b);
-        deleteStatement.close();
+        try (PreparedStatement deleteStatement = prepareDelete())
+        {
+            for (Benchmark b : benchmarks) delete(deleteStatement, b);
+        }
         endOperation();
     }
 }

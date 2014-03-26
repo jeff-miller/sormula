@@ -64,43 +64,45 @@ public abstract class JdbcBenchmarkThread extends BenchmarkThread
     
     protected List<Benchmark> selectForBenchmarkName(PreparedStatement selectStatement, int quantity) throws SQLException
     {
-        List<Benchmark> benchmarks = new ArrayList<Benchmark>(quantity);
+        List<Benchmark> benchmarks = new ArrayList<>(quantity);
         selectStatement.setString(1, getBenchmarkName());
-        ResultSet rs = selectStatement.executeQuery();
         
-        // read quantity of rows
-        for (int i = 0; i < quantity; ++i)
+        try (ResultSet rs = selectStatement.executeQuery())
         {
-            Benchmark b = readBenchmark(rs); 
-            if (b != null)
+            // read quantity of rows
+            for (int i = 0; i < quantity; ++i)
             {
-                benchmarks.add(b);
-            }
-            else
-            {
-                break;
+                Benchmark b = readBenchmark(rs); 
+                if (b != null)
+                {
+                    benchmarks.add(b);
+                }
+                else
+                {
+                    break;
+                }
             }
         }
         
-        rs.close();
         return benchmarks;
     }
 
     
     protected List<Benchmark> selectBenchmarks(List<Integer> ids) throws SQLException
     {
-        List<Benchmark> benchmarks = new ArrayList<Benchmark>(ids.size());
+        List<Benchmark> benchmarks = new ArrayList<>(ids.size());
         
         // select one at-a-time since size may be too big for IN operator 
-        PreparedStatement ps = getConnection().prepareStatement(select + " WHERE id=?");
-        for (Integer id : ids)
+        try (PreparedStatement ps = getConnection().prepareStatement(select + " WHERE id=?"))
         {
-            ps.setInt(1, id);
-            ResultSet rs = ps.executeQuery();
-            benchmarks.add(readBenchmark(rs));
-            rs.close();
+            for (Integer id : ids)
+            {
+                ps.setInt(1, id);
+                ResultSet rs = ps.executeQuery();
+                benchmarks.add(readBenchmark(rs));
+                rs.close();
+            }
         }
-        ps.close();
         
         return benchmarks;
     }

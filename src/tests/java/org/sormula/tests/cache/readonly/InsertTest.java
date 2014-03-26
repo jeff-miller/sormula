@@ -65,7 +65,7 @@ public class InsertTest extends CacheTest<SormulaCacheTestRO>
         SormulaCacheTestRO test = new SormulaCacheTestRO(999, 999, "transaction new Table");
         
         // create new Table instance (don't get existing)
-        Table<SormulaCacheTestRO> table = new Table<SormulaCacheTestRO>(getDatabase(), SormulaCacheTestRO.class);
+        Table<SormulaCacheTestRO> table = new Table<>(getDatabase(), SormulaCacheTestRO.class);
         
         // this will throw IllegalCacheStateException prior to bug fix
         table.insert(test);

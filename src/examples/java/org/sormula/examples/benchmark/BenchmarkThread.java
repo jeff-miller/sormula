@@ -56,7 +56,7 @@ public abstract class BenchmarkThread extends Thread
         threadRandom = new Random();                        // different for each thread
         elapsedTime = new ElapsedTime(benchmarkName);
         elapsedTime.setIgnoreFirst(false);
-        insertedIds = new ArrayList<Integer>(benchmarkSuite.getMaximumOperations() * 
+        insertedIds = new ArrayList<>(benchmarkSuite.getMaximumOperations() * 
                 benchmarkSuite.getMaximumRowsPerOperation() / 10);
     }
     
@@ -132,7 +132,7 @@ public abstract class BenchmarkThread extends Thread
     public void selectCounts() throws Exception
     {
         Database database = new Database(getConnection(), benchmarkSuite.getSchema());
-        Table<Benchmark> benchmarkTable = new Table<Benchmark>(database, Benchmark.class);
+        Table<Benchmark> benchmarkTable = new Table<>(database, Benchmark.class);
         remainingCount = benchmarkTable.<Integer>selectCount("id", "forDescription", benchmarkName);
         updatedCount   = benchmarkTable.<Integer>selectCount("id", "forUpdateMarker", benchmarkName, UPDATE_MARKER);
         database.close();
@@ -215,7 +215,7 @@ public abstract class BenchmarkThread extends Thread
     
     protected List<Benchmark> newBenchmarks(int quantity)
     {
-        List<Benchmark> benchmarks = new ArrayList<Benchmark>(quantity);
+        List<Benchmark> benchmarks = new ArrayList<>(quantity);
         for (int i = 0; i < quantity; ++i) benchmarks.add(newBenchmark());
         return benchmarks;
     }
@@ -223,7 +223,7 @@ public abstract class BenchmarkThread extends Thread
     
     protected List<Integer> getRandomIds(int quantity)
     {
-        List<Integer> randomIds = new ArrayList<Integer>(quantity);
+        List<Integer> randomIds = new ArrayList<>(quantity);
         Collections.shuffle(insertedIds, suiteRandom);
         
         int max = Math.min(insertedIds.size(), quantity);

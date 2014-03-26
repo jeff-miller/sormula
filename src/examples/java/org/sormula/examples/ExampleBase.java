@@ -135,10 +135,11 @@ public class ExampleBase
         if (dbdir != null)
         {
             // read db properties
-            InputStream is = new FileInputStream("jdbc/" + dbdir + "/jdbc.properties");
-            jdbcProperties = new Properties();
-            jdbcProperties.load(is);
-            is.close();
+            try (InputStream is = new FileInputStream("jdbc/" + dbdir + "/jdbc.properties"))
+            {
+                jdbcProperties = new Properties();
+                jdbcProperties.load(is);
+            }
             jdbcProperties.list(System.out);
             
             // get connection

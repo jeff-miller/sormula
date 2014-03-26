@@ -55,9 +55,10 @@ public class SormulaBenchmarkMultiResource extends SormulaBenchmarkThread
     protected void select(int quantity) throws Exception
     {
         beginOperation();
-        ListSelectOperation<Benchmark> selectOperation = createSelectForDescription();
-        selectLikeBenchmarkName(selectOperation, quantity);
-        selectOperation.close();
+        try (ListSelectOperation<Benchmark> selectOperation = createSelectForDescription())
+        {
+            selectLikeBenchmarkName(selectOperation, quantity);
+        }
         endOperation();
     }
     

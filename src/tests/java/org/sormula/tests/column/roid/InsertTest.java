@@ -67,7 +67,7 @@ public class InsertTest extends DatabaseTest<ColumnTestRoid>
         if (isTestIdentity())
         {
             begin();
-            ArrayList<ColumnTestRoid> list = new ArrayList<ColumnTestRoid>();
+            ArrayList<ColumnTestRoid> list = new ArrayList<>();
             
             for (int i = 1; i < 10; ++i)
             {

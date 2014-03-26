@@ -202,7 +202,7 @@ public class BenchmarkSuite extends ExampleBase
     {
         // NOTE: each thread will use same seed so each will perform the same 
         // operations in the same order for the same quantities
-        benchmarkThreads = new ArrayList<BenchmarkThread>();
+        benchmarkThreads = new ArrayList<>();
         benchmarkThreads.add(new SormulaBenchmarkMultiResource(this, CacheType.NONE));
         benchmarkThreads.add(new SormulaBenchmarkMultiResource(this, CacheType.READ_ONLY));
         benchmarkThreads.add(new SormulaBenchmarkMultiResource(this, CacheType.READ_WRITE)); 

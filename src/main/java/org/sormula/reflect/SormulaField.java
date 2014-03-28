@@ -72,13 +72,14 @@ public class SormulaField<C, T>
         {
             methodName = getterPrefix + methodBaseName;
             getMethod = field.getDeclaringClass().getMethod(methodName);
+            
             methodName = "set" + methodBaseName;
             setMethod = field.getDeclaringClass().getMethod(methodName, field.getType());
         }
         catch (NoSuchMethodException e)
         {
             throw new ReflectException("missing method " + methodName + " for " + 
-                    field.getDeclaringClass().getCanonicalName());
+                    field.getDeclaringClass().getCanonicalName(), e);
         }
         
         array = field.getType().isArray();
@@ -222,7 +223,7 @@ public class SormulaField<C, T>
      */
     public String getCanonicalGetMethodName()
     {
-        return setMethod.getDeclaringClass().getCanonicalName() + "#" + getMethod.getName();
+        return getMethod.getDeclaringClass().getCanonicalName() + "#" + getMethod.getName();
     }
     
     

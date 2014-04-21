@@ -5,7 +5,7 @@ JDK 5/6     JDK 7       comments
 3.2-jdk1.5  3.2-jdk1.7  - org.sormula.translator.standard translators can read/write null non-primative types
                         - fix bug that caused cache exception when Table was created after transaction began 
  						- BenchmarkSuite example to compare Sormula vs. JDBC perfomance
- 						- booleanDDL property in jdbc.properties to allow for varying tests for some databases 
+ 						- booleanDDL property in jdbc.properties to allow for varying types for some databases 
  						
 3.1-jdk1.5  3.1-jdk1.7  - SelectCascade#sourceParameterFieldNames can be symbolic name of "#primaryKeyFields" 
                           or "#targetFieldNames" instead of specific fields

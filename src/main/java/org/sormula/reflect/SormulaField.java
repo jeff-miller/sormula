@@ -78,7 +78,7 @@ public class SormulaField<C, T>
         catch (NoSuchMethodException e)
         {
             throw new ReflectException("missing method " + methodName + " for " + 
-                    field.getDeclaringClass().getCanonicalName());
+                    field.getDeclaringClass().getCanonicalName(), e);
         }
         
         array = field.getType().isArray();

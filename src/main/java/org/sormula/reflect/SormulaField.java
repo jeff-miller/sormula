@@ -222,7 +222,7 @@ public class SormulaField<C, T>
      */
     public String getCanonicalGetMethodName()
     {
-        return setMethod.getDeclaringClass().getCanonicalName() + "#" + getMethod.getName();
+        return getMethod.getDeclaringClass().getCanonicalName() + "#" + getMethod.getName();
     }
     
     

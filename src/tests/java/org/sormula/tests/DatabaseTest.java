@@ -280,28 +280,31 @@ public class DatabaseTest<R>
     
     protected void createTable(String ddl) throws Exception
     {
-        begin();
+        // use local connection
+        Connection connection = getConnection();
+        
         try
         {
             if (log.isDebugEnabled()) log.debug(ddl);
-            Connection connection = getConnection();
             Statement statement = connection.createStatement();
             statement.executeUpdate(ddl);
             statement.close();
             if (useTransacation) connection.commit();
-            connection.close();
-            commit();
         }
-        catch (SormulaException e)
+        catch (SQLException e)
         {
             if (log.isDebugEnabled()) log.error("error creating table using " + ddl, e);
-            rollback();
+        }
+        finally
+        {
+            connection.close();
         }
     }
     
     
     public void dropTable(String qualifiedTableName) throws Exception
     {
+        // use local connection
         Connection connection = getConnection();
         
         try

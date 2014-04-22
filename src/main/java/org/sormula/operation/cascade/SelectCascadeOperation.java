@@ -58,21 +58,6 @@ public class SelectCascadeOperation<S, T> extends CascadeOperation<S, T>
 	String[] parameterFieldNames;
 	List<SormulaField<S, ?>> parameterFields;
 	SelectCascadeFilter<?>[] selectCascadeFilters;
-	
-	
-    /**
-     * Constructor used by {@link SelectOperation}.
-     *  
-     * @param targetField cascade select operation modifies this field
-     * @param targetTable cascade select operation is performed on this table 
-     * @param selectCascadeAnnotation cascade operation
-     */
-	@Deprecated // use constructor with source table
-    public SelectCascadeOperation(SormulaField<S, ?> targetField, Table<T> targetTable, SelectCascade selectCascadeAnnotation)
-    {
-        super(targetField, targetTable, selectCascadeAnnotation.operation(), selectCascadeAnnotation.post());
-        this.selectCascadeAnnotation = selectCascadeAnnotation;
-    }
     
     
     /**

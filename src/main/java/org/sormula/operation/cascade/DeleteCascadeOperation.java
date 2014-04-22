@@ -37,20 +37,6 @@ public class DeleteCascadeOperation<S, T> extends ModifyCascadeOperation<S, T>
     /**
      * Constructor used by {@link DeleteOperation}.
      *  
-     * @param targetField cascade delete operation uses row(s) from this field
-     * @param targetTable cascade delete operation is performed on this table 
-     * @param deleteCascadeAnnotation cascade operation
-     */
-    @Deprecated // use constructor with source table
-    public DeleteCascadeOperation(SormulaField<S, ?> targetField, Table<T> targetTable, DeleteCascade deleteCascadeAnnotation)
-    {
-        super(targetField, targetTable, deleteCascadeAnnotation.operation(), deleteCascadeAnnotation.post());
-    }
-    
-    
-    /**
-     * Constructor used by {@link DeleteOperation}.
-     *  
      * @param sourceTable cascade orgininates on row from this table 
      * @param targetField cascade delete operation uses row(s) from this field
      * @param targetTable cascade delete operation is performed on this table 

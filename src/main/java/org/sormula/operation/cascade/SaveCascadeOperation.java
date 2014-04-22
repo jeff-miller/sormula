@@ -37,20 +37,6 @@ public class SaveCascadeOperation<S, T> extends ModifyCascadeOperation<S, T>
 {
     /**
      * Constructor used by {@link SaveOperation}.
-     *  
-     * @param targetField cascade save operation uses row(s) from this field
-     * @param targetTable cascade save operation is performed on this table 
-     * @param saveCascadeAnnotation cascade operation
-     */
-    @Deprecated // use constructor with source table
-    public SaveCascadeOperation(SormulaField<S, ?> targetField, Table<T> targetTable, SaveCascade saveCascadeAnnotation)
-    {
-        super(targetField, targetTable, saveCascadeAnnotation.operation(), saveCascadeAnnotation.post());
-    }
-    
-    
-    /**
-     * Constructor used by {@link SaveOperation}.
      * 
      * @param sourceTable cascade orgininates on row from this table
      * @param targetField cascade save operation uses row(s) from this field

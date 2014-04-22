@@ -67,25 +67,6 @@ public abstract class CascadeOperation<S, T>
     /**
      * Constructs for field and table to be affected by cascade.
      * 
-     * @param targetField in source row to be affected by cascade operation
-     * @param targetTable sorm table that will be cascaded
-     * @param cascadeOperationClass class of cascade operation (used to create new instance)
-     * @param post true if operation is to be performed after source row operation; false if operation
-     * is to be performed before source row operation
-     */
-    @Deprecated // use constructor with source table
-	public CascadeOperation(SormulaField<S, ?> targetField, Table<T> targetTable, Class <?> cascadeOperationClass, boolean post)
-    {
-        this.targetField = targetField;
-        this.targetTable = targetTable;
-        this.cascadeOperationClass = cascadeOperationClass;
-        this.post = post;
-    }
-    
-    
-    /**
-     * Constructs for field and table to be affected by cascade.
-     * 
      * @param sourceTable cascade orgininates on row from this table
      * @param targetField in source row to be affected by cascade operation
      * @param targetTable sorm table that will be cascaded
@@ -123,19 +104,6 @@ public abstract class CascadeOperation<S, T>
 	{
 	    return post;
 	}
-	
-
-	/**
-	 * Replaced with {@link #getForeignKeyValueFieldNames()}.
-	 * 
-	 * @return target (child) row foreign key fields; null means don't update foreign key values
-	 * @since 3.0
-	 */
-	@Deprecated
-	public String[] getForeignKeyFieldNames() 
-    {
-        return foreignKeyValueFieldNames;
-    }
     
 
     /**

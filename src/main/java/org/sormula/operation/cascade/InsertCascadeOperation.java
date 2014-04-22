@@ -37,21 +37,6 @@ public class InsertCascadeOperation<S, T> extends ModifyCascadeOperation<S, T>
     
     /**
      * Constructor used by {@link InsertOperation}.
-     *  
-     * @param targetField cascade insert operation uses row(s) from this field
-     * @param targetTable cascade insert operation is performed on this table 
-     * @param insertCascadeAnnotation cascade operation
-     */
-    @Deprecated // use constructor that contains source table
-    public InsertCascadeOperation(SormulaField<S, ?> targetField, Table<T> targetTable, InsertCascade insertCascadeAnnotation)
-    {
-        super(targetField, targetTable, insertCascadeAnnotation.operation(), insertCascadeAnnotation.post());
-        this.insertCascadeAnnotation = insertCascadeAnnotation;
-    }
-    
-    
-    /**
-     * Constructor used by {@link InsertOperation}.
      *
      * @param sourceTable cascade orgininates on row from this table
      * @param targetField cascade insert operation uses row(s) from this field

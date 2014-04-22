@@ -37,20 +37,6 @@ public class UpdateCascadeOperation<S, T> extends ModifyCascadeOperation<S, T>
     /**
      * Constructor used by {@link UpdateOperation}.
      *  
-     * @param targetField cascade update operation uses row(s) from this field
-     * @param targetTable cascade update operation is performed on this table 
-     * @param updateCascadeAnnotation cascade operation
-     */
-    @Deprecated // use constructor with source table
-    public UpdateCascadeOperation(SormulaField<S, ?> targetField, Table<T> targetTable, UpdateCascade updateCascadeAnnotation)
-    {
-        super(targetField, targetTable, updateCascadeAnnotation.operation(), updateCascadeAnnotation.post());
-    }
-    
-    
-    /**
-     * Constructor used by {@link UpdateOperation}.
-     *  
      * @param sourceTable cascade orgininates on row from this table 
      * @param targetField cascade update operation uses row(s) from this field
      * @param targetTable cascade update operation is performed on this table 

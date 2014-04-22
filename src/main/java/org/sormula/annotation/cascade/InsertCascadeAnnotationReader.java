@@ -35,14 +35,6 @@ public class InsertCascadeAnnotationReader extends CascadeAnnotationReader
     
     /**
      * {@inheritDoc}
-     */
-    @Deprecated
-    protected void initOneToManyCascade()
-    {
-        initOneToManyCascade(source.getAnnotation(OneToManyCascade.class));
-    }
-    /**
-     * {@inheritDoc}
      * @since 3.1
      */
     protected void initOneToManyCascade(OneToManyCascade cascadeAnnotation)
@@ -59,14 +51,6 @@ public class InsertCascadeAnnotationReader extends CascadeAnnotationReader
     
     /**
      * {@inheritDoc}
-     */
-    @Deprecated
-    protected void initOneToOneCascade()
-    {
-        initOneToOneCascade(source.getAnnotation(OneToOneCascade.class));
-    }
-    /**
-     * {@inheritDoc}
      * @since 3.1
      */
     protected void initOneToOneCascade(OneToOneCascade cascadeAnnotation)
@@ -81,14 +65,6 @@ public class InsertCascadeAnnotationReader extends CascadeAnnotationReader
     }
     
     
-    /**
-     * {@inheritDoc}
-     */
-    @Deprecated
-    protected void initCascade()
-    {
-        initCascade(source.getAnnotation(Cascade.class));
-    }
     /**
      * {@inheritDoc}
      * @since 3.1

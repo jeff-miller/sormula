@@ -109,30 +109,6 @@ abstract public class CascadeAnnotationReader
     
     
     /**
-     * Replaced by {@link #initOneToManyCascade(OneToManyCascade)}. Parameter allows default to be
-     * used when no cascade annotation is supplied.
-     */
-    @Deprecated
-    abstract protected void initOneToManyCascade();
-    
-    
-    /**
-     * Replaced by {@link #initOneToOneCascade(OneToOneCascade)}. Parameter allows default to be
-     * used when no cascade annotation is supplied.
-     */
-    @Deprecated
-    abstract protected void initOneToOneCascade();
-    
-    
-    /**
-     * Replaced by {@link #initCascade(Cascade)}. Parameter allows default to be
-     * used when no cascade annotation is supplied.
-     */
-    @Deprecated
-    abstract protected void initCascade();
-    
-    
-    /**
      * Initializes when {@link OneToManyCascade} is annotated on source field (or implied
      * as default when no annotation is used).
      * @param cascacdeAnnotation annotation to use for cascade

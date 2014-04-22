@@ -26,7 +26,7 @@ import org.sormula.examples.ExampleBase;
 
 /**
  * Inserts a row into a table and then selects the row from a table where {@link Widget} 
- * field is stored as a blob. {@link WidgetColumnTranslator1} and {@link WidgetColumnTranslator2}
+ * field is stored as a blob. {@link WidgetColumnTranslator2}
  * are custom column translators that converts {@link Widget} objects to/from {@link Blob}.
  */
 public class BlobExample extends ExampleBase

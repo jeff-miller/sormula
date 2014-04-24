@@ -90,20 +90,6 @@ public class RowTranslator<R> extends ColumnsTranslator<R>
      * Constructs for a table.
      * 
      * @param table table associated with this row translator
-     * @throws TranslatorException if error
-     * @since 1.6 and 2.0
-     */
-    @Deprecated // use RowTranslator(Table<R>, Row) constructor 
-    public RowTranslator(Table<R> table) throws TranslatorException
-    {
-        this(table, null);
-    }
-    
-    
-    /**
-     * Constructs for a table.
-     * 
-     * @param table table associated with this row translator
      * @param rowAnnotation row annotation on table or row class
      * @throws TranslatorException if error
      * @since 3.0

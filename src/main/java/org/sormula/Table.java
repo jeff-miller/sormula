@@ -386,20 +386,6 @@ public class Table<R> implements TypeTranslatorMap, TransactionListener
     /**
      * Creates a {@link RowTranslator} for use by this table. Invoked by constructor.
      * 
-     * @return row translator
-     * @throws TranslatorException if error
-     */
-    @Deprecated // use initRowTranslator(Row rowAnnotation)
-    protected RowTranslator<R> initRowTranslator() throws TranslatorException
-    {
-        // default
-        return new RowTranslator<R>(this);
-    }
-    
-    
-    /**
-     * Creates a {@link RowTranslator} for use by this table. Invoked by constructor.
-     * 
      * @param rowAnnotation annotation on table or row class
      * @return row translator
      * @throws TranslatorException if error

@@ -35,13 +35,17 @@ import org.sormula.Table;
 public class LinkedHashMapSelectOperation<K, R> extends MapSelectOperation<K, R>
 {
 	/**
-	 * Constructs for a table to select by primary key. It is unlikely that you will want
-     * to use this constructor since at most one row will be selected.
+     * Constructs for a table to use primary key where condition. This is the standard 
+     * consturctor for all {@link SqlOperation} classes.
+     * <p>
+     * It is unlikely that you will want to use this constructor without also
+     * changing the where condition since at most one row will be selected. Use 
+     * {@link #setWhere(String)} or {@link #setWhereTranslator2(org.sormula.translator.AbstractWhereTranslator)} 
+     * to change the default primary key where condition. 
 	 * 
 	 * @param table select from this table
 	 * @throws OperationException if error
 	 */
-    @Deprecated
     public LinkedHashMapSelectOperation(Table<R> table) throws OperationException
     {
         super(table);

@@ -340,7 +340,7 @@ public class SelectCascadeOperation<S, T> extends CascadeOperation<S, T>
                     log.debug("source parameter field names from target where condition " + selectOperation.getWhereConditionName());
                 }
                 
-                List<ColumnTranslator<T>> whereColumnTranslators = selectOperation.getWhereTranslator2().getColumnTranslatorList();
+                List<ColumnTranslator<T>> whereColumnTranslators = selectOperation.getWhereTranslator().getColumnTranslatorList();
                 parameterFieldNames = new String[whereColumnTranslators.size()];
                 int i = 0;
                 for (ColumnTranslator<T> ct : whereColumnTranslators)
@@ -467,7 +467,7 @@ public class SelectCascadeOperation<S, T> extends CascadeOperation<S, T>
                     }
                 }
                 
-                selectOperation.setWhereTranslator2(whereTranslator);
+                selectOperation.setWhereTranslator(whereTranslator);
             }
             else if (isWhereForeignKeyValueFields())
             {
@@ -493,7 +493,7 @@ public class SelectCascadeOperation<S, T> extends CascadeOperation<S, T>
                     }
                 }
                 
-                selectOperation.setWhereTranslator2(whereTranslator);
+                selectOperation.setWhereTranslator(whereTranslator);
             }
             else
             {

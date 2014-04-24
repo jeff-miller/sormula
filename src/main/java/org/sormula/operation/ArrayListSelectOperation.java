@@ -36,7 +36,7 @@ public class ArrayListSelectOperation<R> extends ListSelectOperation<R>
      * <p>
      * It is unlikely that you will want to use this constructor without also
      * changing the where condition since at most one row will be selected. Use 
-     * {@link #setWhere(String)} or {@link #setWhereTranslator2(org.sormula.translator.AbstractWhereTranslator)} 
+     * {@link #setWhere(String)} or {@link #setWhereTranslator(org.sormula.translator.AbstractWhereTranslator)} 
      * to change the default primary key where condition. 
 	 * 
 	 * @param table select from this table

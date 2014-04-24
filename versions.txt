@@ -5,6 +5,7 @@ JDK 5/6     JDK 7       comments
 3.3 jdk1.5  3.3-jdk1.7  - remove deprecated: WidgetColumnTranslator1, cascade methods, operation methods
                         - SqlOperation getWhereTranslator and setWhereTranslator are now public
                         - remove deprecated RowTranslator(Table<R>) constructor
+                        - aggregate SelectCountOperation for Table selectCount() and selectCount(String, Object...) methods
 
 3.2-jdk1.5  3.2-jdk1.7  - org.sormula.translator.standard translators can read/write null non-primative types
                         - fix bug that caused cache exception when Table was created after transaction began 

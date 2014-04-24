@@ -1318,7 +1318,7 @@ public abstract class SqlOperation<R>
      * @return where translator or null if none
      * @since 3.1
      */
-    @Deprecated
+    @Deprecated // remove in future versions
     public AbstractWhereTranslator<R> getWhereTranslator2()
     {
         return whereTranslator;
@@ -1331,7 +1331,7 @@ public abstract class SqlOperation<R>
      * @param whereTranslator where translator or null if none
      * @since 3.1
      */
-    @Deprecated
+    @Deprecated // remove in future versions
     public void setWhereTranslator2(AbstractWhereTranslator<R> whereTranslator)
     {
         this.whereTranslator = whereTranslator;

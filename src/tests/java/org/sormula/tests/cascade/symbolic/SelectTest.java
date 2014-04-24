@@ -90,7 +90,7 @@ public class SelectTest extends DatabaseTest<SormulaSymParent>
         {
             // verify 1 to many
             List<SormulaSymChild> children = parent.getChildList();
-            int count = childTable.selectCount("byParent", parent.getParentId());
+            Integer count = childTable.<Integer>selectCount("parentId", "byParent", parent.getParentId());
             
             if (children.size() > 0)
             {

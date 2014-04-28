@@ -824,7 +824,7 @@ public class Table<R> implements TypeTranslatorMap, TransactionListener
      */
     public int selectCount() throws SormulaException
     {
-        return this.<Integer>selectCount("*", "");
+        return selectCount("", new Object[0]); // new Object[0] parameter disambiguates the method to use
     }
     
     
@@ -850,7 +850,11 @@ public class Table<R> implements TypeTranslatorMap, TransactionListener
      */
     public int selectCount(String whereConditionName, Object...parameters) throws SormulaException
     {
-        return this.<Integer>selectCount("*", whereConditionName, parameters);
+        // databases may return int or long for count(*)
+        Number count = this.<Number>selectCount("*", whereConditionName, parameters);
+         
+        // return as int for backward compatibility, use <Long>selectCount("*", whereConditionName, ...) if long is required
+        return count.intValue();
     }
     
     

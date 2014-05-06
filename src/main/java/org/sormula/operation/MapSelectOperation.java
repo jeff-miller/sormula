@@ -68,11 +68,13 @@ public abstract class MapSelectOperation<K, R> extends SelectOperation<R, Map<K,
 
 
 	/**
-	 * Sets the get key method. See {@link #getGetKeyMethod()} for details. The default
-     * is {@link #hashCode()}. Use this method or {@link #setGetKeyMethod(Method)}to define the 
-     * get key method or override {@link #getKey(Object)}.
+	 * Sets the method name of row class R that gets key of type K to use in Map.
+	 * Used by {@link #add(Object)} to add a row to the map. 
+	 * The default is "hashCode".
+	 * <p>
+	 * Override {@link #getKey(Object)} to implement alternative ways to form key for Map.
      * 
-	 * @param getKeyMethodName name of row method to get map key 
+	 * @param getKeyMethodName name of row method to get key for Map 
 	 * @throws OperationException if error
 	 */
 	public void setGetKeyMethodName(String getKeyMethodName) throws OperationException
@@ -89,9 +91,9 @@ public abstract class MapSelectOperation<K, R> extends SelectOperation<R, Map<K,
 	
 	
 	/**
-	 * Return the name of the get key method.
+	 * Return the name of the method for the row R that returns the Map key K. The default is "hashCode".
 	 * 
-	 * @return name of row method that gets map key
+	 * @return name of row method that gets row key for Map or null if none
 	 */
 	public String getGetKeyMethodName()
 	{

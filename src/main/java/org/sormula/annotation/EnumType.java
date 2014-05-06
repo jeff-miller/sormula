@@ -25,7 +25,14 @@ import org.sormula.translator.standard.EnumTranslator;
 
 
 /**
- * TODO
+ * Annotation for a row Enum field that defines how to map Enum to/from a table column.
+ * <p>
+ * EnumType is optional since {@link EnumTranslator} is the default translator to use for 
+ * an Enum field when no annotation is specified. 
+ * <p>
+ * Use {@link EnumType} to provide an alternate translator with
+ * {@link #translator()} or to define a default Enum to use when column name read is
+ * not a valid Enum as defined by {@link Class#getEnumConstants()}.
  * 
  * @since 3.3
  * @author Jeff Miller
@@ -35,21 +42,19 @@ import org.sormula.translator.standard.EnumTranslator;
 public @interface EnumType
 {
     /**
-     * @return type translator to use on class
+     * @return type translator to use to convert Enum types to/from column
      */
     Class<? extends EnumTranslator> translator() default EnumTranslator.class;
     
     
     /**
-     * TODO
-     * note case sensitive
-     * 
-     * Enum to return from {@link EnumTranslator#read(java.sql.ResultSet, int)} when
-     * database column does not match any enum names. 
-     * "" means return null 
-     * non empty string means return enum corresponding to the non empty string 
-     * 
-     * @return
+     * The name of the Enum ({@link Enum#name()}) for the default Enum. The name
+     * supplied here determines the Enum to return from 
+     * {@link EnumTranslator#read(java.sql.ResultSet, int)} when database column 
+     * does not match any Enum names. Name is case sensitive.
+     *  
+     * @return non empty string means return Enum corresponding to the non empty string;
+     * empty string means use null for default Enum
      */
      String defaultEnumName() default ""; 
 }

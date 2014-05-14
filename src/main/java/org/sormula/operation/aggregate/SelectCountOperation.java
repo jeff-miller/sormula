@@ -25,7 +25,7 @@ import org.sormula.operation.OperationException;
  * <p>
  * The data type returned from database is the same type as the expression. For example,
  * if expression is a column, then the returned type is the same type as column. If
- * expression is "*", then databases typically return a long.
+ * expression is "*", then databases may return a long instead of an int.
  * 
  * @since 1.1
  * @author Jeff Miller

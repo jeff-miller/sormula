@@ -19,6 +19,7 @@ package org.sormula.tests.translator;
 import java.util.GregorianCalendar;
 
 import org.sormula.annotation.Column;
+import org.sormula.annotation.EnumType;
 import org.sormula.annotation.Transient;
 import org.sormula.annotation.Where;
 import org.sormula.translator.standard.BooleanYNColumnTranslator;
@@ -55,6 +56,10 @@ public class SormulaTest1
     java.sql.Timestamp testSqlTimestamp;
     GregorianCalendar testGc;
     String testString1;
+    EnumField testEnum1;
+    
+    @EnumType(defaultEnumName="Bad")
+    EnumField testEnum2;
     
     @Column(name="ts2") // test explicit name
     String testString2;
@@ -234,5 +239,21 @@ public class SormulaTest1
     public void setTestString2(String testString2)
     {
         this.testString2 = testString2;
+    }
+    public EnumField getTestEnum1()
+    {
+        return testEnum1;
+    }
+    public void setTestEnum1(EnumField testEnum1)
+    {
+        this.testEnum1 = testEnum1;
+    }
+    public EnumField getTestEnum2()
+    {
+        return testEnum2;
+    }
+    public void setTestEnum2(EnumField testEnum2)
+    {
+        this.testEnum2 = testEnum2;
     }
 }

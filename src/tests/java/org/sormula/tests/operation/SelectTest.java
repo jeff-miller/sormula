@@ -70,7 +70,7 @@ public class SelectTest extends DatabaseTest<SormulaTest4>
     {
     	begin();
     	selectTestRows(); // must perform each time since other tests are destructive
-        assert getAll().size() == getTable().selectCount() : "select count failed";
+        assert getAll().size() == getTable().selectCount() : "select count failed"; // tests selectCount() also
         commit();
     }
 
@@ -97,7 +97,7 @@ public class SelectTest extends DatabaseTest<SormulaTest4>
     public void selectLimit() throws SormulaException
     {
         begin();
-        int maxRows = getTable().selectCount() / 2;
+        int maxRows = getTable().<Integer>selectCount("id") / 2;
         assert maxRows > 0 : "no rows to test";
         ArrayListSelectOperation<SormulaTest4> s = new ArrayListSelectOperation<>(getTable(), "");
         s.setMaximumRowsRead(maxRows);

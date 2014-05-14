@@ -16,6 +16,8 @@
  */
 package org.sormula.tests.translator;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.util.GregorianCalendar;
 
 import org.sormula.SormulaException;
@@ -63,8 +65,10 @@ public class ColumnTranslatorTest extends DatabaseTest<SormulaTest1>
             " testSqlDate DATE," +
             " testSqlTimestamp TIMESTAMP," +
             " testGc TIMESTAMP," +
-            " testString1 VARCHAR(10)," +
-            " ts2 CHAR(10)" +
+            " testString1 VARCHAR(20)," +
+            " ts2 CHAR(20)," +
+            " testEnum1 VARCHAR(10)," +
+            " testEnum2 VARCHAR(10)" +
             ")"
         );
     }
@@ -77,7 +81,7 @@ public class ColumnTranslatorTest extends DatabaseTest<SormulaTest1>
     }
     
     
-    protected SormulaTest1 insertTest() throws SormulaException
+    protected SormulaTest1 insertTest(String key) throws SormulaException
     {
         SormulaTest1 inserted = new SormulaTest1();
         
@@ -97,8 +101,12 @@ public class ColumnTranslatorTest extends DatabaseTest<SormulaTest1>
         inserted.setTestShort1((short)12345);
         inserted.setTestShort2((short)-12345);
         
+        // enum
+        inserted.setTestEnum1(EnumField.Good);
+        inserted.setTestEnum2(EnumField.Ugly);
+        
         // string
-        inserted.setTestString1("abcdef");
+        inserted.setTestString1(key);
         inserted.setTestString2("wxyz");
         
         // date/time
@@ -119,7 +127,7 @@ public class ColumnTranslatorTest extends DatabaseTest<SormulaTest1>
     @Test //(dependsOnMethods="insertTest")
     public void selectTest() throws SormulaException
     {
-        SormulaTest1 inserted = insertTest(); // use this instead, dependsOnMethods caused problems
+        SormulaTest1 inserted = insertTest("selectTest"); // use this instead, dependsOnMethods caused problems
         
         begin();
         SormulaTest1 selected = getTable().selectWhere("forTestSting1", inserted.getTestString1());
@@ -171,10 +179,15 @@ public class ColumnTranslatorTest extends DatabaseTest<SormulaTest1>
         assert inserted.getTestSqlDate()     .equals(selected.getTestSqlDate())      : "testSqlDate" + message;
         assert inserted.getTestSqlTimestamp().equals(selected.getTestSqlTimestamp()) : "testSqlTimestamp" + message;
         assert inserted.getTestGc()          .equals(selected.getTestGc())           : "testGc" + message;
+        
+        // enum tests
+        assert inserted.getTestEnum1().equals(selected.getTestEnum1()) : "testEnum1" + message;
+        assert inserted.getTestEnum2().equals(selected.getTestEnum2()) : "testEnum2" + message;
+        
         commit();
     }
     
-    
+
     @Test
     public void nullTest() throws Exception
     {
@@ -210,7 +223,32 @@ public class ColumnTranslatorTest extends DatabaseTest<SormulaTest1>
         // DateTranslator null is tested in selectTest()
         assert selected.getTestSqlDate() == null : "testSqlDate" + message;
         assert selected.getTestSqlTimestamp() == null : "testSqlTimestamp" + message;
+        assert selected.getTestEnum1() == null : "testEnum1" + message;
+        assert selected.getTestEnum2() == null : "testEnum2" + message;
         
+        commit();
+    }
+    
+    
+    @Test //(dependsOnMethods="insertTest")
+    public void defaultEnumTest() throws Exception
+    {
+        SormulaTest1 inserted = insertTest("defaultEnumTest"); // use this instead, dependsOnMethods caused problems
+        
+        begin();
+        
+        // change database column value to a non enum 
+        Connection connection = getDatabase().getConnection();
+        PreparedStatement statement = connection.prepareStatement("update " + 
+                getSchemaPrefix() + SormulaTest1.class.getSimpleName() + " set testEnum2='zzz' where testString1=?");
+        statement.setString(1, inserted.getTestString1());
+        assert statement.executeUpdate() == 1 : "testEnum2 column was not changed";
+        statement.close();
+        
+        // testEnum2 should be read as 'zzz' and converted to EnumField.Bad
+        SormulaTest1 selected = getTable().selectWhere("forTestSting1", inserted.getTestString1());
+        assert selected != null : "no test row";
+        assert selected.getTestEnum2().equals(EnumField.Bad) : "testEnum2 did not use default enum";
         commit();
     }
 }

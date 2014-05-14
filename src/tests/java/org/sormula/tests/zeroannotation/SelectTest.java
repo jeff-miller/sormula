@@ -51,7 +51,7 @@ public class SelectTest extends DatabaseTest<ZeroAnnotationTest>
     {
     	begin();
     	selectTestRows(); // must perform each time since other tests are destructive
-        assert getAll().size() == getTable().selectCount() : "select count failed";
+        assert getAll().size() == getTable().<Integer>selectCount("type") : "select count failed";
         commit();
     }
 

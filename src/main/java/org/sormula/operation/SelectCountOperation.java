@@ -28,12 +28,16 @@ import org.sormula.Table;
  * <p>
  * This class remains in this package for backward compatibility. org.sormula.operation.aggregate
  * contains a replacement for this class and it contains other aggregate operations.
+ * <p>
+ * Use {@link org.sormula.operation.aggregate.SelectCountOperation} as a replacement
+ * with "*" for expression in constructor.
  * 
  * @since 1.0
  * @author Jeff Miller
  * @see org.sormula.operation.SelectCountOperation
  * @param <R> class type which contains members for columns of a row in a table
  */
+@Deprecated // replaced by org.sormula.operation.aggregate.SelectCountOperation
 public class SelectCountOperation<R> extends ScalarSelectOperation<R>
 {
     /**

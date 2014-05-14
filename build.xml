@@ -284,6 +284,7 @@
 	        	protected="true" 
 	            use="true"
 	            source="${javac.version}"
+	    	    overview="${main.srcdir}/java/overview.html"
 	            >
 	        	<classpath refid="main.libpath"/>
 	        </javadoc>

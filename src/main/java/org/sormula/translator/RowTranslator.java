@@ -39,6 +39,7 @@ import java.util.List;
 
 import org.sormula.Table;
 import org.sormula.annotation.Column;
+import org.sormula.annotation.EnumType;
 import org.sormula.annotation.ImplicitType;
 import org.sormula.annotation.ImplicitTypeAnnotationReader;
 import org.sormula.annotation.Row;
@@ -50,6 +51,7 @@ import org.sormula.annotation.cascade.OneToManyCascade;
 import org.sormula.annotation.cascade.OneToOneCascade;
 import org.sormula.log.ClassLogger;
 import org.sormula.operation.ModifyOperation;
+import org.sormula.translator.standard.EnumTranslator;
 import org.sormula.translator.standard.StandardColumnTranslator;
 
 
@@ -75,6 +77,24 @@ import org.sormula.translator.standard.StandardColumnTranslator;
 public class RowTranslator<R> extends ColumnsTranslator<R>
 {
     private static final ClassLogger log = new ClassLogger();
+    
+    // default enum type
+    @EnumType
+    static Object defaultEnumTypeHolder;
+    static EnumType defaultEnumType;
+    static
+    {
+        try
+        {
+            defaultEnumType = RowTranslator.class.getDeclaredField(
+                    "defaultEnumTypeHolder").getAnnotation(EnumType.class);
+        }
+        catch (NoSuchFieldException e)
+        {
+            log.error("error initializing default enum type annotation", e);
+        }
+    }
+    
     Table<R> table;
     PrimaryKeyWhereTranslator<R> primaryKeyWhereTranslator;
     String unusedColumnInsertNamesSql;
@@ -84,20 +104,6 @@ public class RowTranslator<R> extends ColumnsTranslator<R>
     boolean inheritedFields;
     boolean zeroRowCountPostExecute;
     List<Field> cascadeFieldList;
-    
-    
-    /**
-     * Constructs for a table.
-     * 
-     * @param table table associated with this row translator
-     * @throws TranslatorException if error
-     * @since 1.6 and 2.0
-     */
-    @Deprecated // use RowTranslator(Table<R>, Row) constructor 
-    public RowTranslator(Table<R> table) throws TranslatorException
-    {
-        this(table, null);
-    }
     
     
     /**
@@ -345,6 +351,8 @@ public class RowTranslator<R> extends ColumnsTranslator<R>
      * one {@link ImplicitType#translator()} is different from existing.
      * 
      * @throws TranslatorException if error
+     * @throws IllegalAccessException 
+     * @throws InstantiationException 
      */
     @SuppressWarnings("unchecked") // field types are only known at runtime 
     protected void initColumnTranslators() throws TranslatorException
@@ -372,6 +380,7 @@ public class RowTranslator<R> extends ColumnsTranslator<R>
             }
             else 
             {
+                // field is not static, no transient annotation and no cascade annotation
                 try
                 {
                     // check for Type annotation on field type and field 
@@ -383,7 +392,7 @@ public class RowTranslator<R> extends ColumnsTranslator<R>
                 }
                 
                 // determine column translator to use
-                String columnName = "";
+                String columnName;
                 Class<? extends ColumnTranslator> columnTranslatorClass;
                 Column columnAnnotation = f.getAnnotation(Column.class);
     
@@ -397,6 +406,7 @@ public class RowTranslator<R> extends ColumnsTranslator<R>
                 {
                     // no Column annotation for field, use standard column translator
                     columnTranslatorClass = (Class<? extends ColumnTranslator>)StandardColumnTranslator.class;
+                    columnName = "";
                 }
                 
                 if (columnName.length() == 0)
@@ -406,25 +416,50 @@ public class RowTranslator<R> extends ColumnsTranslator<R>
                 }
                 
                 // create column translator
-                ColumnTranslator<R> translator = (ColumnTranslator<R>)
+                ColumnTranslator<R> columnTranslator = (ColumnTranslator<R>)
                     AbstractColumnTranslator.newInstance(columnTranslatorClass, f, columnName);
 
-                if (translator instanceof AbstractColumnTranslator) 
+                if (columnTranslator instanceof AbstractColumnTranslator) 
                 {
-                    TypeTranslator<?> typeTranslator = table.getTypeTranslator(f.getType());
+                    // column translator is some standard sormula column translator
+                    EnumType enumTypeAnnotation = f.getAnnotation(EnumType.class);
+                    Class<?> fieldType = f.getType();
+                    TypeTranslator<?> typeTranslator = table.getTypeTranslator(fieldType);
                     
                     if (typeTranslator != null)
                     {
-                        addColumnTranslator(translator); // do this only if has type translator
-                        if (log.isDebugEnabled()) log.debug(f + " set type translator=" + typeTranslator + " on column translator=" + translator.getClass());
+                        // type translator is defined for field type
+                        if (log.isDebugEnabled()) log.debug(f + " set type translator=" + typeTranslator + " on column translator=" + columnTranslator.getClass());
+                        addColumnTranslator(columnTranslator); // do this only if has type translator
                         // set type translator for subclasses of AbstractColumnTranslator 
-                        ((AbstractColumnTranslator)translator).setTypeTranslator(typeTranslator);
+                        ((AbstractColumnTranslator)columnTranslator).setTypeTranslator(typeTranslator);
+                    }
+                    else if (Enum.class.isAssignableFrom(fieldType) || enumTypeAnnotation != null)
+                    {
+                        // field type is enum but no type translator, use enum translator
+                        addColumnTranslator(columnTranslator);
+                        
+                        if (enumTypeAnnotation == null) enumTypeAnnotation = defaultEnumType; // default
+                        
+                        Class<? extends EnumTranslator> translatorClass = enumTypeAnnotation.translator();
+                        if (log.isDebugEnabled()) log.debug("use " + translatorClass + " for " + fieldType);
+                        try
+                        {
+                            EnumTranslator<? extends Enum<?>> enumTranslator = translatorClass.newInstance();
+                            enumTranslator.setEnumClass((Class)fieldType);
+                            enumTranslator.setDefaultEnumName(enumTypeAnnotation.defaultEnumName());
+                            ((AbstractColumnTranslator)columnTranslator).setTypeTranslator(enumTranslator);
+                        }
+                        catch (Exception e)
+                        {
+                            throw new TranslatorException("error constructing enum translator for " + f, e);
+                        }
                     }
                     else if (columnAnnotation != null)
                     {
                         // custom column with no TypeTranslator but assume ColumnTranslator exists
-                        if (log.isDebugEnabled()) log.debug(f + " custom AbstractColumnTranslator " + translator.getClass());
-                        addColumnTranslator(translator);
+                        if (log.isDebugEnabled()) log.debug(f + " custom AbstractColumnTranslator " + columnTranslator.getClass());
+                        addColumnTranslator(columnTranslator);
                     }
                     else
                     {
@@ -438,16 +473,16 @@ public class RowTranslator<R> extends ColumnsTranslator<R>
                 else
                 {
                     // assume some non sormula custom translator
-                    if (log.isDebugEnabled()) log.debug(f + " custom ColumnTranslator " + translator.getClass());
-                    addColumnTranslator(translator);
+                    if (log.isDebugEnabled()) log.debug(f + " custom ColumnTranslator " + columnTranslator.getClass());
+                    addColumnTranslator(columnTranslator);
                 }
                 
-                if (translator.isIdentity())
+                if (columnTranslator.isIdentity())
                 {
                     if (identityColumnTranslator == null)
                     {
                         // first identity column encountered
-                        identityColumnTranslator = translator;
+                        identityColumnTranslator = columnTranslator;
                     }
                     else
                     {

@@ -58,21 +58,6 @@ public class SelectCascadeOperation<S, T> extends CascadeOperation<S, T>
 	String[] parameterFieldNames;
 	List<SormulaField<S, ?>> parameterFields;
 	SelectCascadeFilter<?>[] selectCascadeFilters;
-	
-	
-    /**
-     * Constructor used by {@link SelectOperation}.
-     *  
-     * @param targetField cascade select operation modifies this field
-     * @param targetTable cascade select operation is performed on this table 
-     * @param selectCascadeAnnotation cascade operation
-     */
-	@Deprecated // use constructor with source table
-    public SelectCascadeOperation(SormulaField<S, ?> targetField, Table<T> targetTable, SelectCascade selectCascadeAnnotation)
-    {
-        super(targetField, targetTable, selectCascadeAnnotation.operation(), selectCascadeAnnotation.post());
-        this.selectCascadeAnnotation = selectCascadeAnnotation;
-    }
     
     
     /**
@@ -355,7 +340,7 @@ public class SelectCascadeOperation<S, T> extends CascadeOperation<S, T>
                     log.debug("source parameter field names from target where condition " + selectOperation.getWhereConditionName());
                 }
                 
-                List<ColumnTranslator<T>> whereColumnTranslators = selectOperation.getWhereTranslator2().getColumnTranslatorList();
+                List<ColumnTranslator<T>> whereColumnTranslators = selectOperation.getWhereTranslator().getColumnTranslatorList();
                 parameterFieldNames = new String[whereColumnTranslators.size()];
                 int i = 0;
                 for (ColumnTranslator<T> ct : whereColumnTranslators)
@@ -482,7 +467,7 @@ public class SelectCascadeOperation<S, T> extends CascadeOperation<S, T>
                     }
                 }
                 
-                selectOperation.setWhereTranslator2(whereTranslator);
+                selectOperation.setWhereTranslator(whereTranslator);
             }
             else if (isWhereForeignKeyValueFields())
             {
@@ -508,7 +493,7 @@ public class SelectCascadeOperation<S, T> extends CascadeOperation<S, T>
                     }
                 }
                 
-                selectOperation.setWhereTranslator2(whereTranslator);
+                selectOperation.setWhereTranslator(whereTranslator);
             }
             else
             {

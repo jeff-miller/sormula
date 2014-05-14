@@ -72,7 +72,7 @@ public class SelectTest2 extends DatabaseTest<SormulaTestParentLazy2>
             Map<Integer, SormulaTestChildLazy> map = parent.getChildMap(); // child map is selected here since it is lazy
             assert map != null : "Lazy map: children were not selected";
             assert map == parent.getChildMap() : "Lazy map: children were selected twice";
-            int count = childTable.selectCount("byParent", parent.getId());
+            Integer count = childTable.<Integer>selectCount("parentId", "byParent", parent.getId());
             
             if (map.size() > 0)
             {

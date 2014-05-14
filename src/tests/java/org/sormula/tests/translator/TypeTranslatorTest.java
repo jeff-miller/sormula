@@ -64,7 +64,8 @@ public class TypeTranslatorTest extends DatabaseTest<SormulaTestTT>
             " testbooleanyesno3 CHAR(1)," +
             " testinteger INTEGER," +
             " testdate TIMESTAMP," +
-            " teststring VARCHAR(10)" +
+            " teststring VARCHAR(10), " +
+            " testEnum SMALLINT " + // convert Enum to/from int's
             ")"
         );
     }
@@ -88,6 +89,7 @@ public class TypeTranslatorTest extends DatabaseTest<SormulaTestTT>
         inserted.setTestInteger(1234567890);
         inserted.setTestString("abcdefghij");
         inserted.setTestDate(new java.util.Date(System.currentTimeMillis()));
+        inserted.setTestEnum(EnumField.Ugly);
         
         begin();
         assert getTable().insert(inserted) == 1 : "1 row not inserted";
@@ -110,6 +112,8 @@ public class TypeTranslatorTest extends DatabaseTest<SormulaTestTT>
         assert inserted.getTestInteger() == selected.getTestInteger() : "testInteger" + message;
         assert inserted.getTestString().equals(selected.getTestString()) : "testString" + message;
         assert inserted.getTestDate().equals(selected.getTestDate()) : "testDate" + message;
+        assert inserted.getTestEnum().equals(selected.getTestEnum()) : "testEnum" + message;
+        
         commit();
     }
 }

@@ -30,8 +30,7 @@ import org.sormula.translator.TypeTranslator;
 
 
 /**
- * Translates a {@link Widget} field using {@link TypeTranslator}. Replaces
- * {@link WidgetColumnTranslator1}. 
+ * Translates a {@link Widget} field using {@link TypeTranslator}.  
  */
 public class WidgetTanslator1 implements TypeTranslator<Widget>
 {

@@ -36,13 +36,17 @@ public abstract class MapSelectOperation<K, R> extends SelectOperation<R, Map<K,
 	
 	
 	/**
-	 * Constructs for a table to select by primary key. It is unlikely that you will want
-     * to use this constructor since at most one row will be selected.
+     * Constructs for a table to use primary key where condition. This is the standard 
+     * consturctor for all {@link SqlOperation} classes.
+     * <p>
+     * It is unlikely that you will want to use this constructor without also
+     * changing the where condition since at most one row will be selected. Use 
+     * {@link #setWhere(String)} or {@link #setWhereTranslator(org.sormula.translator.AbstractWhereTranslator)} 
+     * to change the default primary key where condition. 
 	 * 
 	 * @param table select from this table
 	 * @throws OperationException if error
 	 */
-	@Deprecated
     public MapSelectOperation(Table<R> table) throws OperationException
     {
         super(table);
@@ -63,45 +67,14 @@ public abstract class MapSelectOperation<K, R> extends SelectOperation<R, Map<K,
     }
 
 
-    /**
-     * Gets the method of class R that obtains key of type K from a row. Used by
-     * {@link #add(Object)} to add a row to the map.
-     * <p>
-     * This method is deprecated because java.lang.reflect.MethodHandle will be used in future
-     * versions.
-     *  
-     * @return method that supplies map key value for a row; default is {@link Object#hashCode()}
-     */
-    @Deprecated
-    public Method getGetKeyMethod() 
-    {
-		return getKeyMethod;
-	}
-
-
-    /**
-     * Sets the get key method. See {@link #getGetKeyMethod()} for details. The default
-     * is {@link #hashCode()}. Use this method or {@link #setGetKeyMethodName(String)} to define 
-     * the get key method  or override {@link #getKey(Object)}.
-     * <p>
-     * This method is deprecated because java.lang.reflect.MethodHandle will be used in future
-     * versions.
-     * 
-     * @param getKeyMethod row method that gets map key 
-     */
-    @Deprecated
-	public void setGetKeyMethod(Method getKeyMethod) 
-	{
-		this.getKeyMethod = getKeyMethod;
-	}
-
-	
 	/**
-	 * Sets the get key method. See {@link #getGetKeyMethod()} for details. The default
-     * is {@link #hashCode()}. Use this method or {@link #setGetKeyMethod(Method)}to define the 
-     * get key method or override {@link #getKey(Object)}.
+	 * Sets the method name of row class R that gets key of type K to use in Map.
+	 * Used by {@link #add(Object)} to add a row to the map. 
+	 * The default is "hashCode".
+	 * <p>
+	 * Override {@link #getKey(Object)} to implement alternative ways to form key for Map.
      * 
-	 * @param getKeyMethodName name of row method to get map key 
+	 * @param getKeyMethodName name of row method to get key for Map 
 	 * @throws OperationException if error
 	 */
 	public void setGetKeyMethodName(String getKeyMethodName) throws OperationException
@@ -118,9 +91,9 @@ public abstract class MapSelectOperation<K, R> extends SelectOperation<R, Map<K,
 	
 	
 	/**
-	 * Return the name of the get key method.
+	 * Return the name of the method for the row R that returns the Map key K. The default is "hashCode".
 	 * 
-	 * @return name of row method that gets map key
+	 * @return name of row method that gets row key for Map or null if none
 	 */
 	public String getGetKeyMethodName()
 	{

@@ -16,6 +16,7 @@
  */
 package org.sormula.tests.translator;
 
+import org.sormula.annotation.EnumType;
 import org.sormula.annotation.ExplicitType;
 import org.sormula.annotation.ImplicitType;
 import org.sormula.translator.standard.BooleanYNTranslator;
@@ -39,6 +40,9 @@ public class SormulaTestTT
     
     int testInteger;
     String testString;
+    
+    @EnumType(translator=CustomEnumTranslator.class)
+    EnumField testEnum; // test custom enum translator
     
     
     public boolean isTestBooleanYesNo1()
@@ -88,5 +92,13 @@ public class SormulaTestTT
     public void setTestString(String testString)
     {
         this.testString = testString;
+    }
+    public EnumField getTestEnum()
+    {
+        return testEnum;
+    }
+    public void setTestEnum(EnumField testEnum)
+    {
+        this.testEnum = testEnum;
     }
 }

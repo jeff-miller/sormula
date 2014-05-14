@@ -2,6 +2,13 @@ Version History
 
 JDK 5/6     JDK 7       comments
 ------------------------------------------------------------------------------------------------------------
+3.3 jdk1.5  3.3-jdk1.7  - automatic Enum support by default
+                        - EnumType and EnumTranslator for reading/writing Enum fields
+                        - remove deprecated: WidgetColumnTranslator1, cascade methods, operation methods
+                        - SqlOperation getWhereTranslator and setWhereTranslator are now public
+                        - remove deprecated RowTranslator(Table<R>) constructor
+                        - Table selectCount() and selectCount(String, Object...) new implementation 
+
 3.2-jdk1.5  3.2-jdk1.7  - org.sormula.translator.standard translators can read/write null non-primative types
                         - fix bug that caused cache exception when Table was created after transaction began 
  						- BenchmarkSuite example to compare Sormula vs. JDBC perfomance

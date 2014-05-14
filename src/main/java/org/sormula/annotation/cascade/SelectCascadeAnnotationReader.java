@@ -21,7 +21,7 @@ public class SelectCascadeAnnotationReader extends CascadeAnnotationReader
      */
     public SelectCascadeAnnotationReader(Field source)
     {
-        super(source); // uses deprecated constructor for backward compatability (don't use new constructor)
+        super(source);
         
         if (selectCascades == null)
         {
@@ -32,14 +32,6 @@ public class SelectCascadeAnnotationReader extends CascadeAnnotationReader
     }
     
     
-    /**
-     * {@inheritDoc}
-     */
-    @Deprecated
-    protected void initOneToManyCascade()
-    {
-        initOneToManyCascade(source.getAnnotation(OneToManyCascade.class));
-    }
     /**
      * {@inheritDoc}
      * @since 3.1
@@ -54,14 +46,6 @@ public class SelectCascadeAnnotationReader extends CascadeAnnotationReader
     
     /**
      * {@inheritDoc}
-     */
-    @Deprecated
-    protected void initOneToOneCascade()
-    {
-        initOneToOneCascade(source.getAnnotation(OneToOneCascade.class));
-    }
-    /**
-     * {@inheritDoc}
      * @since 3.1
      */
     protected void initOneToOneCascade(OneToOneCascade cascadeAnnotation)
@@ -72,14 +56,6 @@ public class SelectCascadeAnnotationReader extends CascadeAnnotationReader
     }
     
     
-    /**
-     * {@inheritDoc}
-     */
-    @Deprecated
-    protected void initCascade()
-    {
-        initCascade(source.getAnnotation(Cascade.class));
-    }
     /**
      * {@inheritDoc}
      * @since 3.1

@@ -1291,38 +1291,34 @@ public abstract class SqlOperation<R> implements AutoCloseable
 
     
     /**
-     * Use public access {@link #getWhereTranslator2()}.
+     * Gets the translator to map row object values into where condition.
      * 
      * @return where translator or null if none
      */
-    @Deprecated // plan to make public in future, keep protected for now to avoid breaking subclasses
-    protected AbstractWhereTranslator<R> getWhereTranslator()
+    public AbstractWhereTranslator<R> getWhereTranslator()
     {
         return whereTranslator;
     }
     
     
     /**
-     * Use public access {@link #setWhereTranslator2(AbstractWhereTranslator)}.
+     * Sets the translator to map row object values into where condition.
      * 
      * @param whereTranslator where translator or null if none
      */
-    @Deprecated // plan to make public in future, keep protected for now to avoid breaking subclasses
-    protected void setWhereTranslator(AbstractWhereTranslator<R> whereTranslator)
+    public void setWhereTranslator(AbstractWhereTranslator<R> whereTranslator)
     {
         this.whereTranslator = whereTranslator;
     }
 
     
     /**
-     * Gets the translator to map row object values into where condition.
-     * <p>
-     * Changing {@link #getWhereTranslator()} to public may break any class that overrode it since
-     * the signature in subclass will be protected (error to reduce visibility).
+     * Use {@link #getWhereTranslator()}.
      * 
      * @return where translator or null if none
      * @since 3.1
      */
+    @Deprecated // remove in future versions
     public AbstractWhereTranslator<R> getWhereTranslator2()
     {
         return whereTranslator;
@@ -1330,14 +1326,12 @@ public abstract class SqlOperation<R> implements AutoCloseable
 
     
     /**
-     * Sets the translator to map row object values into where condition.
-     * <p>
-     * Changing {@link #setWhereTranslator(AbstractWhereTranslator)} to public may break any class that overrode it since
-     * the signature in subclass will be protected (error to reduce visibility).
+     * Use {@link #setWhereTranslator(AbstractWhereTranslator)}.
      * 
      * @param whereTranslator where translator or null if none
      * @since 3.1
      */
+    @Deprecated // remove in future versions
     public void setWhereTranslator2(AbstractWhereTranslator<R> whereTranslator)
     {
         this.whereTranslator = whereTranslator;

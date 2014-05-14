@@ -79,7 +79,7 @@ public class SelectTest extends DatabaseTest<SormulaTestParent>
             
             // verify 1 to many
             List<? extends SormulaTestChildN> children = parent.getChildList();
-            int countN = childNTable.selectCount("byParent", parent.getId());
+            int countN = childNTable.selectCount("byParent", parent.getId()); // tests non parameterized type of selectCount()
             if (children.size() > 0)
             {
                 // verify all rows selected
@@ -98,7 +98,7 @@ public class SelectTest extends DatabaseTest<SormulaTestParent>
 
             // verify map select
             Map<Integer, SormulaTestChildM> map = parent.getChildMap();
-            int countM = childMTable.selectCount("byParent", parent.getId());
+            Integer countM = childMTable.<Integer>selectCount("parentId", "byParent", parent.getId());
             
             if (map.size() > 0)
             {

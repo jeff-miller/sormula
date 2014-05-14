@@ -41,10 +41,10 @@ import org.sormula.operation.InsertOperation;
 import org.sormula.operation.ModifyOperation;
 import org.sormula.operation.SaveOperation;
 import org.sormula.operation.ScalarSelectOperation;
-import org.sormula.operation.SelectCountOperation;
 import org.sormula.operation.UpdateOperation;
 import org.sormula.operation.aggregate.SelectAggregateOperation;
 import org.sormula.operation.aggregate.SelectAvgOperation;
+import org.sormula.operation.aggregate.SelectCountOperation;
 import org.sormula.operation.aggregate.SelectMaxOperation;
 import org.sormula.operation.aggregate.SelectMinOperation;
 import org.sormula.operation.aggregate.SelectSumOperation;
@@ -380,20 +380,6 @@ public class Table<R> implements TypeTranslatorMap, TransactionListener
         }
         
         return name;
-    }
-    
-    
-    /**
-     * Creates a {@link RowTranslator} for use by this table. Invoked by constructor.
-     * 
-     * @return row translator
-     * @throws TranslatorException if error
-     */
-    @Deprecated // use initRowTranslator(Row rowAnnotation)
-    protected RowTranslator<R> initRowTranslator() throws TranslatorException
-    {
-        // default
-        return new RowTranslator<R>(this);
     }
     
     
@@ -828,13 +814,14 @@ public class Table<R> implements TypeTranslatorMap, TransactionListener
     
     
     /**
-     * Gets count of all rows in table. This method is from older versions and is kept for 
-     * backward compatiblity. It is equivalent to <Integer>selectCount("*", "").
+     * Gets count of all rows in table. It is equivalent to <Integer>selectCount("*").
+     * <P>
+     * This method will throw an exception if database returns a long for the count instead
+     * of an int. Use <Long>selectCount("*") if long result is expected.
      * 
      * @return count of all rows in table
      * @throws SormulaException if error
      */
-    @Deprecated
     public int selectCount() throws SormulaException
     {
         return selectCount("", new Object[0]); // new Object[0] parameter disambiguates the method to use
@@ -842,8 +829,11 @@ public class Table<R> implements TypeTranslatorMap, TransactionListener
     
     
     /**
-     * Selects count for a subset of rows. This method is from older versions and is kept for 
-     * backward compatiblity. It is equivalent to <Integer>selectCount("*", whereConditionName, parameters).
+     * Selects count for a subset of rows. It is equivalent to 
+     * <Integer>selectCount("*", whereConditionName, parameters).
+     * <P>
+     * This method will throw an exception if database returns a long for the count instead
+     * of an int. Use <Long>selectCount("*", whereConditionName, parameters) if long result is expected.
      * <p>
      * Example:
      * <blockquote><pre>
@@ -858,28 +848,22 @@ public class Table<R> implements TypeTranslatorMap, TransactionListener
      * @return count of all rows in table
      * @throws SormulaException if error
      */
-    @Deprecated
     public int selectCount(String whereConditionName, Object...parameters) throws SormulaException
     {
-        int count;
+        // databases may return int or long for count(*)
+        Number count = this.<Number>selectCount("*", whereConditionName, parameters);
+         
+        // return as int for backward compatibility, use <Long>selectCount("*", whereConditionName, ...) if long is required
+        return count.intValue();
         
-        try (org.sormula.operation.SelectCountOperation<R> selectCountOperation = new SelectCountOperation<>(this))
-        {
-            selectCountOperation.setWhere(whereConditionName);
-            selectCountOperation.setParameters(parameters);
-            selectCountOperation.execute();
-            count = selectCountOperation.readCount();
-        }
-        
-        return count;
     }
     
-
+    
     /**
-     * Selects count of rows.
+     * Selects count of rows. 
      * <p>
      * The data type returned from database is the same type as the expression. For example,
-     * if expression is a column, then the returned type is the same type as column. If
+     * if expression is a column of type integer, then the returned type is Integer. If
      * expression is "*", then return types are database dependent.
      * 
      * @param <T> aggregate result type
@@ -897,7 +881,7 @@ public class Table<R> implements TypeTranslatorMap, TransactionListener
      * Selects count of rows.
      * <p>
      * The data type returned from database is the same type as the expression. For example,
-     * if expression is a column, then the returned type is the same type as column. If
+     * if expression is a column of type integer, then the returned type is Integer. If
      * expression is "*", then return types are database dependent.
      * 
      * @param <T> aggregate result type
@@ -911,8 +895,7 @@ public class Table<R> implements TypeTranslatorMap, TransactionListener
     {
         T result;
         
-        try (org.sormula.operation.aggregate.SelectCountOperation<R, T> selectOperation = 
-            new org.sormula.operation.aggregate.SelectCountOperation<>(this, expression))
+        try (SelectCountOperation<R, T> selectOperation = new SelectCountOperation<>(this, expression))
         {
             selectOperation.setWhere(whereConditionName);
             selectOperation.setParameters(parameters);

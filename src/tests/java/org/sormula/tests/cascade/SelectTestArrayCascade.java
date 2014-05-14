@@ -58,7 +58,7 @@ public class SelectTestArrayCascade extends DatabaseTest<SormulaTestParentArrayC
         {
             // verify 1 to many from list to array
             SormulaTestChildNArrayCascade[] children = parent.getChildren();
-            int countN = childNTable.selectCount("byParent", parent.getParentId());
+            Integer countN = childNTable.<Integer>selectCount("parentId", "byParent", parent.getParentId());
             if (children.length > 0)
             {
                 // verify all rows selected

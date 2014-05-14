@@ -124,6 +124,17 @@ public class EnumTranslator<T extends Enum<T>> implements TypeTranslator<Enum<T>
 
 
     /**
+     * Gets the default Enum associated with {@link #getDefaultEnumName()}.
+     * 
+     * @return default Enum or null if none
+     */
+    public T getDefaultEnum()
+    {
+        return defaultEnum;
+    }
+
+
+    /**
      * Writes the name of the Enum parameter to database as a String. If parameter is null, then
      * null is written to database.
      * 

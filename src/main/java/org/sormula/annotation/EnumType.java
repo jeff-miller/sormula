@@ -25,14 +25,14 @@ import org.sormula.translator.standard.EnumTranslator;
 
 
 /**
- * Annotation for a row Enum field that defines how to map Enum to/from a table column.
+ * Defines how to map Enum to/from a table column.
  * <p>
  * EnumType is optional since {@link EnumTranslator} is the default translator to use for 
  * an Enum field when no annotation is specified. 
  * <p>
  * Use {@link EnumType} to provide an alternate translator with
- * {@link #translator()} or to define a default Enum to use when column name read is
- * not a valid Enum as defined by {@link Class#getEnumConstants()}.
+ * {@link #translator()} or to define a default Enum to use when the column name read is
+ * not a valid Enum as determined by {@link Class#getEnumConstants()}.
  * 
  * @since 3.3
  * @author Jeff Miller
@@ -42,7 +42,9 @@ import org.sormula.translator.standard.EnumTranslator;
 public @interface EnumType
 {
     /**
-     * @return type translator to use to convert Enum types to/from column
+     * Type translator to use to convert Enum types to/from column.
+     * 
+     * @return EnumTranslator to use 
      */
     Class<? extends EnumTranslator> translator() default EnumTranslator.class;
     

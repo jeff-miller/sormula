@@ -28,21 +28,23 @@ import org.sormula.translator.TypeTranslator;
 
 
 /**
- * Writes Enum name ({@link Enum#name()}) to column as a String. Reads column as a String Enum name
+ * {@link TypeTranslator} to use for Enum fields. Writes Enum name ({@link Enum#name()}) 
+ * to column as a String. Reads column as a String Enum name
  * ({@link Enum#name()}) and converts name to {@link Enum} by searching {@link Class#getEnumConstants()}.
  * <p> 
  * Column should be a sql type that is compatible with java String (like varchar) and
- * wide enough for longest Enum name.
+ * wide enough for the longest Enum name.
  * <p>
  * This class and subclasses may be used as a {@link TypeTranslator} for Enum fields
- * by specifying with {@link ImplicitType#translator()} or {@link ExplicitType#translator()}. 
- * <p> 
- * This class and subclasses may be specified in {@link EnumType#translator()}.
- * <p>  
- * This class is default translator to use for Enum types when no annotation is specified for
- * and Enum field within a row class.
+ * in one of two ways:
+ * <ul>
+ * <li>by specifying with {@link ImplicitType#translator()} or {@link ExplicitType#translator()}.</li> 
+ * <li>by specifying in {@link EnumType#translator()}.</li>
+ * </ul>  
+ * This class is the default translator to use for Enum types when no annotation is specified for
+ * an Enum field within a row class.
  * <p>
- * Subclass to create a custom {@link TypeTranslator} for Enum fields by overriding
+ * Subclass to create a custom {@link TypeTranslator} for Enum fields. Override
  * {@link #read(ResultSet, int)} and {@link #write(PreparedStatement, int, Enum)}.
  * 
  * @since 3.3
@@ -67,9 +69,9 @@ public class EnumTranslator<T extends Enum<T>> implements TypeTranslator<Enum<T>
 
 
     /**
-     * Sets the class to use to look up Eum by name using {@link Class#getEnumConstants()}. 
-     * This method is typically invoked by {@link RowTranslator} when {@link Table} 
-     * object is initialized that contains an Enum field.
+     * Sets the class to use to look up Enum by name using {@link Class#getEnumConstants()}. 
+     * This method is typically invoked by {@link RowTranslator} to initialize this translator
+     * when {@link Table} object is initialized that contains an Enum field
      * 
      * @param enumClass Class of Enum to be translated
      */
@@ -83,7 +85,7 @@ public class EnumTranslator<T extends Enum<T>> implements TypeTranslator<Enum<T>
      * Gets the Enum name to use in {@link #read(ResultSet, int)} when the name read from 
      * database cannot be found in {@link Class#getEnumConstants()} of class {@link #getEnumClass()}.
      * 
-     * @return default name of enum to use; empty string for no default (null Enum)
+     * @return default name of Enum to use; empty string for no default (null Enum)
      */
     public String getDefaultEnumName()
     {
@@ -92,9 +94,10 @@ public class EnumTranslator<T extends Enum<T>> implements TypeTranslator<Enum<T>
 
 
     /**
-     * Gets the Enum name to use in {@link #read(ResultSet, int)}. If no default has been
-     * set then {@link #read(ResultSet, int)} will return null.
-     * 
+     * Sets the Enum name to use in {@link #read(ResultSet, int)} when the Enum name read
+     * from the database is not a valid Enum name. If no default has been set then
+     * {@link #read(ResultSet, int)} will return null.
+     * <p>
      * {@link #setEnumClass(Class)} must be invoked prior to invoking this method. This method is 
      * invoked by {@link RowTranslator} when {@link Table} object is initialized.
      * 

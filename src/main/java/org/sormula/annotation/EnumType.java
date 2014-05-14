@@ -33,6 +33,21 @@ import org.sormula.translator.standard.EnumTranslator;
  * Use {@link EnumType} to provide an alternate translator with
  * {@link #translator()} or to define a default Enum to use when the column name read is
  * not a valid Enum as determined by {@link Class#getEnumConstants()}.
+ * <p>
+ * Example:
+ * <blockquote><pre>
+ * public class SomeRowClass
+ * {
+ *     &#64;EnumType(defaultEnumName="Bad")
+ *     SomeEnum e;
+ *     ...
+ * } 
+ * 
+ * public enum SomeEnum
+ * {
+ *     Good, Bad, Ugly;
+ * }
+ * </pre></blockquote>
  * 
  * @since 3.3
  * @author Jeff Miller

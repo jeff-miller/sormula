@@ -2,6 +2,7 @@ Version History
 
 JDK 5/6     JDK 7       comments
 ------------------------------------------------------------------------------------------------------------
+                        - maven support (bendem)
 3.3 jdk1.5  3.3-jdk1.7  - automatic Enum support by default
                         - EnumType and EnumTranslator for reading/writing Enum fields
                         - remove deprecated: WidgetColumnTranslator1, cascade methods, operation methods

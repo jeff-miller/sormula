@@ -5,8 +5,6 @@ Sormula
 
 Sormula is a Java library that moves data between Java objects and relational database tables.
 
-It is designed to be: 
- 
 * Easy to Use
 * Simple to Understand
 * Minimal Configuration

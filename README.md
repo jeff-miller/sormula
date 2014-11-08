@@ -1,5 +1,5 @@
-Sormula
-=======
+Sormula ORM
+===========
 
 ### Simple (Easy) Object Relational Mapping for Java
 

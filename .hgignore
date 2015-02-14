@@ -4,3 +4,4 @@
 \.log$
 test.log
 \.orig
+dependency-reduced-pom.xml

@@ -5,3 +5,5 @@
 test.log
 \.orig
 dependency-reduced-pom.xml
+db.script
+db.properties

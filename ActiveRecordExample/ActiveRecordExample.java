@@ -1,5 +1,5 @@
 /* sormula - Simple object relational mapping
- * Copyright (C) 2011-2012 Jeff Miller
+ * Copyright (C) 2011-2015 Jeff Miller
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,6 +18,7 @@ import java.io.PrintWriter;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
@@ -33,7 +34,7 @@ import org.sormula.active.ActiveTransaction;
 /**
  * SimpleExample converted to use active record package. Everything needed for this 
  * example is in the directory that contains this class. The database used by this 
- * example is simpleDB.script. simpleDB.script may be viewed with any text editor.
+ * example is db.script. db.script may be viewed with any text editor.
  * <p>
  * Compile with compile.bat<br> 
  * Run with run.bat
@@ -49,12 +50,13 @@ public class ActiveRecordExample
     public static void main(String[] args) throws Exception
     {
         System.out.println("begin");
-        ActiveRecordExample simpleExample = new ActiveRecordExample();
-        simpleExample.removeInventory(1234, 1);
-        simpleExample.clearInventory("xyz");
-        simpleExample.selectByRange(1, 10);
-        simpleExample.selectByRange2(1, 10);
-        simpleExample.selectIn();
+        ActiveRecordExample example = new ActiveRecordExample();
+        example.createTable();
+        example.removeInventory(1234, 1);
+        example.clearInventory("xyz");
+        example.selectByRange(1, 10);
+        example.selectByRange2(1, 10);
+        example.selectIn();
         System.out.println("end");
     }
     
@@ -63,6 +65,53 @@ public class ActiveRecordExample
     {
         dataSource = new BasicDataSource();
         ActiveDatabase.setDefault(new ActiveDatabase(dataSource));
+    }
+    
+    
+    public void createTable() throws Exception
+    {
+    	try (Connection connection = dataSource.getConnection(); Statement statement = connection.createStatement())
+    	{
+	        System.out.println("create table");
+	        statement.execute("CREATE TABLE INVENTORY(PARTNUMBER INTEGER, QUANTITY INTEGER, MANFID VARCHAR(40))");
+    	}
+    	catch (SQLException e)
+    	{
+    		// assume exception because table already exists
+    		System.out.println(e);
+    	}
+
+    	// insert test records
+    	ArrayList<Inventory> testRecords = new ArrayList<>();
+    	testRecords.add(newRecord(1233, 105, "abcd"));
+    	testRecords.add(newRecord( 777,   7, "abcd"));
+    	testRecords.add(newRecord( 555,   5, "abcd"));
+    	testRecords.add(newRecord(1234,  64, "abcd"));
+    	testRecords.add(newRecord( 999,  99, "xyz"));
+    	testRecords.add(newRecord( 998,  88, "xyx"));
+    	
+        // perform within transaction for the default active database
+        ActiveTransaction transaction = new ActiveTransaction();
+        try
+        {
+            transaction.begin();
+            Inventory.table.deleteAll(); // start with empty table
+            Inventory.table.insertAll(testRecords);
+            transaction.commit();
+        }
+        catch (ActiveException e)
+        {
+            transaction.rollback();
+            e.printStackTrace();
+        }
+    }
+    private Inventory newRecord(int partNumber, int quantity, String manufacturerId)
+    {
+    	Inventory inventory = new Inventory();
+    	inventory.setPartNumber(partNumber);
+    	inventory.setQuantity(quantity);
+    	inventory.setManufacturerId(manufacturerId);
+    	return inventory;
     }
     
     
@@ -215,12 +264,11 @@ class BasicDataSource implements DataSource
 {
     public BasicDataSource() throws Exception
     {
-        Class.forName("org.hsqldb.jdbc.JDBCDriver");
     }
 
     public Connection getConnection() throws SQLException
     {
-        return DriverManager.getConnection("jdbc:hsqldb:file:simpleDB;shutdown=true");
+        return DriverManager.getConnection("jdbc:hsqldb:file:db;shutdown=true");
     }
 
     public Connection getConnection(String username, String password) throws SQLException

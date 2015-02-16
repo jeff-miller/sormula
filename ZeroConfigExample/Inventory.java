@@ -2,7 +2,7 @@ import org.sormula.annotation.Column;
 import org.sormula.annotation.Row;
 
 /* sormula - Simple object relational mapping
- * Copyright (C) 2011-2012 Jeff Miller
+ * Copyright (C) 2011-2015 Jeff Miller
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -32,7 +32,7 @@ public class Inventory // table name defaults to "inventory", use @Row(tableName
 {
     int partNumber;         // first field is primary key, use @Column(primaryKey=true) to specify different key(s)
     int quantity;           // corresponds to column quantity, use @Column(name="...") to specify different name
-    String manufacturerId;  // corresponds to column manfId, use @Column(name="...") to specify different name
+    String manufacturerId;  // corresponds to column manufacturerId, use @Column(name="...") to specify different name
     
     
     public int getPartNumber()

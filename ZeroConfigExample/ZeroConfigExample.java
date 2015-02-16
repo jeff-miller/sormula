@@ -1,5 +1,5 @@
 /* sormula - Simple object relational mapping
- * Copyright (C) 2011-2012 Jeff Miller
+ * Copyright (C) 2011-2015 Jeff Miller
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,6 +16,8 @@
  */
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.SQLException;
+import java.sql.Statement;
 
 import org.sormula.Database;
 import org.sormula.Table;
@@ -37,7 +39,7 @@ import org.sormula.Table;
  * </ul>
  * </p><p>
  * Everything needed for this example is in the one directory that contains 
- * this class. The database used by this example is exampleDB.script. exampleDB.script 
+ * this class. The database used by this example is db.script. db.script 
  * may be viewed with any text editor.
  * <p>
  * Compile with compile.bat<br> 
@@ -57,7 +59,7 @@ public class ZeroConfigExample
     {
     	System.out.println("begin");
     	ZeroConfigExample example = new ZeroConfigExample();
-    	example.deleteAll(); // start with empty database
+    	example.createTable();
     	example.insert(1234);
     	example.insert(5555);
     	example.insert(1111);
@@ -70,8 +72,7 @@ public class ZeroConfigExample
     
     public ZeroConfigExample() throws Exception
     {
-        Class.forName("org.hsqldb.jdbc.JDBCDriver");
-        connection = DriverManager.getConnection("jdbc:hsqldb:file:exampleDB;shutdown=true");
+        connection = DriverManager.getConnection("jdbc:hsqldb:file:db;shutdown=true");
         database = new Database(connection);
         inventoryTable = database.getTable(Inventory.class);
     }
@@ -84,9 +85,26 @@ public class ZeroConfigExample
     }
     
     
+    public void createTable() throws Exception
+    {
+    	try (Statement statement = connection.createStatement())
+    	{
+	        System.out.println("create table");
+	        statement.execute("CREATE TABLE INVENTORY(PARTNUMBER INTEGER, QUANTITY INTEGER, MANUFACTURERID VARCHAR(40))");
+    	}
+    	catch (SQLException e)
+    	{
+    		// assume exception because table already exists
+    		System.out.println(e);
+    	}
+    	
+    	inventoryTable.deleteAll(); // start with empty table
+    }
+    
+    
     public void insert(int partNumber) throws Exception
     {
-        System.out.println("insert");
+        System.out.println("insert " + partNumber);
         Inventory inventory = new Inventory();
         inventory.setPartNumber(partNumber);
         inventory.setManufacturerId("Acme");
@@ -97,24 +115,19 @@ public class ZeroConfigExample
     
     public void update(int partNumber) throws Exception
     {
-        System.out.println("update");
+        System.out.println("update " + partNumber);
         Inventory inventory = inventoryTable.select(partNumber);
         inventory.setQuantity(1000);
-        inventoryTable.update(inventory);
+        int count = inventoryTable.update(inventory);
+        System.out.println(count + " updated");
     }    
     
     
     public void delete(int partNumber) throws Exception
     {
-        System.out.println("delete");
+        System.out.println("delete " + partNumber);
         Inventory inventory = inventoryTable.select(partNumber);
-        inventoryTable.delete(inventory);
+        int count = inventoryTable.delete(inventory);
+        System.out.println(count + " deleted");
     }    
-    
-    
-    public void deleteAll() throws Exception
-    {
-        System.out.println("clear database");
-        inventoryTable.deleteAll();
-    }
 }

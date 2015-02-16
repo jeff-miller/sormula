@@ -10,13 +10,11 @@ Run   with run.bat     (or equivalent shell command)
 Files contained in this example:
 ------------------------------------------------------------------------------
 compile.bat                   Executes javac to compile example
-hsqldb-j5-2.2.4.jar           HSQLDB database api (JRE 5)
+hsqldb-n.jar                  HSQLDB database api 
 Inventory.class               Row compiled class 
 Inventory.java                Row source class (POJO)
 readme.txt                    This file
 run.bat                       Executes java to run example
-exampleDB.properties          Example database 
-exampleeDB.script             Example database 
 ZeroConfigExample.class       Example compiled class
 ZeroConfigExample.java        Example source class
-sormula-n.n.n.jar             Sormumla api
+sormula-n.jar                 Sormumla api

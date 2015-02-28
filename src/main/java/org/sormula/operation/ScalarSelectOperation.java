@@ -66,6 +66,7 @@ public class ScalarSelectOperation<R> extends SqlOperation<R>
     int rowsReadCount;
     boolean lazySelectsCascades;
     boolean notifyLazySelects;
+    boolean cachePrimaryKeySelect; // set by execute() 
     boolean cacheContainsPrimaryKey; // set by execute() if cache hit
     boolean executed;
     SelectCascadeFilter<?>[] selectCascadeFilters;
@@ -185,7 +186,7 @@ public class ScalarSelectOperation<R> extends SqlOperation<R>
     @Override
     public void execute() throws OperationException
     {
-        executed = true;
+        cachePrimaryKeySelect = false;
         cacheContainsPrimaryKey = false;
         initOperationTime();
         setNextParameter(1);
@@ -193,10 +194,12 @@ public class ScalarSelectOperation<R> extends SqlOperation<R>
         
         if (isCached())
         {
+        	Cache<R> cache = table.getCache();
+        	
             try
             {
                 // notify cache of start of execution
-                getTable().getCache().execute(this);
+                cache.execute(this);
             }
             catch (CacheException e)
             {
@@ -205,11 +208,13 @@ public class ScalarSelectOperation<R> extends SqlOperation<R>
 
             if (isPrimaryKey() && rowParameters == null)
             {
-                // table is cached and select is for primary key and primary is from parameters, look in cache
+                // table is cached and select is for primary key and primary is from parameters, 
+            	// use cache instead of preparing sql
+            	cachePrimaryKeySelect = true;
                 try
                 {
                     if (log.isDebugEnabled()) log.debug("execute() check cache " + table.getRowClass());
-                    cacheContainsPrimaryKey = table.getCache().contains(parameters);
+                    cacheContainsPrimaryKey = cache.contains(parameters); 
                 }
                 catch (CacheException e)
                 {
@@ -220,7 +225,7 @@ public class ScalarSelectOperation<R> extends SqlOperation<R>
         
         if (!cacheContainsPrimaryKey)
         {
-            // query database
+            // not cached or read will be a cache miss so prepare sql to query database
             prepareCheck();
             OperationTime operationTime = getOperationTime();
             
@@ -250,6 +255,8 @@ public class ScalarSelectOperation<R> extends SqlOperation<R>
                 throw new OperationException("execute() error", e);
             }
         }
+        
+        executed = true;
     }
     
     
@@ -300,33 +307,37 @@ public class ScalarSelectOperation<R> extends SqlOperation<R>
         if (!executed) throw new OperationException("execute() method must be invoked prior to readNext()");
         
         R row = null;
+        Cache<R> cache = table.getCache(); 
         
         try
         {
-            if (cacheContainsPrimaryKey)
+        	if (cachePrimaryKeySelect &&
+        	    rowsReadCount == 0) // readNext() must return null after 1st invocation because only 1 row with primary key
+        	{
+        		// get from cache
+        	    // must always try to select from cache so that cache miss status is correct
+        	    row = cache.select(parameters);
+        	}
+    		
+    		if (cacheContainsPrimaryKey)
             {
-                // read from cache using primary key 
-                if (rowsReadCount == 0) // readNext() returns null after 1st invocation because only 1 row with primary key
+                // row from cache  
+    		    // row is null if row is in cache but row has deleted state
+                if (filter != null && row != null)
                 {
-                    // return value from most recent execute()
-                    row = table.getCache().select(parameters);
-                    
                     // test for filter pass 
-                    if (filter != null)
+                    if (!filter.accept(this, row, false) ||
+                        (isCascading() && !filter.accept(this, row, true)) )
                     {
-                        if (!filter.accept(this, row, false) ||
-                            (isCascading() && !filter.accept(this, row, true)) )
-                        {
-                            // don't use this row based upon filter response
-                            row = null;
-                        }
+                        // don't use this row based upon filter response
+                        row = null;
                     }
                 }
             }
             else
             {
-                // select from result set
-                
+            	// select from result set
+
                 // include resultSet.next() in read time but don't include cascade
                 // times since that would cause cascade timings summed twice into total
                 operationTime.startReadTime();
@@ -358,7 +369,7 @@ public class ScalarSelectOperation<R> extends SqlOperation<R>
                         if (isCached())
                         {
                             // now that row has been selected, key is known, check if cache has newer
-                            R cachedRow = table.getCache().selected(row);
+                            R cachedRow = cache.selected(row);
                             
                             if (cachedRow != null)
                             {
@@ -367,7 +378,7 @@ public class ScalarSelectOperation<R> extends SqlOperation<R>
                             }   
                             else
                             {
-                                // cache indicates row has been deleted, dont use it, try next row
+                                // cache indicates row has been deleted, don't use it, try next row
                                 if (log.isDebugEnabled()) log.debug("selected deleted row, select next");
                                 row = null;
                             }

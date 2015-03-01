@@ -1,1 +1,0 @@
-rt.jar is for compiling to java 1.5 compliance

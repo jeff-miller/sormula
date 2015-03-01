@@ -171,30 +171,32 @@ public abstract class AbstractCache<R> implements Cache<R>
 
 
     /**
-     * Removes row from the cache.
+     * Removes row from the cache. Does nothing if cache is not initialized because no
+     * transaction is active.
      * 
      * @param row row to remove
-     * @throws CacheException if error
+     * @throws CacheException never
      */
     public void evict(R row) throws CacheException
     {
-        check();
         CacheKey cacheKey = new CacheKey(getPrimaryKeyValues(row));
         if (log.isDebugEnabled()) log.debug("evict() " + cacheKey + " for table " + table.getClass());
-        uncommittedCache.remove(cacheKey);
-        committedCache.remove(cacheKey);
+        if (uncommittedCache != null) uncommittedCache.remove(cacheKey);
+        if (committedCache != null)   committedCache.remove(cacheKey);
     }
 
 
     /**
-     * Removes all rows from the cache.
-     * @throws CacheException if error
+     * Removes all rows from the cache. Does nothing if cache is not initialized because no
+     * transaction is active.
+     * 
+     * @throws CacheException never 
      */
     public void evictAll() throws CacheException
     {
         if (log.isDebugEnabled()) log.debug("evictAll() for table " + table.getClass());
         if (uncommittedCache != null) uncommittedCache.clear();
-        committedCache.clear();
+        if (committedCache != null)   committedCache.clear(); 
     }
 
 
@@ -220,7 +222,7 @@ public abstract class AbstractCache<R> implements Cache<R>
     {
         if (uncommittedCache == null)
         {
-            uncommittedCache = new HashMap<>(cachedAnnotation.size() / 2); // TODO 1/2 contradicts documentation for Cache, why 1/2?
+            uncommittedCache = new HashMap<>(cachedAnnotation.size() / 2);
         }
         else
         {

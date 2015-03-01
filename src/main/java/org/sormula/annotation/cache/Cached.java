@@ -81,7 +81,7 @@ public @interface Cached
     
     /**
      * Meaning of is dependent upon cache implementation specified with {@link #type()}. For {@link ReadOnlyCache}
-     * and {@link ReadWriteCache}, the size is the inital capacity of cache.
+     * and {@link ReadWriteCache}, the size is the initial capacity of cache.
      * 
      * @return the cache size constraint
      */

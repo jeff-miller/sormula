@@ -3,7 +3,8 @@ Version History
 JDK 5/6     JDK 7       comments
 ------------------------------------------------------------------------------------------------------------
             3.4-jdk1.7  - cache miss count is recorded correctly
-                        - cache.statistics build.property for logging cache statistics
+                        - cache.statistics in build.properties for logging cache statistics
+                        - evict methods never throw CacheException
             
             3.3.1-jdk1.7- maven support (bendem)
                         - updated SimpleExample, ActiveRecordExample, and ZeroConfigExample

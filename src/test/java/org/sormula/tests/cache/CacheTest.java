@@ -63,7 +63,7 @@ public class CacheTest<R> extends DatabaseTest<R>
         uncachedTable.setCached(false);
     }
 
-    
+
     public ScalarSelectOperation<R> getUncachedTable()
     {
         return uncachedTable;

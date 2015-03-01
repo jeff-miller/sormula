@@ -201,4 +201,22 @@ public class SelectTest extends CacheTest<SormulaCacheTestRW>
         
         commit();
     }
+    
+    
+    @Test
+    public void noTransaction() throws Exception
+    {
+        try
+        {
+            // no begin transaction should throw CacheException
+            insertTestRow(222); 
+            
+            // should not get here
+            throw new Exception("cached insert without transaction");
+        }
+        catch (SormulaException e)
+        {
+            // expected path
+        }
+    }
 }

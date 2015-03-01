@@ -77,16 +77,18 @@ public class ReadWriteCache<R> extends WritableCache<R>
     {
         super(table, cachedAnnotation);
     }
-    
+
     
     /**
-     * {@inheritDoc}
+     * Prepares cache for use.
+     * 
+     * @param sqlOperation operation that will use this cache
+     * @throws CacheException if cache has not been initialized (no transaction is active)
      */
     public void execute(SqlOperation<R> sqlOperation) throws CacheException
     {
-    	// TODO test when no transaction for cached table 
-    	// TODO if check() is used here, then not needed all other places?
-    	// TODO check();
+    	check();
+    	
         if (sqlOperation instanceof ScalarSelectOperation)
         {
             // select

@@ -37,12 +37,12 @@ import org.sormula.operation.SqlOperation;
 /**
  * A cache that retains rows that selected, inserted, updated, and deleted. Rows are never written to the 
  * database. The selected and modified rows are retained in cache for life of {@link Table} object or until 
- * explicity flushed with {@link Table#flush()}, or {@link Database#flush()} or evicted with
+ * explicitly flushed with {@link Table#flush()}, or {@link Database#flush()} or evicted with
  * {@link Cache#evict(Object)} or {@link Cache#evictAll()}.
  * <p>
  * TODO can ReadOnlyCache be modified so that transaction is optional?
  * This is a transactional cache which means that caching is performed relative to database transactional
- * boundries of begin, commit, and rollback. Tables that are cached may not read/write unless a transaction 
+ * boundaries of begin, commit, and rollback. Tables that are cached may not read/write unless a transaction 
  * is active. Tables that are cached must use {@link Transaction} obtained from {@link Database#getTransaction()}
  * or must use a subclass of {@link Transaction} that is set with {@link Database#setTransaction(Transaction)}.
  * <p>
@@ -74,16 +74,15 @@ public class ReadOnlyCache<R> extends AbstractCache<R>
     
     
     /**
-     * Does nothing. TODO performs check
+     * Prepares cache for use.
      * 
      * @param sqlOperation ignored
+     * @throws CacheException if cache has not been initialized (no transaction is active)
      */
     public void execute(SqlOperation<R> sqlOperation) throws CacheException
     {
-        // no-op
-    	// TODO test when no transaction for cached table 
-    	// TODO if check() is used here, then not needed all other places?
-    	// TODO check();
+        // if no transaction then fail now rather than later 
+    	check();
     }
 
 

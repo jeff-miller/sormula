@@ -113,7 +113,7 @@ public abstract class AbstractCache<R> implements Cache<R>
         }
         else
         {
-            // update commited cache here so rollbacks prior to this spot will keep committed in correct state
+            // update committed cache here so rollbacks prior to this spot will keep committed in correct state
             Collection<UncommittedRow<R>> uncommitted = getUncommittedCache().values();
             if (log.isDebugEnabled()) log.debug("update committed count=" + uncommitted.size());
             for (UncommittedRow<R> uncommittedRow : uncommitted)
@@ -122,7 +122,7 @@ public abstract class AbstractCache<R> implements Cache<R>
             }
         }
         
-        // uncommitted is no longer needed since now synched with committed
+        // uncommitted is no longer needed since now synchronized with committed
         setUncommittedCache(null);
     }
 
@@ -154,7 +154,7 @@ public abstract class AbstractCache<R> implements Cache<R>
      * Tests if row is in cache. Returns true if row exists as committed or uncommitted. Note that
      * {@link #select(Object[])} will return null but {@link #contains(Object[])} will true for the
      * same primary key(s) if row is an uncommitted delete. {@link #select(Object[])} indicates 
-     * committed visibilty while {@link #contains(Object[])} simply indicates if row is known to
+     * committed visibility while {@link #contains(Object[])} simply indicates if row is known to
      * the cache. This method is used by {@link ScalarSelectOperation#execute()} to know if
      * cache is authority for row or if database must be queried to get row.
      * 

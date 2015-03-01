@@ -146,6 +146,8 @@
         <java classname="${class}" args="${args}" maxmemory="${maxmem}">
             <sysproperty key="dbdir" value="${db.dir}"/>
         	<sysproperty key="seed" value="${seed}"/>
+        	<sysproperty key="timings" value="${timings}"/> <!-- TODO add to examples? -->
+        	<sysproperty key="cache.statistics" value="${cache.statistics}"/>
         	<sysproperty key="java.library.path" value="jdbc/${db.dir}"/> <!-- for type 2 JDBC drivers -->
             <classpath refid="examples.libpath"/>
             <classpath>
@@ -166,6 +168,7 @@
         	<sysproperty key="dbdir" value="${db.dir}"/>
         	<sysproperty key="seed" value="${seed}"/>
         	<sysproperty key="timings" value="${timings}"/>
+        	<sysproperty key="cache.statistics" value="${cache.statistics}"/>
         	<classpath refid="tests.libpath"/>
         	<classpath>
         		<path path="${target}"/>

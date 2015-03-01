@@ -23,8 +23,10 @@ import java.util.List;
 import org.sormula.Database;
 import org.sormula.SormulaException;
 import org.sormula.annotation.cache.Cached;
+import org.sormula.cache.Cache;
 import org.sormula.cache.readonly.ReadOnlyCache;
 import org.sormula.cache.readwrite.ReadWriteCache;
+import org.sormula.log.ClassLogger;
 import org.sormula.operation.ArrayListSelectOperation;
 import org.sormula.operation.ListSelectOperation;
 import org.sormula.operation.ScalarSelectOperation;
@@ -54,12 +56,14 @@ public abstract class SormulaBenchmarkThread extends BenchmarkThread
     
     Database database;
     CacheType cacheType;
-
+    boolean logCacheStatistics;
     
-    public SormulaBenchmarkThread(BenchmarkSuite benchmarkSuite, String benchmarkName, CacheType cacheType)
+    
+    public SormulaBenchmarkThread(BenchmarkSuite benchmarkSuite, String benchmarkName, CacheType cacheType, boolean logCacheStatistics)
     {
         super(benchmarkSuite, benchmarkName + " - " + cacheType.getDescription());
         this.cacheType = cacheType;
+        this.logCacheStatistics = logCacheStatistics;
     }
     
     
@@ -72,11 +76,11 @@ public abstract class SormulaBenchmarkThread extends BenchmarkThread
                 break;
                 
             case READ_ONLY:
-                database = new ROCacheDatabase(getConnection(), benchmarkSuite.getSchema());
+                database = new ROCacheDatabase(getConnection(), benchmarkSuite.getSchema(), logCacheStatistics);
                 break;
                 
             case READ_WRITE:
-                database = new RWCacheDatabase(getConnection(), benchmarkSuite.getSchema());
+                database = new RWCacheDatabase(getConnection(), benchmarkSuite.getSchema(), logCacheStatistics);
                 break;
         }
     }
@@ -136,20 +140,52 @@ public abstract class SormulaBenchmarkThread extends BenchmarkThread
 
 
 @Cached(type=ReadOnlyCache.class, size=100)
-class ROCacheDatabase extends Database
+class ROCacheDatabase extends CachedDatabase
 {
-    public ROCacheDatabase(Connection connection, String schema)
+    public ROCacheDatabase(Connection connection, String schema, boolean logCacheStatistics)
     {
-        super(connection, schema);
+        super(connection, schema, logCacheStatistics);
     }
 }
 
 
 @Cached(type=ReadWriteCache.class, size=100)
-class RWCacheDatabase extends Database
+class RWCacheDatabase extends CachedDatabase
 {
-    public RWCacheDatabase(Connection connection, String schema)
+    public RWCacheDatabase(Connection connection, String schema, boolean logCacheStatistics)
+    {
+        super(connection, schema, logCacheStatistics);
+    }
+}
+
+
+class CachedDatabase extends Database
+{
+    private static final ClassLogger log = new ClassLogger();
+    boolean logCacheStatistics;
+    
+    public CachedDatabase(Connection connection, String schema, boolean logCacheStatistics)
     {
         super(connection, schema);
+        this.logCacheStatistics = logCacheStatistics;
+    }
+
+    @Override
+    public void close() 
+    {
+        if (logCacheStatistics)
+        {
+            try
+            {
+                Cache<Benchmark> cache = getTable(Benchmark.class).getCache();
+                if (cache != null) cache.log(); 
+            }
+            catch (SormulaException e)
+            {
+                log.error("error logging cache statistics", e);
+            }
+        }
+        
+        super.close();
     }
 }

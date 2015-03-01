@@ -220,7 +220,7 @@ public abstract class AbstractCache<R> implements Cache<R>
     {
         if (uncommittedCache == null)
         {
-            uncommittedCache = new HashMap<>(cachedAnnotation.size() / 2);
+            uncommittedCache = new HashMap<>(cachedAnnotation.size() / 2); // TODO 1/2 contradicts documentation for Cache, why 1/2?
         }
         else
         {
@@ -267,7 +267,8 @@ public abstract class AbstractCache<R> implements Cache<R>
      */
     public void log()
     {
-        log.info("hits=" + hits + " (" + getPercentHits() + "%)" + " misses=" + misses);
+        log.info(getTable().getRowClass().getCanonicalName() + " cache hits=" + hits + 
+                " (" + getPercentHits() + "%)" + " misses=" + misses + " size=" + committedCache.size());
         
         if (log.isDebugEnabled())
         {

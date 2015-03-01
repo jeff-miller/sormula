@@ -37,6 +37,7 @@ import javax.sql.DataSource;
 import org.sormula.NoOpTransaction;
 import org.sormula.SormulaException;
 import org.sormula.Table;
+import org.sormula.cache.Cache;
 import org.sormula.log.ClassLogger;
 
 
@@ -331,6 +332,13 @@ public class DatabaseTest<R>
     public void closeDatabase()
     {
         database.logTimings();
+        
+        if (Boolean.parseBoolean(System.getProperty("cache.statistics")))
+        {
+            // log cache statistics
+            Cache<R> cache = getTable().getCache();
+            if (cache != null) cache.log();
+        }
         
         try
         {

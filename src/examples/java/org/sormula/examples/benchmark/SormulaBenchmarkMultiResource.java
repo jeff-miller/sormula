@@ -30,7 +30,13 @@ public class SormulaBenchmarkMultiResource extends SormulaBenchmarkThread
 {
     public SormulaBenchmarkMultiResource(BenchmarkSuite benchmarkSuite, CacheType cacheType)
     {
-        super(benchmarkSuite, "Sormula multi resource", cacheType);
+        super(benchmarkSuite, "Sormula multi resource", cacheType, false);
+    }
+    
+    
+    public SormulaBenchmarkMultiResource(BenchmarkSuite benchmarkSuite, CacheType cacheType, boolean logCacheStatistics)
+    {
+        super(benchmarkSuite, "Sormula multi resource", cacheType, logCacheStatistics);
     }
 
 

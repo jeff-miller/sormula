@@ -68,13 +68,6 @@ public class CacheTest<R> extends DatabaseTest<R>
     {
         return uncachedTable;
     }
-
-
-    @Override
-    public void closeDatabase()
-    {
-        super.closeDatabase();
-    }
     
     
     protected void confirmCached(R row) throws SormulaException

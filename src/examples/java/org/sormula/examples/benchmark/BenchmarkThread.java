@@ -84,7 +84,7 @@ public abstract class BenchmarkThread extends Thread
                 {
                     case 0:
                         if (log.isDebugEnabled()) log.debug(i + " select " + quantity + " " + benchmarkName);
-                        select(quantity);
+                        select(quantity); // TODO test for select by primary key to get cache hits
                         break;
                         
                     case 1:

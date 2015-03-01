@@ -202,14 +202,15 @@ public class BenchmarkSuite extends ExampleBase
     {
         // NOTE: each thread will use same seed so each will perform the same 
         // operations in the same order for the same quantities
+        boolean logCacheStatistics = Boolean.parseBoolean(System.getProperty("cache.statistics"));
         benchmarkThreads = new ArrayList<>();
         benchmarkThreads.add(new SormulaBenchmarkMultiResource(this, CacheType.NONE));
-        benchmarkThreads.add(new SormulaBenchmarkMultiResource(this, CacheType.READ_ONLY));
-        benchmarkThreads.add(new SormulaBenchmarkMultiResource(this, CacheType.READ_WRITE)); 
+        benchmarkThreads.add(new SormulaBenchmarkMultiResource(this, CacheType.READ_ONLY, logCacheStatistics));
+        benchmarkThreads.add(new SormulaBenchmarkMultiResource(this, CacheType.READ_WRITE, logCacheStatistics)); 
         benchmarkThreads.add(new JdbcBenchmarkMultiResource(this));
         benchmarkThreads.add(new SormulaBenchmarkSingleResource(this, CacheType.NONE));
-        benchmarkThreads.add(new SormulaBenchmarkSingleResource(this, CacheType.READ_ONLY));
-        benchmarkThreads.add(new SormulaBenchmarkSingleResource(this, CacheType.READ_WRITE));
+        benchmarkThreads.add(new SormulaBenchmarkSingleResource(this, CacheType.READ_ONLY, logCacheStatistics));
+        benchmarkThreads.add(new SormulaBenchmarkSingleResource(this, CacheType.READ_WRITE, logCacheStatistics));
         benchmarkThreads.add(new JdbcBenchmarkSingleResource(this));
         Collections.shuffle(benchmarkThreads); // random order
     }

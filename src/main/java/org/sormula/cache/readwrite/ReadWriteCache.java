@@ -84,6 +84,9 @@ public class ReadWriteCache<R> extends WritableCache<R>
      */
     public void execute(SqlOperation<R> sqlOperation) throws CacheException
     {
+    	// TODO test when no transaction for cached table 
+    	// TODO if check() is used here, then not needed all other places?
+    	// TODO check();
         if (sqlOperation instanceof ScalarSelectOperation)
         {
             // select

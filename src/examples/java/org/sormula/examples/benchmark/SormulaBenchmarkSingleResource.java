@@ -39,10 +39,15 @@ public class SormulaBenchmarkSingleResource extends SormulaBenchmarkThread
     
     public SormulaBenchmarkSingleResource(BenchmarkSuite benchmarkSuite, CacheType cacheType)
     {
-        super(benchmarkSuite, "Sormula single resource", cacheType);
+        super(benchmarkSuite, "Sormula single resource", cacheType, false);
     }
     
+    public SormulaBenchmarkSingleResource(BenchmarkSuite benchmarkSuite, CacheType cacheType, boolean logCacheStatistics)
+    {
+        super(benchmarkSuite, "Sormula single resource", cacheType, logCacheStatistics);
+    }
 
+    
     @Override
     public void open() throws Exception
     {

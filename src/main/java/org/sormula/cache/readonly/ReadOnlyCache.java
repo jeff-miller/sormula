@@ -40,6 +40,7 @@ import org.sormula.operation.SqlOperation;
  * explicity flushed with {@link Table#flush()}, or {@link Database#flush()} or evicted with
  * {@link Cache#evict(Object)} or {@link Cache#evictAll()}.
  * <p>
+ * TODO can ReadOnlyCache be modified so that transaction is optional?
  * This is a transactional cache which means that caching is performed relative to database transactional
  * boundries of begin, commit, and rollback. Tables that are cached may not read/write unless a transaction 
  * is active. Tables that are cached must use {@link Transaction} obtained from {@link Database#getTransaction()}
@@ -73,13 +74,16 @@ public class ReadOnlyCache<R> extends AbstractCache<R>
     
     
     /**
-     * Does nothing.
+     * Does nothing. TODO performs check
      * 
      * @param sqlOperation ignored
      */
     public void execute(SqlOperation<R> sqlOperation) throws CacheException
     {
         // no-op
+    	// TODO test when no transaction for cached table 
+    	// TODO if check() is used here, then not needed all other places?
+    	// TODO check();
     }
 
 
@@ -92,8 +96,11 @@ public class ReadOnlyCache<R> extends AbstractCache<R>
     {
         // no-op 
     }
+    
 
-
+    /**
+     * {@inheritDoc}
+     */
     public R select(Object[] primaryKeys) throws CacheException
     {
         if (log.isDebugEnabled()) log.debug("select() keys=" + Arrays.asList(primaryKeys));

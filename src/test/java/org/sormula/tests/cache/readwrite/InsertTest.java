@@ -46,7 +46,6 @@ public class InsertTest extends CacheTest<SormulaCacheTestRW>
             " description VARCHAR(30)" +
             ")"
         );
-        //getDatabase().setTimings(true);
     }
     
     

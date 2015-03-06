@@ -25,7 +25,7 @@ import org.sormula.operation.ScalarSelectOperation;
 
 
 /**
- * Base class for select cascade fitlers. Uses reflection to determine the accept method to invoke
+ * Base class for select cascade filters. Uses reflection to determine the accept method to invoke
  * based upon the row runtime class type. Simplifies filter implementation by allowing you to
  * create a method for each row type to filter.
  * <p>

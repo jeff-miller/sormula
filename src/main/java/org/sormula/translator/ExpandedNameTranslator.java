@@ -56,7 +56,7 @@ public class ExpandedNameTranslator implements NameTranslator
             
             if (Character.isUpperCase(c) && i > 0)
             {
-                // word break occurs before uppercase but not first letter
+                // word break occurs before upper case but not first letter
                 result.append(wordDelimiter);
             }
             

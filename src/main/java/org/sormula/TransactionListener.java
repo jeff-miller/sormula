@@ -39,7 +39,7 @@ public interface TransactionListener
     
     /**
      * Indicates that transaction is completing normally. Invoked prior to {@link Connection#commit()} and 
-     * while {@link Transaction#isActive()} so that connention may be used for additional related
+     * while {@link Transaction#isActive()} so that connection may be used for additional related
      * database activity if needed.
      * 
      * @param transaction database transaction that is source of event
@@ -49,7 +49,7 @@ public interface TransactionListener
     
     /**
      * Indicates that transaction is completing normally. Invoked prior to {@link Connection#rollback()} and 
-     * while {@link Transaction#isActive()} so that connention may be used for additional related
+     * while {@link Transaction#isActive()} so that connection may be used for additional related
      * database activity if needed.
      * 
      * @param transaction database transaction that is source of event

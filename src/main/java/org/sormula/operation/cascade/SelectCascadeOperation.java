@@ -63,7 +63,7 @@ public class SelectCascadeOperation<S, T> extends CascadeOperation<S, T>
     /**
      * Constructor used by {@link SelectOperation}.
      *  
-     * @param sourceTable cascade orgininates on row from this table 
+     * @param sourceTable cascade originates on row from this table 
      * @param targetField cascade select operation modifies this field
      * @param targetTable cascade select operation is performed on this table 
      * @param selectCascadeAnnotation cascade operation
@@ -79,7 +79,7 @@ public class SelectCascadeOperation<S, T> extends CascadeOperation<S, T>
     
     /**
      * Sets the filter(s) to be used by this cascade. Typically this method is invoked by
-     * a {@link SelectOperation} with the fitlers used by the {@link SelectOperation}.
+     * a {@link SelectOperation} with the filters used by the {@link SelectOperation}.
      *  
      * @param selectCascadeFilters select filters to use or null if none
      * @since 3.1

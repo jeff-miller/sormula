@@ -549,7 +549,7 @@ public class ScalarSelectOperation<R> extends SqlOperation<R>
 
 
     /**
-     * Reports that {@link #isLazySelectsCascades()} is true and row is instanceof {@link LazySelectable}. This is
+     * Reports that {@link #isLazySelectsCascades()} is true and row is instance of {@link LazySelectable}. This is
      * set as an optimization so the {@link #readNext()} only tests a boolean to know when to invoke 
      * {@link LazySelectable#pendingLazySelects(org.sormula.Database)}.
      * 
@@ -564,7 +564,7 @@ public class ScalarSelectOperation<R> extends SqlOperation<R>
 
     /**
      * Sets filter to be used for selected rows. Cascade filters allow you to write filter
-     * algroithms in Java (instead of SQL). Sometimes it is easier and more powerful to write 
+     * algorithms in Java (instead of SQL). Sometimes it is easier and more powerful to write 
      * filtering in Java instead of SQL joins and SQL where conditions. For example, a filter 
      * allows a graph of objects to be read with selective pruning of nodes.
      * <p>
@@ -693,7 +693,7 @@ public class ScalarSelectOperation<R> extends SqlOperation<R>
     
     /**
      * Invoked prior to reading columns into row. Override to modify the row prior to JDBC reads.
-     * Default implementaion does nothing.
+     * Default implementation does nothing.
      * 
      * @param row row that will get column values from table
      */
@@ -704,7 +704,7 @@ public class ScalarSelectOperation<R> extends SqlOperation<R>
     
     /**
      * Invoked after reading columns into row. Override to modify the row after to JDBC reads.
-     * Default implementaion does nothing.
+     * Default implementation does nothing.
      * 
      * @param row row that got column values from table
      */

@@ -19,7 +19,7 @@
 /**
  * Classes that perform SQL operations such as select, update, insert, delete.
  * <p> 
- * There are three types of operations: select operations, and modifiy operations, 
+ * There are three types of operations: select operations, and modify operations, 
  * All select operations are derived from 
  * {@link org.sormula.operation.SelectOperation}. Insert, update, and, delete 
  * operations are derived from {@link org.sormula.operation.ModifyOperation}. 

@@ -34,7 +34,7 @@ import org.sormula.annotation.cascade.SelectCascade;
  * This class is slightly less efficient than {@link SimpleLazySelector} because a {@link Database} and {@link Table} are created
  * when selector needs to be used. It is more flexible since it can be used any time even when original connection has been closed.
  * <p>
- * DurableLazySelector is good for scenario's when source row may be serialzed to disk, for example, in
+ * DurableLazySelector is good for scenario's when source row may be serialized to disk, for example, in
  * web application where source row is stored in web session. 
  * 
  * @author Jeff Miller

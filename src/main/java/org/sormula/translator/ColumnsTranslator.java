@@ -108,7 +108,7 @@ public class ColumnsTranslator<R>
     /**
      * Initializes objects to hold all column information.
      * 
-     * @param columns approximatenumber of columns that will be in translator (used as initial capacity)
+     * @param columns approximate number of columns that will be in translator (used as initial capacity)
      */
     protected void initColumnTranslatorList(int columns)
     {
@@ -158,7 +158,7 @@ public class ColumnsTranslator<R>
     /**
      * Sets parameters in a prepared statement.
      * 
-     * @param preparedStatement set parameters for this prepared statment
+     * @param preparedStatement set parameters for this prepared statement
      * @param parameterIndex starting parameter index
      * @param row read parameters from this row object
      * 

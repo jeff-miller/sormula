@@ -19,7 +19,7 @@ package org.sormula.operation.monitor;
 
 
 /**
- * Information about stack location and frequency of occurance for an {@link OperationTime}.
+ * Information about stack location and frequency of occurrence for an {@link OperationTime}.
  * 
  * @author Jeff Miller
  * @since 1.5

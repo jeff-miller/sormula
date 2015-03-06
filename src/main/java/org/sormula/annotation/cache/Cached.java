@@ -99,7 +99,7 @@ public @interface Cached
     
     /**
      * Evicts all rows upon transaction commit or rollback. Setting to true means cache will only be used
-     * while database transanction is acitve. Setting to false means that cached rows may be used in
+     * while database transaction is active. Setting to false means that cached rows may be used in
      * multiple transactions.
      * 
      * @return true to remove all rows from cache when transaction completes

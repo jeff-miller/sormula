@@ -27,7 +27,7 @@ package org.sormula.translator;
  * They are double quotes by default.
  * <p>
  * Case is preserved. Use {@link UpperCaseNameTranslator} or {@link LowerCaseNameTranslator}
- * in addition to this class to force a specific case. With most datatabases a delimited identifier
+ * in addition to this class to force a specific case. With most databases a delimited identifier
  * is case-sensitive.
  * 
  * @since 1.8 and 2.2
@@ -67,7 +67,7 @@ public class DelimitedNameTranslator implements NameTranslator
     /**
      * Gets the opening delimiter.
      * 
-     * @return string to preceed name
+     * @return string to precede name
      */
     public String getOpeningDelimiter()
     {
@@ -78,7 +78,7 @@ public class DelimitedNameTranslator implements NameTranslator
     /**
      * Sets the opening delimiter.
      * 
-     * @param openingDelimiter string to preceed name
+     * @param openingDelimiter string to precede name
      */
     public void setOpeningDelimiter(String openingDelimiter)
     {

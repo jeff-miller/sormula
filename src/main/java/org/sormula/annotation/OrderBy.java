@@ -43,7 +43,7 @@ import org.sormula.operation.SqlOperation;
 public @interface OrderBy
 {
     /**
-     * Name of the order by phrase. Must be unique amoung all order by names for a row class.
+     * Name of the order by phrase. Must be unique among all order by names for a row class.
      *  
      * @return name of order phrase  
      */

@@ -31,7 +31,7 @@ public class SormulaException extends Exception
     /**
      * Constructs for a message.
      * 
-     * @param message expection message
+     * @param message exception message
      */
     public SormulaException(String message)
     {
@@ -42,7 +42,7 @@ public class SormulaException extends Exception
     /**
      * Constructs for a message and cause.
      * 
-     * @param message expection message
+     * @param message exception message
      * @param cause cause of exception
      */
     public SormulaException(String message, Throwable cause)

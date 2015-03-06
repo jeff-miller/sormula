@@ -217,7 +217,7 @@ public class SormulaField<C, T>
     
     
     /**
-     * Gets cannonical "get" method name.
+     * Gets canonical "get" method name.
      * 
      * @return package-name.class-name#get-method-name
      */

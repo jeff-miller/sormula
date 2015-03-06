@@ -67,9 +67,9 @@ public abstract class CascadeOperation<S, T> implements AutoCloseable
     /**
      * Constructs for field and table to be affected by cascade.
      * 
-     * @param sourceTable cascade orgininates on row from this table
+     * @param sourceTable cascade originates on row from this table
      * @param targetField in source row to be affected by cascade operation
-     * @param targetTable sorm table that will be cascaded
+     * @param targetTable sormula table that will be cascaded
      * @param cascadeOperationClass class of cascade operation (used to create new instance)
      * is to be performed before source row operation
      * @since 3.0

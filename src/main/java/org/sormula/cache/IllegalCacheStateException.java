@@ -35,7 +35,7 @@ public class IllegalCacheStateException extends CacheException
     /**
      * Constructs for a message.
      * 
-     * @param message expection message
+     * @param message exception message
      */
     public IllegalCacheStateException(String message)
     {
@@ -46,7 +46,7 @@ public class IllegalCacheStateException extends CacheException
     /**
      * Constructs for a message and cause.
      * 
-     * @param message expection message
+     * @param message exception message
      * @param cause cause of exception
      */
     public IllegalCacheStateException(String message, Throwable cause)

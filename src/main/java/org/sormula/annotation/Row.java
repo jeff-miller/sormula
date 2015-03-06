@@ -122,7 +122,7 @@ public @interface Row
      * The advantage of this annotation is that the order of the keys listed is the order used 
      * by {@link SqlOperation#setParameters(Object...)}.
      * Some JVM's do not reflect the fields in order of declaration so this method provides a 
-     * predicable order for primary keys.
+     * predictable order for primary keys.
      * 
      * @return names of fields that are the primary keys; empty array to obtain primary keys from
      * {@link Column} annotations

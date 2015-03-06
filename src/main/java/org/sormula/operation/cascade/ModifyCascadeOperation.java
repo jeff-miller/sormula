@@ -44,7 +44,7 @@ public abstract class ModifyCascadeOperation<S, T> extends CascadeOperation<S, T
     /**
      * Constructs.
      * 
-     * @param sourceTable cascade orgininates on row from this table
+     * @param sourceTable cascade originates on row from this table
      * @param targetField cascade operation uses row(s) from this field
      * @param targetTable cascade operation is performed on this table 
      * @param cascadeOperationClass class of cascade operation

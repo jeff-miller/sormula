@@ -86,7 +86,7 @@ public class PrimaryKeyWhereTranslator<R> extends AbstractWhereTranslator<R>
             
             if (getColumnTranslatorList().size() == 0 && firstField != null)
             {
-                // no primary key specificed, assume first non-static, non-transient field
+                // no primary key specified, assume first non-static, non-transient field
                 addColumnTranslator(firstField, "default");
             }
         }

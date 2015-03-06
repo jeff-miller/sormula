@@ -27,7 +27,7 @@ import org.sormula.operation.SqlOperation;
  * a table with {@link Cached#type()}.
  * <p>
  * Implementations have the option to cache all rows for the table or only subset of rows. The row
- * parameter in the interface methods, allow cahce implementations to cache a subset based upon
+ * parameter in the interface methods, allow cache implementations to cache a subset based upon
  * a row's values.
  * <p>
  * A design goal was to keep this interface as simple as possible and to allow optimal performance
@@ -91,7 +91,7 @@ public interface Cache<R>
 	
 	/**
 	 * Tests if cache contains a row with the primary key(s). True is returned if cache has 
-	 * knowlege of any kind of row including one that has been deleted. For deleted rows, true
+	 * knowledge of any kind of row including one that has been deleted. For deleted rows, true
 	 * is returned meaning that row is in cache but will be deleted when transaction completes.
 	 * 
 	 * @param primaryKeys primary key(s) for one row 
@@ -158,7 +158,7 @@ public interface Cache<R>
 	
     /**
      * Indicates row was selected from database. Always use returned row since it will be
-     * consitent with what is stored in cache. Row is added to cache if appropriate.
+     * consistent with what is stored in cache. Row is added to cache if appropriate.
      * 
      * @param row that was selected
      * @return cached row if row parameter if row already exists in cache; null if row

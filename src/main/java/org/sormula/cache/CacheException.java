@@ -33,7 +33,7 @@ public class CacheException extends SormulaException
     /**
      * Constructs for a message.
      * 
-     * @param message expection message
+     * @param message exception message
      */
     public CacheException(String message)
     {
@@ -44,7 +44,7 @@ public class CacheException extends SormulaException
     /**
      * Constructs for a message and cause.
      * 
-     * @param message expection message
+     * @param message exception message
      * @param cause cause of exception
      */
     public CacheException(String message, Throwable cause)

@@ -37,7 +37,7 @@ public class DeleteCascadeOperation<S, T> extends ModifyCascadeOperation<S, T>
     /**
      * Constructor used by {@link DeleteOperation}.
      *  
-     * @param sourceTable cascade orgininates on row from this table 
+     * @param sourceTable cascade originates on row from this table 
      * @param targetField cascade delete operation uses row(s) from this field
      * @param targetTable cascade delete operation is performed on this table 
      * @param deleteCascadeAnnotation cascade operation

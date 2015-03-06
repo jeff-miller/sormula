@@ -20,7 +20,7 @@ package org.sormula.active;
 
 /**
  * Exception that originates in the activerecord package. Since it is a runtime
- * exception, try/catch/finally blocks are optional when using active record pacakge.
+ * exception, try/catch/finally blocks are optional when using active record package.
  * 
  * @since 1.7 and 2.1
  * @author Jeff Miller
@@ -33,7 +33,7 @@ public class ActiveException extends RuntimeException
     /**
      * Constructs for a message.
      * 
-     * @param message expection message
+     * @param message exception message
      */
     public ActiveException(String message)
     {
@@ -44,7 +44,7 @@ public class ActiveException extends RuntimeException
     /**
      * Constructs for a message and cause.
      * 
-     * @param message expection message
+     * @param message exception message
      * @param cause cause of exception
      */
     public ActiveException(String message, Throwable cause)

@@ -27,7 +27,7 @@ import java.lang.annotation.Target;
  * Used with {@link UnusedColumns} annotation.
  * <p>
  * To insert null into unused column, omit UnusedColumn annotation. null values are not
- * permittted by Annotation syntax.
+ * permitted by Annotation syntax.
  * 
  * @since 1.0
  * @author Jeff Miller

@@ -214,7 +214,7 @@ public class RowTranslator<R> extends ColumnsTranslator<R>
      * subclass(es) if {@link #isInheritedFields()} is true. Subclass fields appear in array prior
      * to superclass fields.
      * 
-     * @return all fields for row class (and optionaly row class superclass(es))
+     * @return all fields for row class (and optionally row class superclass(es))
      * @since 3.0
      */
     public Field[] getDeclaredFields()
@@ -248,7 +248,7 @@ public class RowTranslator<R> extends ColumnsTranslator<R>
     
     
     /**
-     * Recurisvely searches for declared fields in super class(es) of clazz and then clazz parameter.
+     * Recursively searches for declared fields in super class(es) of clazz and then clazz parameter.
      * 
      * @param clazz get fields from this class and superclass(es)
      * @param classHierarchyFields each class fields are added to this list 
@@ -275,7 +275,7 @@ public class RowTranslator<R> extends ColumnsTranslator<R>
      * are searched prior to to superclasses.
      *
      * @param fieldName get field for this name
-     * @return field for row class (and optionaly row class superclass(es)); null if field not found
+     * @return field for row class (and optionally row class superclass(es)); null if field not found
      * @since 3.0
      */
     public Field getDeclaredField(String fieldName)

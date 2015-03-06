@@ -35,7 +35,7 @@ import org.sormula.translator.RowTranslator;
 
 /**
  * Base class for active records. See {@link #table(Class)} for an example how to add
- * a static member named table to the sublcass that extends ActiveRecord.  
+ * a static member named table to the subclass that extends ActiveRecord.  
  * 
  * @author Jeff Miller
  * @since 1.7 and 2.1

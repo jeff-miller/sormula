@@ -54,7 +54,7 @@ public class SelectIterator<R> implements Iterator<R>
      * {@link SelectOperation#readNext()} to look ahead to find out if another row is 
      * available if it does not already know about next row.
      * 
-     * @return true if at least one more row is availble through {@link #next()}; false if not
+     * @return true if at least one more row is available through {@link #next()}; false if not
      */
     public boolean hasNext() 
     {

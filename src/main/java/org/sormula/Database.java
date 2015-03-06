@@ -728,11 +728,11 @@ public class Database implements TypeTranslatorMap, AutoCloseable
 	 * a value from a result set. This method is needed only for type translators that are not
 	 * defined with {@link ImplicitType} annotation. 
 	 * <p>
-	 * By default, all primative types and most subclasses of {@link TypeTranslator} in 
+	 * By default, all primitive types and most subclasses of {@link TypeTranslator} in 
 	 * org.sormula.translator.standard package are added during initialization of this class.
 	 * Use this method to override default translators or to add a new translator.
 	 * <p>
-	 * These tranlators may be overridden for a table by {@link Table#putTypeTranslator(Class, TypeTranslator)}.
+	 * These translators may be overridden for a table by {@link Table#putTypeTranslator(Class, TypeTranslator)}.
 	 * 
      * @param typeClass class that translator operates upon
      * @param typeTranslator translator to use for typeClass
@@ -745,8 +745,8 @@ public class Database implements TypeTranslatorMap, AutoCloseable
 
     
     /**
-     * Same as {@link #putTypeTranslator(Class, TypeTranslator)} but uses class name. Usefull for adding
-     * primative types like "int", "boolean", "float", etc.
+     * Same as {@link #putTypeTranslator(Class, TypeTranslator)} but uses class name. Useful for adding
+     * primitive types like "int", "boolean", "float", etc.
      * 
      * @param typeClassName class name that translator operates upon
      * @param typeTranslator translator to use for typeClass

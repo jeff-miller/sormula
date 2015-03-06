@@ -83,7 +83,7 @@ public class ClassLogger
     {
         if (loggerAvailable)
         {
-            // search for easylog on stack
+            // search for ClassLogger on stack
             StackTraceElement[] stes =  new Throwable().getStackTrace();
             int e = stes.length - 1;
             for (int i = 0; i < e; ++i) {

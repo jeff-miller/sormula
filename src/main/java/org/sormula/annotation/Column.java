@@ -32,7 +32,7 @@ import org.sormula.translator.standard.StandardColumnTranslator;
 
 
 /**
- * Defines column attributes for a row class variable. If no {@link Column} annotaion is
+ * Defines column attributes for a row class variable. If no {@link Column} annotation is
  * used for a row class variable, that is equivalent to "@Column" (all defaults are used). 
  * Annotates a class variable.
  * 

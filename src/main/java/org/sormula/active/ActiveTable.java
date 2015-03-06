@@ -56,7 +56,7 @@ import org.sormula.operation.ModifyOperation;
 /**
  * Performs all database operations for {@link ActiveRecord} objects. This class is
  * used by {@link ActiveRecord} to perform single record operations. This class may also be 
- * created explicity to invoke collection methods like, {@link #saveAll(Collection)},
+ * created explicitly to invoke collection methods like, {@link #saveAll(Collection)},
  * {@link #insertAll(Collection)}, {@link #updateAll(Collection)}, {@link #deleteAll(Collection)},
  * and select methods.
  * 

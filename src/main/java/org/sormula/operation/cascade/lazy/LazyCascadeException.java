@@ -32,7 +32,7 @@ public class LazyCascadeException extends RuntimeException
     /**
      * Constructs for a message.
      * 
-     * @param message expection message
+     * @param message exception message
      */
     public LazyCascadeException(String message)
     {
@@ -43,7 +43,7 @@ public class LazyCascadeException extends RuntimeException
     /**
      * Constructs for a message and cause.
      * 
-     * @param message expection message
+     * @param message exception message
      * @param cause cause of exception
      */
     public LazyCascadeException(String message, Throwable cause)

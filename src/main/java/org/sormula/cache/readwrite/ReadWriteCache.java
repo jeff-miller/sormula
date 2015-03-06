@@ -42,11 +42,11 @@ import org.sormula.operation.SqlOperation;
  * insert, update, and delete are written to the database when transaction is committed or when
  * {@link ReadWriteCache#write()}, {@link Table#flush()}, or {@link Database#flush()} is invoked. 
  * The selected and modified rows are retained in cache for life of {@link Table} object or until 
- * explicity flushed with {@link Table#flush()}, or {@link Database#flush()} or evicted with
+ * explicitly flushed with {@link Table#flush()}, or {@link Database#flush()} or evicted with
  * {@link Cache#evict(Object)} or {@link Cache#evictAll()}.
  * <p>
  * This is a transactional cache which means that caching is performed relative to database transactional
- * boundries of begin, commit, and rollback. Tables that are cached may not read/write unless a transaction 
+ * boundaries of begin, commit, and rollback. Tables that are cached may not read/write unless a transaction 
  * is active. Tables that are cached must use {@link Transaction} obtained from {@link Database#getTransaction()}
  * or must use a subclass of {@link Transaction} that is set with {@link Database#setTransaction(Transaction)}.
  * <p>

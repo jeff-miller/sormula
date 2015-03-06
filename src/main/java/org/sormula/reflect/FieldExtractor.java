@@ -27,7 +27,7 @@ import org.sormula.translator.ColumnTranslator;
  * Utility to get field values from a row class as defined by {@link ColumnTranslator}. This class
  * is used by cache package classes to get a list of primary key values for use as a {@link CacheKey}. 
  * <p>
- * The constructor performs all of the reflection instialization once by creating {@link SormulaField}
+ * The constructor performs all of the reflection initialization once by creating {@link SormulaField}
  * objects for each desired field. Then {@link #getFieldValues(Object)} can simply invoke reflection 
  * methods to obtain the values for each row as needed.  
  * 

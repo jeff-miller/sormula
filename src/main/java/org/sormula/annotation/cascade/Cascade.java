@@ -51,7 +51,7 @@ public @interface Cascade
      * get table for cascade operation. {@link #targetClass()} is optional for scalar fields since
      * target class can be obtained from target field at runtime.
      * <p>
-     * For nonscalar target field types, like arrays, {@link Collection} types, and
+     * For non-scalar target field types, like arrays, {@link Collection} types, and
      * {@link Map} types, targetClass can be determined from the field. Array types can be determined
      * through {@link Class#getComponentType()}. For collections and maps, target class can be determined
      * through the parameterized type with {@link Field#getGenericType()} if the generic type is not 
@@ -167,7 +167,7 @@ public @interface Cascade
     
     
     /**
-     * Names the cacacade so that it occurs only when desired. Set desired cascades with 
+     * Names the cascade so that it occurs only when desired. Set desired cascades with 
      * {@link Table#setRequiredCascades(String...)} or {@link SqlOperation#setRequiredCascades(String...)}.
      * If no name is specified (empty string) and no required cascades are specified, then cascade will 
      * occur by default since the default required cascade for {@link Table} is an empty string.

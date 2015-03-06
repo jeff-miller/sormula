@@ -20,7 +20,7 @@ import org.sormula.log.ClassLogger;
 
 
 /**
- * Records elapsed time in nano seconds. A count, {@link #getCount()}, is incremented
+ * Records elapsed time in nanoseconds. A count, {@link #getCount()}, is incremented
  * for each start/stop so that an average elapsed time can be calculated, {@link #getAverageTime()}.
  * 
  * @author Jeff Miller
@@ -234,7 +234,7 @@ public class ElapsedTime
     /**
      * Sets what to do with the first time recorded. Ignoring first time value (the
      * first time that {@link #stop()} is used) is a rough way to exclude class loading
-     * times which may skew the average time for all occurances.
+     * times which may skew the average time for all occurrences.
      * 
      * @param ignoreFirst true to ignore the first time; false to record all times
      */

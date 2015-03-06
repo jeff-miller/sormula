@@ -28,7 +28,7 @@ import org.sormula.translator.AbstractColumnTranslator;
  * Translates a boolean field using {@link PreparedStatement#setString(int, String)} and {@link ResultSet#getString(int)}.
  * "Y" is used for true and "N" is used for false.
  * <p>
- * Use this to overrided the standard translator attribute, translator in {@link Column} annotation:
+ * Use this to override the standard translator attribute, translator in {@link Column} annotation:
  * <blockquote><pre>
  * &#64;Column(translator=BooleanYNColumnTranslator.class) 
  * boolean someBoolean;

@@ -236,7 +236,7 @@ public @interface OneToManyCascade
     
     
     /**
-     * Names the cacacade so that it occurs only when desired. Set desired cascades with 
+     * Names the cascade so that it occurs only when desired. Set desired cascades with 
      * {@link Table#setRequiredCascades(String...)} or {@link SqlOperation#setRequiredCascades(String...)}.
      * If no name is specified (empty string) and no required cascades are specified, then cascade will 
      * occur by default since the default required cascade for {@link Table} is an empty string.

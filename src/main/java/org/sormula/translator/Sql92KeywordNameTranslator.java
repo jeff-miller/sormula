@@ -31,7 +31,7 @@ import java.util.Set;
  * They are double quotes by default since they are typical SQL standard.
  * <p>
  * Case is preserved. Use {@link UpperCaseNameTranslator} or {@link LowerCaseNameTranslator}
- * in addition to this class to force a specific case. With most datatabases a delimited identifier
+ * in addition to this class to force a specific case. With most databases a delimited identifier
  * is case-sensitive.
  * 
  * @since 1.8 and 2.2

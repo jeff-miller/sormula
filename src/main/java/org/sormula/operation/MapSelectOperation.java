@@ -37,7 +37,7 @@ public abstract class MapSelectOperation<K, R> extends SelectOperation<R, Map<K,
 	
 	/**
      * Constructs for a table to use primary key where condition. This is the standard 
-     * consturctor for all {@link SqlOperation} classes.
+     * constructor for all {@link SqlOperation} classes.
      * <p>
      * It is unlikely that you will want to use this constructor without also
      * changing the where condition since at most one row will be selected. Use 

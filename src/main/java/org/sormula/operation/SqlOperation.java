@@ -279,7 +279,7 @@ public abstract class SqlOperation<R> implements AutoCloseable
 
     /**
      * Sets the cache mode for this operation. True by default. Set to false by {@link WriteOperations}
-     * when writing cache changeds to the database.
+     * when writing cache changes to the database.
      * <p>
      * Setting to true enables caching only if Cached annotation is specified for row/table.
      * 
@@ -762,7 +762,7 @@ public abstract class SqlOperation<R> implements AutoCloseable
             }
             else
             {
-                // use prepareStatement(String) method for capatibility with 
+                // use prepareStatement(String) method for compatibility with 
                 // jdbc drivers that don't support identity columns
                 preparedStatement = connection.prepareStatement(preparedSql);
             }
@@ -1189,7 +1189,7 @@ public abstract class SqlOperation<R> implements AutoCloseable
         }
         else
         {
-            // search for name amoung required
+            // search for name among required
             required = false; // assume
             
             // linear search should be ok since list should be small
@@ -1282,7 +1282,7 @@ public abstract class SqlOperation<R> implements AutoCloseable
     /**
      * Gets the prepared statement used by this operation.
      * 
-     * @return prepared statement or null if statement has not been prepapred
+     * @return prepared statement or null if statement has not been prepared
      */
     protected PreparedStatement getPreparedStatement()
     {

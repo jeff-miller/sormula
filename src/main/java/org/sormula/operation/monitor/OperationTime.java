@@ -24,12 +24,12 @@ import org.sormula.operation.SqlOperation;
 
 
 /**
- * Records execution times for subclasses of {@link SqlOperation}. The excecution
+ * Records execution times for subclasses of {@link SqlOperation}. The exception
  * times that may be recorded are prepare (JDBC prepare), write (setting column and where
  * parameters), execute (JDBC execute), and read (reading result set values into row objects).
  * A total time is the sum of all prepare, write, execute, and read times.
  * <p> 
- * An optional parentOperationTime can be set used to hold subtotals of more than
+ * An optional parentOperationTime can be set used to hold sub-totals of more than
  * on OperationTime.
  * <p>
  * This class is not thread safe. If more than one thread will be updating times, 
@@ -175,7 +175,7 @@ public class OperationTime
     
     
     /**
-     * Starts recording an elapsed time. et will be set as the active time. Methods
+     * Starts recording an elapsed time. It will be set as the active time. Methods
      * {@link #cancel()}, {@link #stop()}, {@link #pause()}, and {@link #resume()}
      * act upon the active time.
      * 

@@ -60,7 +60,7 @@ public class WhereAnnotationReader
             
             if (whereAnnotation != null && whereAnnotation.name().equals(name))
             {
-                // found in single Where annoation
+                // found in single Where annotation
                 if (log.isDebugEnabled()) log.debug(name + " where annotation from " + s.getCanonicalName());
                 return whereAnnotation;
             }

@@ -38,7 +38,7 @@ public class InsertCascadeOperation<S, T> extends ModifyCascadeOperation<S, T>
     /**
      * Constructor used by {@link InsertOperation}.
      *
-     * @param sourceTable cascade orgininates on row from this table
+     * @param sourceTable cascade originates on row from this table
      * @param targetField cascade insert operation uses row(s) from this field
      * @param targetTable cascade insert operation is performed on this table 
      * @param insertCascadeAnnotation cascade operation

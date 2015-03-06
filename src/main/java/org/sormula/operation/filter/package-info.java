@@ -20,7 +20,7 @@
  * Filters that allow filtering algorithms to be written in Java and applied
  * as rows are read from the database. {@link org.sormula.operation.filter.SelectCascadeFilter}
  * filters one row type. {@link org.sormula.operation.filter.AbstractSelectCascadeFilter} is a
- * base class for a filter that fitlers all row types (one method per type). 
+ * base class for a filter that filters all row types (one method per type). 
  * 
  * @since 3.1
  */

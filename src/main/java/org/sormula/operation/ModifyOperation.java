@@ -117,7 +117,7 @@ public abstract class ModifyOperation<R> extends SqlOperation<R>
     
     /**
      * Gets the rows that will be modified. All of the setter methods for setting rows convert
-     * parmeters to {@link Collection} so this method will get the row(s) regardless of setter
+     * parameters to {@link Collection} so this method will get the row(s) regardless of setter
      * method that was used.
      * 
      * @return rows to be modified or null if {@link #setParameters(Object...)} was used
@@ -409,7 +409,7 @@ public abstract class ModifyOperation<R> extends SqlOperation<R>
 
 
     /**
-     * Modifies row(s) with sql parametes as Objects
+     * Modifies row(s) with sql parameters as Objects
      * 
      * @param parameters operation parameters as objects (see {@link #setParameters(Object...)})
      * @return count of rows affected
@@ -427,7 +427,7 @@ public abstract class ModifyOperation<R> extends SqlOperation<R>
     
     /**
      * Invoked prior to JDBC execute. Override to modify the row prior to JDBC execute.
-     * Default implementaion does nothing. This method is not invoked when 
+     * Default implementation does nothing. This method is not invoked when 
      * {@link ModifyOperation#setParameters(Object...)} is used since no row is available.
      * 
      * @param row row for JDBC execute
@@ -440,7 +440,7 @@ public abstract class ModifyOperation<R> extends SqlOperation<R>
     
     /**
      * Invoked after JDBC execute. Override to modify the row after JDBC execute has occured.
-     * Default implementaion does nothing. This method is not invoked when 
+     * Default implementation does nothing. This method is not invoked when 
      * {@link ModifyOperation#setParameters(Object...)} is used since no row is available. 
      * 
      * @param row row for JDBC execute

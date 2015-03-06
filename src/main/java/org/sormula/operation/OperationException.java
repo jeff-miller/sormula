@@ -33,7 +33,7 @@ public class OperationException extends SormulaException
     /**
      * Constructs for a message.
      * 
-     * @param message expection message
+     * @param message exception message
      */
     public OperationException(String message)
     {
@@ -44,7 +44,7 @@ public class OperationException extends SormulaException
     /**
      * Constructs for a message and cause.
      * 
-     * @param message expection message
+     * @param message exception message
      * @param cause cause of exception
      */
     public OperationException(String message, Throwable cause)

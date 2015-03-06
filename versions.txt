@@ -16,9 +16,9 @@ JDK 5/6     JDK 7       comments
                         - remove deprecated RowTranslator(Table<R>) constructor
                         - Table selectCount() and selectCount(String, Object...) new implementation 
 
-3.2-jdk1.5  3.2-jdk1.7  - org.sormula.translator.standard translators can read/write null non-primative types
+3.2-jdk1.5  3.2-jdk1.7  - org.sormula.translator.standard translators can read/write null non-primitive types
                         - fix bug that caused cache exception when Table was created after transaction began 
-                        - BenchmarkSuite example to compare Sormula vs. JDBC perfomance
+                        - BenchmarkSuite example to compare Sormula vs. JDBC performance
                         - booleanDDL property in jdbc.properties to allow for varying types for some databases 
                         - jdbc.driver property in jdbc.properties is optional for JDBC 4.0 compliant drivers 
  						
@@ -38,8 +38,8 @@ JDK 5/6     JDK 7       comments
 
 3.0-jdk1.5  3.0-jdk1.7  - caching
                         - TransactionListener
-                        - row annotations have precendence over table annotations 
-                          (set legacyAnnotationPrecedence=true for pre v3.0 precendence)
+                        - row annotations have precedence over table annotations 
+                          (set legacyAnnotationPrecedence=true for pre v3.0 precedence)
                         - remove deprecated 
                         - cascades can set foreign key values and reference on target objects
                         - Row.inheritedFields allows fields in subclasses to be used as columns
@@ -60,7 +60,7 @@ JDK 5/6     JDK 7       comments
                         - non-identity inserts for tables with identity columns
 1.9.4       2.3.4       - cascades occur only when parent row is inserted, updated, or deleted                 
 1.9.3       2.3.3       - save cascades to all levels
-1.9.2       2.3.2       - TypeTranslator can be used for primative
+1.9.2       2.3.2       - TypeTranslator can be used for primitive
 1.9.1       2.3.1       - update examples
 1.9         2.3         - batch, JNDI, cascade array types, optional cascade targetClass, query cancel, query timeout
 1.8         2.2         - lazy cascade, name translators

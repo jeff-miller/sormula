@@ -711,7 +711,11 @@ public class Table<R> implements TypeTranslatorMap, TransactionListener
      */
     public R select(Object... primaryKeys) throws SormulaException
     {
-        return new ScalarSelectOperation<R>(this).select(primaryKeys);
+        // ScalarSelectOperation.select closes the operation but use try block to avoid warning 
+        try (ScalarSelectOperation<R> operation = new ScalarSelectOperation<>(this))
+        {
+            return operation.select(primaryKeys);
+        }
     }
     
     
@@ -726,7 +730,11 @@ public class Table<R> implements TypeTranslatorMap, TransactionListener
      */
     public R selectWhere(String whereConditionName, Object...parameters) throws SormulaException
     {
-        return new ScalarSelectOperation<R>(this, whereConditionName).select(parameters);
+        // ScalarSelectOperation.select closes the operation but use try block to avoid warning 
+        try (ScalarSelectOperation<R> operation = new ScalarSelectOperation<>(this, whereConditionName))
+        {
+            return operation.select(parameters);
+        }
     }
     
     
@@ -807,9 +815,12 @@ public class Table<R> implements TypeTranslatorMap, TransactionListener
      */
     public R selectCustom(String customSql, Object... parameters) throws SormulaException
     {
-    	ScalarSelectOperation<R> operation = new ScalarSelectOperation<>(this, "");
-    	operation.setCustomSql(customSql);
-    	return operation.select(parameters);
+        // ScalarSelectOperation.select closes the operation but use try block to avoid warning 
+        try (ScalarSelectOperation<R> operation = new ScalarSelectOperation<>(this, ""))
+        {
+            operation.setCustomSql(customSql);
+            return operation.select(parameters);
+        }
     }
     
     

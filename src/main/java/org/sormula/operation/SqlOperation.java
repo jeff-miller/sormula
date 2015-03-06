@@ -1311,32 +1311,6 @@ public abstract class SqlOperation<R> implements AutoCloseable
         this.whereTranslator = whereTranslator;
     }
 
-    
-    /**
-     * Use {@link #getWhereTranslator()}.
-     * 
-     * @return where translator or null if none
-     * @since 3.1
-     */
-    @Deprecated // remove in future versions
-    public AbstractWhereTranslator<R> getWhereTranslator2()
-    {
-        return whereTranslator;
-    }
-
-    
-    /**
-     * Use {@link #setWhereTranslator(AbstractWhereTranslator)}.
-     * 
-     * @param whereTranslator where translator or null if none
-     * @since 3.1
-     */
-    @Deprecated // remove in future versions
-    public void setWhereTranslator2(AbstractWhereTranslator<R> whereTranslator)
-    {
-        this.whereTranslator = whereTranslator;
-    }
-
 
     /**
      * Gets the next JDBC parameter number used by {@link PreparedStatement} to set parameters.

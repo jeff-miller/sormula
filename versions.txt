@@ -8,6 +8,7 @@ JDK 5/6     JDK 7       comments
                         - remove deprecated get/setWhereTranslator2 methods
                         - remove deprecated org.sormula.operation.SelectCountOperation
                           replacement is org.sormula.operation.aggregate.SelectionCountOperation
+                        - deprecate Table.isLegacyAnnotationPrecedence
             
             3.3.1-jdk1.7- maven support (bendem)
                         - updated SimpleExample, ActiveRecordExample, and ZeroConfigExample

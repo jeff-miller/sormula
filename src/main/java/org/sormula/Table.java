@@ -228,10 +228,13 @@ public class Table<R> implements TypeTranslatorMap, TransactionListener
 	 * Indicates the order in which annotations are processed. Prior to version 3.0, table annotations
 	 * were read first and thus had precedence over row annotations. Returns false by default. Set
 	 * LEGACY_ANNOTATION_PRECEDENCE=true to have this method return true.
-	 * 
+	 * <p>
+	 * This method will be removed in some future version. Do not rely on table annotations
+	 * having precedence over row  annotations.
 	 * @return true if table annotations have precedence over row annotations
 	 * @since 3.0
 	 */
+	@Deprecated
     public boolean isLegacyAnnotationPrecedence()
     {
         return legacyAnnotationPrecedence;

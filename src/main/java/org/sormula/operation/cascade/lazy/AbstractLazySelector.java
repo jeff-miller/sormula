@@ -31,7 +31,7 @@ import org.sormula.annotation.cascade.SelectCascade;
 import org.sormula.annotation.cascade.SelectCascadeAnnotationReader;
 import org.sormula.log.ClassLogger;
 import org.sormula.operation.cascade.SelectCascadeOperation;
-import org.sormula.reflect.SormulaField;
+import org.sormula.reflect.RowField;
 
 
 /**
@@ -292,8 +292,9 @@ abstract public class AbstractLazySelector<R> implements LazySelectable, Seriali
             
             // init loop variables
             SelectCascadeAnnotationReader scar = new SelectCascadeAnnotationReader(field);
-            SormulaField<R, ?> targetField = new SormulaField<>(scar.getSource());
             Table<?> targetTable = getDatabase().getTable(scar.getTargetClass());
+            @SuppressWarnings("unchecked") // target type not known at compile time
+            RowField<R, ?> targetField = (RowField<R, ?>)targetTable.getRowTranslator().createRowField(scar.getSource());
             
             begin();
             

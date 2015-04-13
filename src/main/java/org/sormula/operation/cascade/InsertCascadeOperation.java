@@ -19,6 +19,7 @@ package org.sormula.operation.cascade;
 import org.sormula.Table;
 import org.sormula.annotation.cascade.InsertCascade;
 import org.sormula.operation.InsertOperation;
+import org.sormula.reflect.RowField;
 import org.sormula.reflect.SormulaField;
 
 
@@ -44,7 +45,24 @@ public class InsertCascadeOperation<S, T> extends ModifyCascadeOperation<S, T>
      * @param insertCascadeAnnotation cascade operation
      * @since 3.0
      */
+    @Deprecated
     public InsertCascadeOperation(Table<S> sourceTable, SormulaField<S, ?> targetField, Table<T> targetTable, InsertCascade insertCascadeAnnotation)
+    {
+        super(sourceTable, targetField, targetTable, insertCascadeAnnotation.operation());
+        this.insertCascadeAnnotation = insertCascadeAnnotation;
+        setPost(insertCascadeAnnotation.post());
+    }
+    
+    
+    /**
+     * TODO
+     * @param sourceTable
+     * @param targetField
+     * @param targetTable
+     * @param insertCascadeAnnotation
+     * @since 3.4
+     */
+    public InsertCascadeOperation(Table<S> sourceTable, RowField<S, ?> targetField, Table<T> targetTable, InsertCascade insertCascadeAnnotation)
     {
         super(sourceTable, targetField, targetTable, insertCascadeAnnotation.operation());
         this.insertCascadeAnnotation = insertCascadeAnnotation;

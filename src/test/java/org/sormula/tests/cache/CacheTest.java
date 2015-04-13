@@ -48,8 +48,7 @@ public class CacheTest<R> extends DatabaseTest<R>
         // for getting column and primary key values from a row
         try
         {
-            primaryKeyExtractor = new FieldExtractor<R>(
-                    getTable().getRowTranslator().getPrimaryKeyWhereTranslator().getColumnTranslatorList());
+            primaryKeyExtractor = new FieldExtractor<R>(getTable().getRowTranslator().getPrimaryKeyWhereTranslator());
             rowExtractor = new FieldExtractor<R>(
                     getTable().getRowTranslator().getColumnTranslatorList());
         }

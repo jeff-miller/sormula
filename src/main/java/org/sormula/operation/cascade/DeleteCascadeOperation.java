@@ -21,6 +21,7 @@ import org.sormula.annotation.cascade.DeleteCascade;
 import org.sormula.operation.DeleteOperation;
 import org.sormula.operation.OperationException;
 import org.sormula.operation.SqlOperation;
+import org.sormula.reflect.RowField;
 import org.sormula.reflect.SormulaField;
 
 
@@ -43,7 +44,23 @@ public class DeleteCascadeOperation<S, T> extends ModifyCascadeOperation<S, T>
      * @param deleteCascadeAnnotation cascade operation
      * @since 3.0
      */
+    @Deprecated
     public DeleteCascadeOperation(Table<S> sourceTable, SormulaField<S, ?> targetField, Table<T> targetTable, DeleteCascade deleteCascadeAnnotation)
+    {
+        super(sourceTable, targetField, targetTable, deleteCascadeAnnotation.operation());
+        setPost(deleteCascadeAnnotation.post());
+    }
+
+    
+    /**
+     * TODO
+     * @param sourceTable
+     * @param targetField
+     * @param targetTable
+     * @param deleteCascadeAnnotation
+     * @since 3.4
+     */
+    public DeleteCascadeOperation(Table<S> sourceTable, RowField<S, ?> targetField, Table<T> targetTable, DeleteCascade deleteCascadeAnnotation)
     {
         super(sourceTable, targetField, targetTable, deleteCascadeAnnotation.operation());
         setPost(deleteCascadeAnnotation.post());

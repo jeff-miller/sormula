@@ -20,6 +20,8 @@ import java.lang.reflect.Field;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
+import org.sormula.reflect.FieldAccessType;
+
 
 /**
  * Interface of minimal behavior needed for a column translator. Interface provides
@@ -63,6 +65,14 @@ public interface ColumnTranslator<R>
      * @since 3.2
      */
     public boolean isReadOnly();
+    
+
+    /**
+     * TODO
+     * @return
+     * @since 3.4
+     */
+    public FieldAccessType getFieldAccessType(); 
     
     
     /**

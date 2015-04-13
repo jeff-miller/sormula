@@ -27,6 +27,7 @@ import org.sormula.Table;
 import org.sormula.operation.ModifyOperation;
 import org.sormula.operation.SelectOperation;
 import org.sormula.operation.SqlOperation;
+import org.sormula.reflect.FieldAccessType;
 import org.sormula.translator.NameTranslator;
 
 
@@ -69,7 +70,7 @@ public @interface Row
      * rows in result set may improve performance since collection/map that holds results will not 
      * need to be resized as much.
      * 
-     * @return initial capacity of results colllection/map for a select
+     * @return initial capacity of results collection/map for a select
      * @since 3.0
      */
     int selectInitialCapacity() default 20;
@@ -129,4 +130,22 @@ public @interface Row
      * @since 3.0
      */
     String[] primaryKeyFields() default {};
+    
+    
+    /**
+     * TODO
+     * If {@link Column#fieldAccess()} is not specified or is {@link FieldAccessType#Default}, then 
+     * {@link Row#fieldAccess()} is used.
+     *
+     * If {@link Column#fieldAccess()} is specified as {@link FieldAccessType#Direct} or 
+     * {@link FieldAccessType#Method} then {@link Column#fieldAccess()} is used and 
+     * {@link Row#fieldAccess()} is ignored.
+     * 
+     * If both {@link Row#fieldAccess()} and {@link Column#fieldAccess()} are {@link FieldAccessType#Default},
+     * then getter/setter methods are used. This is the behavior with versions prior to 3.4.
+     * 
+     * @return
+     * @since 3.4
+     */
+    FieldAccessType fieldAccess() default FieldAccessType.Default;
 }

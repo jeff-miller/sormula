@@ -51,6 +51,10 @@ import org.sormula.annotation.cascade.OneToManyCascade;
 import org.sormula.annotation.cascade.OneToOneCascade;
 import org.sormula.log.ClassLogger;
 import org.sormula.operation.ModifyOperation;
+import org.sormula.operation.OperationException;
+import org.sormula.reflect.FieldAccessType;
+import org.sormula.reflect.ReflectException;
+import org.sormula.reflect.RowField;
 import org.sormula.translator.standard.EnumTranslator;
 import org.sormula.translator.standard.StandardColumnTranslator;
 
@@ -104,6 +108,7 @@ public class RowTranslator<R> extends ColumnsTranslator<R>
     boolean inheritedFields;
     boolean zeroRowCountPostExecute;
     List<Field> cascadeFieldList;
+    FieldAccessType fieldAccessType;
     
     
     /**
@@ -123,8 +128,13 @@ public class RowTranslator<R> extends ColumnsTranslator<R>
         {
             inheritedFields = rowAnnotation.inhertedFields();
             zeroRowCountPostExecute = rowAnnotation.zeroRowCountPostExecute();
+            fieldAccessType = rowAnnotation.fieldAccess();
         }
-        
+        else
+        {
+            fieldAccessType = FieldAccessType.Default;
+        }
+
         initColumnTranslators();
         initUnusedColumnSql(rowClass);
         primaryKeyWhereTranslator = new PrimaryKeyWhereTranslator<>(this);
@@ -141,6 +151,70 @@ public class RowTranslator<R> extends ColumnsTranslator<R>
     }
 
     
+    /**
+     * TODO
+     * @return
+     * @since 3.4
+     */
+    public FieldAccessType getFieldAccessType() 
+    {
+        return fieldAccessType;
+    }
+    
+    
+    /**
+     * TODO
+     *  Typically this method is used to create
+     * a field that will receive value from  a cascade.
+     * 
+     * @param field
+     * @return
+     * @throws OperationException
+     * @since 3.4
+     */
+    public RowField<R, ?> createRowField(Field field) throws TranslatorException
+    {
+        if (log.isDebugEnabled()) log.debug("creating target field for " + field);
+            
+        // determine access type to use
+        FieldAccessType fat;
+        Column columnAnnotation = field.getAnnotation(Column.class);
+                
+        if (columnAnnotation == null || columnAnnotation.fieldAccess() == FieldAccessType.Default)
+        {
+            // no column annotation specified, test for row annotation
+            if (getFieldAccessType() == FieldAccessType.Default)
+            {
+                // neither row or column annotation specified, 
+                // use method access for default for backwards compatability to versions prior to 3.4
+                fat = FieldAccessType.Method;
+            }
+            else
+            {
+                // access type for row specified, use it
+                fat = getFieldAccessType();
+            }
+        }
+        else
+        {
+            // column annotation was specified, use it
+            fat = columnAnnotation.fieldAccess();
+        }
+
+        RowField<R, ?> targetField;
+        try
+        {
+            targetField = RowField.newInstance(fat, field);
+        }
+        catch (ReflectException e)
+        {
+            throw new TranslatorException("error constructing RowField for " + field, e);
+        }
+        
+        return targetField;
+    }
+
+
     /**
      * Column translator used to set the value of a row column that is the identity column 
      * for row. Typically used by insert operations for column that is annotated with
@@ -537,7 +611,7 @@ public class RowTranslator<R> extends ColumnsTranslator<R>
             // for each unused
             for (UnusedColumn uc: unusedColumnAnnotations)
             {
-                // preceed with comma so that it may be appended to end of normal sql
+                // precede with comma so that it may be appended to end of normal sql
                 insertNames.append(", ");
                 insertValues.append(", ");
                 update.append(", ");

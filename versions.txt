@@ -2,13 +2,17 @@ Version History
 
 JDK 5/6     JDK 7       comments
 ------------------------------------------------------------------------------------------------------------
-            3.4-jdk1.7  - cache miss count is recorded correctly
+            3.4-jdk1.7  - allow choice of method or direct field access or some combination
+                          (see Column.fieldAccess and Row.fieldAccess)
+                        - cache miss count is recorded correctly
                         - cache.statistics in build.properties for logging cache statistics
                         - evict methods never throw CacheException
                         - remove deprecated get/setWhereTranslator2 methods
                         - remove deprecated org.sormula.operation.SelectCountOperation
                           replacement is org.sormula.operation.aggregate.SelectionCountOperation
                         - deprecate Table.isLegacyAnnotationPrecedence
+                        - field access may be direct, getter/setter, or some combination 
+                          (add RowField and subclasses, deprecate SormulaField)
             
             3.3.1-jdk1.7- maven support (bendem)
                         - updated SimpleExample, ActiveRecordExample, and ZeroConfigExample

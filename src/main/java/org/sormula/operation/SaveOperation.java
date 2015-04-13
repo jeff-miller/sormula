@@ -31,7 +31,7 @@ import org.sormula.annotation.cascade.SaveCascadeAnnotationReader;
 import org.sormula.log.ClassLogger;
 import org.sormula.operation.cascade.CascadeOperation;
 import org.sormula.operation.cascade.SaveCascadeOperation;
-import org.sormula.reflect.SormulaField;
+import org.sormula.reflect.RowField;
 
 
 /**
@@ -355,8 +355,9 @@ public class SaveOperation<R> extends ModifyOperation<R>
         {
             // at least one save cascade
             if (log.isDebugEnabled()) log.debug("prepareCascades() for " + field.getName());
-            Table<?> targetTable = getTargetTable(scar.getTargetClass(), field);
-            SormulaField<R, ?> targetField = createTargetField(field);
+            @SuppressWarnings("unchecked") // target field type is not known at compile time
+            Table<R> targetTable = (Table<R>)getTargetTable(scar.getTargetClass(), field);
+            RowField<R, ?> targetField = createTargetRowField(targetTable, field);
             co = new ArrayList<CascadeOperation<R, ?>>(saveCascades.length);
             
             // for each cascade operation

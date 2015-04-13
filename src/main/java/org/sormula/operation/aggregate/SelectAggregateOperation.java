@@ -22,8 +22,7 @@ import org.sormula.Table;
 import org.sormula.log.ClassLogger;
 import org.sormula.operation.OperationException;
 import org.sormula.operation.ScalarSelectOperation;
-import org.sormula.reflect.ReflectException;
-import org.sormula.reflect.SormulaField;
+import org.sormula.reflect.RowField;
 import org.sormula.translator.ColumnTranslator;
 
 
@@ -50,7 +49,7 @@ public class SelectAggregateOperation<R, T> extends ScalarSelectOperation<R>
     String function;
     String expression;
     ColumnTranslator<R> columnTranslator;
-    SormulaField<R, T> sormulaField;
+    RowField<R, T> rowField;
     
     
     /**
@@ -75,6 +74,7 @@ public class SelectAggregateOperation<R, T> extends ScalarSelectOperation<R>
      * amount is expression)  
      * @throws OperationException if error
      */
+    @SuppressWarnings("unchecked")
     public SelectAggregateOperation(Table<R> table, String function, String expression) throws OperationException
     {
         super(table, "");
@@ -86,14 +86,8 @@ public class SelectAggregateOperation<R, T> extends ScalarSelectOperation<R>
         if (columnTranslator != null)
         {
             if (log.isDebugEnabled()) log.debug("columnTranslator.getColumnName()=" + columnTranslator.getColumnName());
-            try
-            {
-                sormulaField = new SormulaField<>(columnTranslator.getField());
-            }
-            catch (ReflectException e)
-            {
-                throw new OperationException("error getting column translator", e);
-            }
+            // TODO write test case for field access?
+            rowField = (RowField<R, T>)createTargetRowField(table, columnTranslator.getField());
         }
     }
 
@@ -140,7 +134,7 @@ public class SelectAggregateOperation<R, T> extends ScalarSelectOperation<R>
                     columnTranslator.read(rs, 1, row);
                     
                     // get result from row
-                    result = sormulaField.invokeGetMethod(row);
+                    result = rowField.get(row);
                 }
                 else
                 {

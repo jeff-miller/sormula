@@ -32,7 +32,7 @@ import org.sormula.cache.CacheException;
 import org.sormula.log.ClassLogger;
 import org.sormula.operation.cascade.CascadeOperation;
 import org.sormula.operation.cascade.InsertCascadeOperation;
-import org.sormula.reflect.SormulaField;
+import org.sormula.reflect.RowField;
 import org.sormula.translator.ColumnTranslator;
 import org.sormula.translator.RowTranslator;
 
@@ -181,8 +181,9 @@ public class InsertOperation<R> extends ModifyOperation<R>
         {
             // at least one insert cascade and (unnamed or is required)
             if (log.isDebugEnabled()) log.debug("prepareCascades() for " + field.getName() + " cascade name=" + car.getName());
-            Table<?> targetTable = getTargetTable(car.getTargetClass(), field);
-            SormulaField<R, ?> targetField = createTargetField(field);
+            @SuppressWarnings("unchecked") // target field type is not known at compile time
+            Table<R> targetTable = (Table<R>)getTargetTable(car.getTargetClass(), field);
+            RowField<R, ?> targetField = createTargetRowField(targetTable, field);
             co = new ArrayList<>(insertCascades.length);
             
             // for each cascade operation

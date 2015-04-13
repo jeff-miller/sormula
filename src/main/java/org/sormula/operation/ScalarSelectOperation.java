@@ -39,7 +39,7 @@ import org.sormula.operation.cascade.SelectCascadeOperation;
 import org.sormula.operation.cascade.lazy.LazySelectable;
 import org.sormula.operation.filter.SelectCascadeFilter;
 import org.sormula.operation.monitor.OperationTime;
-import org.sormula.reflect.SormulaField;
+import org.sormula.reflect.RowField;
 import org.sormula.translator.OrderByTranslator;
 import org.sormula.translator.RowTranslator;
 import org.sormula.translator.TranslatorException;
@@ -751,8 +751,9 @@ public class ScalarSelectOperation<R> extends SqlOperation<R>
         {
             // at least one select cascade and (unnamed or is required)
             if (log.isDebugEnabled()) log.debug("prepareCascades() for " + field.getName());
-            Table<?> targetTable = getTargetTable(car.getTargetClass(), field);
-            SormulaField<R, ?> targetField = createTargetField(field);
+            @SuppressWarnings("unchecked") // target field type is not known at compile time
+            Table<R> targetTable = (Table<R>)getTargetTable(car.getTargetClass(), field);
+            RowField<R, ?> targetField = createTargetRowField(targetTable, field);
             co = new ArrayList<>(selectCascades.length);
             
             // for each cascade operation

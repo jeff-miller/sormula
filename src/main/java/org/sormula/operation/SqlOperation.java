@@ -46,6 +46,7 @@ import org.sormula.operation.cascade.CascadeOperation;
 import org.sormula.operation.monitor.NoOperationTime;
 import org.sormula.operation.monitor.OperationTime;
 import org.sormula.reflect.ReflectException;
+import org.sormula.reflect.RowField;
 import org.sormula.reflect.SormulaField;
 import org.sormula.translator.AbstractWhereTranslator;
 import org.sormula.translator.ColumnTranslator;
@@ -852,10 +853,11 @@ public abstract class SqlOperation<R> implements AutoCloseable
      * Gets a table object from database associated with this operation.
      * 
      * @param targetClass class that cascade is to affect
-     * @param targetField target of cascade 
+     * @param targetField target of cascade TODO why is this needed?
      * @return table for target class of annotation
      * @throws OperationException if error
      */
+    // TODO deprecate and add protected Table<?> getTargetTable(Class<?> targetClass)
     protected Table<?> getTargetTable(Class<?> targetClass, Field targetField) throws OperationException
     {
         Table<?> targetTable;
@@ -876,12 +878,16 @@ public abstract class SqlOperation<R> implements AutoCloseable
     
     
     /**
-     * Creates a {@link SormulaField} from {@link Field}.
+     * Creates a {@link SormulaField} from {@link Field}. Typically this method is used to create
+     * a field that will receive value from  a cascade.
+     * 
+     * Use {@link #createTargetRowField(Table, Field)} or {@link RowTranslator#createRowField} instead of this method.
      * 
      * @param field creates for this field
      * @return sormula field based upon field parameter
      * @throws OperationException if error
      */
+    @Deprecated
     protected SormulaField<R, ?> createTargetField(Field field) throws OperationException
     {
         SormulaField<R, ?> targetField;
@@ -898,7 +904,33 @@ public abstract class SqlOperation<R> implements AutoCloseable
         return targetField;
     }
     
+    
+    /**
+     * TODO
+     * @param targetTable
+     * @param field
+     * @return
+     * @throws OperationException
+     * @since 3.4
+     */
+    // TODO name? createRowField since it may not be for target of cascade?
+    protected RowField<R, ?> createTargetRowField(Table<R> targetTable, Field field) throws OperationException
+    {
+        RowField<R, ?> targetField;
+        
+        try
+        {
+            targetField = targetTable.getRowTranslator().createRowField(field);
+        }
+        catch (TranslatorException e)
+        {
+            throw new OperationException("error creating target field access", e);
+        }
+        
+        return targetField;
+    }
 
+    
     /**
      * Gets full sql statement to prepare. Default implementation is to use base 
      * sql + custom sql + where sql. Subclasses may override to create more detailed sql.

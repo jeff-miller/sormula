@@ -30,7 +30,7 @@ import org.sormula.cache.CacheException;
 import org.sormula.log.ClassLogger;
 import org.sormula.operation.cascade.CascadeOperation;
 import org.sormula.operation.cascade.UpdateCascadeOperation;
-import org.sormula.reflect.SormulaField;
+import org.sormula.reflect.RowField;
 import org.sormula.translator.RowTranslator;
 
 
@@ -164,8 +164,9 @@ public class UpdateOperation<R> extends ModifyOperation<R>
         {
             // at least one update cascade and (unnamed or is required)
             if (log.isDebugEnabled()) log.debug("prepareCascades() for " + field.getName());
-            Table<?> targetTable = getTargetTable(car.getTargetClass(), field);
-            SormulaField<R, ?> targetField = createTargetField(field);
+            @SuppressWarnings("unchecked") // target field type is not known at compile time
+            Table<R> targetTable = (Table<R>)getTargetTable(car.getTargetClass(), field);
+            RowField<R, ?> targetField = createTargetRowField(targetTable, field);
             co = new ArrayList<>(updateCascades.length);
             
             // for each cascade operation

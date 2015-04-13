@@ -20,7 +20,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.sormula.cache.CacheKey;
+import org.sormula.translator.AbstractWhereTranslator;
 import org.sormula.translator.ColumnTranslator;
+import org.sormula.translator.RowTranslator;
+import org.sormula.translator.TranslatorException;
 
 
 /**
@@ -37,25 +40,72 @@ import org.sormula.translator.ColumnTranslator;
  */
 public class FieldExtractor<R> 
 {
-	List<SormulaField<R, Object>> sormulaFieldList;
+	List<RowField<R, ?>> rowFieldList;
 	
 	
 	/**
 	 * Constructs from a list of {@link ColumnTranslator}.
+	 * TODO indicate replacement constructors to use
 	 * 
 	 * @param columnTranslatorList list of fields that are read/written to database
 	 * @throws ReflectException if error
 	 */
+	@Deprecated 
     public FieldExtractor(List<ColumnTranslator<R>> columnTranslatorList) throws ReflectException
     {
-    	sormulaFieldList = new ArrayList<SormulaField<R, Object>>(columnTranslatorList.size());
+    	rowFieldList = new ArrayList<RowField<R, ?>>(columnTranslatorList.size());
     	
     	for (ColumnTranslator<R> c: columnTranslatorList)
     	{
-    		sormulaFieldList.add(new SormulaField<R, Object>(c.getField()));
+    	    // MethodAccessField is backward compatible with SormulaField prior to version 3.4
+    		rowFieldList.add(new MethodAccessField<R, Object>(c.getField())); 
     	}
     }
     
+    
+    /**
+     * TODO for where translator columns
+     * @since 3.4
+     */
+    public FieldExtractor(AbstractWhereTranslator<R> abstractWhereTranslator) throws ReflectException
+    {
+        // TODO need test case for cached table with field access key
+        init(abstractWhereTranslator.getRowTranslator(), abstractWhereTranslator.getColumnTranslatorList());
+    }
+    
+    
+    /**
+     * TODO for whole row
+     * @since 3.4
+     */
+    public FieldExtractor(RowTranslator<R> rowTranslator) throws ReflectException
+    {
+        init(rowTranslator, rowTranslator.getColumnTranslatorList());
+    }
+    
+    
+    /**
+     * TODO
+     * @since 3.4
+     */
+    public void init(RowTranslator<R> rowTranslator, List<ColumnTranslator<R>> columnTranslatorList) throws ReflectException
+    {
+        rowFieldList = new ArrayList<RowField<R, ?>>(columnTranslatorList.size());
+        
+        try
+        {
+            for (ColumnTranslator<R> c: columnTranslatorList)
+            {
+                // create with row translator to get the correct type of field access
+                rowFieldList.add(rowTranslator.createRowField(c.getField()));
+            }
+        }
+        catch (TranslatorException e)
+        {
+            throw new ReflectException("TODO", e);
+        }
+    }
+
     
     /**
      * Gets the values of fields for a row.
@@ -65,13 +115,13 @@ public class FieldExtractor<R>
      */
     public Object[] getFieldValues(R row) throws ReflectException
     {
-    	Object[] result = new Object[sormulaFieldList.size()];
+    	Object[] result = new Object[rowFieldList.size()];
     	int i = 0;
     	
-    	for (SormulaField<R, Object> s : sormulaFieldList)
+    	for (RowField<R, ?> s : rowFieldList)
     	{
     		//log.info("f=" + c.getField());
-    		result[i++] = s.invokeGetMethod(row);
+    		result[i++] = s.get(row);
     	}
     	
     	return result;

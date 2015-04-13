@@ -34,6 +34,7 @@ import org.sormula.operation.ScalarSelectOperation;
 import org.sormula.operation.SelectOperation;
 import org.sormula.operation.filter.SelectCascadeFilter;
 import org.sormula.reflect.ReflectException;
+import org.sormula.reflect.RowField;
 import org.sormula.reflect.SormulaField;
 import org.sormula.translator.ColumnTranslator;
 import org.sormula.translator.RowTranslator;
@@ -56,7 +57,7 @@ public class SelectCascadeOperation<S, T> extends CascadeOperation<S, T>
 	SelectCascade selectCascadeAnnotation;
 	ScalarSelectOperation<T> selectOperation;
 	String[] parameterFieldNames;
-	List<SormulaField<S, ?>> parameterFields;
+	List<RowField<S, ?>> parameterFields;
 	SelectCascadeFilter<?>[] selectCascadeFilters;
     
     
@@ -69,7 +70,24 @@ public class SelectCascadeOperation<S, T> extends CascadeOperation<S, T>
      * @param selectCascadeAnnotation cascade operation
      * @since 3.0
      */
+	@Deprecated
     public SelectCascadeOperation(Table<S> sourceTable, SormulaField<S, ?> targetField, Table<T> targetTable, SelectCascade selectCascadeAnnotation)
+    {
+        super(sourceTable, targetField, targetTable, selectCascadeAnnotation.operation());
+        this.selectCascadeAnnotation = selectCascadeAnnotation;
+        setPost(selectCascadeAnnotation.post());
+    }
+    
+    
+	/**
+	 * TODO
+	 * @param sourceTable
+	 * @param targetField
+	 * @param targetTable
+	 * @param selectCascadeAnnotation
+	 * @since 3.4
+	 */
+    public SelectCascadeOperation(Table<S> sourceTable, RowField<S, ?> targetField, Table<T> targetTable, SelectCascade selectCascadeAnnotation)
     {
         super(sourceTable, targetField, targetTable, selectCascadeAnnotation.operation());
         this.selectCascadeAnnotation = selectCascadeAnnotation;
@@ -116,7 +134,7 @@ public class SelectCascadeOperation<S, T> extends CascadeOperation<S, T>
         
         // set results in target field
         @SuppressWarnings("unchecked") // target field type is not known at compile time
-        SormulaField<S, Object> targetField = (SormulaField<S, Object>)getTargetField();
+        RowField<S, Object> targetField = (RowField<S, Object>)getTargetField();
         
         try
         {
@@ -126,7 +144,7 @@ public class SelectCascadeOperation<S, T> extends CascadeOperation<S, T>
                 T targetRow = selectOperation.readNext();
                 setForeignKeyValues(targetRow);
                 setForeignKeyReference(targetRow);
-                targetField.invokeSetMethod(sourceRow, targetRow);
+                targetField.set(sourceRow, targetRow);
             }
             else
             {
@@ -146,12 +164,12 @@ public class SelectCascadeOperation<S, T> extends CascadeOperation<S, T>
                     if (targetField.isArray())
                     {
                         // set as array
-                        targetField.invokeSetMethod(sourceRow, toTargetArray(c));
+                        targetField.set(sourceRow, toTargetArray(c));
                     }
                     else
                     {
                         // set as collection 
-                        targetField.invokeSetMethod(sourceRow, c);
+                        targetField.set(sourceRow, c);
                     }
                 }
                 else if (rows instanceof Map)
@@ -167,12 +185,12 @@ public class SelectCascadeOperation<S, T> extends CascadeOperation<S, T>
                     if (targetField.isArray())
                     {
                         // set as array
-                        targetField.invokeSetMethod(sourceRow, toTargetArray(mapValues));
+                        targetField.set(sourceRow, toTargetArray(mapValues));
                     }
                     else
                     {
                         // set as map
-                        targetField.invokeSetMethod(sourceRow, m);
+                        targetField.set(sourceRow, m);
                     }
                 }
                 else
@@ -199,6 +217,7 @@ public class SelectCascadeOperation<S, T> extends CascadeOperation<S, T>
     {
         super.prepare();
         selectOperation = (ScalarSelectOperation<T>)createOperation();
+        prepareForeignKey();
         selectOperation.setNamedParameterMap(getNamedParameterMap()); // from source
         selectOperation.setSelectCascadeFilters(selectCascadeFilters); // from source
         
@@ -248,7 +267,7 @@ public class SelectCascadeOperation<S, T> extends CascadeOperation<S, T>
         }
         
         // verify scalar field is compatible with target table row type (this test may not be necessary?)
-        SormulaField<S, ?> tf = getTargetField();
+        RowField<S, ?> tf = (RowField<S, ?>)getTargetField();
         if (tf.isScalar() && !tf.isClass(getTargetTable().getRowTranslator().getRowClass()))
         {
         	throw new OperationException(tf.getClass().getName() + " is not assignable from " +
@@ -312,56 +331,56 @@ public class SelectCascadeOperation<S, T> extends CascadeOperation<S, T>
         // parameters are from source class (target field is in source class)
         RowTranslator<S> sourceRowTranslator = getSourceTable().getRowTranslator();
         
-        try
+        parameterFieldNames = null;
+        
+        if (isSourcePrimaryKeyFields())
         {
-            parameterFieldNames = null;
-            
-            if (isSourcePrimaryKeyFields())
+            // use fields from primary keys
+            if (log.isDebugEnabled())
             {
-                // use fields from primary keys
-                if (log.isDebugEnabled())
-                {
-                    log.debug("source parameter field names are source primary keys");
-                }
-                
-                List<ColumnTranslator<S>> primaryKeyColumnTranslators = sourceRowTranslator.getPrimaryKeyWhereTranslator().getColumnTranslatorList();
-                parameterFieldNames = new String[primaryKeyColumnTranslators.size()];
-                int i = 0;
-                for (ColumnTranslator<S> ct : primaryKeyColumnTranslators)
-                {
-                    parameterFieldNames[i++] = ct.getField().getName();
-                }
-            }
-            else if (isSourceTargetFieldNames())
-            {
-                // use fields from target where
-                if (log.isDebugEnabled())
-                {
-                    log.debug("source parameter field names from target where condition " + selectOperation.getWhereConditionName());
-                }
-                
-                List<ColumnTranslator<T>> whereColumnTranslators = selectOperation.getWhereTranslator().getColumnTranslatorList();
-                parameterFieldNames = new String[whereColumnTranslators.size()];
-                int i = 0;
-                for (ColumnTranslator<T> ct : whereColumnTranslators)
-                {
-                    parameterFieldNames[i++] = ct.getField().getName();
-                }
-            }
-            else
-            {
-                // use fields from annotation
-                parameterFieldNames = selectCascadeAnnotation.sourceParameterFieldNames();
-                if (log.isDebugEnabled())
-                {
-                    log.debug("source parameter field names from cascade sourceParameterFieldNames=" + 
-                            Arrays.asList(parameterFieldNames));
-                }
+                log.debug("source parameter field names are source primary keys");
             }
             
-            if (parameterFieldNames != null)
+            List<ColumnTranslator<S>> primaryKeyColumnTranslators = sourceRowTranslator.getPrimaryKeyWhereTranslator().getColumnTranslatorList();
+            parameterFieldNames = new String[primaryKeyColumnTranslators.size()];
+            int i = 0;
+            for (ColumnTranslator<S> ct : primaryKeyColumnTranslators)
             {
-                parameterFields = new ArrayList<SormulaField<S, ?>>(parameterFieldNames.length);
+                parameterFieldNames[i++] = ct.getField().getName();
+            }
+        }
+        else if (isSourceTargetFieldNames())
+        {
+            // use fields from target where
+            if (log.isDebugEnabled())
+            {
+                log.debug("source parameter field names from target where condition " + selectOperation.getWhereConditionName());
+            }
+            
+            List<ColumnTranslator<T>> whereColumnTranslators = selectOperation.getWhereTranslator().getColumnTranslatorList();
+            parameterFieldNames = new String[whereColumnTranslators.size()];
+            int i = 0;
+            for (ColumnTranslator<T> ct : whereColumnTranslators)
+            {
+                parameterFieldNames[i++] = ct.getField().getName();
+            }
+        }
+        else
+        {
+            // use fields from annotation
+            parameterFieldNames = selectCascadeAnnotation.sourceParameterFieldNames();
+            if (log.isDebugEnabled())
+            {
+                log.debug("source parameter field names from cascade sourceParameterFieldNames=" + 
+                        Arrays.asList(parameterFieldNames));
+            }
+        }
+        
+        if (parameterFieldNames != null)
+        {
+            try
+            {
+                parameterFields = new ArrayList<RowField<S, ?>>(parameterFieldNames.length);
                 for (String name : parameterFieldNames)
                 {
                     if (name.startsWith("$"))
@@ -372,15 +391,23 @@ public class SelectCascadeOperation<S, T> extends CascadeOperation<S, T>
                     else
                     {
                         Field f = sourceRowTranslator.getDeclaredField(name);
-                        if (f != null) parameterFields.add(new SormulaField<S, Object>(f));
-                        else throw new MissingFieldException(name, getSourceTable().getRowClass());
+                        if (f != null)
+                        {
+                            RowField<S, ?> rowField = sourceRowTranslator.createRowField(f);
+                            parameterFields.add(rowField);
+                        }
+                        else
+                        {
+                            throw new MissingFieldException(name, getSourceTable().getRowClass());
+                        }
                     }
                 }
             }
-        }
-        catch (ReflectException e)
-        {
-            throw new OperationException("error creating SormulaField", e);
+            catch (TranslatorException e)
+            {
+                // TODO message contains access type and field name?
+                throw new OperationException("error creating field access for parameter", e);
+            }
         }
     }
     
@@ -404,12 +431,12 @@ public class SelectCascadeOperation<S, T> extends CascadeOperation<S, T>
             
             try
             {
-                for (SormulaField<S, ?> f: parameterFields)
+                for (RowField<S, ?> f: parameterFields)
                 {
                     if (f != null)
                     {
                         // from source row
-                        parameters[i] = f.invokeGetMethod(sourceRow);
+                        parameters[i] = f.get(sourceRow);
                     }
                     else
                     {
@@ -450,7 +477,7 @@ public class SelectCascadeOperation<S, T> extends CascadeOperation<S, T>
                 WhereTranslator<T> whereTranslator = new WhereTranslator<T>(targetRowTranslator, parameterFields.size());
                 
                 // for all source parameter fields
-                for (SormulaField<S, ?> spf : parameterFields)
+                for (RowField<S, ?> spf : parameterFields)
                 {
                     // look up target column translator of same name
                     if (log.isDebugEnabled()) log.debug("add field " + spf.getField().getName());

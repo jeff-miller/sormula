@@ -24,6 +24,7 @@ import org.sormula.log.ClassLogger;
 import org.sormula.operation.ModifyOperation;
 import org.sormula.operation.OperationException;
 import org.sormula.reflect.ReflectException;
+import org.sormula.reflect.RowField;
 import org.sormula.reflect.SormulaField;
 
 
@@ -51,7 +52,23 @@ public abstract class ModifyCascadeOperation<S, T> extends CascadeOperation<S, T
      * false if cascade is performed before row execute (see {@link ModifyOperation#preExecute}
      * @since 3.0
      */
+    @Deprecated
     public ModifyCascadeOperation(Table<S> sourceTable, SormulaField<S, ?> targetField, Table<T> targetTable, 
+            Class <?> cascadeOperationClass)
+    {
+        super(sourceTable, targetField, targetTable, cascadeOperationClass);
+    }
+    
+    
+    /**
+     * TODO
+     * @param sourceTable
+     * @param targetField
+     * @param targetTable
+     * @param cascadeOperationClass
+     * @since 3.4
+     */
+    public ModifyCascadeOperation(Table<S> sourceTable, RowField<S, ?> targetField, Table<T> targetTable, 
             Class <?> cascadeOperationClass)
     {
         super(sourceTable, targetField, targetTable, cascadeOperationClass);
@@ -65,12 +82,12 @@ public abstract class ModifyCascadeOperation<S, T> extends CascadeOperation<S, T
     public void cascade(S sourceRow) throws OperationException
     {
         super.cascade(sourceRow);
-        SormulaField<S, ?> tf = getTargetField();
+        RowField<S, ?> tf = (RowField<S, ?>)getTargetField();
         
         try
         {
             if (log.isDebugEnabled()) log.debug("cascade() " + tf.getField());
-            Object value = tf.invokeGetMethod(sourceRow);
+            Object value = tf.get(sourceRow);
             
             if (value != null)
             {
@@ -133,6 +150,7 @@ public abstract class ModifyCascadeOperation<S, T> extends CascadeOperation<S, T
     {
         super.prepare();
         modifyOperation = (ModifyOperation<T>)createOperation();
+        prepareForeignKey();
         modifyOperation.setNamedParameterMap(getNamedParameterMap()); // from source
     }
 

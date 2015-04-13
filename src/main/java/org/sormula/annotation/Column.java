@@ -26,6 +26,7 @@ import java.sql.Statement;
 
 import org.sormula.Database;
 import org.sormula.Table;
+import org.sormula.reflect.FieldAccessType;
 import org.sormula.translator.ColumnTranslator;
 import org.sormula.translator.NameTranslator;
 import org.sormula.translator.standard.StandardColumnTranslator;
@@ -104,4 +105,15 @@ public @interface Column
      * @return translator to use for reading and writing values from/to the database
      */
     Class<? extends ColumnTranslator> translator() default StandardColumnTranslator.class;
+    
+    
+    /**
+     * TODO
+     * If {@link Column#fieldAccess()} is not specified or is {@link FieldAccessType#Default}, then 
+     * {@link Row#fieldAccess()} is used.
+     * 
+     * @return
+     * @since 3.4
+     */
+    FieldAccessType fieldAccess() default FieldAccessType.Default;
 }

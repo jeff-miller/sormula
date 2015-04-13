@@ -62,7 +62,7 @@ public class OrderByAnnotationReader
             
             if (orderByAnnotation != null && orderByAnnotation.name().equals(name))
             {
-                // found in single OrderBy annoation
+                // found in single OrderBy annotation
                 if (log.isDebugEnabled()) log.debug(name + " order annotation from " + s.getCanonicalName());
                 return orderByAnnotation;
             }

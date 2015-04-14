@@ -20,6 +20,7 @@ import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
+import java.lang.reflect.Field;
 import java.sql.PreparedStatement;
 import java.sql.Statement;
 
@@ -133,18 +134,22 @@ public @interface Row
     
     
     /**
-     * TODO
-     * If {@link Column#fieldAccess()} is not specified or is {@link FieldAccessType#Default}, then 
-     * {@link Row#fieldAccess()} is used.
-     *
-     * If {@link Column#fieldAccess()} is specified as {@link FieldAccessType#Direct} or 
-     * {@link FieldAccessType#Method} then {@link Column#fieldAccess()} is used and 
-     * {@link Row#fieldAccess()} is ignored.
+     * Specifies how all fields in row be accessed when no {@link Column} annotation is specified 
+     * or when {@link Column#fieldAccess()} is {@link FieldAccessType#Default}.
+     * <p> 
+     * Use {@link FieldAccessType#Method} to read/write all field values with getter/setter. Public 
+     * getter/setter methods are required.
+     * <p> 
+     * Use {@link FieldAccessType#Direct} to read/write all field values with direct access 
+     * {@link Field#equals(Object)} and {@link Field#set(Object, Object)}. No getter/setter are required.
+     * <p> 
+     * If no {@link Row} annotation is specified or {@link #fieldAccess()} is {@link FieldAccessType#Default}
+     * then {@link Column#fieldAccess()} is used and {@link #fieldAccess()} is ignored.
+     * <p>
+     * If both {@link #fieldAccess()} and {@link Column#fieldAccess()} are {@link FieldAccessType#Default},
+     * then getter/setter methods are used. This is the behavior of versions prior to 3.4.
      * 
-     * If both {@link Row#fieldAccess()} and {@link Column#fieldAccess()} are {@link FieldAccessType#Default},
-     * then getter/setter methods are used. This is the behavior with versions prior to 3.4.
-     * 
-     * @return
+     * @return {@link FieldAccessType#Method}, {@link FieldAccessType#Direct}, or {@link FieldAccessType#Default}
      * @since 3.4
      */
     FieldAccessType fieldAccess() default FieldAccessType.Default;

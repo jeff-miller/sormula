@@ -55,11 +55,12 @@ public class InsertCascadeOperation<S, T> extends ModifyCascadeOperation<S, T>
     
     
     /**
-     * TODO
-     * @param sourceTable
-     * @param targetField
-     * @param targetTable
-     * @param insertCascadeAnnotation
+     * Constructor used by {@link InsertOperation}.
+     *
+     * @param sourceTable cascade originates on row from this table
+     * @param targetField cascade insert operation uses row(s) from this field
+     * @param targetTable cascade insert operation is performed on this table 
+     * @param insertCascadeAnnotation cascade operation
      * @since 3.4
      */
     public InsertCascadeOperation(Table<S> sourceTable, RowField<S, ?> targetField, Table<T> targetTable, InsertCascade insertCascadeAnnotation)

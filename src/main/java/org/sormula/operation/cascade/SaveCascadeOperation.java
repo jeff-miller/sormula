@@ -54,11 +54,12 @@ public class SaveCascadeOperation<S, T> extends ModifyCascadeOperation<S, T>
     
     
     /**
-     * TODO
-     * @param sourceTable
-     * @param targetField
-     * @param targetTable
-     * @param saveCascadeAnnotation
+     * Constructor used by {@link SaveOperation}.
+     * 
+     * @param sourceTable cascade originates on row from this table
+     * @param targetField cascade save operation uses row(s) from this field
+     * @param targetTable cascade save operation is performed on this table 
+     * @param saveCascadeAnnotation cascade operation
      * @since 3.4
      */
     public SaveCascadeOperation(Table<S> sourceTable, RowField<S, ?> targetField, Table<T> targetTable, SaveCascade saveCascadeAnnotation)

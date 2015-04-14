@@ -44,7 +44,7 @@ public class SormulaFKTestParent
     
     // tests 1 to many relationship
     @OneToManyCascade( 
-            // optional in v3.1, "parentId" obtained from where defintions
+            // optional in v3.1, "parentId" obtained from where definitions
             //selects=@SelectCascade(sourceParameterFieldNames="parentId", targetWhereName="byParent"),
             foreignKeyValueFields="#",          // foreign key fields are same name as parent foreign key (parentId)
             foreignKeyReferenceField="parent"   // foreign key reference field is named "parent"

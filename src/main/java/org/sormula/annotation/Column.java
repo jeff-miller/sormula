@@ -108,11 +108,19 @@ public @interface Column
     
     
     /**
-     * TODO
-     * If {@link Column#fieldAccess()} is not specified or is {@link FieldAccessType#Default}, then 
-     * {@link Row#fieldAccess()} is used.
+     * Specifies how the field associated with this column will be accessed. This overrides 
+     * {@link Row#fieldAccess()} if {@link #fieldAccess()} is not {@link FieldAccessType#Default}.
+     * <p> 
+     * Use {@link FieldAccessType#Method} to read/write the field value with getter/setter. Public 
+     * getter/setter methods are required.
+     * <p> 
+     * Use {@link FieldAccessType#Direct} to read/write the field value with direct access 
+     * {@link Field#equals(Object)} and {@link Field#set(Object, Object)}. No getter/setter are required.
+     * <p> 
+     * If {@link Column} annotation is not specified or {@link #fieldAccess()} is {@link FieldAccessType#Default}, 
+     * then {@link Row#fieldAccess()} determines how field is accessed.
      * 
-     * @return
+     * @return {@link FieldAccessType#Method}, {@link FieldAccessType#Direct}, or {@link FieldAccessType#Default}
      * @since 3.4
      */
     FieldAccessType fieldAccess() default FieldAccessType.Default;

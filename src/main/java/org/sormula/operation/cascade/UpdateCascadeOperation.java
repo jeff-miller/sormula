@@ -53,11 +53,12 @@ public class UpdateCascadeOperation<S, T> extends ModifyCascadeOperation<S, T>
     
     
     /**
-     * TODO
-     * @param sourceTable
-     * @param targetField
-     * @param targetTable
-     * @param updateCascadeAnnotation
+     * Constructor used by {@link UpdateOperation}.
+     *  
+     * @param sourceTable cascade originates on row from this table 
+     * @param targetField cascade update operation uses row(s) from this field
+     * @param targetTable cascade update operation is performed on this table 
+     * @param updateCascadeAnnotation cascade operation
      * @since 3.4
      */
     public UpdateCascadeOperation(Table<S> sourceTable, RowField<S, ?> targetField, Table<T> targetTable, UpdateCascade updateCascadeAnnotation)

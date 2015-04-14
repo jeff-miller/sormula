@@ -45,6 +45,8 @@ import org.sormula.log.ClassLogger;
 import org.sormula.operation.cascade.CascadeOperation;
 import org.sormula.operation.monitor.NoOperationTime;
 import org.sormula.operation.monitor.OperationTime;
+import org.sormula.reflect.DirectAccessField;
+import org.sormula.reflect.MethodAccessField;
 import org.sormula.reflect.ReflectException;
 import org.sormula.reflect.RowField;
 import org.sormula.reflect.SormulaField;
@@ -879,7 +881,7 @@ public abstract class SqlOperation<R> implements AutoCloseable
     
     /**
      * Creates a {@link SormulaField} from {@link Field}. Typically this method is used to create
-     * a field that will receive value from  a cascade.
+     * a field that will receive value from a cascade.
      * 
      * Use {@link #createTargetRowField(Table, Field)} or {@link RowTranslator#createRowField} instead of this method.
      * 
@@ -906,14 +908,21 @@ public abstract class SqlOperation<R> implements AutoCloseable
     
     
     /**
-     * TODO
-     * @param targetTable
-     * @param field
-     * @return
-     * @throws OperationException
+     * Creates a {@link RowField} from a {@link Field} and {@link Table}. Returned {@link RowField}
+     * will be either {@link MethodAccessField} or {@link DirectAccessField} based upon values
+     * used for {@link Column#fieldAccess()} and {@link Row#fieldAccess()}. 
+     * <p>
+     * Typically this method is used to create a field that will receive value from a cascade.
+     * 
+     * @param targetTable table that reads/writes rows that contain field
+     * @param field create access to this field
+     * @return {@link MethodAccessField} or {@link DirectAccessField}
+     * annotation(s)
+     * 
+     * @throws OperationException if error
      * @since 3.4
      */
-    // TODO name? createRowField since it may not be for target of cascade?
+    // TODO rename to createRowField since not always used for cascade target
     protected RowField<R, ?> createTargetRowField(Table<R> targetTable, Field field) throws OperationException
     {
         RowField<R, ?> targetField;
@@ -924,7 +933,7 @@ public abstract class SqlOperation<R> implements AutoCloseable
         }
         catch (TranslatorException e)
         {
-            throw new OperationException("error creating target field access", e);
+            throw new OperationException("error creating field access for " + field, e);
         }
         
         return targetField;

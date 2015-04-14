@@ -44,8 +44,9 @@ public class FieldExtractor<R>
 	
 	
 	/**
-	 * Constructs from a list of {@link ColumnTranslator}.
-	 * TODO indicate replacement constructors to use
+	 * Constructs from a list of {@link ColumnTranslator}. Use other constructors instead of this
+	 * one since field access type cannot be determined solely from {@link ColumnTranslator}. This
+	 * constructor always creates method access to field.
 	 * 
 	 * @param columnTranslatorList list of fields that are read/written to database
 	 * @throws ReflectException if error
@@ -64,18 +65,22 @@ public class FieldExtractor<R>
     
     
     /**
-     * TODO for where translator columns
+     * Constructs for where translator columns.
+     * 
+     * @param whereTranslator use fields from this translator
      * @since 3.4
      */
-    public FieldExtractor(AbstractWhereTranslator<R> abstractWhereTranslator) throws ReflectException
+    public FieldExtractor(AbstractWhereTranslator<R> whereTranslator) throws ReflectException
     {
         // TODO need test case for cached table with field access key
-        init(abstractWhereTranslator.getRowTranslator(), abstractWhereTranslator.getColumnTranslatorList());
+        init(whereTranslator.getRowTranslator(), whereTranslator.getColumnTranslatorList());
     }
     
     
     /**
-     * TODO for whole row
+     * Constructs for all fields in row.
+     * 
+     * @param rowTranslator use fields from this translator
      * @since 3.4
      */
     public FieldExtractor(RowTranslator<R> rowTranslator) throws ReflectException
@@ -84,11 +89,7 @@ public class FieldExtractor<R>
     }
     
     
-    /**
-     * TODO
-     * @since 3.4
-     */
-    public void init(RowTranslator<R> rowTranslator, List<ColumnTranslator<R>> columnTranslatorList) throws ReflectException
+    private void init(RowTranslator<R> rowTranslator, List<ColumnTranslator<R>> columnTranslatorList) throws ReflectException
     {
         rowFieldList = new ArrayList<RowField<R, ?>>(columnTranslatorList.size());
         
@@ -102,7 +103,7 @@ public class FieldExtractor<R>
         }
         catch (TranslatorException e)
         {
-            throw new ReflectException("TODO", e);
+            throw new ReflectException("initialization error", e);
         }
     }
 

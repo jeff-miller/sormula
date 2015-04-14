@@ -80,11 +80,12 @@ public class SelectCascadeOperation<S, T> extends CascadeOperation<S, T>
     
     
 	/**
-	 * TODO
-	 * @param sourceTable
-	 * @param targetField
-	 * @param targetTable
-	 * @param selectCascadeAnnotation
+     * Constructor used by {@link SelectOperation}.
+     *  
+     * @param sourceTable cascade originates on row from this table 
+     * @param targetField cascade select operation modifies this field
+     * @param targetTable cascade select operation is performed on this table 
+     * @param selectCascadeAnnotation cascade operation
 	 * @since 3.4
 	 */
     public SelectCascadeOperation(Table<S> sourceTable, RowField<S, ?> targetField, Table<T> targetTable, SelectCascade selectCascadeAnnotation)
@@ -217,7 +218,6 @@ public class SelectCascadeOperation<S, T> extends CascadeOperation<S, T>
     {
         super.prepare();
         selectOperation = (ScalarSelectOperation<T>)createOperation();
-        prepareForeignKey();
         selectOperation.setNamedParameterMap(getNamedParameterMap()); // from source
         selectOperation.setSelectCascadeFilters(selectCascadeFilters); // from source
         
@@ -405,8 +405,7 @@ public class SelectCascadeOperation<S, T> extends CascadeOperation<S, T>
             }
             catch (TranslatorException e)
             {
-                // TODO message contains access type and field name?
-                throw new OperationException("error creating field access for parameter", e);
+                throw new OperationException("error creating access to field for parameter", e);
             }
         }
     }

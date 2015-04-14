@@ -152,8 +152,11 @@ public class RowTranslator<R> extends ColumnsTranslator<R>
 
     
     /**
-     * TODO
-     * @return
+     * Gets the field access type to use for all fields in row if no access type has been specified
+     * for {@link Column}.
+     * 
+     * @return the field access type specified by {@link Row#fieldAccess()} or 
+     * {@link FieldAccessType#Default} if no {@link Row} annotation was used
      * @since 3.4
      */
     public FieldAccessType getFieldAccessType() 
@@ -163,13 +166,13 @@ public class RowTranslator<R> extends ColumnsTranslator<R>
     
     
     /**
-     * TODO
-     *  Typically this method is used to create
-     * a field that will receive value from  a cascade.
+     * Creates a {@link RowField} object with the appropriate field access (either getter/setter method 
+     * or direct access). Typically this method is used to create a field that will receive value from  
+     * a cascade.
      * 
-     * @param field
-     * @return
-     * @throws OperationException
+     * @param field create for this field
+     * @return a concrete subclass of {@link RowField}
+     * @throws OperationException if error
      * @since 3.4
      */
     public RowField<R, ?> createRowField(Field field) throws TranslatorException
@@ -186,7 +189,7 @@ public class RowTranslator<R> extends ColumnsTranslator<R>
             if (getFieldAccessType() == FieldAccessType.Default)
             {
                 // neither row or column annotation specified, 
-                // use method access for default for backwards compatability to versions prior to 3.4
+                // use method access for default for backwards compatibility to versions prior to 3.4
                 fat = FieldAccessType.Method;
             }
             else
@@ -201,17 +204,17 @@ public class RowTranslator<R> extends ColumnsTranslator<R>
             fat = columnAnnotation.fieldAccess();
         }
 
-        RowField<R, ?> targetField;
+        RowField<R, ?> rowField;
         try
         {
-            targetField = RowField.newInstance(fat, field);
+            rowField = RowField.newInstance(fat, field);
         }
         catch (ReflectException e)
         {
             throw new TranslatorException("error constructing RowField for " + field, e);
         }
         
-        return targetField;
+        return rowField;
     }
 
 

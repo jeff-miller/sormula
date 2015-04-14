@@ -59,7 +59,7 @@ public class SormulaFKTestChildN
         this.id = id;
     }
     
-    
+
     public int getParentId()
     {
         return parentId;

@@ -37,7 +37,7 @@ public class SormulaField<C, T>
 {
     private static final ClassLogger log = new ClassLogger();
     
-    // TODO move all members and corresponding methods to RowField when SormulaField is removed
+    // note: move all members and corresponding methods to RowField when SormulaField is removed
     Field field;
     Method getMethod;
     Method setMethod;
@@ -55,8 +55,32 @@ public class SormulaField<C, T>
      */
     public SormulaField(Field field) throws ReflectException
     {
+        this(field, true);
+    }
+    
+    
+    /** 
+     * Constructs for a field and optionally initializes references to getter and setter methods.
+     * 
+     * @param field java reflection Field that corresponds to class variable
+     * @param initGettersAndSetters true to get references to getter and setter methods
+     * @throws ReflectException if error
+     * @since 3.4
+     */
+    protected SormulaField(Field field, boolean initGettersAndSetters) throws ReflectException
+    {
         this.field = field;
+        array = field.getType().isArray();
+        collection = isClass(Collection.class);
+        map = isClass(Map.class);
+        scalar = !(array || collection || map);
         
+        if (initGettersAndSetters) initGettersAndSetters();
+    }
+    
+    
+    void initGettersAndSetters() throws ReflectException
+    {
         String getterPrefix;
         if (isBooleanMethod())
         {
@@ -83,11 +107,6 @@ public class SormulaField<C, T>
             throw new ReflectException("missing method " + methodName + " for " + 
                     field.getDeclaringClass().getCanonicalName(), e);
         }
-        
-        array = field.getType().isArray();
-        collection = isClass(Collection.class);
-        map = isClass(Map.class);
-        scalar = !(array || collection || map);
     }
     
     
@@ -159,7 +178,6 @@ public class SormulaField<C, T>
     @Deprecated
     public T invokeGetMethod(C object) throws ReflectException
     {
-        // TODO move body of this method to MethodAccessField#get when SormulaField is removed
         try
         {
             @SuppressWarnings("unchecked") // invoke returns Object, type not known at compile time
@@ -184,7 +202,6 @@ public class SormulaField<C, T>
     @Deprecated
     public void invokeSetMethod(C object, T value) throws ReflectException
     {
-        // TODO move body of this method to MethodAccessField#set when SormulaField is removed
         try
         {
             if (log.isDebugEnabled()) log.debug("invokeSetMethod() method="+setMethod.getName() + " value="+value);
@@ -216,7 +233,7 @@ public class SormulaField<C, T>
      * @return true if field is instance of c or subclass of c
      * @see Class#isAssignableFrom(Class)
      */
-    // TODO move this method to RowField when SormulaField is removed
+    // move this method to RowField when SormulaField is removed
     public boolean isClass(Class<?> c)
     {
         return c.isAssignableFrom(field.getType());

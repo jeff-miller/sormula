@@ -206,7 +206,8 @@ public abstract class AbstractColumnTranslator<R, T> implements ColumnTranslator
 
 
     /**
-     * Gets the field as a {@link SormulaField}.
+     * Gets the field as a {@link SormulaField}. Use {@link #getRowField()} instead of
+     * this method.
      * 
      * @return {@link SormulaField} for field supplied in constructor
      */
@@ -218,8 +219,9 @@ public abstract class AbstractColumnTranslator<R, T> implements ColumnTranslator
 
     
     /**
-     * TODO replacement for getSormulaField
-     * @return
+     * Gets the {@link RowField} for field in this translator.
+     * 
+     * @return {@link RowField} for field supplied in constructor
      * @since 3.4
      */
     public RowField<R, T> getRowField()

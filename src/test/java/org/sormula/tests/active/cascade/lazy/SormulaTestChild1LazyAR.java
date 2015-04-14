@@ -18,6 +18,7 @@ package org.sormula.tests.active.cascade.lazy;
 
 import org.sormula.active.ActiveRecord;
 import org.sormula.annotation.Column;
+import org.sormula.reflect.FieldAccessType;
 
 
 /**
@@ -29,7 +30,7 @@ public class SormulaTestChild1LazyAR extends ActiveRecord<SormulaTestChild1LazyA
 {
     private static final long serialVersionUID = 1L;
     
-    @Column(primaryKey=true)
+    @Column(primaryKey=true, fieldAccess=FieldAccessType.Direct)// TODO
     int id;
     String description;
     

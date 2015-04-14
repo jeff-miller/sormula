@@ -61,11 +61,13 @@ public abstract class ModifyCascadeOperation<S, T> extends CascadeOperation<S, T
     
     
     /**
-     * TODO
-     * @param sourceTable
-     * @param targetField
-     * @param targetTable
-     * @param cascadeOperationClass
+     * Constructs.
+     * 
+     * @param sourceTable cascade originates on row from this table
+     * @param targetField cascade operation uses row(s) from this field
+     * @param targetTable cascade operation is performed on this table 
+     * @param cascadeOperationClass class of cascade operation
+     * false if cascade is performed before row execute (see {@link ModifyOperation#preExecute}
      * @since 3.4
      */
     public ModifyCascadeOperation(Table<S> sourceTable, RowField<S, ?> targetField, Table<T> targetTable, 
@@ -150,7 +152,6 @@ public abstract class ModifyCascadeOperation<S, T> extends CascadeOperation<S, T
     {
         super.prepare();
         modifyOperation = (ModifyOperation<T>)createOperation();
-        prepareForeignKey();
         modifyOperation.setNamedParameterMap(getNamedParameterMap()); // from source
     }
 

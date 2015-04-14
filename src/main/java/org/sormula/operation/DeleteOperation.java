@@ -161,7 +161,7 @@ public class DeleteOperation<R> extends ModifyOperation<R>
             if (log.isDebugEnabled()) log.debug("prepareCascades() for " + field.getName());
             @SuppressWarnings("unchecked") // target field type is not known at compile time
             Table<R> targetTable = (Table<R>)getTargetTable(car.getTargetClass(), field);
-            RowField<R, ?> targetField = createTargetRowField(targetTable, field);
+            RowField<R, ?> targetField = createRowField(targetTable, field);
             co = new ArrayList<>(deleteCascades.length);
             
             // for each cascade operation

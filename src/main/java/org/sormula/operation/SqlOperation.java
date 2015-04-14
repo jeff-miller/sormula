@@ -883,7 +883,7 @@ public abstract class SqlOperation<R> implements AutoCloseable
      * Creates a {@link SormulaField} from {@link Field}. Typically this method is used to create
      * a field that will receive value from a cascade.
      * 
-     * Use {@link #createTargetRowField(Table, Field)} or {@link RowTranslator#createRowField} instead of this method.
+     * Use {@link #createRowField(Table, Field)} or {@link RowTranslator#createRowField} instead of this method.
      * 
      * @param field creates for this field
      * @return sormula field based upon field parameter
@@ -922,21 +922,20 @@ public abstract class SqlOperation<R> implements AutoCloseable
      * @throws OperationException if error
      * @since 3.4
      */
-    // TODO rename to createRowField since not always used for cascade target
-    protected RowField<R, ?> createTargetRowField(Table<R> targetTable, Field field) throws OperationException
+    protected RowField<R, ?> createRowField(Table<R> targetTable, Field field) throws OperationException
     {
-        RowField<R, ?> targetField;
+        RowField<R, ?> rowField;
         
         try
         {
-            targetField = targetTable.getRowTranslator().createRowField(field);
+            rowField = targetTable.getRowTranslator().createRowField(field);
         }
         catch (TranslatorException e)
         {
             throw new OperationException("error creating field access for " + field, e);
         }
         
-        return targetField;
+        return rowField;
     }
 
     

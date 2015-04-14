@@ -21,6 +21,7 @@ import java.lang.reflect.Method;
 
 import org.sormula.annotation.Column;
 import org.sormula.annotation.Row;
+import org.sormula.log.ClassLogger;
 
 
 /**
@@ -36,6 +37,8 @@ import org.sormula.annotation.Row;
  */
 public class MethodAccessField<C, T> extends RowField<C, T>
 {
+    private static final ClassLogger log = new ClassLogger();
+    
     
     /**
      * Constructs for a field.
@@ -46,7 +49,6 @@ public class MethodAccessField<C, T> extends RowField<C, T>
     public MethodAccessField(Field field) throws ReflectException
     {
         super(field, true);
-        // TODO more efficient to get reference to methods
     }
 
     
@@ -60,8 +62,17 @@ public class MethodAccessField<C, T> extends RowField<C, T>
     @Override
     public T get(C object) throws ReflectException 
     {
-        // TODO more efficient to get reference to method, duplicate invokeGetMethod here?
-        return super.invokeGetMethod(object);
+        try
+        {
+            @SuppressWarnings("unchecked") // invoke returns Object, type not known at compile time
+            T value = (T)getMethod.invoke(object);
+            if (log.isDebugEnabled()) log.debug("get method="+getMethod.getName() + " value="+value);
+            return value;
+        }
+        catch (Exception e)
+        {
+            throw new ReflectException("error getting value for " + getMethod, e);
+        }
     }
 
 
@@ -73,7 +84,14 @@ public class MethodAccessField<C, T> extends RowField<C, T>
      */
     public void set(C object, T value) throws ReflectException 
     {
-        // TODO more efficient to get reference to method, duplicate invokeSetMethod here?
-        super.invokeSetMethod(object, value);
+        try
+        {
+            if (log.isDebugEnabled()) log.debug("set method="+setMethod.getName() + " value="+value);
+            setMethod.invoke(object, value);
+        }
+        catch (Exception e)
+        {
+            throw new ReflectException("error setting value=" + value + " for " + setMethod, e);
+        }
     }
 }

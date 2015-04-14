@@ -356,7 +356,7 @@ public class SaveOperation<R> extends ModifyOperation<R>
             // at least one save cascade
             if (log.isDebugEnabled()) log.debug("prepareCascades() for " + field.getName());
             @SuppressWarnings("unchecked") // target field type is not known at compile time
-            Table<R> targetTable = (Table<R>)getTargetTable(scar.getTargetClass(), field);
+            Table<R> targetTable = (Table<R>)getTargetTable(scar.getTargetClass());
             RowField<R, ?> targetField = createRowField(targetTable, field);
             co = new ArrayList<CascadeOperation<R, ?>>(saveCascades.length);
             

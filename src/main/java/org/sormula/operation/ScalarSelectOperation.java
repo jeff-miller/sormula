@@ -752,7 +752,7 @@ public class ScalarSelectOperation<R> extends SqlOperation<R>
             // at least one select cascade and (unnamed or is required)
             if (log.isDebugEnabled()) log.debug("prepareCascades() for " + field.getName());
             @SuppressWarnings("unchecked") // target field type is not known at compile time
-            Table<R> targetTable = (Table<R>)getTargetTable(car.getTargetClass(), field);
+            Table<R> targetTable = (Table<R>)getTargetTable(car.getTargetClass());
             RowField<R, ?> targetField = createRowField(targetTable, field);
             co = new ArrayList<>(selectCascades.length);
             

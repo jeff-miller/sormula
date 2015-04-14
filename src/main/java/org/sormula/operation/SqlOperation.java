@@ -852,15 +852,29 @@ public abstract class SqlOperation<R> implements AutoCloseable
     
     
     /**
-     * Gets a table object from database associated with this operation.
+     * Gets a table object from database associated with this operation. Use
+     * {@link #getTargetTable(Class)} instead of this method.
      * 
      * @param targetClass class that cascade is to affect
-     * @param targetField target of cascade TODO why is this needed?
+     * @param targetField target of cascade
      * @return table for target class of annotation
      * @throws OperationException if error
      */
-    // TODO deprecate and add protected Table<?> getTargetTable(Class<?> targetClass)
+    @Deprecated
     protected Table<?> getTargetTable(Class<?> targetClass, Field targetField) throws OperationException
+    {
+        return getTargetTable(targetClass);
+    }
+    
+    
+    /**
+     * Gets a table object from database associated with this operation.
+     * 
+     * @param targetClass class that cascade is to affect
+     * @return table for target class of annotation
+     * @throws OperationException if error
+     */
+    protected Table<?> getTargetTable(Class<?> targetClass) throws OperationException
     {
         Table<?> targetTable;
         

@@ -245,7 +245,7 @@ public class SormulaField<C, T>
      * 
      * @return package-name.class-name#get-method-name
      */
-    // TODO Method.toString() can replace this method?
+    @Deprecated
     public String getCanonicalGetMethodName()
     {
         return getMethod.getDeclaringClass().getCanonicalName() + "#" + getMethod.getName();
@@ -257,7 +257,7 @@ public class SormulaField<C, T>
      * 
      * @return package-name.class-name#set-method-name
      */
-    // TODO Method.toString() can replace this method?
+    @Deprecated
     public String getCanonicalSetMethodName()
     {
         return setMethod.getDeclaringClass().getCanonicalName() + "#" + setMethod.getName();

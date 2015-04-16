@@ -21,6 +21,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
 import org.sormula.annotation.Column;
+import org.sormula.reflect.RowField;
 import org.sormula.translator.AbstractColumnTranslator;
 
 
@@ -46,11 +47,21 @@ import org.sormula.translator.AbstractColumnTranslator;
 public class BooleanYNColumnTranslator<R> extends AbstractColumnTranslator<R, Boolean>
 {
 	/**
-	 * See super class constructor for description.
+	 * {@inheritDoc}
 	 */
+    @Deprecated
     public BooleanYNColumnTranslator(Field field, String columnName) throws Exception
     {
         super(field, columnName);
+    }
+    
+    
+    /**
+     * {@inheritDoc}
+     */
+    public BooleanYNColumnTranslator(RowField<R, Boolean> rowField, String columnName) throws Exception
+    {
+        super(rowField, columnName);
     }
     
     

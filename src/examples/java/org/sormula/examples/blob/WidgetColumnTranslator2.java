@@ -20,13 +20,13 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.lang.reflect.Field;
 import java.sql.Blob;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
 import javax.sql.rowset.serial.SerialBlob;
 
+import org.sormula.reflect.RowField;
 import org.sormula.translator.AbstractBlobColumnTranslator;
 
 
@@ -36,9 +36,9 @@ import org.sormula.translator.AbstractBlobColumnTranslator;
  */
 public class WidgetColumnTranslator2<R> extends AbstractBlobColumnTranslator<R, Widget>
 {
-    public WidgetColumnTranslator2(Field field, String columnName) throws Exception
+    public WidgetColumnTranslator2(RowField<R, Widget> rowField, String columnName) throws Exception
     {
-        super(field, columnName);
+        super(rowField, columnName);
     }
     
     

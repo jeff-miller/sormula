@@ -382,7 +382,7 @@ public class RowTranslator<R> extends ColumnsTranslator<R>
     
     
     /**
-     * Recurisvely searches for declared field in superclass(es) of clazz and then clazz parameter.
+     * Recursively searches for declared field in superclass(es) of clazz and then clazz parameter.
      * 
      * @param clazz get fields from this class and superclass(es)
      * @param fieldName get field for this name
@@ -494,7 +494,7 @@ public class RowTranslator<R> extends ColumnsTranslator<R>
                 
                 // create column translator
                 ColumnTranslator<R> columnTranslator = (ColumnTranslator<R>)
-                    AbstractColumnTranslator.newInstance(columnTranslatorClass, f, columnName);
+                    AbstractColumnTranslator.newInstance(columnTranslatorClass, createRowField(f), columnName);
 
                 if (columnTranslator instanceof AbstractColumnTranslator) 
                 {

@@ -18,6 +18,7 @@ package org.sormula.translator.standard;
 
 import java.lang.reflect.Field;
 
+import org.sormula.reflect.RowField;
 import org.sormula.translator.AbstractColumnTranslator;
 
 
@@ -33,10 +34,20 @@ import org.sormula.translator.AbstractColumnTranslator;
 public class StandardColumnTranslator<R, T> extends AbstractColumnTranslator<R, T>
 {
 	/**
-	 * See super class constructor for description.
+	 * {@inheritDoc}
 	 */
+    @Deprecated
     public StandardColumnTranslator(Field field, String columnName) throws Exception
     {
         super(field, columnName);
+    }
+    
+    
+    /**
+     * {@inheritDoc}
+     */
+    public StandardColumnTranslator(RowField<R, T> rowField, String columnName) throws Exception
+    {
+        super(rowField, columnName);
     }
 }

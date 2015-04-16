@@ -20,9 +20,6 @@ import java.lang.reflect.Field;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
-import org.sormula.annotation.Column;
-import org.sormula.reflect.FieldAccessType;
-
 
 /**
  * Interface of minimal behavior needed for a column translator. Interface provides
@@ -74,8 +71,10 @@ public interface ColumnTranslator<R>
      * @return the field access type specified by {@link Column#fieldAccess()} or 
      * {@link FieldAccessType#Default} if no {@link Column} annotation was used
      * @since 3.4
-     */
-    public FieldAccessType getFieldAccessType(); 
+     *
+    TODO unnecessary low-level detail?
+    public FieldAccessType getFieldAccessType();
+    */ 
     
     
     /**

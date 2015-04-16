@@ -21,6 +21,8 @@ import java.sql.Blob;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
+import org.sormula.reflect.RowField;
+
 
 /**
  * Base class for creating custom column translators for fields stored as SQL BLOB.
@@ -38,11 +40,21 @@ import java.sql.ResultSet;
 public abstract class AbstractBlobColumnTranslator<R, T> extends AbstractColumnTranslator<R, T>
 {
     /**
-     * See super class constructor for description.
+     * {@inheritDoc}
      */
+    @Deprecated
     public AbstractBlobColumnTranslator(Field field, String columnName) throws Exception
     {
         super(field, columnName);
+    }
+    
+    
+    /**
+     * {@inheritDoc}
+     */
+    public AbstractBlobColumnTranslator(RowField<R, T> rowField, String columnName) throws Exception
+    {
+        super(rowField, columnName);
     }
     
     

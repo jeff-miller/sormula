@@ -502,8 +502,8 @@ public abstract class CascadeOperation<S, T> implements AutoCloseable
             for (int i = 0; i < keyFieldCount; ++i)
             {
                 // set source key on target row foreign key field
-                Object sourceKey = sourceKeyFieldList.get(i).invokeGetMethod(sourceRow);
-                targetForeignKeyValueFieldList.get(i).invokeSetMethod(row, sourceKey);
+                Object sourceKey = sourceKeyFieldList.get(i).get(sourceRow);
+                targetForeignKeyValueFieldList.get(i).set(row, sourceKey);
             }
         }
         catch (ReflectException e)

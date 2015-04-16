@@ -167,6 +167,36 @@ public class SormulaField<C, T>
         return field.getType().getName().equals("boolean");
     }
     
+    
+    /**
+     * Invokes {@link #invokeGetMethod(Object)}. Overridden by
+     * {@link DirectAccessField} and {@link MethodAccessField}.
+     * 
+     * @param object instance of field to get 
+     * @return return value of field instance
+     * @throws ReflectException if error
+     * @since 3.4
+     */
+    public T get(C object) throws ReflectException
+    {
+        return invokeGetMethod(object);
+    }
+    
+    
+    /**
+     * Invokes {@link #invokeSetMethod(Object, Object)}. Overridden by
+     * {@link DirectAccessField} and {@link MethodAccessField}.
+     *  
+     * @param object instance of field to set new value
+     * @param value new value of field instance
+     * @throws ReflectException if error
+     * @since 3.4
+     */
+    public void set(C object, T value) throws ReflectException
+    {
+        invokeSetMethod(object, value);
+    }
+    
 
     /**
      * Gets value from get method of an object using reflection.

@@ -49,8 +49,7 @@ public class CacheTest<R> extends DatabaseTest<R>
         try
         {
             primaryKeyExtractor = new FieldExtractor<R>(getTable().getRowTranslator().getPrimaryKeyWhereTranslator());
-            rowExtractor = new FieldExtractor<R>(
-                    getTable().getRowTranslator().getColumnTranslatorList());
+            rowExtractor = new FieldExtractor<R>(getTable().getRowTranslator());
         }
         catch (ReflectException e)
         {

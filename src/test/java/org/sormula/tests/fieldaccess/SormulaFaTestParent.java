@@ -30,11 +30,16 @@ import org.sormula.reflect.FieldAccessType;
  * 
  * @author Jeff Miller
  */
+
+// use cache to test that cache FieldExtractor can work with direct access
+//@Cached can't mix cached cascades
+
 // use method access for all fields unless specified by Column annotation
 @Row(fieldAccess=FieldAccessType.Method) 
+
 public class SormulaFaTestParent
 {
-    @Column(primaryKey=true) 
+    @Column(primaryKey=true, fieldAccess=FieldAccessType.Direct) 
     int parentId;
     String description;
     
@@ -45,13 +50,12 @@ public class SormulaFaTestParent
     
     public SormulaFaTestParent()
     {
-        childList = new ArrayList<>();
     }
 
     
     public SormulaFaTestParent(int parentId, String description)
     {
-        this();
+        childList = new ArrayList<>();
         this.parentId = parentId;
         this.description = description;
     }
@@ -60,10 +64,11 @@ public class SormulaFaTestParent
     public void add(SormulaFaTestChild child)
     {
         childList.add(child);
-        //child.setParentId(parentId); // not needed since foreignKeyValueFields="#"
+        //child.parentId = parentId; // not needed since foreignKeyValueFields="#"
     }
     
     
+    /* omit getters/setters to verify that direct field access is used
     public int getParentId()
     {
         return parentId;
@@ -72,6 +77,7 @@ public class SormulaFaTestParent
     {
         this.parentId = parentId;
     }
+    */
     
     
     public String getDescription()

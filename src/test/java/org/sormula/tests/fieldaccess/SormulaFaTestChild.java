@@ -33,7 +33,7 @@ import org.sormula.reflect.FieldAccessType;
 @Where(name="byParent", fieldNames="parentId")
 public class SormulaFaTestChild
 {
-    @Column(primaryKey=true)
+    @Column(primaryKey=true, fieldAccess=FieldAccessType.Method)
     int childId;
     int parentId;
     String description;

@@ -276,7 +276,6 @@ public class SormulaField<C, T>
      * @return package-name.class-name#get-method-name
      */
     @Deprecated
-    // TODO remove all references
     public String getCanonicalGetMethodName()
     {
         return getMethod.getDeclaringClass().getCanonicalName() + "#" + getMethod.getName();
@@ -289,7 +288,6 @@ public class SormulaField<C, T>
      * @return package-name.class-name#set-method-name
      */
     @Deprecated
-    // TODO remove all references
     public String getCanonicalSetMethodName()
     {
         return setMethod.getDeclaringClass().getCanonicalName() + "#" + setMethod.getName();

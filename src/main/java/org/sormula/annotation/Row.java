@@ -114,7 +114,7 @@ public @interface Row
      * perform post execute methods only when database is modified
      * @since 3.0
      */
-    // TODO deprecate this and related methods
+    @Deprecated
     boolean zeroRowCountPostExecute() default false;
     
     

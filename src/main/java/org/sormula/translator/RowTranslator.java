@@ -106,7 +106,10 @@ public class RowTranslator<R> extends ColumnsTranslator<R>
     String unusedColumnUpdateSql;
     ColumnTranslator<R> identityColumnTranslator;
     boolean inheritedFields;
+    
+    @Deprecated
     boolean zeroRowCountPostExecute;
+    
     List<Field> cascadeFieldList;
     FieldAccessType fieldAccessType;
     
@@ -265,6 +268,7 @@ public class RowTranslator<R> extends ColumnsTranslator<R>
      * @since 3.0
      * @see Row#zeroRowCountPostExecute()
      */
+    @Deprecated
     public boolean isZeroRowCountPostExecute()
     {
         return zeroRowCountPostExecute;
@@ -280,6 +284,7 @@ public class RowTranslator<R> extends ColumnsTranslator<R>
      * @since 3.0
      * @see Row#zeroRowCountPostExecute()
      */
+    @Deprecated
     public void setZeroRowCountPostExecute(boolean zeroRowCountPostExecute)
     {
         this.zeroRowCountPostExecute = zeroRowCountPostExecute;

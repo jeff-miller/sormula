@@ -351,7 +351,7 @@ public class SaveOperation<R> extends ModifyOperation<R>
         SaveCascadeAnnotationReader scar = new SaveCascadeAnnotationReader(field);
         SaveCascade[] saveCascades = scar.getSaveCascades();
         
-        if (saveCascades.length > 0)
+        if (saveCascades.length > 0 && isRequiredCascade(scar.getName()))
         {
             // at least one save cascade
             if (log.isDebugEnabled()) log.debug("prepareCascades() for " + field.getName());
@@ -366,8 +366,13 @@ public class SaveOperation<R> extends ModifyOperation<R>
                 if (log.isDebugEnabled()) log.debug("prepare cascade " + c.operation());
                 @SuppressWarnings("unchecked") // target field type is not known at compile time
                 CascadeOperation<R, ?> operation = new SaveCascadeOperation(getTable(), targetField, targetTable, c);
+                operation.setNamedParameterMap(getNamedParameterMap());
                 if (c.setForeignKeyValues()) operation.setForeignKeyFieldNames(scar.getForeignKeyValueFields());
                 if (c.setForeignKeyReference()) operation.setForeignKeyReferenceFieldName(scar.getForeignKeyReferenceField());
+                
+                // cascade operation uses same required cascade names as this operation
+                operation.setRequiredCascades(getRequiredCascades());
+                
                 operation.prepare();
                 co.add(operation);
             }

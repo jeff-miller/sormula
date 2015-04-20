@@ -13,6 +13,7 @@ JDK 5/6     JDK 7       comments
                         - deprecate Table.isLegacyAnnotationPrecedence
                         - field access may be direct, getter/setter, or some combination 
                           (add RowField and subclasses, deprecate SormulaField)
+                        - deprecate Row.zeroRowCountPostExecute()
             
             3.3.1-jdk1.7- maven support (bendem)
                         - updated SimpleExample, ActiveRecordExample, and ZeroConfigExample

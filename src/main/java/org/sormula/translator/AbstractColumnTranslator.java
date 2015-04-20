@@ -78,12 +78,16 @@ public abstract class AbstractColumnTranslator<R, T> implements ColumnTranslator
     
     
     /**
-     * TODO
-     * @param columnTranslatorClass
-     * @param rowField
-     * @param columnName
-     * @return
-     * @throws TranslatorException
+     * Factory method for creating a new instance of a column translator for a row field.
+     * Gets columnTranslatorClass constructor with parameters (RowField, String) and invokes
+     * {@link Class#newInstance()}. {@link RowField} is needed instead of {@link Field} so
+     * that appropriate field access is used.
+     * 
+     * @param columnTranslatorClass translator
+     * @param rowField row field of row class to use in translator
+     * @param columnName name of column associated with rowfield parameter
+     * @return column translator
+     * @throws TranslatorException if error
      * @since 3.4
      */
     public static ColumnTranslator<?> newInstance(Class<? extends ColumnTranslator> columnTranslatorClass, 
@@ -98,7 +102,8 @@ public abstract class AbstractColumnTranslator<R, T> implements ColumnTranslator
         }
         catch (NoSuchMethodException e)
         {
-            // TODO
+            // this is a temporary work-around to allow pre 3.4 ColumnTranslators to work
+            // remove this block when pre 3.4 constructor is deprecated
             // assume pre 3.4 translator, use deprecated constructor
             return newInstance(columnTranslatorClass, rowField.getField(), columnName);
         }

@@ -873,6 +873,7 @@ public abstract class SqlOperation<R> implements AutoCloseable
      * @param targetClass class that cascade is to affect
      * @return table for target class of annotation
      * @throws OperationException if error
+     * @since 3.4 TODO?
      */
     protected Table<?> getTargetTable(Class<?> targetClass) throws OperationException
     {

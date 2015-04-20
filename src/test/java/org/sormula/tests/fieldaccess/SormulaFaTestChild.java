@@ -36,6 +36,8 @@ public class SormulaFaTestChild
     @Column(primaryKey=true, fieldAccess=FieldAccessType.Method)
     int childId;
     int parentId;
+    
+    @Column(fieldAccess=FieldAccessType.Direct) // redundant but make sure no problems
     String description;
     
     @Transient

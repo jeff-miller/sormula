@@ -21,6 +21,7 @@ import java.util.List;
 
 import org.sormula.annotation.Column;
 import org.sormula.annotation.Row;
+import org.sormula.annotation.Transient;
 import org.sormula.annotation.cascade.OneToManyCascade;
 import org.sormula.reflect.FieldAccessType;
 
@@ -43,21 +44,31 @@ public class SormulaFaTestParent
     int parentId;
     String description;
     
+    @Column(fieldAccess=FieldAccessType.Method) // redundant but make sure no problems
+    String other;
+    
     // tests cascade operations
     @OneToManyCascade(foreignKeyValueFields="#")
     List<SormulaFaTestChild> childList;
-    
+
+    @Transient
+    boolean setDescriptionMethodInvoked; // to confirm method field access
+
+    @Transient
+    boolean setOtherMethodInvoked; // to confirm method field access
+
     
     public SormulaFaTestParent()
     {
     }
 
     
-    public SormulaFaTestParent(int parentId, String description)
+    public SormulaFaTestParent(int parentId, String description, String other)
     {
         childList = new ArrayList<>();
         this.parentId = parentId;
         this.description = description;
+        this.other = other;
     }
 
     
@@ -87,6 +98,18 @@ public class SormulaFaTestParent
     public void setDescription(String description)
     {
         this.description = description;
+        setDescriptionMethodInvoked = true;
+    }
+
+
+    public String getOther()
+    {
+        return other;
+    }
+    public void setOther(String other) 
+    {
+        this.other = other;
+        setOtherMethodInvoked = true;
     }
 
 

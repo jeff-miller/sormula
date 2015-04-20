@@ -16,10 +16,10 @@
  */
 package org.sormula.tests.fieldaccess;
 
-import java.util.List;
-
 import org.sormula.SormulaException;
 import org.sormula.Table;
+import org.sormula.annotation.Column;
+import org.sormula.annotation.Row;
 import org.sormula.tests.DatabaseTest;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
@@ -27,12 +27,13 @@ import org.testng.annotations.Test;
 
 
 /**
- * Tests cascade select annotations.
+ * Delete tests for {@link Row#fieldAccess()} and {@link Column#fieldAccess()}.
+ * Delete parents with odd number id (and cascades to children).
  * 
  * @author Jeff Miller
  */
-@Test(singleThreaded=true, groups="fieldaccess.select", dependsOnGroups="fieldaccess.insert")
-public class SelectTest extends DatabaseTest<SormulaFaTestParent>
+@Test(singleThreaded=true, groups="cascade.delete", dependsOnGroups="cascade.insert")
+public class DeleteTest extends DatabaseTest<SormulaFaTestParent>
 {
     @BeforeClass
     public void setUp() throws Exception
@@ -47,37 +48,28 @@ public class SelectTest extends DatabaseTest<SormulaFaTestParent>
     {
         closeDatabase();
     }
-
+    
     
     @Test
-    public void cascadeSelect() throws SormulaException
+    public void deleteOneToManyList() throws SormulaException
     {
         begin();
+        Table<SormulaFaTestParent> parentTable = getTable();
         Table<SormulaFaTestChild> childTable = getDatabase().getTable(SormulaFaTestChild.class);
         
-        // for each parent 
-        for (SormulaFaTestParent parent : getTable().selectAll())
+        for (SormulaFaTestParent parent: parentTable.selectAll())
         {
-            // verify 1 to many
-            List<SormulaFaTestChild> children = parent.getChildList();
-            assert parent.setDescriptionMethodInvoked : "direct access to description instead of set method";
-            assert parent.setOtherMethodInvoked : "direct access to other instead of set method";
-            
-            int count = childTable.selectCount("byParent", parent.parentId); // tests non parameterized type of selectCount()
-            if (children.size() > 0)
+            if (parent.parentId % 2 == 1 && parent.getChildList().size() > 0)
             {
-                // verify all rows selected
-                for (SormulaFaTestChild c: children)
-                { 
-                    assert c.parentId == parent.parentId : "child parent id != parent id";
-                    assert c.setChildIdMethodInvoked : "direct access to childId instead of set method";
+                // test delete on 1 to many relationship via list
+                parentTable.delete(parent);
+                
+                for (SormulaFaTestChild c: parent.getChildList())
+                {
+                    // select directly to test delete
+                    SormulaFaTestChild selectedChild = childTable.select(c.getChildId());
+                    assert selectedChild == null : "child was not deleted";
                 }
-                assert count == children.size() : "wrong number of children read from cascade";
-            }
-            else 
-            {
-                // verify no child records
-                assert count == 0 : "child rows were not read";
             }
         }
         

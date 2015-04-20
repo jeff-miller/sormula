@@ -42,7 +42,8 @@ public class InsertTest extends DatabaseTest<SormulaFaTestParent>
         createTable(SormulaFaTestParent.class, 
             "CREATE TABLE " + getSchemaPrefix() + SormulaFaTestParent.class.getSimpleName() + " (" +
             " parentid INTEGER NOT NULL PRIMARY KEY," +
-            " description VARCHAR(60)" +
+            " description VARCHAR(60)," +
+            " other VARCHAR(10)," +
             ")"
         );
         
@@ -80,7 +81,7 @@ public class InsertTest extends DatabaseTest<SormulaFaTestParent>
     }
     void insertOneToManyList(int parentId, int childId) throws SormulaException
     {
-        SormulaFaTestParent parent = new SormulaFaTestParent(parentId, "Insert parent " + parentId);
+        SormulaFaTestParent parent = new SormulaFaTestParent(parentId, "Insert parent " + parentId, "");
         
         for (int i = 1; i <= 20; ++i)
         {

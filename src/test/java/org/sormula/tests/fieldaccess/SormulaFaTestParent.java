@@ -22,6 +22,7 @@ import java.util.List;
 import org.sormula.annotation.Column;
 import org.sormula.annotation.Row;
 import org.sormula.annotation.Transient;
+import org.sormula.annotation.cache.Cached;
 import org.sormula.annotation.cascade.OneToManyCascade;
 import org.sormula.reflect.FieldAccessType;
 
@@ -33,7 +34,7 @@ import org.sormula.reflect.FieldAccessType;
  */
 
 // use cache to test that cache FieldExtractor can work with direct access
-//@Cached can't mix cached cascades
+@Cached // TODO can't mix cached cascades?
 
 // use method access for all fields unless specified by Column annotation
 @Row(fieldAccess=FieldAccessType.Method) 

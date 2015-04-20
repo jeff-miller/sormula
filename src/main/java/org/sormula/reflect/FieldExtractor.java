@@ -72,7 +72,6 @@ public class FieldExtractor<R>
      */
     public FieldExtractor(AbstractWhereTranslator<R> whereTranslator) throws ReflectException
     {
-        // TODO need test case for cached table with field access key
         init(whereTranslator.getRowTranslator(), whereTranslator.getColumnTranslatorList());
     }
     

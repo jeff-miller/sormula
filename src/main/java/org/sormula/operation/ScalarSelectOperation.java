@@ -394,7 +394,7 @@ public class ScalarSelectOperation<R> extends SqlOperation<R>
                                 // no filter or passes filter 
                                 if (isCascading()) 
                                 {
-                                    if (!isCached()) postReadCascade(row); // only cascade non-cached rows
+                                    postReadCascade(row);
                                     complete = filter == null || filter.accept(this, row, true);
                                 }
                                 else

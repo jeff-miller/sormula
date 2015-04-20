@@ -46,7 +46,6 @@ public abstract class AbstractColumnTranslator<R, T> implements ColumnTranslator
     TypeTranslator<T> typeTranslator;
     boolean identity;
     boolean readOnly;
-    // TODO unnecessary low-level detail? FieldAccessType fieldAccessType;
     
     
     /**
@@ -233,21 +232,6 @@ public abstract class AbstractColumnTranslator<R, T> implements ColumnTranslator
     {
         this.readOnly = readOnly;
     }
-
-
-    /**
-     * {@inheritDoc}
-     */
-    /* TODO unnecessary low-level detail?
-    public FieldAccessType getFieldAccessType() 
-    {
-        return fieldAccessType;
-    }
-    public void setFieldAccessType(FieldAccessType fieldAccessType) 
-    {
-        this.fieldAccessType = fieldAccessType;
-    }
-*/
     
 
     /**

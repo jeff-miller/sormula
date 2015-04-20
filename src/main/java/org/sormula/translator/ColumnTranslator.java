@@ -64,18 +64,6 @@ public interface ColumnTranslator<R>
      */
     public boolean isReadOnly();
     
-
-    /**
-     * Gets type type of access used for getting/setting value of field.
-     * 
-     * @return the field access type specified by {@link Column#fieldAccess()} or 
-     * {@link FieldAccessType#Default} if no {@link Column} annotation was used
-     * @since 3.4
-     *
-    TODO unnecessary low-level detail?
-    public FieldAccessType getFieldAccessType();
-    */ 
-    
     
     /**
      * Reads column value from result set and sets in row object.

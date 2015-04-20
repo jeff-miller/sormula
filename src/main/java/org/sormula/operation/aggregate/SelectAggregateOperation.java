@@ -86,7 +86,6 @@ public class SelectAggregateOperation<R, T> extends ScalarSelectOperation<R>
         if (columnTranslator != null)
         {
             if (log.isDebugEnabled()) log.debug("columnTranslator.getColumnName()=" + columnTranslator.getColumnName());
-            // TODO write test case for field access?
             rowField = (RowField<R, T>)createRowField(table, columnTranslator.getField());
         }
     }

@@ -63,7 +63,7 @@ public abstract class AbstractBlobColumnTranslator<R, T> extends AbstractColumnT
      */
     public void write(PreparedStatement preparedStatement, int parameterIndex, R row) throws Exception
     {
-        preparedStatement.setBlob(parameterIndex, fieldToBlob(getSormulaField().invokeGetMethod(row)));
+        preparedStatement.setBlob(parameterIndex, fieldToBlob(getRowField().get(row)));
     }
     
     
@@ -72,7 +72,7 @@ public abstract class AbstractBlobColumnTranslator<R, T> extends AbstractColumnT
      */
     public void read(ResultSet resultSet, int columnIndex, R row) throws Exception
     {
-        getSormulaField().invokeSetMethod(row, blobToField(resultSet.getBlob(columnIndex)));
+        getRowField().set(row, blobToField(resultSet.getBlob(columnIndex)));
     }
     
 

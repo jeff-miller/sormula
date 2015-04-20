@@ -70,7 +70,7 @@ public class BooleanYNColumnTranslator<R> extends AbstractColumnTranslator<R, Bo
      */
     public void write(PreparedStatement preparedStatement, int parameterIndex, R row) throws Exception
     {
-        Boolean b = getSormulaField().invokeGetMethod(row);
+        Boolean b = getRowField().get(row);
         if (b == null) preparedStatement.setString(parameterIndex, null);
         else           preparedStatement.setString(parameterIndex, b ? "Y" : "N");
     }
@@ -88,6 +88,6 @@ public class BooleanYNColumnTranslator<R> extends AbstractColumnTranslator<R, Bo
         else if (yn.equals("Y")) b = true;
         else                     b = false;
         
-        getSormulaField().invokeSetMethod(row, b);
+        getRowField().set(row, b);
     }
 }

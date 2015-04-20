@@ -197,14 +197,13 @@ public class SelectCascadeOperation<S, T> extends CascadeOperation<S, T>
                 else
                 {
                     throw new OperationException("can't convert result " + o.getClass() +
-                        " for " + targetField.getCanonicalSetMethodName());
+                        " for " + targetField);
                 }
             }
         }
         catch (ReflectException e)
         {
-            throw new OperationException("error setting cascade results to " + 
-                    targetField.getCanonicalSetMethodName(), e);
+            throw new OperationException("error setting cascade results to " + targetField, e);
         }
     }
     

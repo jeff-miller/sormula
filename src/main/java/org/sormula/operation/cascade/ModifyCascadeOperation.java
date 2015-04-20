@@ -137,8 +137,7 @@ public abstract class ModifyCascadeOperation<S, T> extends CascadeOperation<S, T
         }
         catch (ReflectException e)
         {
-            throw new OperationException("error getting value from " + 
-                    tf.getCanonicalGetMethodName(), e);
+            throw new OperationException("error getting value from " + tf, e);
         }
     }
 

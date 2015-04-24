@@ -1056,6 +1056,8 @@ public abstract class SqlOperation<R> implements AutoCloseable
         }
         else if (whereConditionName.length() > 0)
         {
+            primaryKey = false;
+            
             try
             {
                 // look for where annotation
@@ -1089,6 +1091,7 @@ public abstract class SqlOperation<R> implements AutoCloseable
         else
         {
             // no where
+            primaryKey = false;
             setWhereTranslator(null);
             whereAnnotation = null;
         }

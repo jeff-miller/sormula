@@ -31,6 +31,7 @@ import org.sormula.annotation.Row;
 import org.sormula.annotation.Where;
 import org.sormula.annotation.cascade.SelectCascade;
 import org.sormula.annotation.cascade.SelectCascadeAnnotationReader;
+import org.sormula.cache.AbstractCache;
 import org.sormula.cache.Cache;
 import org.sormula.cache.CacheException;
 import org.sormula.log.ClassLogger;
@@ -194,6 +195,7 @@ public class ScalarSelectOperation<R> extends SqlOperation<R>
         
         if (isCached())
         {
+            // table is cached
         	Cache<R> cache = table.getCache();
         	
             try
@@ -206,20 +208,31 @@ public class ScalarSelectOperation<R> extends SqlOperation<R>
                 throw new OperationException("error notifying cache", e);
             }
 
-            if (isPrimaryKey() && rowParameters == null)
+            if (isPrimaryKey())
             {
-                // table is cached and select is for primary key and primary is from parameters, 
-            	// use cache instead of preparing sql
-            	cachePrimaryKeySelect = true;
-                try
+                // select is for primary key
+                if (rowParameters == null)
                 {
-                    if (log.isDebugEnabled()) log.debug("execute() check cache " + table.getRowClass());
-                    cacheContainsPrimaryKey = cache.contains(parameters); 
+                    // TODO if rowParameters != null use AbstractCache.getPrimaryKeyValues() to get cache key?
+                    // primary key is from parameters, use cache instead of preparing sql
+                	cachePrimaryKeySelect = true;
+                    try
+                    {
+                        if (log.isDebugEnabled()) log.debug("execute() check cache " + table.getRowClass().getCanonicalName());
+                        ((AbstractCache)cache).loguc(parameters);
+                        cacheContainsPrimaryKey = cache.contains(parameters); 
+                    }
+                    catch (CacheException e)
+                    {
+                        throw new OperationException("error reading cache", e);
+                    }
                 }
-                catch (CacheException e)
-                {
-                    throw new OperationException("error reading cache", e);
-                }
+            }
+            
+            if (log.isDebugEnabled())
+            {
+                log.debug("cachePrimaryKeySelect=" + cachePrimaryKeySelect);
+                log.debug("cacheContainsPrimaryKey=" + cacheContainsPrimaryKey);
             }
         }
         
@@ -244,7 +257,6 @@ public class ScalarSelectOperation<R> extends SqlOperation<R>
             
             try
             {
-                log.debug("execute query");
                 if (maximumRowsRead < Integer.MAX_VALUE) preparedStatement.setMaxRows(maximumRowsRead);
                 operationTime.startExecuteTime();
                 resultSet = preparedStatement.executeQuery();
@@ -337,7 +349,8 @@ public class ScalarSelectOperation<R> extends SqlOperation<R>
             else
             {
             	// select from result set
-
+                if (log.isDebugEnabled()) log.debug("select from result set");
+                
                 // include resultSet.next() in read time but don't include cascade
                 // times since that would cause cascade timings summed twice into total
                 operationTime.startReadTime();
@@ -406,7 +419,7 @@ public class ScalarSelectOperation<R> extends SqlOperation<R>
                             else
                             {
                                 // did not pass filter
-                                if (log.isDebugEnabled()) log.info("row did not pass filter " + row);
+                                if (log.isDebugEnabled()) log.debug("row did not pass filter " + row);
                             }
                         }
                     
@@ -415,7 +428,7 @@ public class ScalarSelectOperation<R> extends SqlOperation<R>
                             // did not get desired row, try next row
                             operationTime.startReadTime(); // see comment above concerning startReadTime
                             
-                            if (!resultSet.next())
+                            if (!resultSet.next()) // TODO don't no next()? advances cursor?
                             {
                                 // no more rows
                                 complete = true; // exit loop
@@ -750,7 +763,7 @@ public class ScalarSelectOperation<R> extends SqlOperation<R>
         if (selectCascades.length > 0 && isRequiredCascade(car.getName()))
         {
             // at least one select cascade and (unnamed or is required)
-            if (log.isDebugEnabled()) log.debug("prepareCascades() for " + field.getName());
+            if (log.isDebugEnabled()) log.debug("prepareCascades() for " + field);
             @SuppressWarnings("unchecked") // target field type is not known at compile time
             Table<R> targetTable = (Table<R>)getTargetTable(car.getTargetClass());
             RowField<R, ?> targetField = createRowField(targetTable, field);
@@ -766,7 +779,8 @@ public class ScalarSelectOperation<R> extends SqlOperation<R>
                 else
                 {
                     // prepare non lazy cascade for execution
-                    if (log.isDebugEnabled()) log.debug("prepare cascade " + c.operation());
+                    if (log.isDebugEnabled()) log.debug("prepare cascade " + c.operation().getCanonicalName() + 
+                            " for target field " + targetField.getField());
                     @SuppressWarnings("unchecked") // target field type is not known at compile time
                     SelectCascadeOperation<R, ?> operation = new SelectCascadeOperation(getTable(), targetField, targetTable, c);
                     operation.setSelectCascadeFilters(selectCascadeFilters);

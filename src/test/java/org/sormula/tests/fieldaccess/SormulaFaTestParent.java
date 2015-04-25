@@ -34,7 +34,7 @@ import org.sormula.reflect.FieldAccessType;
  */
 
 // use cache to test that cache FieldExtractor can work with direct access
-@Cached // TODO can't mix cached cascades?
+@Cached
 
 // use method access for all fields unless specified by Column annotation
 @Row(fieldAccess=FieldAccessType.Method) 

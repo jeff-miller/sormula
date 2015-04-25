@@ -46,9 +46,6 @@ import org.sormula.translator.AbstractColumnTranslator;
  */
 public class BooleanYNColumnTranslator<R> extends AbstractColumnTranslator<R, Boolean>
 {
-	/**
-	 * {@inheritDoc}
-	 */
     @Deprecated
     public BooleanYNColumnTranslator(Field field, String columnName) throws Exception
     {
@@ -57,7 +54,12 @@ public class BooleanYNColumnTranslator<R> extends AbstractColumnTranslator<R, Bo
     
     
     /**
-     * {@inheritDoc}
+     * Constructs for a {@link RowField} and column name.
+     * 
+     * @param rowField field within row class that contains the boolean
+     * @param columnName sql column name associated with rowField
+     * @throws Exception if error
+     * @since 3.4
      */
     public BooleanYNColumnTranslator(RowField<R, Boolean> rowField, String columnName) throws Exception
     {

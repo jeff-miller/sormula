@@ -150,8 +150,8 @@ public abstract class AbstractColumnTranslator<R, T> implements ColumnTranslator
     /**
      * Constructs for a column. Translates with {@link ObjectTranslator} for default.
      * 
-     * @param field java reflection Field that corresponds to column
-     * @param columnName name of table column
+     * @param rowfield field within row that corresponds to column 
+     * @param columnName name of table column associated with rowField
      * @throws TranslatorException if error
      * @since 3.4
      */

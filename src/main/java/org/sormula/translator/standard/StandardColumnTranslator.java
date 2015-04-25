@@ -33,9 +33,6 @@ import org.sormula.translator.AbstractColumnTranslator;
  */
 public class StandardColumnTranslator<R, T> extends AbstractColumnTranslator<R, T>
 {
-	/**
-	 * {@inheritDoc}
-	 */
     @Deprecated
     public StandardColumnTranslator(Field field, String columnName) throws Exception
     {
@@ -44,7 +41,12 @@ public class StandardColumnTranslator<R, T> extends AbstractColumnTranslator<R, 
     
     
     /**
-     * {@inheritDoc}
+     * Constructs for a {@link RowField} and column name.
+     * 
+     * @param rowField field within row class that contains the value of sql column
+     * @param columnName sql column name associated with rowField
+     * @throws Exception if error
+     * @since 3.4
      */
     public StandardColumnTranslator(RowField<R, T> rowField, String columnName) throws Exception
     {

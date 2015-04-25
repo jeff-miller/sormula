@@ -155,12 +155,14 @@ public abstract class BenchmarkThread extends Thread
     {
         if (log.isDebugEnabled()) log.debug("open() " + benchmarkName);
         connection = benchmarkSuite.createConnection();
+        connection.setAutoCommit(!benchmarkSuite.isUseTransacation());
     }
     
     
     public void close() throws Exception
     {
         if (log.isDebugEnabled()) log.debug("close() " + benchmarkName);
+        if (benchmarkSuite.isUseTransacation()) connection.commit();
         connection.close();
     }
     
@@ -246,7 +248,7 @@ public abstract class BenchmarkThread extends Thread
      * <p>
      * This is used to check that all rows have the same number of updated rows. There is no
      * problem if a new benchmark is created with a random value for integer2 that is the same as
-     * the update marker since all threads will have the same anomolly.
+     * the update marker since all threads will have the same anomaly.
      * 
      * @param benchmarks benchmark rows to affect
      */

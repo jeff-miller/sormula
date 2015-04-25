@@ -46,6 +46,7 @@ public class ExampleBase
     String url;
     String user;
     String password;
+    boolean useTransacation;
     
     
     /**
@@ -121,6 +122,12 @@ public class ExampleBase
     }
     
     
+    public boolean isUseTransacation() 
+    {
+        return useTransacation;
+    }
+
+
     /**
      * Gets a jdbc connection based upon values in jdbc/ddd/jdbc.properties (ddd is
      * value of environment variable dbdir.
@@ -155,6 +162,7 @@ public class ExampleBase
             
             connection = createConnection();
             schema = jdbcProperties.getProperty("jdbc.schema", "");
+            useTransacation = Boolean.parseBoolean(jdbcProperties.getProperty("jdbc.transaction", "false"));
         }
         else
         {

@@ -31,7 +31,6 @@ import org.sormula.annotation.Row;
 import org.sormula.annotation.Where;
 import org.sormula.annotation.cascade.SelectCascade;
 import org.sormula.annotation.cascade.SelectCascadeAnnotationReader;
-import org.sormula.cache.AbstractCache;
 import org.sormula.cache.Cache;
 import org.sormula.cache.CacheException;
 import org.sormula.log.ClassLogger;
@@ -213,13 +212,11 @@ public class ScalarSelectOperation<R> extends SqlOperation<R>
                 // select is for primary key
                 if (rowParameters == null)
                 {
-                    // TODO if rowParameters != null use AbstractCache.getPrimaryKeyValues() to get cache key?
                     // primary key is from parameters, use cache instead of preparing sql
                 	cachePrimaryKeySelect = true;
                     try
                     {
                         if (log.isDebugEnabled()) log.debug("execute() check cache " + table.getRowClass().getCanonicalName());
-                        ((AbstractCache)cache).loguc(parameters);
                         cacheContainsPrimaryKey = cache.contains(parameters); 
                     }
                     catch (CacheException e)
@@ -227,6 +224,7 @@ public class ScalarSelectOperation<R> extends SqlOperation<R>
                         throw new OperationException("error reading cache", e);
                     }
                 }
+                //else use AbstractCache.getPrimaryKeyValues() to get cache key? not likely selecting by primary key of row is already known
             }
             
             if (log.isDebugEnabled())
@@ -428,7 +426,7 @@ public class ScalarSelectOperation<R> extends SqlOperation<R>
                             // did not get desired row, try next row
                             operationTime.startReadTime(); // see comment above concerning startReadTime
                             
-                            if (!resultSet.next()) // TODO don't no next()? advances cursor?
+                            if (!resultSet.next()) // advance to next row (if any)
                             {
                                 // no more rows
                                 complete = true; // exit loop

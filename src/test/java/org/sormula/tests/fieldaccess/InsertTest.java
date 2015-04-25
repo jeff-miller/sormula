@@ -43,7 +43,7 @@ public class InsertTest extends DatabaseTest<SormulaFaTestParent>
             "CREATE TABLE " + getSchemaPrefix() + SormulaFaTestParent.class.getSimpleName() + " (" +
             " parentid INTEGER NOT NULL PRIMARY KEY," +
             " description VARCHAR(60)," +
-            " other VARCHAR(10)," +
+            " other VARCHAR(10)" +
             ")"
         );
         

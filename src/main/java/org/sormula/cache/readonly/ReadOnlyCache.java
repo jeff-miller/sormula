@@ -30,6 +30,7 @@ import org.sormula.cache.CacheException;
 import org.sormula.cache.CacheKey;
 import org.sormula.cache.DuplicateCacheException;
 import org.sormula.cache.UncommittedRow;
+import org.sormula.cache.readwrite.UncommittedSave;
 import org.sormula.log.ClassLogger;
 import org.sormula.operation.SqlOperation;
 
@@ -159,6 +160,20 @@ public class ReadOnlyCache<R> extends AbstractCache<R>
      * 
      * @param row ignored
      * @return false
+     * @since 3.4
+     */
+    public boolean save(R row) throws CacheException
+    {
+        return false;
+    }
+
+    
+    /**
+     * Returns false since read only cache never writes to database and is never authority
+     * for row.
+     * 
+     * @param row ignored
+     * @return false
      */
     public boolean delete(R row) throws CacheException
     {
@@ -252,6 +267,28 @@ public class ReadOnlyCache<R> extends AbstractCache<R>
         {
             // row is not in cache, remember update
             putUncommitted(new UncommittedUpdate<R>(cacheKey, row));
+        }
+    }
+
+
+    /**
+     * {@inheritDoc}
+     */
+    public void saved(R row) throws CacheException
+    {
+        check();
+        CacheKey cacheKey = new CacheKey(getPrimaryKeyValues(row));
+        UncommittedRow<R> uncommittedRow = getUncommitted(cacheKey);
+        
+        if (uncommittedRow != null)
+        {
+            // key exists in uncommitted
+            transition(uncommittedRow, uncommittedRow.saved(row));
+        }
+        else
+        {
+            // row is not in cache, remember save
+            putUncommitted(new UncommittedSave<R>(cacheKey, row));
         }
     }
 

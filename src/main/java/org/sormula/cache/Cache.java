@@ -141,6 +141,21 @@ public interface Cache<R>
      */
 	public boolean update(R row) throws CacheException;
 	
+	
+	/**
+     * Performs an equivalent to save operation on cache for row. If false is returned, then 
+     * invoke {@link #saved(Object)} when the row is saved to database. If true
+     * is returned, then {@link #saved(Object)} must not be invoked.
+     * 
+     * @param row row to save
+     * @return true if cache is authority for row (cache will save row in database);
+     * false if cache does not save row in database (row should be saved by the operation that invoked this method)
+     *  
+     * @throws CacheException if error
+	 * @since 3.4
+	 */
+	public boolean save(R row) throws CacheException;
+	
     
     /**
      * Performs an equivalent to SQL delete on cache for row. If false is returned, then 
@@ -184,6 +199,16 @@ public interface Cache<R>
      * @throws CacheException if error
      */
     public void updated(R row) throws CacheException;
+    
+    
+    /**
+     * Indicates that a row was saved in database. Row is added to cache if appropriate.
+     *  
+     * @param row that was saved
+     * @throws CacheException if error
+     * @since 3.4
+     */
+    public void saved(R row) throws CacheException;
     
     
     /**

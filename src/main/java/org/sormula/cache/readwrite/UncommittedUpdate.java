@@ -67,6 +67,14 @@ public class UncommittedUpdate<R> extends UncommittedWritableRow<R>
 
 
     @Override
+    public UncommittedRow<R> save(R row) throws CacheException
+    {
+        // update r1 followed by save r2 is equivalent to save r2
+        return new UncommittedSave<R>(getCacheKey(), row);
+    }
+
+
+    @Override
     public UncommittedRow<R> delete(R row) throws CacheException
     {
         // update r1 followed by delete r2 is equivalent to delete r2

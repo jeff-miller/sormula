@@ -88,7 +88,6 @@ public class ReadWriteCache<R> extends WritableCache<R>
     public void execute(SqlOperation<R> sqlOperation) throws CacheException
     {
     	check();
-    	
         if (sqlOperation instanceof ScalarSelectOperation)
         {
             // select
@@ -219,6 +218,32 @@ public class ReadWriteCache<R> extends WritableCache<R>
     /**
      * {@inheritDoc}
      */
+    public boolean save(R row) throws CacheException
+    {
+        check();
+        CacheKey cacheKey = new CacheKey(getPrimaryKeyValues(row));
+        UncommittedRow<R> uncommittedRow = getUncommitted(cacheKey);
+        
+        if (uncommittedRow != null)
+        {
+            // key exists in uncommitted
+            hit();
+            transition(uncommittedRow, uncommittedRow.save(row));
+        }
+        else
+        {
+            // row is not in cache, remember save
+            miss();
+            putUncommitted(new UncommittedSave<R>(cacheKey, row));
+        }
+
+        return true;
+    }
+
+    
+    /**
+     * {@inheritDoc}
+     */
     public boolean delete(R row) throws CacheException
     {
         check();
@@ -245,7 +270,7 @@ public class ReadWriteCache<R> extends WritableCache<R>
     /**
      * {@inheritDoc}
      */
-    // note if return is null then row is deleted so dont use
+    // note if return is null then row is deleted so don't use
     public R selected(R row) throws CacheException
     {
         check();
@@ -284,8 +309,8 @@ public class ReadWriteCache<R> extends WritableCache<R>
      * since writable {@link ReadWriteCache} should never be notified of an insert of non identity
      * row since {@link ReadWriteCache} will be inserting the database. 
      * <p>
-     * If table has an identity column ({@link Column#identity()} was set true on a field)
-     * is not nul), then row is added to cache. Row is not written to database since this method
+     * If table has an identity column ({@link Column#identity()} was set true on a field),
+     * then row is added to cache. Row is not written to database since this method
      * indicates that it has already been written. 
      * 
      * @param row row that has been inserted
@@ -317,6 +342,20 @@ public class ReadWriteCache<R> extends WritableCache<R>
      * @throws IllegalCacheOperationException
      */
     public void updated(R row) throws CacheException
+    {
+        throw new IllegalCacheOperationException();
+    }
+
+
+    /**
+     * Throws IllegalCacheOperationException since writable {@link ReadWriteCache} should never be 
+     * notified of an save since {@link ReadWriteCache} will be saving to the database. 
+     * 
+     * @param row ignored
+     * @throws IllegalCacheOperationException
+     * @since 3.4
+     */
+    public void saved(R row) throws CacheException
     {
         throw new IllegalCacheOperationException();
     }

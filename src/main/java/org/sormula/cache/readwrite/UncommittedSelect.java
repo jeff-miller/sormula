@@ -64,6 +64,14 @@ public class UncommittedSelect<R> extends UncommittedWritableRow<R>
 
     
     @Override
+    public UncommittedRow<R> save(R row) throws CacheException
+    {
+        // select r1 followed by save r2 for same key is equivalent to save r2
+        return new UncommittedSave<R>(getCacheKey(), row);
+    }
+
+    
+    @Override
     public UncommittedRow<R> delete(R row) throws CacheException
     {
         // select r1 followed by delete r2 for same key is equivalent to delete r2

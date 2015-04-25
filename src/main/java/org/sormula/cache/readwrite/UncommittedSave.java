@@ -73,6 +73,23 @@ public class UncommittedSave<R> extends UncommittedWritableRow<R>
 
 
     @Override
+    public UncommittedRow<R> save(R row) throws CacheException
+    {
+        if (isWritten())
+        {
+            // save has occurred so update row
+            return new UncommittedUpdate<R>(getCacheKey(), row);
+        }
+        else
+        {
+            // save on saved r1 row is equivalent to save r2
+            setRow(row);
+            return this;
+        }
+    }
+
+
+    @Override
     public UncommittedRow<R> delete(R row) throws CacheException
     {
         // delete on saved r1 row is equivalent to delete r2

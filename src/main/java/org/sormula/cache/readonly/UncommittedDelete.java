@@ -20,6 +20,7 @@ import org.sormula.cache.Cache;
 import org.sormula.cache.CacheException;
 import org.sormula.cache.CacheKey;
 import org.sormula.cache.UncommittedRow;
+import org.sormula.cache.readwrite.UncommittedSave;
 
 
 /**
@@ -60,6 +61,14 @@ public class UncommittedDelete<R> extends UncommittedReadOnlyRow<R>
         // this should never occur since java.sql.Statement.executeUpdate() on a deleted row will return 0 
         // and so this method will not be invoked
         return null;
+    }
+
+
+    @Override
+    public UncommittedRow<R> saved(R row) throws CacheException
+    {
+        // delete r1 followed by save r2 is save r2 
+        return new UncommittedSave<R>(getCacheKey(), row);
     }
 
 

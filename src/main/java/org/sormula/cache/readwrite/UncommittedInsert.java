@@ -73,6 +73,23 @@ public class UncommittedInsert<R> extends UncommittedWritableRow<R>
 
 
     @Override
+    public UncommittedRow<R> save(R row) throws CacheException
+    {
+        if (isWritten())
+        {
+            // insert has occurred so update row
+            return new UncommittedUpdate<R>(getCacheKey(), row);
+        }
+        else
+        {
+            // insert r1 followed by save r2 is same as insert r2
+            setRow(row); 
+            return this;
+        }
+    }
+
+
+    @Override
     public UncommittedRow<R> delete(R row) throws CacheException
     {
         return null; // insert r1 followed by delete r2 is same as no change so remove uncommitted insert 

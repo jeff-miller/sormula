@@ -179,7 +179,7 @@ public abstract class AbstractCache<R> implements Cache<R>
     public void evict(R row) throws CacheException
     {
         CacheKey cacheKey = new CacheKey(getPrimaryKeyValues(row));
-        if (log.isDebugEnabled()) log.debug("evict() " + cacheKey + " for table " + table.getClass());
+        if (log.isDebugEnabled()) log.debug("evict() " + cacheKey + " for table " + table.getRowClass());
         if (uncommittedCache != null) uncommittedCache.remove(cacheKey);
         if (committedCache != null)   committedCache.remove(cacheKey);
     }
@@ -193,7 +193,7 @@ public abstract class AbstractCache<R> implements Cache<R>
      */
     public void evictAll() throws CacheException
     {
-        if (log.isDebugEnabled()) log.debug("evictAll() for table " + table.getClass());
+        if (log.isDebugEnabled()) log.debug("evictAll() for table " + table.getRowClass());
         if (uncommittedCache != null) uncommittedCache.clear();
         if (committedCache != null)   committedCache.clear(); 
     }

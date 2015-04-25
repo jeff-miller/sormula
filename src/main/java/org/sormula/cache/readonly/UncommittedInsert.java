@@ -21,6 +21,7 @@ import org.sormula.cache.CacheException;
 import org.sormula.cache.CacheKey;
 import org.sormula.cache.DuplicateCacheException;
 import org.sormula.cache.UncommittedRow;
+import org.sormula.cache.readwrite.UncommittedSave;
 
 
 /**
@@ -59,6 +60,14 @@ public class UncommittedInsert<R> extends UncommittedReadOnlyRow<R>
     {
         // insert has occurred so update row
         return new UncommittedUpdate<R>(getCacheKey(), row);
+    }
+
+
+    @Override
+    public UncommittedRow<R> saved(R row) throws CacheException
+    {
+        // insert has occurred so save row
+        return new UncommittedSave<R>(getCacheKey(), row);
     }
 
 

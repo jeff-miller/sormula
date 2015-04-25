@@ -97,6 +97,16 @@ public abstract class UncommittedWritableRow<R> extends UncommittedRow<R>
      * Throws {@link IllegalCacheOperationException} since this method should not be used.
      */
     @Override
+    public UncommittedRow<R> saved(R row) throws CacheException
+    {
+        throw new IllegalCacheOperationException();
+    }
+
+    
+    /**
+     * Throws {@link IllegalCacheOperationException} since this method should not be used.
+     */
+    @Override
     public UncommittedRow<R> deleted(R row) throws CacheException
     {
         throw new IllegalCacheOperationException();

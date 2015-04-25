@@ -28,6 +28,7 @@ import org.sormula.annotation.cascade.OneToManyCascade;
 import org.sormula.annotation.cascade.OneToOneCascade;
 import org.sormula.annotation.cascade.SaveCascade;
 import org.sormula.annotation.cascade.SaveCascadeAnnotationReader;
+import org.sormula.cache.CacheException;
 import org.sormula.log.ClassLogger;
 import org.sormula.operation.cascade.CascadeOperation;
 import org.sormula.operation.cascade.SaveCascadeOperation;
@@ -287,6 +288,14 @@ public class SaveOperation<R> extends ModifyOperation<R>
                 // operation parameters from rows
                 for (R row: rows)
                 {
+                    if (isCached())
+                    {
+                        // must do this so that UncommittedSave is created in cache
+                        // if not, then UncommittedUpdate will erroneously be created in cache by updateOperation.execute() below 
+                        if (log.isDebugEnabled()) log.debug("save cache " + table.getRowClass());
+                        notifyCacheModify(row); 
+                    }
+                    
                     // try update first
                     updateOperation.setRow(row);
                     updateOperation.execute();
@@ -432,29 +441,35 @@ public class SaveOperation<R> extends ModifyOperation<R>
 
 
     /**
-     * Not used since {@link #execute()} delegates to {@link InsertOperation} and/or
-     * {@link UpdateOperation}.
-     * 
-     * @param row ignored
-     * @return false
-     * @since 3.0
+     * {@inheritDoc}
      */
     @Override
     protected boolean notifyCacheModify(R row) throws OperationException
     {
-        return false;
+        try
+        {
+            return getTable().getCache().save(row);
+        }
+        catch (CacheException e)
+        {
+            throw new OperationException("cache error", e);
+        }
     }
 
 
     /**
-     * Does nothing since {@link #execute()} delegates to {@link InsertOperation} and/or
-     * {@link UpdateOperation}.
-     * 
-     * @param row ignored
-     * @since 3.0
+     * {@inheritDoc}
      */
     @Override
     public void notifyCacheModified(R row) throws OperationException
     {
+        try
+        {
+            getTable().getCache().saved(row);
+        }
+        catch (CacheException e)
+        {
+            throw new OperationException("cache error", e);
+        }
     }
 }

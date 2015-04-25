@@ -74,6 +74,17 @@ public abstract class UncommittedRow<R>
      * @throws CacheException if error
      */
     public abstract UncommittedRow<R> update(R row) throws CacheException;
+    
+    
+    /**
+     * Performs a save of new row on existing uncommitted row. 
+     * 
+     * @param row row to save
+     * @return new uncommitted row to replace this or null if no change is required
+     * @throws CacheException if error
+     * @since 3.4
+     */
+    public abstract UncommittedRow<R> save(R row) throws CacheException;
 
     
     /**
@@ -115,6 +126,17 @@ public abstract class UncommittedRow<R>
      * @throws CacheException if error
      */
     public abstract UncommittedRow<R> updated(R row) throws CacheException;
+    
+    
+    /**
+     * Notifies cache that row has been saved in database.
+     * 
+     * @param row row that has been saved
+     * @return new uncommitted row to replace this or null if no change is required
+     * @throws CacheException if error
+     * @since 3.4
+     */
+    public abstract UncommittedRow<R> saved(R row) throws CacheException;
     
     
     /**

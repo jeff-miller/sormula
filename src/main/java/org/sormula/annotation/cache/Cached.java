@@ -52,6 +52,28 @@ import org.sormula.operation.UpdateOperation;
  * In some cases, it may be desirable to have more than once cache per row class or database table. In
  * those situations, create separate instances of {@link Table} with the {@link Table#Table(Database, Class)} 
  * constructor.
+ * <p>
+ * You can use almost any mixture of cached and non cached tables with one exception. A table
+ * that has a foreign key constraint must be cached with a {@link WritableCache} like 
+ * {@link ReadWriteCache} if the table that it refers to is also cached with a 
+ * a {@link WritableCache} like {@link ReadWriteCache}. The reason is that the foreign keys 
+ * written to database may refer to a row that is in cache (not yet written to database) which will 
+ * result in a foreign key constraint violation. Therefore tables that are related by
+ * foreign key constraints must have compatible caching as follows:
+ * <pre>
+ *    Cache type for table        Cache type for table 
+ *    referenced by foreign key   with foreign key      Compatible
+ *    -------------------------------------------------------------
+ *    none                        none                  yes
+ *    none                        ReadOnlyCache.class   yes
+ *    none                        ReadWriteCache.class  yes
+ *    ReadOnlyCache.class         none                  yes
+ *    ReadOnlyCache.class         ReadOnlyCache.class   yes
+ *    ReadOnlyCache.class         ReadWriteCache.class  yes
+ *    ReadWriteCache.class        none                  no - possible foreign key constraint violation
+ *    ReadWriteCache.class        ReadOnlyCache.class   no - possible foreign key constraint violation
+ *    ReadWriteCache.class        ReadWriteCache.class  yes
+ * </pre>
  *  
  * @since 3.0 
  * @author Jeff Miller

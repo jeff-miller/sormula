@@ -65,6 +65,17 @@ public abstract class UncommittedReadOnlyRow<R> extends UncommittedRow<R>
      * for {@link ReadOnlyCache}.
      */
     @Override
+    public UncommittedRow<R> save(R row) throws CacheException
+    {
+        throw new IllegalCacheOperationException();
+    }
+
+    
+    /**
+     * Throws {@link IllegalCacheOperationException} since this method should not be used
+     * for {@link ReadOnlyCache}.
+     */
+    @Override
     public UncommittedRow<R> delete(R row) throws CacheException
     {
         throw new IllegalCacheOperationException();

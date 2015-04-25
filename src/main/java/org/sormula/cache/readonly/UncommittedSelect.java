@@ -21,6 +21,7 @@ import org.sormula.cache.CacheException;
 import org.sormula.cache.CacheKey;
 import org.sormula.cache.DuplicateCacheException;
 import org.sormula.cache.UncommittedRow;
+import org.sormula.cache.readwrite.UncommittedSave;
 
 
 /**
@@ -49,7 +50,7 @@ public class UncommittedSelect<R> extends UncommittedReadOnlyRow<R>
     @Override
     public UncommittedRow<R> inserted(R row) throws CacheException
     {
-        // should nevert get here since database would throw exception prior to getting here
+        // should never get here since database would throw exception prior to getting here
         throw new DuplicateCacheException(getCacheKey().getPrimaryKeys());
     }
 
@@ -59,6 +60,14 @@ public class UncommittedSelect<R> extends UncommittedReadOnlyRow<R>
     {
         // select r1 followed by update r2 for same key is equivalent to update r2
         return new UncommittedUpdate<R>(getCacheKey(), row);
+    }
+
+    
+    @Override
+    public UncommittedRow<R> saved(R row) throws CacheException
+    {
+        // select r1 followed by save r2 for same key is equivalent to save r2
+        return new UncommittedSave<R>(getCacheKey(), row);
     }
 
     

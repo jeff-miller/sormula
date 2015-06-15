@@ -76,7 +76,7 @@ public class ClassLogger
     /**
      * Constructs with logical log name of package name of the caller
      * of this constructor.  For example, com.mycompany.something.MyClass creates
-     * new EasyLog, the logical log name used would be com.mycompany.something as
+     * new ClassLogger, the logical log name used would be com.mycompany.something as
      * if it called LogFactory.getLog("com.mycompany.something").  
      */
     public ClassLogger()

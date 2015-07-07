@@ -283,6 +283,7 @@
 	</target>
 	
 	<target name="javadoc" description="Generates javadoc to javadoc directory" depends="compile-main">
+		<echo file="${main.srcdir}/java/overview.html" message="&lt;body&gt;Version ${version}&lt;/body&gt;"/>
 	    <javadoc 
 	            sourcepathref="main.srcpath" 
 	            packagenames="*"

@@ -50,7 +50,6 @@ import org.sormula.annotation.cascade.Cascade;
 import org.sormula.annotation.cascade.OneToManyCascade;
 import org.sormula.annotation.cascade.OneToOneCascade;
 import org.sormula.log.ClassLogger;
-import org.sormula.operation.ModifyOperation;
 import org.sormula.operation.OperationException;
 import org.sormula.reflect.FieldAccessType;
 import org.sormula.reflect.ReflectException;
@@ -106,10 +105,6 @@ public class RowTranslator<R> extends ColumnsTranslator<R>
     String unusedColumnUpdateSql;
     ColumnTranslator<R> identityColumnTranslator;
     boolean inheritedFields;
-    
-    @Deprecated
-    boolean zeroRowCountPostExecute;
-    
     List<Field> cascadeFieldList;
     FieldAccessType fieldAccessType;
     
@@ -130,7 +125,6 @@ public class RowTranslator<R> extends ColumnsTranslator<R>
         if (rowAnnotation != null)
         {
             inheritedFields = rowAnnotation.inhertedFields();
-            zeroRowCountPostExecute = rowAnnotation.zeroRowCountPostExecute();
             fieldAccessType = rowAnnotation.fieldAccess();
         }
         else
@@ -257,37 +251,6 @@ public class RowTranslator<R> extends ColumnsTranslator<R>
     public void setInheritedFields(boolean inheritedFields)
     {
         this.inheritedFields = inheritedFields;
-    }
-
-
-    /**
-     * Reports when to invoke {@link ModifyOperation} post execute methods.
-     * 
-     * @return true to invoke post execute methods unconditionally; false to invoke 
-     * post execute methods only when database has been modified by insert, update, or delete
-     * @since 3.0
-     * @see Row#zeroRowCountPostExecute()
-     */
-    @Deprecated
-    public boolean isZeroRowCountPostExecute()
-    {
-        return zeroRowCountPostExecute;
-    }
-
-
-    /**
-     * Sets when to invoke {@link ModifyOperation} post execute methods.
-     * 
-     * @param zeroRowCountPostExecute true to invoke post execute methods unconditionally; 
-     * false to invoke post execute methods only when database has been modified by 
-     * insert, update, or delete
-     * @since 3.0
-     * @see Row#zeroRowCountPostExecute()
-     */
-    @Deprecated
-    public void setZeroRowCountPostExecute(boolean zeroRowCountPostExecute)
-    {
-        this.zeroRowCountPostExecute = zeroRowCountPostExecute;
     }
 
 

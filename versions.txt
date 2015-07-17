@@ -1,7 +1,11 @@
 Version History
 
-JDK 5/6     JDK 7       comments
+version-jdk             comments
 ------------------------------------------------------------------------------------------------------------
+4.0-jdk1.8              - remove deprecated Row#zeroRowCountPostExecute
+                        - update jdbc drivers
+                        - add identity column tests for sqlite
+
             3.4-jdk1.7  - allow choice of method or direct field access or some combination
                           (see Column.fieldAccess and Row.fieldAccess)
                         - cache miss count is recorded correctly
@@ -70,18 +74,3 @@ JDK 5/6     JDK 7       comments
                         - many-to-many examples
                         - named cascades (see org.sormula.tests.cascade.named for example)
                         - non-identity inserts for tables with identity columns
-1.9.4       2.3.4       - cascades occur only when parent row is inserted, updated, or deleted                 
-1.9.3       2.3.3       - save cascades to all levels
-1.9.2       2.3.2       - TypeTranslator can be used for primitive
-1.9.1       2.3.1       - update examples
-1.9         2.3         - batch, JNDI, cascade array types, optional cascade targetClass, query cancel, query timeout
-1.8         2.2         - lazy cascade, name translators
-1.7.1       2.1.1       - improved active record transaction
-1.7         2.1         - active record
-1.6         2.0         - ImplicitType, ExplicitType, TypeTranslator, annotations on Table class, read only 
-1.5         n/a         - timing instrumentation
-1.4         n/a         - execute All methods, comparison operands
-1.3         n/a         - IN operator
-1.2         n/a         - zero configuration capability, readonly attribute cascade annotation
-1.1         n/a         - save operations, aggregate operations
-1.0         n/a         - new

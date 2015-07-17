@@ -43,7 +43,7 @@ public class InsertTest extends DatabaseTest<ColumnTestRoid>
             openDatabase();
             createTable(ColumnTestRoid.class, 
                 "CREATE TABLE " + getSchemaPrefix() + ColumnTestRoid.class.getSimpleName() + " (" +
-                " id " + getIdentityColumnDDL() + " PRIMARY KEY," +
+                " id " + getIdentityColumnDDL() + "," +
                 " description VARCHAR(30)" +
                 ")"
             );

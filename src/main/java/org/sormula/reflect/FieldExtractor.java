@@ -41,27 +41,6 @@ import org.sormula.translator.TranslatorException;
 public class FieldExtractor<R> 
 {
 	List<RowField<R, ?>> rowFieldList;
-	
-	
-	/**
-	 * Constructs from a list of {@link ColumnTranslator}. Use other constructors instead of this
-	 * one since field access type cannot be determined solely from {@link ColumnTranslator}. This
-	 * constructor always creates method access to field.
-	 * 
-	 * @param columnTranslatorList list of fields that are read/written to database
-	 * @throws ReflectException if error
-	 */
-	@Deprecated 
-    public FieldExtractor(List<ColumnTranslator<R>> columnTranslatorList) throws ReflectException
-    {
-    	rowFieldList = new ArrayList<RowField<R, ?>>(columnTranslatorList.size());
-    	
-    	for (ColumnTranslator<R> c: columnTranslatorList)
-    	{
-    	    // MethodAccessField is backward compatible with SormulaField prior to version 3.4
-    		rowFieldList.add(new MethodAccessField<R, Object>(c.getField())); 
-    	}
-    }
     
     
     /**

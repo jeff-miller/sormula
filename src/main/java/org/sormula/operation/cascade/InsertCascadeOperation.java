@@ -20,7 +20,6 @@ import org.sormula.Table;
 import org.sormula.annotation.cascade.InsertCascade;
 import org.sormula.operation.InsertOperation;
 import org.sormula.reflect.RowField;
-import org.sormula.reflect.SormulaField;
 
 
 /**
@@ -34,24 +33,6 @@ import org.sormula.reflect.SormulaField;
 public class InsertCascadeOperation<S, T> extends ModifyCascadeOperation<S, T>
 {
     InsertCascade insertCascadeAnnotation;
-    
-    
-    /**
-     * Constructor used by {@link InsertOperation}.
-     *
-     * @param sourceTable cascade originates on row from this table
-     * @param targetField cascade insert operation uses row(s) from this field
-     * @param targetTable cascade insert operation is performed on this table 
-     * @param insertCascadeAnnotation cascade operation
-     * @since 3.0
-     */
-    @Deprecated
-    public InsertCascadeOperation(Table<S> sourceTable, SormulaField<S, ?> targetField, Table<T> targetTable, InsertCascade insertCascadeAnnotation)
-    {
-        super(sourceTable, targetField, targetTable, insertCascadeAnnotation.operation());
-        this.insertCascadeAnnotation = insertCascadeAnnotation;
-        setPost(insertCascadeAnnotation.post());
-    }
     
     
     /**

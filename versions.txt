@@ -2,7 +2,8 @@ Version History
 
 version-jdk             comments
 ------------------------------------------------------------------------------------------------------------
-4.0-jdk1.8              - remove deprecated Row#zeroRowCountPostExecute
+4.0-jdk1.8              - remove deprecated cascade constructors that used SormulaField 
+                        - remove deprecated Row#zeroRowCountPostExecute
                         - update jdbc drivers
                         - add identity column tests for sqlite
 

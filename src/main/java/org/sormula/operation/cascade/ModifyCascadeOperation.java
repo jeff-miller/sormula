@@ -25,7 +25,6 @@ import org.sormula.operation.ModifyOperation;
 import org.sormula.operation.OperationException;
 import org.sormula.reflect.ReflectException;
 import org.sormula.reflect.RowField;
-import org.sormula.reflect.SormulaField;
 
 
 /**
@@ -40,24 +39,6 @@ public abstract class ModifyCascadeOperation<S, T> extends CascadeOperation<S, T
 {
     private static final ClassLogger log = new ClassLogger();
     ModifyOperation<T> modifyOperation;
-    
-    
-    /**
-     * Constructs.
-     * 
-     * @param sourceTable cascade originates on row from this table
-     * @param targetField cascade operation uses row(s) from this field
-     * @param targetTable cascade operation is performed on this table 
-     * @param cascadeOperationClass class of cascade operation
-     * false if cascade is performed before row execute (see {@link ModifyOperation#preExecute}
-     * @since 3.0
-     */
-    @Deprecated
-    public ModifyCascadeOperation(Table<S> sourceTable, SormulaField<S, ?> targetField, Table<T> targetTable, 
-            Class <?> cascadeOperationClass)
-    {
-        super(sourceTable, targetField, targetTable, cascadeOperationClass);
-    }
     
     
     /**

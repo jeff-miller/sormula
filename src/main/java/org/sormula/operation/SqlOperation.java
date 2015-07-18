@@ -47,9 +47,7 @@ import org.sormula.operation.monitor.NoOperationTime;
 import org.sormula.operation.monitor.OperationTime;
 import org.sormula.reflect.DirectAccessField;
 import org.sormula.reflect.MethodAccessField;
-import org.sormula.reflect.ReflectException;
 import org.sormula.reflect.RowField;
-import org.sormula.reflect.SormulaField;
 import org.sormula.translator.AbstractWhereTranslator;
 import org.sormula.translator.ColumnTranslator;
 import org.sormula.translator.RowTranslator;
@@ -852,22 +850,6 @@ public abstract class SqlOperation<R> implements AutoCloseable
     
     
     /**
-     * Gets a table object from database associated with this operation. Use
-     * {@link #getTargetTable(Class)} instead of this method.
-     * 
-     * @param targetClass class that cascade is to affect
-     * @param targetField target of cascade
-     * @return table for target class of annotation
-     * @throws OperationException if error
-     */
-    @Deprecated
-    protected Table<?> getTargetTable(Class<?> targetClass, Field targetField) throws OperationException
-    {
-        return getTargetTable(targetClass);
-    }
-    
-    
-    /**
      * Gets a table object from database associated with this operation.
      * 
      * @param targetClass class that cascade is to affect
@@ -891,34 +873,6 @@ public abstract class SqlOperation<R> implements AutoCloseable
         }
         
         return targetTable;
-    }
-    
-    
-    /**
-     * Creates a {@link SormulaField} from {@link Field}. Typically this method is used to create
-     * a field that will receive value from a cascade.
-     * 
-     * Use {@link #createRowField(Table, Field)} or {@link RowTranslator#createRowField} instead of this method.
-     * 
-     * @param field creates for this field
-     * @return sormula field based upon field parameter
-     * @throws OperationException if error
-     */
-    @Deprecated
-    protected SormulaField<R, ?> createTargetField(Field field) throws OperationException
-    {
-        SormulaField<R, ?> targetField;
-        
-        try
-        {
-            targetField = new SormulaField<>(field);
-        }
-        catch (ReflectException e)
-        {
-            throw new OperationException("error constructing SormulaField for " + field, e);
-        }
-        
-        return targetField;
     }
     
     

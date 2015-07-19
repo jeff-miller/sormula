@@ -1015,18 +1015,9 @@ public abstract class SqlOperation<R> implements AutoCloseable
             try
             {
                 // look for where annotation
-                if (table.isLegacyAnnotationPrecedence())
-                {
-                    // in operation, table class, row class (in that order)
-                    whereAnnotation = new WhereAnnotationReader(
-                        this.getClass(), table.getClass(), table.getRowClass()).getAnnotation(whereConditionName);
-                }
-                else
-                {
-                    // in operation, row class, table class (in that order)
-                    whereAnnotation = new WhereAnnotationReader(
-                        this.getClass(), table.getClass(), table.getRowClass()).getAnnotation(whereConditionName);
-                }
+                // in operation, row class, table class (in that order)
+                whereAnnotation = new WhereAnnotationReader(
+                    this.getClass(), table.getClass(), table.getRowClass()).getAnnotation(whereConditionName);
                 
                 if (whereAnnotation != null)
                 {

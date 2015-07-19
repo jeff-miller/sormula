@@ -56,16 +56,8 @@ public class OperationTable<R extends ActiveRecord> extends Table<R>
         // must get active database from operation database since activeDatabase not yet initialized
         OperationDatabase odb = (OperationDatabase)getDatabase();
         
-        if (isLegacyAnnotationPrecedence())
-        {
-            // table, row, database
-            return new CachedAnnotationReader(getClass(), getRowClass(), odb.getActiveDatabase().getClass()).getAnnotation();
-        }
-        else
-        {
-            // row, table, database
-            return new CachedAnnotationReader(getRowClass(), getClass(), odb.getActiveDatabase().getClass()).getAnnotation();
-        }
+        // row, table, database
+        return new CachedAnnotationReader(getRowClass(), getClass(), odb.getActiveDatabase().getClass()).getAnnotation();
     }
     
     

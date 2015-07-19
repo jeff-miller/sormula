@@ -16,7 +16,6 @@
  */
 package org.sormula.translator;
 
-import java.lang.reflect.Field;
 import java.sql.Blob;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -39,13 +38,6 @@ import org.sormula.reflect.RowField;
  */
 public abstract class AbstractBlobColumnTranslator<R, T> extends AbstractColumnTranslator<R, T>
 {
-    @Deprecated
-    public AbstractBlobColumnTranslator(Field field, String columnName) throws Exception
-    {
-        super(field, columnName);
-    }
-    
-    
     /**
      * Constructs for a {@link RowField} and column name.
      * 

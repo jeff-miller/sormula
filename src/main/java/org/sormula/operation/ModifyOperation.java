@@ -376,6 +376,11 @@ public abstract class ModifyOperation<R> extends SqlOperation<R>
 
     /**
      * Modifies one row. Set parameters, executes, closes.
+     * <p>
+     * Since this class implements {@link AutoCloseable}, you may see resource leak
+     * warning when you use this method. You can ignore it, add a suppress annotation, 
+     * explicitly close, or close with a try-with-resources statement. Closing an operation 
+     * more than once will not cause problems since the close methods are idempotent. 
      * 
      * @param row row to use for parameters
      * @return {@link #getRowsAffected()}
@@ -385,14 +390,26 @@ public abstract class ModifyOperation<R> extends SqlOperation<R>
     public int modify(R row) throws OperationException
     {
         setRow(row);
-        execute();
-        close();
+        setRowsAffected(0);
+        try 
+        {
+        	execute();
+        }
+        finally
+        {
+        	close();
+        }
         return getRowsAffected();
     }
     
     
     /**
      * Modifies a collection of rows. Set parameters, executes, closes.
+     * <p>
+     * Since this class implements {@link AutoCloseable}, you may see resource leak
+     * warning when you use this method. You can ignore it, add a suppress annotation, 
+     * explicitly close, or close with a try-with-resources statement. Closing an operation 
+     * more than once will not cause problems since the close methods are idempotent. 
      * 
      * @param rows collection of rows to use as parameters 
      * @return {@link #getRowsAffected()}
@@ -402,14 +419,26 @@ public abstract class ModifyOperation<R> extends SqlOperation<R>
     public int modifyAll(Collection<R> rows) throws OperationException
     {
         setRows(rows);
-        execute();
-        close();
+        setRowsAffected(0);
+        try 
+        {
+        	execute();
+        }
+        finally
+        {
+        	close();
+        }
         return getRowsAffected();
     }
 
 
     /**
-     * Modifies row(s) with sql parameters as Objects
+     * Modifies row(s) with sql parameters as Objects. Executes and then closes.
+     * <p>
+     * Since this class implements {@link AutoCloseable}, you may see resource leak
+     * warning when you use this method. You can ignore it, add a suppress annotation, 
+     * explicitly close, or close with a try-with-resources statement. Closing an operation 
+     * more than once will not cause problems since the close methods are idempotent. 
      * 
      * @param parameters operation parameters as objects (see {@link #setParameters(Object...)})
      * @return count of rows affected
@@ -419,8 +448,15 @@ public abstract class ModifyOperation<R> extends SqlOperation<R>
     public int modify(Object... parameters) throws OperationException
     {
         setParameters(parameters);
-        execute();
-        close();
+        setRowsAffected(0);
+        try 
+        {
+        	execute();
+        }
+        finally
+        {
+        	close();
+        }
         return getRowsAffected();
     }
 

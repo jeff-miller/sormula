@@ -510,6 +510,11 @@ public class ScalarSelectOperation<R> extends SqlOperation<R>
 
     /**
      * Set parameters, executes, reads one row, closes.
+     * <p>
+     * Since this class implements {@link AutoCloseable}, you may see resource leak
+     * warning when you use this method. You can ignore it, add a suppress annotation, 
+     * explicitly close, or close with a try-with-resources statement. Closing an operation 
+     * more than once will not cause problems since the close methods are idempotent. 
      * 
      * @param parameters query parameters as objects (see {@link #setParameters(Object...)})
      * @return {@link #readNext()}
@@ -520,15 +525,27 @@ public class ScalarSelectOperation<R> extends SqlOperation<R>
     {
         if (log.isDebugEnabled()) log.debug("select() read from database");
         setParameters(parameters);
-        execute();
-        R row = readNext();
-        close();
+        R row;
+        try
+        {
+        	execute();
+        	row = readNext();
+        }
+        finally
+        {
+        	close();
+        }
         return row;
     }
     
     
     /**
      * Set parameters, executes, reads one row, closes.
+     * <p>
+     * Since this class implements {@link AutoCloseable}, you may see resource leak
+     * warning when you use this method. You can ignore it, add a suppress annotation, 
+     * explicitly close, or close with a try-with-resources statement. Closing an operation 
+     * more than once will not cause problems since the close methods are idempotent. 
      * 
      * @param whereParameters query parameters are read from an existing row object 
      * (see {@link #setRowParameters(Object)})
@@ -539,9 +556,16 @@ public class ScalarSelectOperation<R> extends SqlOperation<R>
     public R select(R whereParameters) throws OperationException
     {
         setRowParameters(whereParameters);
-        execute();
-        R row = readNext();
-        close();
+        R row;
+        try
+        {
+        	execute();
+        	row = readNext();
+        }
+        finally
+        {
+        	close();
+        }
         return row;
     }
     

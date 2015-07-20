@@ -4,6 +4,7 @@ JDK 5/6     JDK 7       comments
 ------------------------------------------------------------------------------------------------------------
             3.5-jdk1.7  - invoke close method within finally block for AutoCloseable classes so that  
                           no resources are leaked if exception occurs 
+                        - suppress unnecessary resource leak warnings
             3.4-jdk1.7  - allow choice of method or direct field access or some combination
                           (see Column.fieldAccess and Row.fieldAccess)
                         - cache miss count is recorded correctly

@@ -85,6 +85,7 @@ public class SelectTest extends DatabaseTest<SormulaTestLevel1>
     @SuppressWarnings("unchecked")
     protected void filterTest(SelectCascadeFilter<?>... selectCascadeFilters) throws SormulaException
     {
+    	@SuppressWarnings("resource") // selectAll method invokes close
         ArrayListSelectOperation<SormulaTestLevel1> filteredSelectOperation = 
                 new ArrayListSelectOperation<>(getTable(), "");
         filteredSelectOperation.setSelectCascadeFilters(selectCascadeFilters);

@@ -113,6 +113,7 @@ public class SelectTest extends DatabaseTest<SormulaTestA>
         assert expectedCount > 0 : "no rows meet expected condition to test";
         
         // select all type 3 rows
+        @SuppressWarnings("resource") // selectAll method invokes close
         List<SormulaTestA> selectedList = new ArrayListSelectOperation<>(getTable(), "byType").selectAll(3);
 
         assert expectedCount == selectedList.size() : "simple select returned wrong number of rows";

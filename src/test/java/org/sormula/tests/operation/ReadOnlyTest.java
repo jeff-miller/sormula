@@ -115,6 +115,7 @@ public class ReadOnlyTest extends DatabaseTest<SormulaTest4RO>
         
         // test readonly at operation level
         getDatabase().setReadOnly(false); // operation gets false when created
+        @SuppressWarnings("resource") // delete method invokes close
         DeleteOperation<SormulaTest4RO> delete = new DeleteOperation<>(getTable());
         assert !delete.isReadOnly() : "incorrect read-only state";
         

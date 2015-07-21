@@ -10,6 +10,10 @@ version-jdk             comments
                         - remove deprecated Row#zeroRowCountPostExecute
                         - update jdbc drivers
                         - add identity column tests for sqlite
+                        
+            3.5-jdk1.7  - invoke close method within finally block for AutoCloseable classes so that  
+                          no resources are leaked if exception occurs 
+                        - suppress unnecessary resource leak warnings
 
             3.4-jdk1.7  - allow choice of method or direct field access or some combination
                           (see Column.fieldAccess and Row.fieldAccess)

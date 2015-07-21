@@ -167,24 +167,41 @@ public abstract class SelectOperation<R, C> extends ScalarSelectOperation<R> imp
     
     /**
      * Set parameters, executes, reads all rows in result set, closes.
+     * <p>
+     * Since this class implements {@link AutoCloseable}, you may see resource leak
+     * warning when you use this method. You can ignore it, add a suppress annotation, 
+     * explicitly close, or close with a try-with-resources statement. Closing an operation 
+     * more than once will not cause problems since the close methods are idempotent. 
      * 
      * @param parameters query parameters as objects (see {@link #setParameters(Object...)})
      * @return {@link #readAll()}
      * @throws OperationException if error
      * @since 1.4
      */
-    public C selectAll(Object... parameters) throws OperationException
+	public C selectAll(Object... parameters) throws OperationException
     {
         setParameters(parameters);
-        execute();
-        C results = readAll(); 
-        close();
+        C results;
+        try
+        {
+        	execute();
+        	results = readAll();
+        }
+        finally
+        {
+        	close();
+        }
         return results;
     }
     
     
     /**
      * Set parameters, executes, reads all rows in result set, closes.
+     * <p>
+     * Since this class implements {@link AutoCloseable}, you may see resource leak
+     * warning when you use this method. You can ignore it, add a suppress annotation, 
+     * explicitly close, or close with a try-with-resources statement. Closing an operation 
+     * more than once will not cause problems since the close methods are idempotent. 
      * 
      * @param whereParameters query parameters are read from an existing row object 
      * (see {@link #setParameters(Object...)})
@@ -192,12 +209,19 @@ public abstract class SelectOperation<R, C> extends ScalarSelectOperation<R> imp
      * @throws OperationException if error
      * @since 1.4
      */
-    public C selectAll(R whereParameters) throws OperationException
+	public C selectAll(R whereParameters) throws OperationException
     {
         setRowParameters(whereParameters);
-        execute();
-        C results = readAll(); 
-        close();
+        C results;
+        try
+        {
+        	execute();
+        	results = readAll();
+        }
+        finally
+        {
+        	close();
+        }
         return results;
     }
 

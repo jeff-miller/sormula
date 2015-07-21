@@ -61,6 +61,7 @@ public class FilterSelect extends ExampleBase
     void selectOrders(String productId) throws SormulaException
     {
         System.out.println("\nOrders that contain product " + productId + ":");
+        @SuppressWarnings("resource") // selectAll method invokes close
         ArrayListSelectOperation<Order> selectOrders = new ArrayListSelectOperation<>(database.getTable(Order.class), "");
         selectOrders.setSelectCascadeFilters(new ProductFilter(productId));
         

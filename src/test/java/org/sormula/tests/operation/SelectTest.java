@@ -99,6 +99,7 @@ public class SelectTest extends DatabaseTest<SormulaTest4>
         begin();
         int maxRows = getTable().<Integer>selectCount("id") / 2;
         assert maxRows > 0 : "no rows to test";
+        @SuppressWarnings("resource") // selectAll method invokes close
         ArrayListSelectOperation<SormulaTest4> s = new ArrayListSelectOperation<>(getTable(), "");
         s.setMaximumRowsRead(maxRows);
         assert maxRows == s.selectAll().size() : "setMaximumRowsRead failed";
@@ -204,6 +205,7 @@ public class SelectTest extends DatabaseTest<SormulaTest4>
         assert expectedCount > 0 : "no rows meet expected condition to test";
         
         // select all type 3 rows
+        @SuppressWarnings("resource") // selectAll method invokes close
         List<SormulaTest4> selectedList = new ArrayListSelectOperation<>(getTable(), "byType").selectAll(3);
 
         assert expectedCount == selectedList.size() : "simple select returned wrong number of rows";

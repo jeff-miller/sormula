@@ -40,7 +40,7 @@ public @interface WhereField
      * SQL boolean operator to use preceding this field. Possible operators are "AND", "OR", 
      * "AND NOT", "OR NOT", "NOT", etc. Operator has no affect for first field in where condition.
      *  
-     * @return Boolean opearator to be used before "column-name booleanOperator ?"  
+     * @return Boolean operator to be used before "column-name booleanOperator ?"  
      */
     String booleanOperator() default "AND";
 
@@ -55,7 +55,7 @@ public @interface WhereField
     
     /**
      * SQL comparison operator to use in condition "column-name comparisonOperator ?". Example
-     * operators are: "=", "<", "<=", ">", ">=", "LIKE", "<>", "IN", "NOT IN". For "IS NULL" use
+     * operators are: "=", "&lt;", "&lt;=", "&gt;", "&gt;=", "LIKE", "&lt;&gt;", "IN", "NOT IN". For "IS NULL" use
      * operator="IS" and operand="NULL".
      * <p>
      * When comparison operator is "IN" then the condition used is 

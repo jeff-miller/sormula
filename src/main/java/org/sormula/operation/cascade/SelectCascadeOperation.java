@@ -416,6 +416,7 @@ public class SelectCascadeOperation<S, T> extends CascadeOperation<S, T>
      * Override for custom parameter initialization.
      * 
      * @param sourceRow cascade source row
+     * @throws OperationException if error
      */
     protected void setParameters(S sourceRow) throws OperationException
     {

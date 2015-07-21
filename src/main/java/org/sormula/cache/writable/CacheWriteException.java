@@ -35,8 +35,8 @@ public class CacheWriteException extends CacheException
     /**
      * Constructs for a table, keys, and cause.
      * 
-     * @param clazz
-     * @param primaryKeys
+     * @param clazz class type of cached row
+     * @param primaryKeys primary keys of cached row
      * @param cause cause of exception
      */
     public CacheWriteException(Class<?> clazz, Object[] primaryKeys, Throwable cause)

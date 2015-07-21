@@ -200,7 +200,7 @@ public class ActiveTable<R extends ActiveRecord<? super R>>
      * <blockquote><pre>
      * ActiveDatabase activeDatabase = ...
      * ActiveTable&lt;Order&gt; table = new ActiveTable&lt;Order&gt;(activeDatabase, Order.class);
-     * List&ltOrder&gt; orders = table.selectAllCustom("where orderdate >= '2011-01-01'");
+     * List&lt;Order&gt; orders = table.selectAllCustom("where orderdate &gt;= '2011-01-01'");
      * </pre></blockquote>
      * @param customSql custom sql to be appended to base sql (for example, "where somecolumn=?")
      * @param parameters parameter value to be set in customSql
@@ -222,7 +222,7 @@ public class ActiveTable<R extends ActiveRecord<? super R>>
      * <blockquote><pre>
      * ActiveDatabase activeDatabase = ...
      * ActiveTable&lt;Order&gt; table = new ActiveTable&lt;Order&gt;(activeDatabase, Order.class);
-     * List&ltOrder&gt; orders = table.selectAll();
+     * List&lt;Order&gt; orders = table.selectAll();
      * </pre></blockquote>
      * @return list of all records; empty list if none found
      * @throws ActiveException if error
@@ -275,7 +275,7 @@ public class ActiveTable<R extends ActiveRecord<? super R>>
      * <blockquote><pre>
      * ActiveDatabase activeDatabase = ...
      * ActiveTable&lt;Order&gt; table = new ActiveTable&lt;Order&gt;(activeDatabase, Order.class);
-     * List&ltOrder&gt; orders = table.selectAllCustom("where orderdate >= '2011-01-01'");
+     * List&lt;Order&gt; orders = table.selectAllCustom("where orderdate &gt;= '2011-01-01'");
      * </pre></blockquote>
      * @param customSql custom sql to be appended to base sql (for example, "where somecolumn=?")
      * @param parameters parameter value to be set in customSql
@@ -571,6 +571,7 @@ public class ActiveTable<R extends ActiveRecord<? super R>>
      * Use this method when you want to insert a record with a known value for the
      * identity column.
      *  
+     * @param record record to insert
      * @return number of records affected; typically 1 if record was inserted or 0 if not inserted
      * @throws ActiveException if error
      * @since 3.1

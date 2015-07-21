@@ -530,6 +530,7 @@ public class Table<R> implements TypeTranslatorMap, TransactionListener
      * {@link NameTranslator#translate(String, Class)} for all name translators in
      * the order that they are defined.
      * 
+     * @param javaName class or field name
      * @return SQL name that corresponds to Java class or field name
      * @since 1.8 and 2.2
      * @see Row#nameTranslators()
@@ -679,7 +680,7 @@ public class Table<R> implements TypeTranslatorMap, TransactionListener
      * <blockquote><pre>
      * Database database = ...
      * Table&lt;Order&gt; table = database.getTable(Order.class);
-     * List&ltOrder&gt; orders = table.selectAll();
+     * List&lt;Order&gt; orders = table.selectAll();
      * </pre></blockquote>
      * @return list of all rows; empty list if none found
      * @throws SormulaException if error
@@ -785,7 +786,7 @@ public class Table<R> implements TypeTranslatorMap, TransactionListener
      * <blockquote><pre>
      * Database database = ...
      * Table&lt;Order&gt; table = database.getTable(Order.class);
-     * List&ltOrder&gt; orders = table.selectAllCustom("where orderdate >= '2011-01-01'");
+     * List&lt;Order&gt; orders = table.selectAllCustom("where orderdate &gt;= '2011-01-01'");
      * </pre></blockquote>
      * @param customSql custom sql to be appended to base sql (for example, "where somecolumn=?")
      * @param parameters parameter value to be set in customSql
@@ -813,7 +814,7 @@ public class Table<R> implements TypeTranslatorMap, TransactionListener
      * <blockquote><pre>
      * Database database = ...
      * Table&lt;Order&gt; table = database.getTable(Order.class);
-     * Order order = table.selectCustom("where orderdate >= '2011-01-01'");
+     * Order order = table.selectCustom("where orderdate &gt;= '2011-01-01'");
      * </pre></blockquote>
      * @param customSql custom sql to be appended to base sql (for example, "where somecolumn=?")
      * @param parameters parameter value to be set in customSql
@@ -832,10 +833,10 @@ public class Table<R> implements TypeTranslatorMap, TransactionListener
     
     
     /**
-     * Gets count of all rows in table. It is equivalent to <Integer>selectCount("*").
+     * Gets count of all rows in table. It is equivalent to &lt;Integer&gt;selectCount("*").
      * <P>
      * This method will throw an exception if database returns a long for the count instead
-     * of an int. Use <Long>selectCount("*") if long result is expected.
+     * of an int. Use &lt;Long&gt;selectCount("*") if long result is expected.
      * 
      * @return count of all rows in table
      * @throws SormulaException if error
@@ -848,17 +849,17 @@ public class Table<R> implements TypeTranslatorMap, TransactionListener
     
     /**
      * Selects count for a subset of rows. It is equivalent to 
-     * <Integer>selectCount("*", whereConditionName, parameters).
+     * &lt;Integer&gt;selectCount("*", whereConditionName, parameters).
      * <P>
      * This method will throw an exception if database returns a long for the count instead
-     * of an int. Use <Long>selectCount("*", whereConditionName, parameters) if long result is expected.
+     * of an int. Use &lt;Long&gt;selectCount("*", whereConditionName, parameters) if long result is expected.
      * <p>
      * Example:
      * <blockquote><pre>
      * Database database = ...
      * Table&lt;Order&gt; table = database.getTable(Order.class);
      *  
-     * // quantityExceeds is the name of a Where annotation on Order that filters quantity >= ?
+     * // quantityExceeds is the name of a Where annotation on Order that filters quantity &gt;= ?
      * int bigOrderCount = table.selectCount("quantityExceeds", 100);
      * </pre></blockquote>
      * @param whereConditionName name of where condition to use; empty string to count all rows in table

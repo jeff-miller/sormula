@@ -495,7 +495,8 @@ public abstract class ModifyOperation<R> extends SqlOperation<R>
      * @see SaveCascade#post()
      * @see DeleteCascade#post()
      * 
-     * @param row row for JDBC execute 
+     * @param row row for JDBC execute
+     * @throws OperationException if error 
      */
     protected void preExecuteCascade(R row) throws OperationException
     {
@@ -512,6 +513,7 @@ public abstract class ModifyOperation<R> extends SqlOperation<R>
      * @see DeleteCascade#post()
      * 
      * @param row row for JDBC execute 
+     * @throws OperationException if error
      */
     protected void postExecuteCascade(R row) throws OperationException
     {
@@ -533,6 +535,7 @@ public abstract class ModifyOperation<R> extends SqlOperation<R>
      * @return true if cache is authority for row (cache will modify row in database);
      * false if cache does not modify the database 
      * @since 3.0
+     * @throws OperationException if error
      */
     protected abstract boolean notifyCacheModify(R row) throws OperationException;
     
@@ -543,6 +546,7 @@ public abstract class ModifyOperation<R> extends SqlOperation<R>
 
      * @param row that was modified in database
      * @since 3.0
+     * @throws OperationException if error
      */
     protected abstract void notifyCacheModified(R row) throws OperationException;
 }

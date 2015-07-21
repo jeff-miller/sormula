@@ -69,14 +69,14 @@ import org.sormula.translator.standard.StringTranslator;
  * Database database = new Database(connection);
  * Table&lt;MyRow&gt; table = database.getTable(MyRow.class);
  * table.selectAll();
- * <pre></blockquote>
+ * </pre></blockquote>
  * <p>
  * Example - Construct database from JNDI:
  * <blockquote><pre>
  * Database database = new Database("java:comp/env/mydatasource");
  * Table&lt;MyRow&gt; table = database.getTable(MyRow.class);
  * table.selectAll();
- * <pre></blockquote>
+ * </pre></blockquote>
  * 
  * @since 1.0
  * @author Jeff Miller
@@ -302,9 +302,8 @@ public class Database implements TypeTranslatorMap, AutoCloseable
     /**
      * Invoked by constructor to initialize default type translators and type translators
      * annotated on {@link Database} class.
-     * <p>
-     * The default translators are:<br>
      * <table>
+     * <caption>Default Translators</caption>
      * <tr><th>Field Type</th><th>Translator</th></tr>
      * <tr><td>boolean / java.lang.Boolean</td><td>{@link BooleanTranslator}</td></tr>
      * <tr><td>byte / java.lang.Byte</td><td>{@link ByteTranslator}</td></tr>

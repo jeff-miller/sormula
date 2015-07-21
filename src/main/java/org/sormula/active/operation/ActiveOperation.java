@@ -160,8 +160,8 @@ public abstract class ActiveOperation<R extends ActiveRecord<? super R>, T>
     /**
      * Invoked by {@link #execute()} to perform the operation. Subclasses must implement.
      * 
-     * @return result of operation (Integer, List<R>, etc.)
-     * @throws Exception
+     * @return result of operation (Integer, List&lt;R&gt;, etc.)
+     * @throws Exception if error
      */
     protected abstract T operate() throws Exception;
 

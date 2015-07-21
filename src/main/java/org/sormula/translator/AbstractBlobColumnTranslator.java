@@ -95,7 +95,7 @@ public abstract class AbstractBlobColumnTranslator<R, T> extends AbstractColumnT
      * 
      * @param blob JDBC blob
      * @return domain object that is stored in database as SQL BLOB type
-     * @throws Exception
+     * @throws Exception if error
      */
     protected abstract T blobToField(Blob blob) throws Exception;
 }

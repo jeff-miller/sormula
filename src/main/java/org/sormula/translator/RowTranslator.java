@@ -51,7 +51,6 @@ import org.sormula.annotation.cascade.OneToManyCascade;
 import org.sormula.annotation.cascade.OneToOneCascade;
 import org.sormula.log.ClassLogger;
 import org.sormula.operation.ModifyOperation;
-import org.sormula.operation.OperationException;
 import org.sormula.reflect.FieldAccessType;
 import org.sormula.reflect.ReflectException;
 import org.sormula.reflect.RowField;
@@ -175,7 +174,7 @@ public class RowTranslator<R> extends ColumnsTranslator<R>
      * 
      * @param field create for this field
      * @return a concrete subclass of {@link RowField}
-     * @throws OperationException if error
+     * @throws TranslatorException if error
      * @since 3.4
      */
     public RowField<R, ?> createRowField(Field field) throws TranslatorException
@@ -433,8 +432,6 @@ public class RowTranslator<R> extends ColumnsTranslator<R>
      * one {@link ImplicitType#translator()} is different from existing.
      * 
      * @throws TranslatorException if error
-     * @throws IllegalAccessException 
-     * @throws InstantiationException 
      */
     @SuppressWarnings("unchecked") // field types are only known at runtime 
     protected void initColumnTranslators() throws TranslatorException
@@ -597,8 +594,8 @@ public class RowTranslator<R> extends ColumnsTranslator<R>
     /**
      * Process {@link UnusedColumns} annotations.
      * 
-     * @param rowClass
-     * @throws TranslatorException
+     * @param rowClass class of row 
+     * @throws TranslatorException if error
      */
     protected void initUnusedColumnSql(Class<R> rowClass) throws TranslatorException
     {

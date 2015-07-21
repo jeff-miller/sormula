@@ -62,8 +62,8 @@ public class SelectAggregateOperation<R, T> extends ScalarSelectOperation<R>
      * Database database = ...
      * Table&lt;Order&gt; table = database.getTable(Order.class);
      * // find largest order
-     * SelectAggregateOperation&ltOrder&gt; maxOrderOperation = 
-     *     new SelectAggregateOperation&ltOrder, Double&gt;(table, "MAX", "amount");
+     * SelectAggregateOperation&lt;Order&gt; maxOrderOperation = 
+     *     new SelectAggregateOperation&lt;Order, Double&gt;(table, "MAX", "amount");
      * maxOrderOperation.execute();    
      * double maxOrder = maxOrderOperation.readAggregate();
      * </pre></blockquote>

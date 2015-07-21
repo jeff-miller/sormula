@@ -244,7 +244,7 @@ public abstract class SelectOperation<R, C> extends ScalarSelectOperation<R> imp
      * prepared statement during {@link #prepare()} with
      * {@link PreparedStatement#setFetchSize(int)}.
      * 
-     * @param fetchSize
+     * @param fetchSize prepared statement fetch size
      * @since 3.0
      * @see PreparedStatement#setFetchSize(int)
      */

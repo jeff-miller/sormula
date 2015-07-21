@@ -110,7 +110,7 @@ public abstract class ActiveRecord<R extends ActiveRecord<? super R>> implements
      * Creates a table that can be used to for records of type recordClass for the default
      * active database. Use to initialize active record static table member like the following:
      * <blockquote><pre>
-     * public class SomeRecord extends ActiveRecord&lg;SomeRecord&gt;
+     * public class SomeRecord extends ActiveRecord&lt;SomeRecord&gt;
      * {
      *     private static final long serialVersionUID = 1L;
      *     public static final ActiveTable&lt;SomeRecord&gt; table = table(SomeRecord.class);
@@ -125,6 +125,7 @@ public abstract class ActiveRecord<R extends ActiveRecord<? super R>> implements
      * @param recordClass type of records of table
      * @return ActiveTable instance for records of type R
      * @throws ActiveException if error
+     * @param <R> record type
      */
     public static <R extends ActiveRecord<? super R>> ActiveTable<R> table(Class<R> recordClass) throws ActiveException
     {

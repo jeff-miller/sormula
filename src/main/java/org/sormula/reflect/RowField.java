@@ -37,6 +37,8 @@ public abstract class RowField<C, T> extends SormulaField<C, T>
      * @param field field to access
      * @return {@link MethodAccessField} or {@link DirectAccessField}
      * @throws ReflectException if error
+	 * @param <C> class containing the field
+	 * @param <T> class of field
      */
     public static <C, T> RowField<C, T> newInstance(FieldAccessType fieldAccessType, Field field) throws ReflectException
     {

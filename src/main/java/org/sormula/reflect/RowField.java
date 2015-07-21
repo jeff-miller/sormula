@@ -17,6 +17,9 @@
 package org.sormula.reflect;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.Method;
+import java.util.Collection;
+import java.util.Map;
 
 
 /**
@@ -27,9 +30,17 @@ import java.lang.reflect.Field;
  * @param <C> class containing the field
  * @param <T> class of field
  */
-public abstract class RowField<C, T> extends SormulaField<C, T> 
-// NOTE: SormulaField is base class so that RowField to help with backward compatibility with SormulaField
+public abstract class RowField<C, T> 
 {
+    Field field;
+    Method getMethod;
+    Method setMethod;
+    boolean scalar;
+    boolean array;
+    boolean collection;
+    boolean map;
+
+    
     /**
      * Factory method to create concrete {@link RowField} subclass instance for a field.
      * 
@@ -64,7 +75,7 @@ public abstract class RowField<C, T> extends SormulaField<C, T>
      */
     public RowField(Field field) throws ReflectException
     {
-        super(field);
+    	this(field, true);
     }
     
     
@@ -77,7 +88,127 @@ public abstract class RowField<C, T> extends SormulaField<C, T>
      */
     protected RowField(Field field, boolean initGettersAndSetters) throws ReflectException
     {
-        super(field, initGettersAndSetters);
+        this.field = field;
+        array = field.getType().isArray();
+        collection = isClass(Collection.class);
+        map = isClass(Map.class);
+        scalar = !(array || collection || map);
+        
+        if (initGettersAndSetters) initGettersAndSetters();
+    }
+    
+    
+    void initGettersAndSetters() throws ReflectException
+    {
+        String getterPrefix;
+        if (isBooleanMethod())
+        {
+            getterPrefix = "is";
+        }
+        else
+        {
+            getterPrefix = "get";
+        }
+        
+        String methodBaseName = field.getName().substring(0, 1).toUpperCase() + field.getName().substring(1);
+        String methodName = null;
+        
+        try
+        {
+            methodName = getterPrefix + methodBaseName;
+            getMethod = field.getDeclaringClass().getMethod(methodName);
+            
+            methodName = "set" + methodBaseName;
+            setMethod = field.getDeclaringClass().getMethod(methodName, field.getType());
+        }
+        catch (NoSuchMethodException e)
+        {
+            throw new ReflectException("missing method " + methodName + " for " + 
+                    field.getDeclaringClass().getCanonicalName(), e);
+        }
+    }
+    
+    
+    /**
+     * Gets field supplied in constructor.
+     * 
+     * @return field Java field
+     */
+    public Field getField()
+    {
+        return field;
+    }
+
+    
+    /**
+     * Gets field array type.
+     * 
+     * @return if field is an array
+     * @since 1.9 and 2.3
+     */
+    public boolean isArray()
+    {
+        return array;
+    }
+
+
+    /**
+     * Gets field {@link Collection} inheritance.
+     * 
+     * @return true if field is a {@link #collection}
+     * @since 1.9 and 2.3
+     */
+    public boolean isCollection()
+    {
+        return collection;
+    }
+
+
+    /**
+     * Gets field {@link Map} inheritance.
+     * 
+     * @return true if field is a {@link Map}
+     * @since 1.9 and 2.3
+     */
+    public boolean isMap()
+    {
+        return map;
+    }
+
+
+    /**
+     * Reports boolean return type of field.
+     * 
+     * @return true if field type is primitive boolean
+     */
+    public boolean isBooleanMethod()
+    {
+        return field.getType().getName().equals("boolean");
+    }
+    
+    
+    /**
+     * Reports if field is scalar.
+     * 
+     * @return true if field is not a {@link Collection} and not a {@link Map}
+     * @see #isClass(Class)
+     */
+    public boolean isScalar()
+    {
+        return scalar;
+    }
+
+
+    /**
+     * Tests if field is instance of class.
+     * 
+     * @param c class to test
+     * @return true if field is instance of c or subclass of c
+     * @see Class#isAssignableFrom(Class)
+     */
+    public boolean isClass(Class<?> c)
+    {
+        return c.isAssignableFrom(field.getType());
     }
     
     

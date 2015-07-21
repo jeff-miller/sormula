@@ -24,7 +24,6 @@ import java.sql.ResultSet;
 import org.sormula.annotation.Column;
 import org.sormula.log.ClassLogger;
 import org.sormula.reflect.RowField;
-import org.sormula.reflect.SormulaField;
 import org.sormula.translator.standard.ObjectTranslator;
 
 
@@ -41,7 +40,7 @@ public abstract class AbstractColumnTranslator<R, T> implements ColumnTranslator
     private static final ClassLogger log = new ClassLogger();
     
     String columnName;
-    SormulaField<R, T> sormulaField;
+    RowField<R, T> rowField;
     TypeTranslator<T> typeTranslator;
     boolean identity;
     boolean readOnly;
@@ -88,7 +87,7 @@ public abstract class AbstractColumnTranslator<R, T> implements ColumnTranslator
     public AbstractColumnTranslator(RowField<R, T> rowfield, String columnName) throws TranslatorException
     {
         this.columnName = columnName;
-        this.sormulaField = rowfield;
+        this.rowField = rowfield;
     
         Column columnAnnotation = rowfield.getField().getAnnotation(Column.class);
         if (columnAnnotation != null)
@@ -108,7 +107,7 @@ public abstract class AbstractColumnTranslator<R, T> implements ColumnTranslator
      */
     public Field getField()
     {
-        return sormulaField.getField();
+        return rowField.getField();
     }
 
 
@@ -167,19 +166,6 @@ public abstract class AbstractColumnTranslator<R, T> implements ColumnTranslator
     {
         this.readOnly = readOnly;
     }
-    
-
-    /**
-     * Gets the field as a {@link SormulaField}. Use {@link #getRowField()} instead of
-     * this method.
-     * 
-     * @return {@link SormulaField} for field supplied in constructor
-     */
-    @Deprecated
-    public SormulaField<R, T> getSormulaField()
-    {
-        return sormulaField;
-    }
 
     
     /**
@@ -190,8 +176,7 @@ public abstract class AbstractColumnTranslator<R, T> implements ColumnTranslator
      */
     public RowField<R, T> getRowField()
     {
-        // note: cast will fail if deprecated constructor was used
-        return (RowField<R, T>)sormulaField;
+        return (RowField<R, T>)rowField;
     }
 
     
@@ -202,7 +187,7 @@ public abstract class AbstractColumnTranslator<R, T> implements ColumnTranslator
     {
         if (typeTranslator != null)
         {
-            typeTranslator.write(preparedStatement, parameterIndex, sormulaField.get(row));
+            typeTranslator.write(preparedStatement, parameterIndex, rowField.get(row));
         }
         else
         {
@@ -218,7 +203,7 @@ public abstract class AbstractColumnTranslator<R, T> implements ColumnTranslator
     {
         if (typeTranslator != null)
         {
-            sormulaField.set(row, typeTranslator.read(resultSet, columnIndex));
+            rowField.set(row, typeTranslator.read(resultSet, columnIndex));
         }
         else
         {

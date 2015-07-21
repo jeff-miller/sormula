@@ -35,7 +35,6 @@ import org.sormula.operation.SelectOperation;
 import org.sormula.operation.filter.SelectCascadeFilter;
 import org.sormula.reflect.ReflectException;
 import org.sormula.reflect.RowField;
-import org.sormula.reflect.SormulaField;
 import org.sormula.translator.ColumnTranslator;
 import org.sormula.translator.RowTranslator;
 import org.sormula.translator.TranslatorException;
@@ -483,7 +482,7 @@ public class SelectCascadeOperation<S, T> extends CascadeOperation<S, T>
                 WhereTranslator<T> whereTranslator = new WhereTranslator<T>(targetRowTranslator, getTargetForeignKeyValueFieldList().size());
                 
                 // for all foreign key fields in target
-                for (SormulaField<T, Object> tfk : getTargetForeignKeyValueFieldList())
+                for (RowField<T, Object> tfk : getTargetForeignKeyValueFieldList())
                 {
                     // look up target column translator of same name
                     if (log.isDebugEnabled()) log.debug("add field " + tfk.getField());

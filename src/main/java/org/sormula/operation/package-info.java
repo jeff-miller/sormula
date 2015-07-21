@@ -33,7 +33,7 @@
  * <blockquote><pre>
  * Database database = ...
  * Table&lt;Student&gt; table = database.getTable(Student.class);
- * ArrayListSelectOperation&lt;Student&gt op = 
+ * ArrayListSelectOperation&lt;Student&gt; op = 
  *     new ArrayListSelectOperation&lt;&gt;(table, "byType");
  * op.setParameters(3);
  * op.execute(); // JDBC prepare occurs here
@@ -47,7 +47,7 @@
  * <blockquote><pre>
  * Database database = ...
  * Table&lt;Student&gt; table = database.getTable(Student.class);
- * UpdateOperation&lt;Student&gt op = new UpdateOperation&lt;&gt;(table);
+ * UpdateOperation&lt;Student&gt; op = new UpdateOperation&lt;&gt;(table);
  * List&lt;Student&gt; list1 = ...;    
  * op.setRows(list1);
  * op.execute(); // JDBC prepare occurs here

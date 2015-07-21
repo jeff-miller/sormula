@@ -339,7 +339,7 @@ public class ReadWriteCache<R> extends WritableCache<R>
      * notified of an update since {@link ReadWriteCache} will be updating the database. 
      * 
      * @param row ignored
-     * @throws IllegalCacheOperationException
+     * @throws IllegalCacheOperationException if error
      */
     public void updated(R row) throws CacheException
     {
@@ -352,7 +352,7 @@ public class ReadWriteCache<R> extends WritableCache<R>
      * notified of an save since {@link ReadWriteCache} will be saving to the database. 
      * 
      * @param row ignored
-     * @throws IllegalCacheOperationException
+     * @throws IllegalCacheOperationException if error
      * @since 3.4
      */
     public void saved(R row) throws CacheException
@@ -366,7 +366,7 @@ public class ReadWriteCache<R> extends WritableCache<R>
      * notified of a delete since {@link ReadWriteCache} will be deleting from the database. 
      * 
      * @param row ignored
-     * @throws IllegalCacheOperationException
+     * @throws IllegalCacheOperationException if error
      */
     public void deleted(R row) throws CacheException
     {

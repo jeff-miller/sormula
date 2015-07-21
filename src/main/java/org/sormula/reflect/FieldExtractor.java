@@ -48,6 +48,7 @@ public class FieldExtractor<R>
      * 
      * @param whereTranslator use fields from this translator
      * @since 3.4
+     * @throws ReflectException if error
      */
     public FieldExtractor(AbstractWhereTranslator<R> whereTranslator) throws ReflectException
     {
@@ -60,6 +61,7 @@ public class FieldExtractor<R>
      * 
      * @param rowTranslator use fields from this translator
      * @since 3.4
+     * @throws ReflectException if error
      */
     public FieldExtractor(RowTranslator<R> rowTranslator) throws ReflectException
     {
@@ -91,6 +93,7 @@ public class FieldExtractor<R>
      * 
      * @param row obtain values from this row
      * @return field values as Object array
+     * @throws ReflectException if error
      */
     public Object[] getFieldValues(R row) throws ReflectException
     {

@@ -143,7 +143,7 @@ public class Transaction
 	
 	/**
 	 * Aborts the transaction by invoking {@link Connection#rollback()}.
-	 * @throws SormulaException
+	 * @throws SormulaException if error
 	 */
 	public void rollback() throws SormulaException
 	{

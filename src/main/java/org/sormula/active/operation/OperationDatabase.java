@@ -84,7 +84,7 @@ public class OperationDatabase extends Database
 
     /**
      * {@inheritDoc}
-     * Cascade operations for Table<R> may invoke getTable for some cascaded Table<T> where T is different from R.
+     * Cascade operations for Table$lt;R&gt; may invoke getTable for some cascaded Table&lt;T&gt; where T is different from R.
      */
     @Override
     @SuppressWarnings("unchecked") // can't change signature to R<? extends ActiveRecord>

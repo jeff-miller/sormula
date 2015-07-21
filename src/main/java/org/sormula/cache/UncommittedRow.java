@@ -24,7 +24,7 @@ package org.sormula.cache;
  * @author Jeff Miller
  * @since 3.0
  *
- * @param <R>
+ * @param <R> cached row type
  */
 public abstract class UncommittedRow<R>
 {

@@ -34,6 +34,7 @@ public class WhereTranslator<R> extends AbstractWhereTranslator<R>
      * and {@link #addColumnTranslator(ColumnTranslator, String, String, String)}.
      * 
      * @param rowTranslator row translator for where condition
+     * @param initialCapacity approximate number of columns that will be in translator
      * @throws TranslatorException if error
      * @since 3.1
      */

@@ -753,6 +753,7 @@ public class ScalarSelectOperation<R> extends SqlOperation<R>
      * where {@link SelectCascade#post()} is false.
      * 
      * @param row row that will get column values from table 
+     * @throws OperationException if error
      */
     protected void preReadCascade(R row) throws OperationException
     {
@@ -764,7 +765,8 @@ public class ScalarSelectOperation<R> extends SqlOperation<R>
      * Invoked after reading row. Performs all select cascade operations 
      * where {@link SelectCascade#post()} is true.
      * 
-     * @param row row that got column values from table 
+     * @param row row that got column values from table
+     * @throws OperationException if error 
      */
     protected void postReadCascade(R row) throws OperationException
     {

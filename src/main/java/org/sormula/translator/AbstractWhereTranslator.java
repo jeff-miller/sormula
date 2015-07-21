@@ -129,7 +129,7 @@ public abstract class AbstractWhereTranslator<R> extends ColumnsTranslator<R>
      * 
      * @param c column translator to add
      * @param booleanOperator logical operator to precede this column (examples: "AND", "OR", "AND NOT", etc.)
-     * @param comparisonOperator sql comparison operator to use in where condition (examples: ">", "=<", "<>", etc.)
+     * @param comparisonOperator sql comparison operator to use in where condition (examples: "&gt;", "=&lt;", "&lt;&gt;", etc.)
      * @param operand operand to follow operator; typically "?" indicates operand is SQL parameter
      * @since 1.4
      */

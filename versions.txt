@@ -2,7 +2,8 @@ Version History
 
 version-jdk             comments
 ------------------------------------------------------------------------------------------------------------
-4.0-jdk1.8              - remove deprecated SormulaField (replaced by RowField)
+4.0-jdk1.8              - fix javadoc errors
+                        - remove deprecated SormulaField (replaced by RowField)
                         - remove deprecated Table#isLegacyAnnotationPrecedence
                         - remove deprecated newInstance method and constructor from AbstractColumnTranslator
                         - remove deprecated FieldExtractor constructor 

@@ -324,7 +324,7 @@ public abstract class SqlOperation<R> implements AutoCloseable
     /**
      * Indicates that cascades will occur with this operation.
      * 
-     * @return {@link #isCascade()} && at least one cascade operation is defined
+     * @return {@link #isCascade()} and at least one cascade operation is defined
      * @since 3.1
      */
     protected boolean isCascading()
@@ -388,6 +388,7 @@ public abstract class SqlOperation<R> implements AutoCloseable
      * @param parameterIndex jdbc prepared statement parameter index
      * @param parameter parameter value
      * @throws Exception if no translator exists for parameter class or error writing parameter
+     * @param <T> type of parameter
      */
     @SuppressWarnings("unchecked") // types are not known until runtime
     protected <T> void writeParameter(int parameterIndex, T parameter) throws Exception
@@ -997,6 +998,7 @@ public abstract class SqlOperation<R> implements AutoCloseable
      * @param whereConditionName name of where condition to use; 
      * "primaryKey" for key defined by {@link Column#primaryKey()}, {@link Column#identity()}, 
      * or {@link Row#primaryKeyFields()}; empty string for no where condition
+     * @throws OperationException if error
      */
     public void setWhere(String whereConditionName) throws OperationException
     {

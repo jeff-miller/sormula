@@ -30,7 +30,7 @@ import org.sormula.operation.ScalarSelectOperation;
  * create a method for each row type to filter.
  * <p>
  * By default all rows are accepted. For each row runtime type of T, create a method like:<br>
- * <code>public boolean accept(ScalarSelectOperation<?> source, T row, boolean cascadesCompleted)</code><br>
+ * <code>public boolean accept(ScalarSelectOperation&lt;?&gt; source, T row, boolean cascadesCompleted)</code><br>
  * Return true to keep row, false to eliminate row from results.
  * 
  * @since 3.1

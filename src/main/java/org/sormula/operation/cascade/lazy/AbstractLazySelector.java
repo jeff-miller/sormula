@@ -116,7 +116,7 @@ abstract public class AbstractLazySelector<R> implements LazySelectable, Seriali
      * Invoked by {@link #checkLazySelects(String)} to close the {@link Database} instance that 
      * was used to perform the lazy selects.
      * 
-     * @throws LazyCascadeException
+     * @throws LazyCascadeException if error
      * @since 1.9 and 2.3
      */
     abstract protected void closeDatabase() throws LazyCascadeException;

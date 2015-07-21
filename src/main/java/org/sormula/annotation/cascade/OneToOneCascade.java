@@ -72,7 +72,6 @@ import org.sormula.translator.TypeTranslator;
        ...
    }
  * </pre></blockquote>
- * </p>
  * 
  * @since 1.0
  * @author Jeff Miller
@@ -151,7 +150,7 @@ public @interface OneToOneCascade
      * {@link Column#identity()}, or {@link Row#primaryKeyFields()}.
      * <p>
      * When "#" is used, then cascade assumes that source key field names are the
-     * same as target (child) key field names. For example: Parent.parentId --> Child.parentId.
+     * same as target (child) key field names. For example: Parent.parentId --&gt; Child.parentId.
      * <p>
      * If explicit fields are named, then they must be in same order as source row primary key fields.
      * 

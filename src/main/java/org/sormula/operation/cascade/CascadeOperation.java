@@ -324,6 +324,8 @@ public abstract class CascadeOperation<S, T> implements AutoCloseable
     /**
      * Creates new instance of sql operation from {@link #cascadeOperationClass} supplied in the 
      * constructor.
+     * @return new instance of {@link SqlOperation} that will be used for cascade
+     * @throws OperationException if error
      */
     protected SqlOperation<?> createOperation() throws OperationException
     {

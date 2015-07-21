@@ -204,7 +204,7 @@ public class ElapsedTime
 
     
     /**
-     * @return average elapsed nanoseconds if count > 0; otherwise 0
+     * @return average elapsed nanoseconds if count is greater than 0; otherwise 0
      */
     public long getAverageTime()
     {

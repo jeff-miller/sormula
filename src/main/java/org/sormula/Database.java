@@ -19,6 +19,7 @@ package org.sormula;
 import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.GregorianCalendar;
@@ -50,6 +51,7 @@ import org.sormula.translator.standard.DoubleTranslator;
 import org.sormula.translator.standard.FloatTranslator;
 import org.sormula.translator.standard.GregorianCalendarTranslator;
 import org.sormula.translator.standard.IntegerTranslator;
+import org.sormula.translator.standard.LocalDateTranslator;
 import org.sormula.translator.standard.LongTranslator;
 import org.sormula.translator.standard.ObjectTranslator;
 import org.sormula.translator.standard.ShortTranslator;
@@ -319,6 +321,7 @@ public class Database implements TypeTranslatorMap, AutoCloseable
      * <tr><td>java.sql.Time</td><td>{@link SqlTimeTranslator}</td></tr>
      * <tr><td>java.sql.Timestamp</td><td>{@link SqlTimestampTranslator}</td></tr>
      * <tr><td>java.util.GregorianCalendar</td><td>{@link GregorianCalendarTranslator}</td></tr>
+     * <tr><td>java.time.LocalDate</td><td>{@link LocalDateTranslator}</td></tr>
      * </table>
      * @throws SormulaException if error
      */
@@ -351,6 +354,7 @@ public class Database implements TypeTranslatorMap, AutoCloseable
         putTypeTranslator(java.sql.Time.class, new SqlTimeTranslator());
         putTypeTranslator(java.sql.Timestamp.class, new SqlTimestampTranslator());
         putTypeTranslator(GregorianCalendar.class, new GregorianCalendarTranslator());
+        putTypeTranslator(LocalDate.class, new LocalDateTranslator());
         
         // custom types
         try

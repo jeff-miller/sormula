@@ -18,6 +18,7 @@ package org.sormula.tests.translator;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.time.LocalDate;
 import java.util.GregorianCalendar;
 
 import org.sormula.SormulaException;
@@ -65,6 +66,7 @@ public class ColumnTranslatorTest extends DatabaseTest<SormulaTest1>
             " testSqlDate DATE," +
             " testSqlTimestamp TIMESTAMP," +
             " testGc TIMESTAMP," +
+            " testLocalDate DATE," +
             " testString1 VARCHAR(20)," +
             " ts2 CHAR(20)," +
             " testEnum1 VARCHAR(10)," +
@@ -85,7 +87,7 @@ public class ColumnTranslatorTest extends DatabaseTest<SormulaTest1>
     {
         SormulaTest1 inserted = new SormulaTest1();
         
-        // primatives and object equivalents
+        // primitives and object equivalents
         inserted.setTestBoolean1(true);
         inserted.setTestBoolean2(true);
         inserted.setTestBooleanYN1(true);
@@ -115,6 +117,7 @@ public class ColumnTranslatorTest extends DatabaseTest<SormulaTest1>
         inserted.setTestSqlDate(new java.sql.Date(new GregorianCalendar(2010, 6, 4).getTimeInMillis()));
         inserted.setTestSqlTimestamp(new java.sql.Timestamp(System.currentTimeMillis()));
         inserted.setTestGc(new GregorianCalendar());
+        inserted.setTestLocalDate(LocalDate.now());
         
         begin();
         assert getTable().insert(inserted) == 1 : "1 row not inserted";
@@ -179,6 +182,7 @@ public class ColumnTranslatorTest extends DatabaseTest<SormulaTest1>
         assert inserted.getTestSqlDate()     .equals(selected.getTestSqlDate())      : "testSqlDate" + message;
         assert inserted.getTestSqlTimestamp().equals(selected.getTestSqlTimestamp()) : "testSqlTimestamp" + message;
         assert inserted.getTestGc()          .equals(selected.getTestGc())           : "testGc" + message;
+        assert inserted.getTestLocalDate()   .equals(selected.getTestLocalDate())    : "testLocalDate" + message;
         
         // enum tests
         assert inserted.getTestEnum1().equals(selected.getTestEnum1()) : "testEnum1" + message;
@@ -193,7 +197,7 @@ public class ColumnTranslatorTest extends DatabaseTest<SormulaTest1>
     {
         begin();
         
-        // non primative members will be null
+        // non primitive members will be null
         SormulaTest1 inserted = new SormulaTest1();
         inserted.setTestString1("nullTest"); // id for select
         
@@ -205,7 +209,7 @@ public class ColumnTranslatorTest extends DatabaseTest<SormulaTest1>
             inserted.setTestBoolean2(false);
         }
         
-        // insert row with null for non primatives 
+        // insert row with null for non primitives 
         getTable().insert(inserted);
         
         SormulaTest1 selected = getTable().selectWhere("forTestSting1", inserted.getTestString1());
@@ -220,6 +224,7 @@ public class ColumnTranslatorTest extends DatabaseTest<SormulaTest1>
         assert selected.getTestInteger2() == null : "testInteger2" + message;
         assert selected.getTestShort2() == null : "testShort2" + message;
         assert selected.getTestGc() == null : "testGc" + message;
+        assert selected.getTestLocalDate() == null : "testLocalDate" + message;
         // DateTranslator null is tested in selectTest()
         assert selected.getTestSqlDate() == null : "testSqlDate" + message;
         assert selected.getTestSqlTimestamp() == null : "testSqlTimestamp" + message;

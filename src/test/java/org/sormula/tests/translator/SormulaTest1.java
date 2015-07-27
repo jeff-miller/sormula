@@ -16,6 +16,7 @@
  */
 package org.sormula.tests.translator;
 
+import java.time.LocalDate;
 import java.util.GregorianCalendar;
 
 import org.sormula.annotation.Column;
@@ -55,6 +56,7 @@ public class SormulaTest1
     java.sql.Date testSqlDate;
     java.sql.Timestamp testSqlTimestamp;
     GregorianCalendar testGc;
+    LocalDate testLocalDate;
     String testString1;
     EnumField testEnum1;
     
@@ -224,7 +226,15 @@ public class SormulaTest1
     {
         this.testGc = testGc;
     }
-    public String getTestString1()
+    public LocalDate getTestLocalDate() 
+    {
+		return testLocalDate;
+	}
+	public void setTestLocalDate(LocalDate testLocalDate) 
+	{
+		this.testLocalDate = testLocalDate;
+	}
+	public String getTestString1()
     {
         return testString1;
     }

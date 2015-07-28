@@ -159,6 +159,11 @@ public @interface SelectCascade
      * Method name in target class that returns row key value for adding to map
      * results. Key method name is required when {@link #operation()} is instance of
      * {@link MapSelectOperation}; otherwise it is ignored.
+     * <p>
+     * The method used for target key is likely the primary key for the row but
+     * may be some other method if select cascade produces a subset of rows.
+     * <p>
+     * TODO: implement "#primaryKey" to use target primary key method (works only with single primary key)?
      *  
      * @return name of method that gets key value from target row
      */

@@ -154,7 +154,9 @@ public class SelectTest extends DatabaseTest<SormulaTestA>
         try (LinkedHashMapSelectOperation<Integer, SormulaTestA> operation = 
             new LinkedHashMapSelectOperation<>(getTable(), "" /*select all*/))
         {
-            operation.setGetKeyMethodName("getId");
+            //TODO operation.setGetKeyMethodName("getId");
+        	operation.setGetKeyFunction(SormulaTestA::getId); // TODO keep or move to separate test?
+        	//operation.setGetKeyFunction(r -> r.getId()); // TODO test this?
             
             // select into map
             operation.setOrderBy("ob2"); // by description

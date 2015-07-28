@@ -18,6 +18,7 @@ package org.sormula.operation;
 
 import java.lang.reflect.Method;
 import java.util.Map;
+import java.util.function.Function;
 
 import org.sormula.Table;
 
@@ -33,6 +34,7 @@ import org.sormula.Table;
 public abstract class MapSelectOperation<K, R> extends SelectOperation<R, Map<K, R>>
 {
 	Method getKeyMethod;
+	Function<R, K> getKeyFunction; // TODO name? keyFunction?
 	
 	
 	/**
@@ -77,6 +79,7 @@ public abstract class MapSelectOperation<K, R> extends SelectOperation<R, Map<K,
 	 * @param getKeyMethodName name of row method to get key for Map 
 	 * @throws OperationException if error
 	 */
+    // TODO deprecate?
 	public void setGetKeyMethodName(String getKeyMethodName) throws OperationException
 	{
         try
@@ -91,10 +94,31 @@ public abstract class MapSelectOperation<K, R> extends SelectOperation<R, Map<K,
 	
 	
 	/**
+	 * TODO
+	 * @return
+	 */
+	public Function<R, K> getGetKeyFunction() 
+	{
+		return getKeyFunction;
+	}
+
+
+	/**
+	 * TODO
+	 * @param getKeyFunction
+	 */
+	public void setGetKeyFunction(Function<R, K> getKeyFunction) 
+	{
+		this.getKeyFunction = getKeyFunction;
+	}
+
+
+	/**
 	 * Return the name of the method for the row R that returns the Map key K. The default is "hashCode".
 	 * 
 	 * @return name of row method that gets row key for Map or null if none
 	 */
+	// TODO deprecate?
 	public String getGetKeyMethodName()
 	{
 	    if (getKeyMethod != null)
@@ -116,7 +140,7 @@ public abstract class MapSelectOperation<K, R> extends SelectOperation<R, Map<K,
 	{
 		super.prepare();
 		
-		if (getKeyMethod == null)
+		if (getKeyFunction == null && getKeyMethod == null)
 		{
 			// default get key method is hashCode()
 		    setGetKeyMethodName("hashCode");
@@ -144,15 +168,24 @@ public abstract class MapSelectOperation<K, R> extends SelectOperation<R, Map<K,
      */
 	protected K getKey(R row) throws OperationException
     {
-    	try
-    	{
-    		@SuppressWarnings("unchecked") // invoke returns Object
-    		K key = (K)getKeyMethod.invoke(row);
-    		return key;
-    	}
-    	catch (Exception e)
-    	{
-    		throw new OperationException("error getting key value", e);
-    	}
+		if (getKeyFunction != null)
+		{
+			// function specified, use it
+			return getKeyFunction.apply(row);
+		}
+		else
+		{
+			// assume method name specified, get key with method
+	    	try
+	    	{
+	    		@SuppressWarnings("unchecked") // invoke returns Object
+	    		K key = (K)getKeyMethod.invoke(row);
+	    		return key;
+	    	}
+	    	catch (Exception e)
+	    	{
+	    		throw new OperationException("error getting key value", e);
+	    	}
+		}
     }
 }

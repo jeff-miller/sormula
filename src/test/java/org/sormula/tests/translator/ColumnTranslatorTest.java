@@ -18,6 +18,7 @@ package org.sormula.tests.translator;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.time.Instant;
 import java.time.LocalDate;
 import java.util.GregorianCalendar;
 
@@ -67,6 +68,7 @@ public class ColumnTranslatorTest extends DatabaseTest<SormulaTest1>
             " testSqlTimestamp TIMESTAMP," +
             " testGc TIMESTAMP," +
             " testLocalDate DATE," +
+            " testInstant TIMESTAMP," +
             " testString1 VARCHAR(20)," +
             " ts2 CHAR(20)," +
             " testEnum1 VARCHAR(10)," +
@@ -118,6 +120,7 @@ public class ColumnTranslatorTest extends DatabaseTest<SormulaTest1>
         inserted.setTestSqlTimestamp(new java.sql.Timestamp(System.currentTimeMillis()));
         inserted.setTestGc(new GregorianCalendar());
         inserted.setTestLocalDate(LocalDate.now());
+        inserted.setTestInstant(Instant.now());
         
         begin();
         assert getTable().insert(inserted) == 1 : "1 row not inserted";
@@ -183,6 +186,7 @@ public class ColumnTranslatorTest extends DatabaseTest<SormulaTest1>
         assert inserted.getTestSqlTimestamp().equals(selected.getTestSqlTimestamp()) : "testSqlTimestamp" + message;
         assert inserted.getTestGc()          .equals(selected.getTestGc())           : "testGc" + message;
         assert inserted.getTestLocalDate()   .equals(selected.getTestLocalDate())    : "testLocalDate" + message;
+        assert inserted.getTestInstant()     .equals(selected.getTestInstant())      : "testInstant" + message;
         
         // enum tests
         assert inserted.getTestEnum1().equals(selected.getTestEnum1()) : "testEnum1" + message;
@@ -225,6 +229,7 @@ public class ColumnTranslatorTest extends DatabaseTest<SormulaTest1>
         assert selected.getTestShort2() == null : "testShort2" + message;
         assert selected.getTestGc() == null : "testGc" + message;
         assert selected.getTestLocalDate() == null : "testLocalDate" + message;
+        assert selected.getTestInstant() == null : "testInstant" + message;
         // DateTranslator null is tested in selectTest()
         assert selected.getTestSqlDate() == null : "testSqlDate" + message;
         assert selected.getTestSqlTimestamp() == null : "testSqlTimestamp" + message;

@@ -16,6 +16,7 @@
  */
 package org.sormula.tests.translator;
 
+import java.time.Instant;
 import java.time.LocalDate;
 import java.util.GregorianCalendar;
 
@@ -57,6 +58,7 @@ public class SormulaTest1
     java.sql.Timestamp testSqlTimestamp;
     GregorianCalendar testGc;
     LocalDate testLocalDate;
+    Instant testInstant;
     String testString1;
     EnumField testEnum1;
     
@@ -233,6 +235,14 @@ public class SormulaTest1
 	public void setTestLocalDate(LocalDate testLocalDate) 
 	{
 		this.testLocalDate = testLocalDate;
+	}
+	public Instant getTestInstant() 
+	{
+		return testInstant;
+	}
+	public void setTestInstant(Instant testInstant) 
+	{
+		this.testInstant = testInstant;
 	}
 	public String getTestString1()
     {

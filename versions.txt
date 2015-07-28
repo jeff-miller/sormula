@@ -2,7 +2,7 @@ Version History
 
 version-jdk             comments
 ------------------------------------------------------------------------------------------------------------
-4.0-jdk1.8              - add default translators for java.time.LocalDate, java.time.LocalTime
+4.0-jdk1.8              - add default translators for java.time.LocalDate, java.time.LocalTime, java.time.Instant
                         - fix javadoc errors
                         - remove deprecated SormulaField (replaced by RowField)
                         - remove deprecated Table#isLegacyAnnotationPrecedence

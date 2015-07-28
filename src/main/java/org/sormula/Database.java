@@ -19,6 +19,7 @@ package org.sormula;
 import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
@@ -51,6 +52,7 @@ import org.sormula.translator.standard.DateTranslator;
 import org.sormula.translator.standard.DoubleTranslator;
 import org.sormula.translator.standard.FloatTranslator;
 import org.sormula.translator.standard.GregorianCalendarTranslator;
+import org.sormula.translator.standard.InstantTranslator;
 import org.sormula.translator.standard.IntegerTranslator;
 import org.sormula.translator.standard.LocalDateTranslator;
 import org.sormula.translator.standard.LocalTimeTranslator;
@@ -325,6 +327,7 @@ public class Database implements TypeTranslatorMap, AutoCloseable
      * <tr><td>java.util.GregorianCalendar</td><td>{@link GregorianCalendarTranslator}</td></tr>
      * <tr><td>java.time.LocalDate</td><td>{@link LocalDateTranslator}</td></tr>
      * <tr><td>java.time.LocalTime</td><td>{@link LocalTimeTranslator}</td></tr>
+     * <tr><td>java.time.Instant</td><td>{@link InstantTranslator}</td></tr>
      * </table>
      * @throws SormulaException if error
      */
@@ -359,6 +362,7 @@ public class Database implements TypeTranslatorMap, AutoCloseable
         putTypeTranslator(GregorianCalendar.class, new GregorianCalendarTranslator());
         putTypeTranslator(LocalDate.class, new LocalDateTranslator());
         putTypeTranslator(LocalTime.class, new LocalTimeTranslator());
+        putTypeTranslator(Instant.class, new InstantTranslator());
         
         // custom types
         try

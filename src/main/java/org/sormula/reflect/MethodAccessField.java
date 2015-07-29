@@ -38,7 +38,9 @@ import org.sormula.log.ClassLogger;
 public class MethodAccessField<C, T> extends RowField<C, T>
 {
     private static final ClassLogger log = new ClassLogger();
-    
+    Method getMethod;
+    Method setMethod;
+
     
     /**
      * Constructs for a field.
@@ -48,7 +50,39 @@ public class MethodAccessField<C, T> extends RowField<C, T>
      */
     public MethodAccessField(Field field) throws ReflectException
     {
-        super(field, true);
+        super(field);
+        initGettersAndSetters();
+    }
+    
+    
+    void initGettersAndSetters() throws ReflectException
+    {
+        String getterPrefix;
+        if (isBooleanMethod())
+        {
+            getterPrefix = "is";
+        }
+        else
+        {
+            getterPrefix = "get";
+        }
+        
+        String methodBaseName = field.getName().substring(0, 1).toUpperCase() + field.getName().substring(1);
+        String methodName = null;
+        
+        try
+        {
+            methodName = getterPrefix + methodBaseName;
+            getMethod = field.getDeclaringClass().getMethod(methodName);
+            
+            methodName = "set" + methodBaseName;
+            setMethod = field.getDeclaringClass().getMethod(methodName, field.getType());
+        }
+        catch (NoSuchMethodException e)
+        {
+            throw new ReflectException("missing method " + methodName + " for " + 
+                    field.getDeclaringClass().getCanonicalName(), e);
+        }
     }
 
     
@@ -94,4 +128,24 @@ public class MethodAccessField<C, T> extends RowField<C, T>
             throw new ReflectException("error setting value=" + value + " for " + setMethod, e);
         }
     }
+
+
+    /**
+     * @return method class corresponding to get method
+     * @since 4.0
+     */
+	public Method getGetMethod() 
+	{
+		return getMethod;
+	}
+
+
+    /**
+     * @return method class corresponding to set method
+     * @since 4.0
+     */
+	public Method getSetMethod() 
+	{
+		return setMethod;
+	}
 }

@@ -17,7 +17,6 @@
 package org.sormula.reflect;
 
 import java.lang.reflect.Field;
-import java.lang.reflect.Method;
 import java.util.Collection;
 import java.util.Map;
 
@@ -33,8 +32,6 @@ import java.util.Map;
 public abstract class RowField<C, T> 
 {
     Field field;
-    Method getMethod;
-    Method setMethod;
     boolean scalar;
     boolean array;
     boolean collection;
@@ -77,57 +74,11 @@ public abstract class RowField<C, T>
      */
     public RowField(Field field) throws ReflectException
     {
-    	this(field, true);
-    }
-    
-    
-    /**
-     * Constructs and optionally initializes getter/setter method references.
-     * 
-     * @param field java reflection Field that corresponds to class variable
-     * @param initGettersAndSetters true to get references to getter and setter methods
-     * @throws ReflectException if error
-     */
-    protected RowField(Field field, boolean initGettersAndSetters) throws ReflectException
-    {
         this.field = field;
         array = field.getType().isArray();
         collection = isClass(Collection.class);
         map = isClass(Map.class);
         scalar = !(array || collection || map);
-        
-        if (initGettersAndSetters) initGettersAndSetters();
-    }
-    
-    
-    void initGettersAndSetters() throws ReflectException
-    {
-        String getterPrefix;
-        if (isBooleanMethod())
-        {
-            getterPrefix = "is";
-        }
-        else
-        {
-            getterPrefix = "get";
-        }
-        
-        String methodBaseName = field.getName().substring(0, 1).toUpperCase() + field.getName().substring(1);
-        String methodName = null;
-        
-        try
-        {
-            methodName = getterPrefix + methodBaseName;
-            getMethod = field.getDeclaringClass().getMethod(methodName);
-            
-            methodName = "set" + methodBaseName;
-            setMethod = field.getDeclaringClass().getMethod(methodName, field.getType());
-        }
-        catch (NoSuchMethodException e)
-        {
-            throw new ReflectException("missing method " + methodName + " for " + 
-                    field.getDeclaringClass().getCanonicalName(), e);
-        }
     }
     
     

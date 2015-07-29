@@ -34,7 +34,7 @@ import org.sormula.Table;
 public abstract class MapSelectOperation<K, R> extends SelectOperation<R, Map<K, R>>
 {
 	Method getKeyMethod;
-	Function<R, K> getKeyFunction; // TODO name? keyFunction?
+	Function<R, K> keyFunction;
 	
 	
 	/**
@@ -78,8 +78,9 @@ public abstract class MapSelectOperation<K, R> extends SelectOperation<R, Map<K,
      * 
 	 * @param getKeyMethodName name of row method to get key for Map 
 	 * @throws OperationException if error
+	 * @deprecated Use {@link #setKeyFunction(Function)} instead.
 	 */
-    // TODO deprecate?
+    @Deprecated
 	public void setGetKeyMethodName(String getKeyMethodName) throws OperationException
 	{
         try
@@ -91,34 +92,15 @@ public abstract class MapSelectOperation<K, R> extends SelectOperation<R, Map<K,
             throw new OperationException("error getting key method " + getKeyMethodName, e);
         }
 	}
-	
-	
-	/**
-	 * TODO
-	 * @return
-	 */
-	public Function<R, K> getGetKeyFunction() 
-	{
-		return getKeyFunction;
-	}
-
-
-	/**
-	 * TODO
-	 * @param getKeyFunction
-	 */
-	public void setGetKeyFunction(Function<R, K> getKeyFunction) 
-	{
-		this.getKeyFunction = getKeyFunction;
-	}
 
 
 	/**
 	 * Return the name of the method for the row R that returns the Map key K. The default is "hashCode".
 	 * 
 	 * @return name of row method that gets row key for Map or null if none
+	 * @deprecated Use {@link #getKeyFunction()} instead.
 	 */
-	// TODO deprecate?
+    @Deprecated
 	public String getGetKeyMethodName()
 	{
 	    if (getKeyMethod != null)
@@ -131,6 +113,39 @@ public abstract class MapSelectOperation<K, R> extends SelectOperation<R, Map<K,
 	    }
 	}
 	
+	
+	/**
+	 * Gets the function used to obtain the map key from a row.
+	 * 
+	 * @return function set by {@link #setKeyFunction(Function)} or null if none
+	 * @since 4.0
+	 */
+	public Function<R, K> getKeyFunction() 
+	{
+		return keyFunction;
+	}
+
+
+	/**
+	 * Sets the function used to obtain the map key from a row. If no key function is set
+	 * and no method was set with {@link #setGetKeyMethodName(String)}, then the default
+	 * is to use {@link Object#hashCode()}. 
+	 * <p>
+	 * Examples of use:
+	 * <blockquote><pre>
+	 * MapSelectOperation&lt;SomeKey, SomeRow&gt; operation = ...
+	 * operation.setKeyFunction(SomeRow::getId);
+	 * operation.setKeyFunction(r -&gt; r.getId());
+	 * </pre></blockquote>
+	 * 
+	 * @param keyFunction lambda expression that will return map key, K, from a row, R
+	 * @since 4.0
+	 */
+	public void setKeyFunction(Function<R, K> keyFunction) 
+	{
+		this.keyFunction = keyFunction;
+	}
+	
 
 	/**
 	 * {@inheritDoc}
@@ -140,9 +155,9 @@ public abstract class MapSelectOperation<K, R> extends SelectOperation<R, Map<K,
 	{
 		super.prepare();
 		
-		if (getKeyFunction == null && getKeyMethod == null)
+		if (keyFunction == null && getKeyMethod == null)
 		{
-			// default get key method is hashCode()
+			// default key method is hashCode()
 		    setGetKeyMethodName("hashCode");
 		}
 	}
@@ -168,10 +183,10 @@ public abstract class MapSelectOperation<K, R> extends SelectOperation<R, Map<K,
      */
 	protected K getKey(R row) throws OperationException
     {
-		if (getKeyFunction != null)
+		if (keyFunction != null)
 		{
 			// function specified, use it
-			return getKeyFunction.apply(row);
+			return keyFunction.apply(row);
 		}
 		else
 		{

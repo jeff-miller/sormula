@@ -203,7 +203,7 @@ public abstract class CascadeOperation<S, T> implements AutoCloseable
 	 * fields in the source row which is also the same as the number of foreign key fields
 	 * in target row.
 	 *  
-	 * @return count of key fields used in foreign key mapping
+	 * @return count of key fields used in foreign key mapping; zero if no foreign key mapping
 	 * @since 3.0
 	 */
     public int getKeyFieldCount()

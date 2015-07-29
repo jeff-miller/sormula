@@ -33,6 +33,7 @@ import org.sormula.operation.OperationException;
 import org.sormula.operation.ScalarSelectOperation;
 import org.sormula.operation.SelectOperation;
 import org.sormula.operation.filter.SelectCascadeFilter;
+import org.sormula.reflect.MethodAccessField;
 import org.sormula.reflect.ReflectException;
 import org.sormula.reflect.RowField;
 import org.sormula.translator.ColumnTranslator;
@@ -235,10 +236,29 @@ public class SelectCascadeOperation<S, T> extends CascadeOperation<S, T>
         	// map select operations need method that gets key from row
         	try
         	{
-        	    ((MapSelectOperation)selectOperation).setGetKeyMethodName(
-	        			selectCascadeAnnotation.targetKeyMethodName());
+        		String keyMethodName = selectCascadeAnnotation.targetKeyMethodName();
+        		if ("#primaryKey".equals(keyMethodName))
+        		{
+        			// use primary field for map key
+        			List<ColumnTranslator<T>> primaryKeyColumnTranslators = getTargetTable().getRowTranslator().
+        					getPrimaryKeyWhereTranslator().getColumnTranslatorList();
+        			if (primaryKeyColumnTranslators.size() == 1)
+        			{
+        				// primary field name
+        				MethodAccessField<T, ?> primaryKeyGetter = new MethodAccessField<>(
+        						primaryKeyColumnTranslators.get(0).getField());
+        				keyMethodName = primaryKeyGetter.getGetMethod().getName();
+        			}
+        			else
+        			{
+        				throw new OperationException("targetKeyMethodName=\"" + keyMethodName + 
+        						"\" can only be used when only 1 primary key field");
+        			}
+        		}
+        		
+        	    ((MapSelectOperation)selectOperation).setGetKeyMethodName(keyMethodName);
         	}
-        	catch (OperationException e) 
+        	catch (OperationException | ReflectException e)
         	{
         	    // new OperationException is redundant but message clarifies source of problem
         		throw new OperationException("error getting key method in SelectCascade.keyMethodName()=" +

@@ -78,9 +78,8 @@ public abstract class MapSelectOperation<K, R> extends SelectOperation<R, Map<K,
      * 
 	 * @param getKeyMethodName name of row method to get key for Map 
 	 * @throws OperationException if error
-	 * @deprecated Use {@link #setKeyFunction(Function)} instead.
+	 * @see #setKeyFunction(Function)
 	 */
-    @Deprecated
 	public void setGetKeyMethodName(String getKeyMethodName) throws OperationException
 	{
         try
@@ -98,9 +97,8 @@ public abstract class MapSelectOperation<K, R> extends SelectOperation<R, Map<K,
 	 * Return the name of the method for the row R that returns the Map key K. The default is "hashCode".
 	 * 
 	 * @return name of row method that gets row key for Map or null if none
-	 * @deprecated Use {@link #getKeyFunction()} instead.
+	 * @see #getKeyFunction()
 	 */
-    @Deprecated
 	public String getGetKeyMethodName()
 	{
 	    if (getKeyMethod != null)

@@ -2,8 +2,7 @@ Version History
 
 version-jdk             comments
 ------------------------------------------------------------------------------------------------------------
-4.0-jdk1.8              - allow lambda for key function in MapSelectOperation, deprecate 
-                          MapSelectOperation#setGetKeyMethodName and MapSelectOperation#getGetKeyMethodName
+4.0-jdk1.8              - allow lambda for key function in MapSelectOperation 
                         - add default translators for java.time.LocalDate, java.time.LocalTime, java.time.Instant
                         - fix javadoc errors
                         - remove deprecated SormulaField (replaced by RowField)

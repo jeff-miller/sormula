@@ -563,13 +563,12 @@ public class RowTranslator<R> extends ColumnsTranslator<R>
     protected void initUnusedColumnSql(Class<R> rowClass) throws TranslatorException
     {
         // look for annotation on table subclass and row class
-        UnusedColumns unusedColumnsAnnotation = table.getClass().getAnnotation(UnusedColumns.class);
-        if (unusedColumnsAnnotation == null) unusedColumnsAnnotation = rowClass.getAnnotation(UnusedColumns.class);
+    	UnusedColumn[] unusedColumnAnnotations = table.getClass().getAnnotationsByType(UnusedColumn.class); 
+        if (unusedColumnAnnotations.length == 0) unusedColumnAnnotations = rowClass.getAnnotationsByType(UnusedColumn.class);
         
-        if (unusedColumnsAnnotation != null)
+        if (unusedColumnAnnotations.length > 0)
         {
             // at least one unused column
-            UnusedColumn[] unusedColumnAnnotations = unusedColumnsAnnotation.value();
             
             // allocate typical space needed
             StringBuilder insertNames = new StringBuilder(unusedColumnAnnotations.length * 20);

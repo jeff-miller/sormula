@@ -18,7 +18,6 @@ package org.sormula.tests.translator;
 
 import org.sormula.annotation.Column;
 import org.sormula.annotation.UnusedColumn;
-import org.sormula.annotation.UnusedColumns;
 
 
 /**
@@ -26,10 +25,8 @@ import org.sormula.annotation.UnusedColumns;
  * 
  * @author Jeff Miller
  */
-@UnusedColumns({    
-    @UnusedColumn(name="unusedInt", value="123"),
-    @UnusedColumn(name="unusedString", value="'unused'")
-})
+@UnusedColumn(name="unusedInt", value="123")
+@UnusedColumn(name="unusedString", value="'unused'")
 public class SormulaTest3
 {
     @Column(primaryKey=true)

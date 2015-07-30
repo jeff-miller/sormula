@@ -7,6 +7,8 @@ version-jdk             comments
                         - allow lambda for key function in MapSelectOperation 
                         - add default translators for java.time.LocalDate, java.time.LocalTime, java.time.Instant
                         - fix javadoc errors
+                        - remove support for LEGACY_ANNOTATION_PRECEDENCE environment variable that permitted 
+                          pre v3.0 annotation search order of table, row, database
                         - remove deprecated SormulaField (replaced by RowField)
                         - remove deprecated Table#isLegacyAnnotationPrecedence
                         - remove deprecated newInstance method and constructor from AbstractColumnTranslator

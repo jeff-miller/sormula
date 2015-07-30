@@ -53,36 +53,16 @@ public class OrderByAnnotationReader
      */
     public OrderBy getAnnotation(String name)
     {
-        OrderBy orderByAnnotation = null;
-        
         for (Class<?> s : sources)
         {
-            // look for single OrderBy annotation
-            orderByAnnotation = s.getAnnotation(OrderBy.class);
-            
-            if (orderByAnnotation != null && orderByAnnotation.name().equals(name))
+            // look for name
+            for (OrderBy o: s.getAnnotationsByType(OrderBy.class))
             {
-                // found in single OrderBy annotation
-                if (log.isDebugEnabled()) log.debug(name + " order annotation from " + s.getCanonicalName());
-                return orderByAnnotation;
-            }
-            else
-            {
-                // no single annotation or name does not match
-                OrderBys orderBysAnnotation = s.getAnnotation(OrderBys.class);
-                
-                if (orderBysAnnotation != null)
+                if (o.name().equals(name))
                 {
-                    // look for name
-                    for (OrderBy o: orderBysAnnotation.value())
-                    {
-                        if (o.name().equals(name))
-                        {
-                            // found
-                            if (log.isDebugEnabled()) log.debug(name + " order annotation from " + s.getCanonicalName());
-                            return o;
-                        }
-                    }
+                    // found
+                    if (log.isDebugEnabled()) log.debug(name + " order annotation from " + s.getCanonicalName());
+                    return o;
                 }
             }
         }

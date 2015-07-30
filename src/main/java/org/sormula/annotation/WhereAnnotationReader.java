@@ -51,36 +51,16 @@ public class WhereAnnotationReader
      */
     public Where getAnnotation(String name)
     {
-        Where whereAnnotation = null;
-        
         for (Class<?> s : sources)
         {
-            // look for single where annotation
-            whereAnnotation = s.getAnnotation(Where.class);
-            
-            if (whereAnnotation != null && whereAnnotation.name().equals(name))
+            // look for name
+            for (Where w: s.getAnnotationsByType(Where.class))
             {
-                // found in single Where annotation
-                if (log.isDebugEnabled()) log.debug(name + " where annotation from " + s.getCanonicalName());
-                return whereAnnotation;
-            }
-            else
-            {
-                // no single annotation or name does not match
-                Wheres wheresAnnotation = s.getAnnotation(Wheres.class);
-                
-                if (wheresAnnotation != null)
+                if (w.name().equals(name))
                 {
-                    // look for name
-                    for (Where w: wheresAnnotation.value())
-                    {
-                        if (w.name().equals(name))
-                        {
-                            // found
-                            if (log.isDebugEnabled()) log.debug(name + " where annotation from " + s.getCanonicalName());
-                            return w;
-                        }
-                    }
+                    // found
+                    if (log.isDebugEnabled()) log.debug(name + " where annotation from " + s.getCanonicalName());
+                    return w;
                 }
             }
         }

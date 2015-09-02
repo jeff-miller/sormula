@@ -7,3 +7,4 @@ test.log
 dependency-reduced-pom.xml
 db.script
 db.properties
+^src/main/java/overview.html

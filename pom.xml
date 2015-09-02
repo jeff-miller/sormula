@@ -7,16 +7,86 @@
     <groupId>org.sormula</groupId>
     <artifactId>sormula</artifactId>
     <version>3.5-SNAPSHOT</version>
-
+    
+    <!-- test with specific database: 
+         mvn -P <profile-id> 
+         where <profile-id> is hsqldb, h2, derby, etc.
+         example:
+         mvn -P hsqldb
+    -->
+    <profiles>
+        <profile>
+            <id>hsqldb</id>
+            <properties>
+                <dbdir>hsqldb</dbdir>
+            </properties>
+	        <dependencies>            
+		        <dependency>
+		            <groupId>org.hsqldb</groupId>
+		            <artifactId>hsqldb</artifactId>
+		            <version>2.3.2</version>
+		            <scope>test</scope>
+		        </dependency>
+	        </dependencies>            
+        </profile>
+        
+        <profile>
+            <id>h2</id>
+            <properties>
+                <dbdir>h2</dbdir>
+            </properties>
+            <dependencies>            
+                <dependency>
+		            <groupId>com.h2database</groupId>
+		            <artifactId>h2</artifactId>
+		            <version>1.4.188</version>
+		            <scope>test</scope>
+                </dependency>
+            </dependencies>            
+        </profile>
+        
+        <profile>
+            <id>derby</id>
+            <properties>
+                <dbdir>derby</dbdir>
+            </properties>
+            <dependencies>            
+                <dependency>
+                    <groupId>org.apache.derby</groupId>
+                    <artifactId>derby</artifactId>
+                    <version>10.11.1.1</version>
+                    <scope>test</scope>
+                </dependency>
+            </dependencies>            
+        </profile>
+        
+        <profile>
+            <id>sqlite</id> <!-- TODO db creation fails since test-output directory is missing -->
+            <properties>
+                <dbdir>sqlitejdbc</dbdir>
+            </properties>
+            <dependencies>            
+                <dependency>
+                    <groupId>org.xerial</groupId>
+                    <artifactId>sqlite-jdbc</artifactId>
+                    <version>3.8.11.1</version>
+                    <scope>test</scope>
+                </dependency>
+            </dependencies>            
+        </profile>
+    </profiles>
+    
+    
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
+
 
     <build>
         <defaultGoal>clean install</defaultGoal>
         
         <plugins>
-            <!-- clean test-output folder -->
+            <!-- clean test-output directory -->
             <plugin>
                 <artifactId>maven-clean-plugin</artifactId>
                 <version>2.6</version>
@@ -47,7 +117,7 @@
                 <version>2.18.1</version>
                 <configuration>
                     <systemPropertyVariables>
-                        <dbdir>hsqldb</dbdir>
+                        <dbdir>${dbdir}</dbdir>
                         <seed></seed>
                         <timings>false</timings>
                         <cache.statistics>false</cache.statistics>
@@ -61,6 +131,7 @@
         </plugins>
     </build>
 
+    <!-- dependencies for all profiles -->
     <dependencies>
         <!-- enable logging with SLF4J -->
         <dependency>
@@ -88,14 +159,6 @@
             <groupId>org.testng</groupId>
             <artifactId>testng</artifactId>
             <version>6.8.8</version>
-            <scope>test</scope>
-        </dependency>
-
-        <!-- jdbc drivers for tests -->
-        <dependency>
-            <groupId>org.hsqldb</groupId>
-            <artifactId>hsqldb</artifactId>
-            <version>2.3.2</version>
             <scope>test</scope>
         </dependency>
     </dependencies>

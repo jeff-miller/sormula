@@ -2,7 +2,7 @@ Version History
 
 JDK 5/6     JDK 7       comments
 ------------------------------------------------------------------------------------------------------------
-            3.5-jdk1.7  - update Maven pom.xml
+            3.5-jdk1.7  - update Maven pom.xml (run with a profile: mvn -P hsqldb)
                         - invoke close method within finally block for AutoCloseable classes so that  
                           no resources are leaked if exception occurs 
                         - suppress unnecessary resource leak warnings

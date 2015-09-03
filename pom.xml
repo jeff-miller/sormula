@@ -61,7 +61,7 @@
         </profile>
         
         <profile>
-            <id>sqlite</id> <!-- TODO db creation fails since test-output directory is missing -->
+            <id>sqlite</id>
             <properties>
                 <dbdir>sqlitejdbc</dbdir>
             </properties>

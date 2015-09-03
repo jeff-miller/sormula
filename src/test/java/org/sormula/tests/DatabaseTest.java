@@ -20,6 +20,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -92,7 +93,8 @@ public class DatabaseTest<R>
     	// some databases fail if parent of database file does not exist
     	try
     	{
-    		Files.createDirectory(Paths.get("test-output"));
+    		Path testOutputDirectory = Paths.get("test-output");
+    		if (!Files.exists(testOutputDirectory)) Files.createDirectory(testOutputDirectory);
     	}
     	catch (IOException e)
     	{

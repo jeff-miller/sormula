@@ -107,21 +107,6 @@
                 </dependency>
             </dependencies>            
         </profile>
-        
-        <profile>
-            <id>oracle</id>
-            <properties>
-                <dbdir>oracle</dbdir>
-            </properties>
-            <dependencies>            
-                <dependency>
-				    <groupId>ojdbc</groupId>
-				    <artifactId>ojdbc</artifactId>
-				    <version>14</version>
-                    <scope>test</scope>
-                </dependency>
-            </dependencies>            
-        </profile>
     </profiles>
     
     

@@ -19,6 +19,9 @@ package org.sormula.tests;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -85,6 +88,17 @@ public class DatabaseTest<R>
     	catch (NamingException e)
     	{
     	    log.error("error setting initial context", e);
+    	}
+    	
+    	// some databases fail if parent of database file does not exist
+    	try
+    	{
+    		Path testOutputDirectory = Paths.get("test-output");
+    		if (!Files.exists(testOutputDirectory)) Files.createDirectory(testOutputDirectory);
+    	}
+    	catch (IOException e)
+    	{
+    		log.error("error creating test directory", e);
     	}
     }
     

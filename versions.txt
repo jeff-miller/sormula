@@ -19,7 +19,8 @@ version-jdk             comments
                         - update jdbc drivers
                         - add identity column tests for sqlite
                         
-            3.5-jdk1.7  - invoke close method within finally block for AutoCloseable classes so that  
+            3.5-jdk1.7  - update Maven pom.xml (run with a profile: mvn -P hsqldb)
+                        - invoke close method within finally block for AutoCloseable classes so that  
                           no resources are leaked if exception occurs 
                         - suppress unnecessary resource leak warnings
 

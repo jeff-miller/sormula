@@ -551,6 +551,7 @@ public abstract class CascadeOperation<S, T> implements AutoCloseable
 
 
     /**
+     * Note: return type will be List&lt;RowField&lt;T, Object&gt;&gt; when SormulaField is removed
      * @return list of foreign key fields or null if none
      * @since 3.1
      */

@@ -21,7 +21,10 @@ import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.function.BiPredicate;
 
 import org.sormula.Table;
 import org.sormula.annotation.Column;
@@ -69,8 +72,13 @@ public class ScalarSelectOperation<R> extends SqlOperation<R>
     boolean cachePrimaryKeySelect; // set by execute() 
     boolean cacheContainsPrimaryKey; // set by execute() if cache hit
     boolean executed;
-    SelectCascadeFilter<?>[] selectCascadeFilters;
-    SelectCascadeFilter<R> filter;
+    
+    @Deprecated
+    SelectCascadeFilter<?>[] selectCascadeFilters; // TODO remove when SelectCascadeFilter is deleted
+    @Deprecated
+    SelectCascadeFilter<R> filter; // TODO remove when SelectCascadeFilter is deleted
+    Map<Class<?>, BiPredicate<?, Boolean>> filterPredicateMap;
+    BiPredicate<R, Boolean> filterPredicate;
     
     
     /**
@@ -333,16 +341,34 @@ public class ScalarSelectOperation<R> extends SqlOperation<R>
             {
                 // row from cache  
     		    // row is null if row is in cache but row has deleted state
-                if (filter != null && row != null)
-                {
-                    // test for filter pass 
-                    if (!filter.accept(this, row, false) ||
-                        (isCascading() && !filter.accept(this, row, true)) )
-                    {
-                        // don't use this row based upon filter response
-                        row = null;
-                    }
-                }
+    			if (filterPredicateMap != null) // TODO remove if statement (keep block) test when SelectCascadeFilter is deleted 
+    			{
+    				// test for lambda filter 
+	                if (filterPredicate != null && row != null)
+	                {
+	                    // test for filter pass 
+	                    if (!filterPredicate.test(row, false) ||
+	                        (isCascading() && !filterPredicate.test(row, true)) )
+	                    {
+	                        // don't use this row based upon filter response
+	                        row = null;
+	                    }
+	                }
+    			}
+    			else // TODO remove else block when SelectCascadeFilter is deleted 
+    			{
+    				// test for legacy filter 
+	                if (filter != null && row != null)
+	                {
+	                    // test for filter pass 
+	                    if (!filter.accept(this, row, false) ||
+	                        (isCascading() && !filter.accept(this, row, true)) )
+	                    {
+	                        // don't use this row based upon filter response
+	                        row = null;
+	                    }
+	                }
+    			}
             }
             else
             {
@@ -399,26 +425,52 @@ public class ScalarSelectOperation<R> extends SqlOperation<R>
                         {
                             // row has not been deleted in cache
                             
-                            // test for filter pass
-                            if (filter == null || filter.accept(this, row, false))
-                            {
-                                // no filter or passes filter 
-                                if (isCascading()) 
-                                {
-                                    postReadCascade(row);
-                                    complete = filter == null || filter.accept(this, row, true);
-                                }
-                                else
-                                {
-                                    // exit loop
-                                    complete = true;
-                                }
-                            }
-                            else
-                            {
-                                // did not pass filter
-                                if (log.isDebugEnabled()) log.debug("row did not pass filter " + row);
-                            }
+                        	if (filterPredicateMap != null)  // TODO remove if statement (keep block) test when SelectCascadeFilter is deleted 
+                        	{
+	                            // test for lambda filter pass
+	                            if (filterPredicate == null || filterPredicate.test(row, false))
+	                            {
+	                                // no filter or passes filter 
+	                                if (isCascading()) 
+	                                {
+	                                    postReadCascade(row);
+	                                    complete = filterPredicate == null || filterPredicate.test(row, true);
+	                                }
+	                                else
+	                                {
+	                                    // exit loop
+	                                    complete = true;
+	                                }
+	                            }
+	                            else
+	                            {
+	                                // did not pass filter
+	                                if (log.isDebugEnabled()) log.debug("row did not pass filter " + row);
+	                            }
+                        	}
+                        	else  // TODO remove else statement and corresponding block when SelectCascadeFilter is deleted 
+                        	{
+                        		// test for legacy filter pass
+	                            if (filter == null || filter.accept(this, row, false))
+	                            {
+	                                // no filter or passes filter 
+	                                if (isCascading()) 
+	                                {
+	                                    postReadCascade(row);
+	                                    complete = filter == null || filter.accept(this, row, true);
+	                                }
+	                                else
+	                                {
+	                                    // exit loop
+	                                    complete = true;
+	                                }
+	                            }
+	                            else
+	                            {
+	                                // did not pass filter
+	                                if (log.isDebugEnabled()) log.debug("row did not pass filter " + row);
+	                            }
+                        	}
                         }
                     
                         if (!complete)
@@ -614,6 +666,7 @@ public class ScalarSelectOperation<R> extends SqlOperation<R>
      * @since 3.1
      */
     @SuppressWarnings("unchecked")
+    @Deprecated
     public void setSelectCascadeFilters(SelectCascadeFilter<?>... selectCascadeFilters)
     {
         this.selectCascadeFilters = selectCascadeFilters;
@@ -631,7 +684,7 @@ public class ScalarSelectOperation<R> extends SqlOperation<R>
                 if (filterRowClassName.equals(rowClassName)     // use filter for row class  
                  || filterRowClassName.equals(objectClassName)) // use filter for all classes
                 {
-                    // found
+                    // found filter to use for this operation
                     filter = (SelectCascadeFilter<R>)f;
                     break;
                 }
@@ -646,13 +699,105 @@ public class ScalarSelectOperation<R> extends SqlOperation<R>
      * @return filters used; null for none
      * @since 3.1
      */
+    @Deprecated
     public SelectCascadeFilter<?>[] getSelectCascadeFilters()
     {
         return selectCascadeFilters;
     }
 
+    
+    /**
+     * TODO
+     * make note affects cascades
+     * @param rowClass
+     * @param filterPredicate
+     * @since 4.0
+     */
+    public <F> void addFilter(Class<F> rowClass, BiPredicate<F, Boolean> filterPredicate)
+    {
+		if (filterPredicateMap == null) filterPredicateMap = new HashMap<>(); // first time  
+		filterPredicateMap.put(rowClass, filterPredicate);
+		updateActiveFilterPredicate(rowClass, filterPredicate);
+    }
+    
+    
+    /**
+     * TODO
+     * @param rowClass
+     * @since 4.0
+     */
+    public <F> void removeFilter(Class<F> rowClass)
+	{
+		if (filterPredicateMap != null)
+		{
+			filterPredicateMap.remove(rowClass);
+			if (filterPredicateMap.size() == 0) filterPredicateMap = null; // null means none
+			else updateActiveFilterPredicate(rowClass, null); // remove if active
+		}
+    }
+    
 
     /**
+     * TODO
+     * @return
+     * @since 4.0
+     */
+    public Map<Class<?>, BiPredicate<?, Boolean>> getFilterPredicateMap() 
+    {
+		return filterPredicateMap;
+	}
+
+
+    /**
+     * TODO
+     * @param filterPredicateMap
+     * @since 4.0
+     */
+	public void setFilterPredicateMap(Map<Class<?>, BiPredicate<?, Boolean>> filterPredicateMap) 
+	{
+		this.filterPredicateMap = filterPredicateMap;
+		
+		// reset active filterPredicate
+		this.filterPredicate = null; // assume none
+		
+		if (filterPredicateMap != null)  // filterPredicateMap will be null if no lambda filters
+		{
+			for (Map.Entry<Class<?>, BiPredicate<?, Boolean>> me : filterPredicateMap.entrySet())
+			{
+				if (updateActiveFilterPredicate(me.getKey(), me.getValue()))
+				{
+					// found active filter
+					break;
+				}
+			}
+		}
+	}
+
+	
+	/**
+	 * TODO
+	 * @param rowClass
+	 * @param filterPredicate
+	 * @return
+	 * @since 4.0
+	 */
+	@SuppressWarnings("unchecked")
+	protected boolean updateActiveFilterPredicate(Class<?> rowClass, BiPredicate<?, Boolean> filterPredicate)
+	{
+		String rowClassName = rowTranslator.getRowClass().getName();
+        String filterRowClassName = rowClass.getName();
+        if (filterRowClassName.equals(rowClassName)     // use filter for this row class only 
+         || filterRowClassName.equals(Object.class.getName())) // use filter for all classes (wild card)
+        {
+        	this.filterPredicate = (BiPredicate<R, Boolean>)filterPredicate;
+        	return true;
+        }
+        
+        return false;
+	}
+	
+
+	/**
      * Gets the {@link OrderByTranslator}. See {@link #setOrderByTranslator(OrderByTranslator)} for details.
      * 
      * @return order translator or null if no ordering desired
@@ -807,7 +952,8 @@ public class ScalarSelectOperation<R> extends SqlOperation<R>
                             " for target field " + targetField.getField());
                     @SuppressWarnings("unchecked") // target field type is not known at compile time
                     SelectCascadeOperation<R, ?> operation = new SelectCascadeOperation(getTable(), targetField, targetTable, c);
-                    operation.setSelectCascadeFilters(selectCascadeFilters);
+                    operation.setSelectCascadeFilters(selectCascadeFilters); // TODO remove when SelectCascadeFilter is deleted
+                    operation.setFilterPredicateMap(filterPredicateMap);
                     operation.setNamedParameterMap(getNamedParameterMap());
                     if (c.setForeignKeyValues()) operation.setForeignKeyFieldNames(car.getForeignKeyValueFields());
                     if (c.setForeignKeyReference()) operation.setForeignKeyReferenceFieldName(car.getForeignKeyReferenceField());

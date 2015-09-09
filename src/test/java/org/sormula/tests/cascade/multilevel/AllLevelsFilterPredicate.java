@@ -16,62 +16,54 @@
  */
 package org.sormula.tests.cascade.multilevel;
 
-import org.sormula.operation.ScalarSelectOperation;
+import java.util.function.BiPredicate;
+
 import org.sormula.operation.filter.AbstractSelectCascadeFilter;
 import org.sormula.operation.filter.SelectCascadeFilter;
 
 
 /**
+ * TODO
  * {@link SelectCascadeFilter} that filters all row class types using {@link AbstractSelectCascadeFilter}.
  * Instead of one {@link SelectCascadeFilter} for each row type, there is one method for each row type.
  * 
  * @author Jeff Miller
  */
-public class AllLevelsFilterB extends AbstractSelectCascadeFilter
+public class AllLevelsFilterPredicate implements BiPredicate<Object, Boolean>
 {
-    public boolean accept(ScalarSelectOperation<SormulaTestLevel1> source, SormulaTestLevel1 row, boolean cascadesCompleted)
+    public boolean test(Object row, Boolean cascadesCompleted)
+    {
+        if (row instanceof SormulaTestLevel1) return test1((SormulaTestLevel1)row, cascadesCompleted);
+        if (row instanceof SormulaTestLevel2) return test2((SormulaTestLevel2)row, cascadesCompleted);
+        if (row instanceof SormulaTestLevel3) return test3((SormulaTestLevel3)row, cascadesCompleted);
+        
+        // unknown type, always accept
+        return true;
+    }
+
+
+    public boolean test1(SormulaTestLevel1 row, boolean cascadesCompleted)
     {
         boolean keep = true;
-        
-        if (cascadesCompleted)
-        {
-            keep = row.getChildList().size() > 0; // keep non empty nodes
-        }
-        else
-        {
-            keep = row.getLevel1Id() != 104; // none of 104 or descendants
-        }
-        
+        if (cascadesCompleted) keep = row.getChildList().size() > 0; // keep non empty nodes
+        else                   keep = row.getLevel1Id() != 104; // none of 104 or descendants
         return keep;
     }
     
     
-    public boolean accept(ScalarSelectOperation<SormulaTestLevel2> source, SormulaTestLevel2 row, boolean cascadesCompleted)
+    public boolean test2(SormulaTestLevel2 row, boolean cascadesCompleted)
     {
         boolean keep = true;
-        
-        if (cascadesCompleted)
-        {
-            keep = row.getChildList().size() > 0; // keep non empty nodes
-        }
-        else
-        {
-            keep = row.getLevel2Id() > 211; // none of 211 or descendants
-        }
-        
+        if (cascadesCompleted) keep = row.getChildList().size() > 0; // keep non empty nodes
+        else                   keep = row.getLevel2Id() > 211; // none of 211 or descendants
         return keep;
     }
     
     
-    public boolean accept(ScalarSelectOperation<SormulaTestLevel3> source, SormulaTestLevel3 row, boolean cascadesCompleted)
+    public boolean test3(SormulaTestLevel3 row, boolean cascadesCompleted)
     {
         boolean keep = true;
-        
-        if (!cascadesCompleted)
-        {
-            keep = row.getLevel3Id() <= 3222; // some of 102 and none of 103
-        }
-        
+        if (!cascadesCompleted) keep = row.getLevel3Id() <= 3222; // some of 102 and none of 103
         return keep;
     }
 }

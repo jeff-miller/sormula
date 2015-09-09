@@ -38,6 +38,7 @@ import org.sormula.operation.ScalarSelectOperation;
  * @author Jeff Miller
  * @param <R> class of row to be filtered
  */
+@Deprecated
 public interface SelectCascadeFilter<R>
 {
    /**

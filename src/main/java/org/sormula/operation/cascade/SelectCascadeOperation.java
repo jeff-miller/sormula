@@ -23,6 +23,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+import java.util.function.BiPredicate;
 
 import org.sormula.Table;
 import org.sormula.annotation.cascade.SelectCascade;
@@ -58,7 +59,9 @@ public class SelectCascadeOperation<S, T> extends CascadeOperation<S, T>
 	ScalarSelectOperation<T> selectOperation;
 	String[] parameterFieldNames;
 	List<RowField<S, ?>> parameterFields;
+	@Deprecated
 	SelectCascadeFilter<?>[] selectCascadeFilters;
+	Map<Class<?>, BiPredicate<?, Boolean>> filterPredicateMap;
     
     
 	/**
@@ -86,6 +89,7 @@ public class SelectCascadeOperation<S, T> extends CascadeOperation<S, T>
      * @since 3.1
      * @see ScalarSelectOperation#setSelectCascadeFilters(SelectCascadeFilter...)
      */
+    @Deprecated
     public void setSelectCascadeFilters(SelectCascadeFilter<?>... selectCascadeFilters)
     {
         this.selectCascadeFilters = selectCascadeFilters;
@@ -99,6 +103,7 @@ public class SelectCascadeOperation<S, T> extends CascadeOperation<S, T>
      * @since 3.1
      * @see ScalarSelectOperation#getSelectCascadeFilters()
      */
+    @Deprecated
     public SelectCascadeFilter<?>[] getSelectCascadeFilters()
     {
         return selectCascadeFilters;
@@ -106,6 +111,28 @@ public class SelectCascadeOperation<S, T> extends CascadeOperation<S, T>
     
 
     /**
+     * TODO
+     * @return
+     * @since 4.0
+     */
+    public Map<Class<?>, BiPredicate<?, Boolean>> getFilterPredicateMap() 
+    {
+		return filterPredicateMap;
+	}
+
+
+    /**
+     * TODO
+     * @param filterPredicateMap
+     * @since 4.0
+     */
+	public void setFilterPredicateMap(Map<Class<?>, BiPredicate<?, Boolean>> filterPredicateMap) 
+	{
+		this.filterPredicateMap = filterPredicateMap;
+	}
+
+
+	/**
      * {@inheritDoc}
      */
     @Override
@@ -201,6 +228,7 @@ public class SelectCascadeOperation<S, T> extends CascadeOperation<S, T>
         selectOperation = (ScalarSelectOperation<T>)createOperation();
         selectOperation.setNamedParameterMap(getNamedParameterMap()); // from source
         selectOperation.setSelectCascadeFilters(selectCascadeFilters); // from source
+        selectOperation.setFilterPredicateMap(filterPredicateMap); // from source
         
         if (!isSourceTargetFieldNames())
         {

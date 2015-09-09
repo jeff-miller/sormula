@@ -37,7 +37,7 @@ public class Level2Filter implements SelectCascadeFilter<SormulaTestLevel2>
         }
         else
         {
-            keep = row.getLevel2Id() > 211; // none of 211 or decendants
+            keep = row.getLevel2Id() > 211; // none of 211 or descendants
         }
         
         return keep;

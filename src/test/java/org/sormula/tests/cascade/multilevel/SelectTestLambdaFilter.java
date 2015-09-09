@@ -18,11 +18,11 @@ package org.sormula.tests.cascade.multilevel;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.BiPredicate;
 
 import org.sormula.SormulaException;
 import org.sormula.log.ClassLogger;
 import org.sormula.operation.ArrayListSelectOperation;
-import org.sormula.operation.filter.SelectCascadeFilter;
 import org.sormula.tests.DatabaseTest;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
@@ -30,12 +30,12 @@ import org.testng.annotations.Test;
 
 
 /**
- * Tests {@link SelectOperationFilter}.
+ * Tests TODO
  * 
  * @author Jeff Miller
  */
 @Test(singleThreaded=true, groups="cascade.select", dependsOnGroups="cascade.insert")
-public class SelectTest extends DatabaseTest<SormulaTestLevel1>
+public class SelectTestLambdaFilter extends DatabaseTest<SormulaTestLevel1>
 {
     private static final ClassLogger log = new ClassLogger();
     
@@ -54,78 +54,97 @@ public class SelectTest extends DatabaseTest<SormulaTestLevel1>
         closeDatabase();
     }
 
-    
+
     @Test
+    @SuppressWarnings("unchecked")
     public void filter123() throws SormulaException
     {
+    	BiPredicate<SormulaTestLevel1, Boolean> filter1 = (row, cascaded) ->
+    	{
+            boolean keep = true; // assume
+            if (cascaded) keep = row.getChildList().size() > 0; // keep non empty nodes
+            else          keep = row.getLevel1Id() != 104;      // none of 104 or descendants
+            return keep;
+    	};
+    	
+    	BiPredicate<SormulaTestLevel2, Boolean> filter2 = (row, cascaded) ->
+    	{
+            boolean keep = true; // assume
+            if (cascaded) keep = row.getChildList().size() > 0; // keep non empty nodes
+            else          keep = row.getLevel2Id() > 211;       // none of 211 or descendants
+            return keep;
+    	};
+    	
+    	BiPredicate<SormulaTestLevel3, Boolean> filter3 = (row, cascaded) ->
+    	{
+            boolean keep = true; // assume
+            if (!cascaded) keep = row.getLevel3Id() <= 3222; // some of 102 and none of 103
+            return keep;
+    	};
+
         begin();
-        filterTest(new Level1Filter(), new Level2Filter(), new Level3Filter());
+        filterTest(filter1, filter2, filter3);
         commit();
     }
 
-    
-    @Test
-    public void filterA() throws SormulaException
-    {
-        begin();
-        filterTest(new AllLevelsFilterA());
-        commit();
-    }
 
-    
     @Test
-    public void filterB() throws SormulaException
-    {
-        begin();
-        filterTest(new AllLevelsFilterB());
-        commit();
-    }
-    
-    
     @SuppressWarnings("unchecked")
-    protected void filterTest(SelectCascadeFilter<?>... selectCascadeFilters) throws SormulaException
+    public void oneFilterForAllLevels() throws SormulaException
     {
-    	@SuppressWarnings("resource") // selectAll method invokes close
-        ArrayListSelectOperation<SormulaTestLevel1> filteredSelectOperation = 
-                new ArrayListSelectOperation<>(getTable(), "");
-        filteredSelectOperation.setSelectCascadeFilters(selectCascadeFilters);
-        List<SormulaTestLevel1> filteredSelectOperationResults = filteredSelectOperation.selectAll();
-        //logGraph(filteredSelectOperationResults, "from db");
-        
+        begin();
+        filterTest(new AllLevelsFilterPredicate());
+        commit();
+    }
+    
+    
+	@SuppressWarnings("unchecked")
+    protected void filterTest(BiPredicate<?, Boolean>... filterPredicates) throws SormulaException
+    {
         // filter1,2,3 are used to verify results
-        SelectCascadeFilter<SormulaTestLevel1> filter1; 
-        SelectCascadeFilter<SormulaTestLevel2> filter2;
-        SelectCascadeFilter<SormulaTestLevel3> filter3;
-        if (selectCascadeFilters.length == 1)
+    	BiPredicate<SormulaTestLevel1, Boolean> filter1; 
+    	BiPredicate<SormulaTestLevel2, Boolean> filter2;
+    	BiPredicate<SormulaTestLevel3, Boolean> filter3;
+    	
+        if (filterPredicates.length == 1)
         {
             // one filter for all row types
-            filter1 = (SelectCascadeFilter<SormulaTestLevel1>)selectCascadeFilters[0];
-            filter2 = (SelectCascadeFilter<SormulaTestLevel2>)selectCascadeFilters[0];
-            filter3 = (SelectCascadeFilter<SormulaTestLevel3>)selectCascadeFilters[0];
+            filter1 = (BiPredicate<SormulaTestLevel1, Boolean>)filterPredicates[0];
+            filter2 = (BiPredicate<SormulaTestLevel2, Boolean>)filterPredicates[0];
+            filter3 = (BiPredicate<SormulaTestLevel3, Boolean>)filterPredicates[0];
         }
         else
         {
             // different filters for each row type (assume order)
-            filter1 = (SelectCascadeFilter<SormulaTestLevel1>)selectCascadeFilters[0];
-            filter2 = (SelectCascadeFilter<SormulaTestLevel2>)selectCascadeFilters[1];
-            filter3 = (SelectCascadeFilter<SormulaTestLevel3>)selectCascadeFilters[2];
+            filter1 = (BiPredicate<SormulaTestLevel1, Boolean>)filterPredicates[0];
+            filter2 = (BiPredicate<SormulaTestLevel2, Boolean>)filterPredicates[1];
+            filter3 = (BiPredicate<SormulaTestLevel3, Boolean>)filterPredicates[2];
         }
+        
+    	@SuppressWarnings("resource") // selectAll method invokes close
+        ArrayListSelectOperation<SormulaTestLevel1> filteredSelectOperation = 
+                new ArrayListSelectOperation<>(getTable(), "");
+        filteredSelectOperation.addFilter(SormulaTestLevel1.class, filter1);
+        filteredSelectOperation.addFilter(SormulaTestLevel2.class, filter2);
+        filteredSelectOperation.addFilter(SormulaTestLevel3.class, filter3);
+        List<SormulaTestLevel1> filteredSelectOperationResults = filteredSelectOperation.selectAll();
+        //logGraph(filteredSelectOperationResults, "from db");
         
         // all selected rows should pass filter 
         // confirms that all filtered rows are permitted
         for (SormulaTestLevel1 row1 : filteredSelectOperationResults)
         {
-            assert filter1.accept(null, row1, false) && filter1.accept(null, row1, true) : 
+            assert filter1.test(row1, false) && filter1.test(row1, true) : 
                 "level 1 row should not be selected id=" + row1.getLevel1Id();
 
             for (SormulaTestLevel2 row2 : row1.getChildList())
             {
-                assert filter2.accept(null, row2, false) && filter2.accept(null, row2, true) : 
+                assert filter2.test(row2, false) && filter2.test(row2, true) : 
                     "level 2 row should not be selected id=" + row2.getLevel2Id();
                 
                 for (SormulaTestLevel3 row3 : row2.getChildList())
                 {
-                    assert filter3.accept(null, row3, false) && filter3.accept(null, row3, true) : 
+                    assert filter3.test(row3, false) && filter3.test(row3, true) : 
                         "level 3 row should not be selected id=" + row3.getLevel3Id();
                 }
             }
@@ -155,19 +174,19 @@ public class SelectTest extends DatabaseTest<SormulaTestLevel1>
             
                 for (SormulaTestLevel3 row3 : unfiltered3)
                 {
-                    if (filter3.accept(null, row3, false) && filter3.accept(null, row3, true))
+                    if (filter3.test(row3, false) && filter3.test(row3, true))
                     {
                         filtered3.add(row3);
                     }
                 }
                 
-                if (filter2.accept(null, row2, false) && filter2.accept(null, row2, true))
+                if (filter2.test(row2, false) && filter2.test(row2, true))
                 {
                     filtered2.add(row2);
                 }
             }
             
-            if (filter1.accept(null, row1, false) && filter1.accept(null, row1, true))
+            if (filter1.test(row1, false) && filter1.test(row1, true))
             {
                 filtered1.add(row1);
             }
@@ -228,7 +247,7 @@ public class SelectTest extends DatabaseTest<SormulaTestLevel1>
             }
         }
     }
-    
+
     
     protected void logGraph(List<SormulaTestLevel1> level1Rows, String message)
     {

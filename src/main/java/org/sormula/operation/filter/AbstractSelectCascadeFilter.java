@@ -36,6 +36,7 @@ import org.sormula.operation.ScalarSelectOperation;
  * @since 3.1
  * @author Jeff Miller
  */
+@Deprecated
 public abstract class AbstractSelectCascadeFilter implements SelectCascadeFilter<Object>
 {
     private static final ClassLogger log = new ClassLogger();

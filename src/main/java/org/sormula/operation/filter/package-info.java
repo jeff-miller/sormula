@@ -22,6 +22,8 @@
  * filters one row type. {@link org.sormula.operation.filter.AbstractSelectCascadeFilter} is a
  * base class for a filter that filters all row types (one method per type). 
  * 
+ * TODO add lambda filter info
+ * 
  * @since 3.1
  */
 package org.sormula.operation.filter;

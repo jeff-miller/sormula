@@ -2,7 +2,8 @@ Version History
 
 version-jdk             comments
 ------------------------------------------------------------------------------------------------------------
-4.0-jdk1.8              - Annotations Where, OrderBy, ExplicitType, UnusedColumn are repeatable
+4.0-jdk1.8              - Select filters can be lambda expressions: see ScalarSelectOperation.addFilter  
+                        - Annotations Where, OrderBy, ExplicitType, UnusedColumn are repeatable
                         - SelectCascade#targetKeyMethodName allows symbolic value of "#primaryKey"
                         - allow lambda for key function in MapSelectOperation 
                         - add default translators for java.time.LocalDate, java.time.LocalTime, java.time.Instant

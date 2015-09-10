@@ -38,7 +38,7 @@ import org.testng.annotations.Test;
 public class ColumnTranslatorTest extends DatabaseTest<SormulaTest1>
 {
 	private static final ClassLogger log = new ClassLogger();
-    
+    private static final int TEST_STRING_COLUMN_LENGTH = 20;
     
     @BeforeClass
     public void setUp() throws Exception
@@ -65,8 +65,8 @@ public class ColumnTranslatorTest extends DatabaseTest<SormulaTest1>
             " testSqlDate DATE," +
             " testSqlTimestamp TIMESTAMP," +
             " testGc TIMESTAMP," +
-            " testString1 VARCHAR(20)," +
-            " ts2 CHAR(20)," +
+            " testString1 VARCHAR(" + TEST_STRING_COLUMN_LENGTH + ")," +
+            " ts2 CHAR(" + TEST_STRING_COLUMN_LENGTH + ")," +
             " testEnum1 VARCHAR(10)," +
             " testEnum2 VARCHAR(10)" +
             ")"
@@ -166,7 +166,7 @@ public class ColumnTranslatorTest extends DatabaseTest<SormulaTest1>
          
         // string column tests
         assert inserted.getTestString1()   .equals(selected.getTestString1())    : "testString1" + message;
-        if (selected.getTestString2().length() != 10)
+        if (selected.getTestString2().length() != TEST_STRING_COLUMN_LENGTH)
         {
             // CHAR not always implemented consistently in all db's
             log.warn("CHAR not padded with blanks length=" + selected.getTestString2().length());

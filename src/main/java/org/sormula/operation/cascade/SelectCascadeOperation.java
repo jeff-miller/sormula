@@ -88,6 +88,7 @@ public class SelectCascadeOperation<S, T> extends CascadeOperation<S, T>
      * @param selectCascadeFilters select filters to use or null if none
      * @since 3.1
      * @see ScalarSelectOperation#setSelectCascadeFilters(SelectCascadeFilter...)
+     * @deprecated Replaced by {@link #setFilterPredicateMap(Map)}
      */
     @Deprecated
     public void setSelectCascadeFilters(SelectCascadeFilter<?>... selectCascadeFilters)
@@ -102,6 +103,7 @@ public class SelectCascadeOperation<S, T> extends CascadeOperation<S, T>
      * @return select filters to use or null if none
      * @since 3.1
      * @see ScalarSelectOperation#getSelectCascadeFilters()
+     * @deprecated Replaced by {@link #getFilterPredicateMap()}
      */
     @Deprecated
     public SelectCascadeFilter<?>[] getSelectCascadeFilters()
@@ -111,8 +113,14 @@ public class SelectCascadeOperation<S, T> extends CascadeOperation<S, T>
     
 
     /**
-     * TODO
-     * @return
+     * Gets a map of all filters used by this operation and lower level cascades. Typically
+     * a filter corresponds to one row type. 
+     * <p>
+     * Key is class type to filter. Value is predicate to invoke for filtering. Filter parameters
+     * are row class and boolean that indicates true/false if cascade has been performed
+     * on row class.
+     * 
+     * @return map of class to filter
      * @since 4.0
      */
     public Map<Class<?>, BiPredicate<?, Boolean>> getFilterPredicateMap() 
@@ -122,8 +130,11 @@ public class SelectCascadeOperation<S, T> extends CascadeOperation<S, T>
 
 
     /**
-     * TODO
-     * @param filterPredicateMap
+     * Sets the map of all filters used by this operation and lower level cascades. See {@link #getFilterPredicateMap()}
+     * for details about the map. Typically this method is invoked by a select operation when preparing 
+     * lower level cascades.
+     * 
+     * @param filterPredicateMap map of class to filter
      * @since 4.0
      */
 	public void setFilterPredicateMap(Map<Class<?>, BiPredicate<?, Boolean>> filterPredicateMap) 

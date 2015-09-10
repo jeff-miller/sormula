@@ -664,6 +664,7 @@ public class ScalarSelectOperation<R> extends SqlOperation<R>
      * 
      * @param selectCascadeFilters filter(s) to use or null for none
      * @since 3.1
+     * @deprecated Replaced by {@link #addFilter(Class, BiPredicate)} and {@link #setFilterPredicateMap(Map)}
      */
     @SuppressWarnings("unchecked")
     @Deprecated
@@ -698,6 +699,7 @@ public class ScalarSelectOperation<R> extends SqlOperation<R>
      * 
      * @return filters used; null for none
      * @since 3.1
+     * @deprecated Replaced by {@link #getFilterPredicateMap()}
      */
     @Deprecated
     public SelectCascadeFilter<?>[] getSelectCascadeFilters()
@@ -707,10 +709,11 @@ public class ScalarSelectOperation<R> extends SqlOperation<R>
 
     
     /**
-     * TODO
+     * Adds a filter to use for a row type. TODO more needed here
      * make note affects cascades
      * @param rowClass
      * @param filterPredicate
+     * @param <F> row type to filter
      * @since 4.0
      */
     public <F> void addFilter(Class<F> rowClass, BiPredicate<F, Boolean> filterPredicate)

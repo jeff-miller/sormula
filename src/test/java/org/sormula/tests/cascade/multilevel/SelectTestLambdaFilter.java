@@ -59,6 +59,7 @@ public class SelectTestLambdaFilter extends DatabaseTest<SormulaTestLevel1>
     @SuppressWarnings("unchecked")
     public void filter123() throws SormulaException
     {
+    	// these are arbitrary filters for testing
     	BiPredicate<SormulaTestLevel1, Boolean> filter1 = (row, cascaded) ->
     	{
             boolean keep = true; // assume
@@ -101,6 +102,10 @@ public class SelectTestLambdaFilter extends DatabaseTest<SormulaTestLevel1>
 	@SuppressWarnings("unchecked")
     protected void filterTest(BiPredicate<?, Boolean>... filterPredicates) throws SormulaException
     {
+    	@SuppressWarnings("resource") // selectAll method invokes close
+        ArrayListSelectOperation<SormulaTestLevel1> filteredSelectOperation = 
+                new ArrayListSelectOperation<>(getTable(), "");
+
         // filter1,2,3 are used to verify results
     	BiPredicate<SormulaTestLevel1, Boolean> filter1; 
     	BiPredicate<SormulaTestLevel2, Boolean> filter2;
@@ -108,10 +113,14 @@ public class SelectTestLambdaFilter extends DatabaseTest<SormulaTestLevel1>
     	
         if (filterPredicates.length == 1)
         {
-            // one filter for all row types
+            // one filter for all row types, 
+        	// three references to the same filter for confirmation tests below
             filter1 = (BiPredicate<SormulaTestLevel1, Boolean>)filterPredicates[0];
             filter2 = (BiPredicate<SormulaTestLevel2, Boolean>)filterPredicates[0];
             filter3 = (BiPredicate<SormulaTestLevel3, Boolean>)filterPredicates[0];
+            
+            // add filter once, it will be used for all levels
+            filteredSelectOperation.addFilter(Object.class, (BiPredicate<Object, Boolean>)filterPredicates[0]);
         }
         else
         {
@@ -119,14 +128,12 @@ public class SelectTestLambdaFilter extends DatabaseTest<SormulaTestLevel1>
             filter1 = (BiPredicate<SormulaTestLevel1, Boolean>)filterPredicates[0];
             filter2 = (BiPredicate<SormulaTestLevel2, Boolean>)filterPredicates[1];
             filter3 = (BiPredicate<SormulaTestLevel3, Boolean>)filterPredicates[2];
+            
+            filteredSelectOperation.addFilter(SormulaTestLevel1.class, filter1);
+            filteredSelectOperation.addFilter(SormulaTestLevel2.class, filter2);
+            filteredSelectOperation.addFilter(SormulaTestLevel3.class, filter3);
         }
-        
-    	@SuppressWarnings("resource") // selectAll method invokes close
-        ArrayListSelectOperation<SormulaTestLevel1> filteredSelectOperation = 
-                new ArrayListSelectOperation<>(getTable(), "");
-        filteredSelectOperation.addFilter(SormulaTestLevel1.class, filter1);
-        filteredSelectOperation.addFilter(SormulaTestLevel2.class, filter2);
-        filteredSelectOperation.addFilter(SormulaTestLevel3.class, filter3);
+
         List<SormulaTestLevel1> filteredSelectOperationResults = filteredSelectOperation.selectAll();
         //logGraph(filteredSelectOperationResults, "from db");
         

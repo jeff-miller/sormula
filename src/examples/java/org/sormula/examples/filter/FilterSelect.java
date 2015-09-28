@@ -33,7 +33,6 @@ public class FilterSelect extends ExampleBase
 {
     Database database;
     
-    // TODO add lambda filter example
     
     public static void main(String[] args) throws Exception
     {
@@ -49,9 +48,13 @@ public class FilterSelect extends ExampleBase
         Connection connection = getConnection();
         database = new Database(connection, getSchema());
         
-        // examples
+        // abstract filter examples
         selectOrders("A");
         selectOrders("D");
+
+        // lambda examples
+        selectOrdersLambda("A");
+        selectOrdersLambda("D");
         
         // clean up
         database.close();
@@ -61,10 +64,52 @@ public class FilterSelect extends ExampleBase
     
     void selectOrders(String productId) throws SormulaException
     {
-        System.out.println("\nOrders that contain product " + productId + ":");
+        System.out.println("\nFilter with AbstractSelectCascadeFilter");
+        System.out.println("Orders that contain product " + productId + ":");
         @SuppressWarnings("resource") // selectAll method invokes close
         ArrayListSelectOperation<Order> selectOrders = new ArrayListSelectOperation<>(database.getTable(Order.class), "");
         selectOrders.setSelectCascadeFilters(new ProductFilter(productId));
+        
+        // for all orders
+        for (Order o : selectOrders.selectAll())
+        {
+            System.out.println("\nOrder " + o.getOrderId());
+            
+            // for all order items
+            for (OrderItem oi : o.getOrderItems())
+            {
+                System.out.println("  " + oi.getItemNumber() + " " + oi.getProduct().getDescription());
+            }
+        }
+    }
+    
+    
+    void selectOrdersLambda(String productId) throws SormulaException
+    {
+        System.out.println("\nFilter with Lambda:");
+        System.out.println("Orders that contain product " + productId + ":");
+        @SuppressWarnings("resource") // selectAll method invokes close
+        ArrayListSelectOperation<Order> selectOrders = new ArrayListSelectOperation<>(database.getTable(Order.class), "");
+        selectOrders.addFilter(Order.class, (order, cascadesCompleted) ->
+        {
+            if (!cascadesCompleted)
+            {
+                // assume order will be kept, test after cascades occur
+                return true;
+            }
+            else
+            {
+                // keep order if one order item contains desired product
+                for (OrderItem oi : order.getOrderItems())
+                {
+                    if (oi.getProductId().equals(productId)) return true;
+                }
+                
+                // assume product id was not in order
+                return false;
+            }
+        }
+        );
         
         // for all orders
         for (Order o : selectOrders.selectAll())

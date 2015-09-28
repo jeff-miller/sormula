@@ -1,5 +1,5 @@
 /* sormula - Simple object relational mapping
- * Copyright (C) 2011-2012 Jeff Miller
+ * Copyright (C) 2015 Jeff Miller
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,14 +18,11 @@ package org.sormula.tests.cascade.multilevel;
 
 import java.util.function.BiPredicate;
 
-import org.sormula.operation.filter.AbstractSelectCascadeFilter;
-import org.sormula.operation.filter.SelectCascadeFilter;
-
 
 /**
- * TODO
- * {@link SelectCascadeFilter} that filters all row class types using {@link AbstractSelectCascadeFilter}.
- * Instead of one {@link SelectCascadeFilter} for each row type, there is one method for each row type.
+ * {@link BiPredicate} that filters all row class types. Instead of a {@link BiPredicate} for each
+ * row type, there is one method for each row type. The filtering conditions are arbitrary and useful
+ * only as an example. This class is used by {@link SelectTestLambdaFilter}.
  * 
  * @author Jeff Miller
  */

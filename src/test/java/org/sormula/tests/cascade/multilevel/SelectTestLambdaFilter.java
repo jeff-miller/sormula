@@ -1,5 +1,5 @@
 /* sormula - Simple object relational mapping
- * Copyright (C) 2011-2012 Jeff Miller
+ * Copyright (C) 2015 Jeff Miller
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -30,7 +30,7 @@ import org.testng.annotations.Test;
 
 
 /**
- * Tests TODO
+ * Tests filtering using lambda expression, {@link AllLevelsFilterPredicate}.
  * 
  * @author Jeff Miller
  */

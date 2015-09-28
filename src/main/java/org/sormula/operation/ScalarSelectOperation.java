@@ -709,10 +709,36 @@ public class ScalarSelectOperation<R> extends SqlOperation<R>
 
     
     /**
-     * Adds a filter to use for a row type. TODO more needed here
-     * make note affects cascades
-     * @param rowClass
-     * @param filterPredicate
+     * Adds a filter to use for a row type. Every row of type, rowClass, is 
+     * is tested as the row is read from the database. 
+     * <p>
+     * It is tested up to two times. It is always tested immediately after it is read.
+     * It is tested a second time if the row has cascades after all cascades have been performed
+     * on the row.
+     * <p>
+     * An example use:
+     * <blockquote><pre>
+     * SelectOperation&lt;Order.class&gt; op = ...
+     * op.addFilter(Order.class, (order, cascadesCompleted) -&gt;
+     *   {
+     *       if (!cascadesCompleted)
+     *       {
+     *           // tests prior to cascades
+     *           return ...
+     *       }
+     *       else
+     *       {
+     *           // tests after cascades
+     *           return ...
+     *       }
+     *   });
+     * </pre></blockquote>
+     * All filters that here are automatically added to lower level cascades when the
+     * operation is prepared. The purpose of this is so that a top-level select operation 
+     * can define filters for any/all lower level cascaded row types.
+     * 
+     * @param rowClass type of row to test
+     * @param filterPredicate predicate to perform the test
      * @param <F> row type to filter
      * @since 4.0
      */
@@ -725,9 +751,11 @@ public class ScalarSelectOperation<R> extends SqlOperation<R>
     
     
     /**
-     * TODO
-     * @param rowClass
+     * Removes a filter that was previously added with {@link #addFilter(Class, BiPredicate)}.
+     * 
+     * @param rowClass remove filter defined for this row class
      * @since 4.0
+     * @param <F> row type to filter
      */
     public <F> void removeFilter(Class<F> rowClass)
 	{
@@ -741,8 +769,10 @@ public class ScalarSelectOperation<R> extends SqlOperation<R>
     
 
     /**
-     * TODO
-     * @return
+     * Gets all filters defined for this operation. Typically this method is used internally by
+     * cascade operations.
+     * 
+     * @return map of row class to filter
      * @since 4.0
      */
     public Map<Class<?>, BiPredicate<?, Boolean>> getFilterPredicateMap() 
@@ -752,8 +782,10 @@ public class ScalarSelectOperation<R> extends SqlOperation<R>
 
 
     /**
-     * TODO
-     * @param filterPredicateMap
+     * Sets all filters defined for this operation and lower level cascades. Typically this method is
+     * used internally by when preparing cascade operations.
+     * 
+     * @param filterPredicateMap map of row class to filter
      * @since 4.0
      */
 	public void setFilterPredicateMap(Map<Class<?>, BiPredicate<?, Boolean>> filterPredicateMap) 
@@ -778,10 +810,14 @@ public class ScalarSelectOperation<R> extends SqlOperation<R>
 
 	
 	/**
-	 * TODO
-	 * @param rowClass
-	 * @param filterPredicate
-	 * @return
+	 * Tests if filterPredicate parameter is to be used for this operation. If true is returned
+	 * then #filterPredicate member is set to filterPredicate parameter.
+	 * 
+	 * @param rowClass row class that is to use filterPredicate
+	 * @param filterPredicate filter 
+	 * @return true if rowClass parameter is same as the row class of row translator ({@link #rowTranslator})
+	 * or if rowClass is Object.class (indicates that filter is to be used for all row types)
+	 * 
 	 * @since 4.0
 	 */
 	@SuppressWarnings("unchecked")

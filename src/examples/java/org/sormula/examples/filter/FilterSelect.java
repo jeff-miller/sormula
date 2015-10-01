@@ -66,7 +66,6 @@ public class FilterSelect extends ExampleBase
     {
         System.out.println("\nFilter with AbstractSelectCascadeFilter");
         System.out.println("Orders that contain product " + productId + ":");
-        @SuppressWarnings("resource") // selectAll method invokes close
         ArrayListSelectOperation<Order> selectOrders = new ArrayListSelectOperation<>(database.getTable(Order.class), "");
         selectOrders.setSelectCascadeFilters(new ProductFilter(productId));
         
@@ -88,7 +87,6 @@ public class FilterSelect extends ExampleBase
     {
         System.out.println("\nFilter with Lambda:");
         System.out.println("Orders that contain product " + productId + ":");
-        @SuppressWarnings("resource") // selectAll method invokes close
         ArrayListSelectOperation<Order> selectOrders = new ArrayListSelectOperation<>(database.getTable(Order.class), "");
         selectOrders.addFilter(Order.class, (order, cascadesCompleted) ->
         {

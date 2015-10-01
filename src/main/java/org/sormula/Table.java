@@ -637,7 +637,6 @@ public class Table<R> implements TypeTranslatorMap, TransactionListener
      */
     public List<R> selectAll() throws SormulaException
     {
-    	@SuppressWarnings("resource") // selectAll method invokes close
         ArrayListSelectOperation<R> operation = new ArrayListSelectOperation<R>(this, "");
         if (rowAnnotation != null)
         {
@@ -704,7 +703,6 @@ public class Table<R> implements TypeTranslatorMap, TransactionListener
      */
     public List<R> selectAllWhere(String whereConditionName, Object...parameters) throws SormulaException
     {
-    	@SuppressWarnings("resource") // selectAll method invokes close
         ArrayListSelectOperation<R> operation = new ArrayListSelectOperation<>(this, whereConditionName);
         return operation.selectAll(parameters);
     }
@@ -722,7 +720,6 @@ public class Table<R> implements TypeTranslatorMap, TransactionListener
      */
     public List<R> selectAllWhereOrdered(String whereConditionName, String orderByName, Object...parameters) throws SormulaException
     {
-    	@SuppressWarnings("resource") // selectAll method invokes close
         ArrayListSelectOperation<R> operation = new ArrayListSelectOperation<>(this, whereConditionName);
         operation.setOrderBy(orderByName);
         return operation.selectAll(parameters);
@@ -745,7 +742,6 @@ public class Table<R> implements TypeTranslatorMap, TransactionListener
      */
     public List<R> selectAllCustom(String customSql, Object... parameters) throws SormulaException
     {
-    	@SuppressWarnings("resource") // selectAll method invokes close
     	ArrayListSelectOperation<R> operation = new ArrayListSelectOperation<>(this, "");
     	operation.setCustomSql(customSql);
         if (rowAnnotation != null)
@@ -1056,7 +1052,6 @@ public class Table<R> implements TypeTranslatorMap, TransactionListener
      * @return count of rows affected
      * @throws SormulaException if error
      */
-    @SuppressWarnings("resource") // insert method invokes close
     public int insert(R row) throws SormulaException
     {
         return new InsertOperation<R>(this).insert(row);
@@ -1077,7 +1072,6 @@ public class Table<R> implements TypeTranslatorMap, TransactionListener
      * @since 3.0
      * @see InsertOperation#InsertOperation(Table, boolean)
      */
-    @SuppressWarnings("resource") // insert method invokes close
     public int insertNonIdentity(R row) throws SormulaException
     {
         return new InsertOperation<R>(this, false).insert(row);
@@ -1101,7 +1095,6 @@ public class Table<R> implements TypeTranslatorMap, TransactionListener
      * @return count of rows affected
      * @throws SormulaException if error
      */
-    @SuppressWarnings("resource") // insertAll method invokes close
     public int insertAll(Collection<R> rows) throws SormulaException
     {
         if (rows.size() > 0) return new InsertOperation<R>(this).insertAll(rows);
@@ -1123,7 +1116,6 @@ public class Table<R> implements TypeTranslatorMap, TransactionListener
      * @since 3.0
      * @see InsertOperation#InsertOperation(Table, boolean)
      */
-    @SuppressWarnings("resource") // insertAll method invokes close
     public int insertNonIdentityAll(Collection<R> rows) throws SormulaException
     {
         if (rows.size() > 0) return new InsertOperation<R>(this, false).insertAll(rows);
@@ -1144,7 +1136,6 @@ public class Table<R> implements TypeTranslatorMap, TransactionListener
     {
         if (rows.size() > 0)
         {
-        	@SuppressWarnings("resource") // insertAll method invokes close
             InsertOperation<R> operation = new InsertOperation<R>(this);
             operation.setBatch(true);
             return operation.insertAll(rows);
@@ -1175,7 +1166,6 @@ public class Table<R> implements TypeTranslatorMap, TransactionListener
     {
         if (rows.size() > 0)
         {
-        	@SuppressWarnings("resource") // insertAll method invokes close
             InsertOperation<R> operation = new InsertOperation<R>(this, false);
             operation.setBatch(true);
             return operation.insertAll(rows);
@@ -1203,7 +1193,6 @@ public class Table<R> implements TypeTranslatorMap, TransactionListener
      * @return count of rows affected
      * @throws SormulaException if error
      */
-    @SuppressWarnings("resource") // update method invokes close
     public int update(R row) throws SormulaException
     {
         return new UpdateOperation<R>(this).update(row);
@@ -1228,7 +1217,6 @@ public class Table<R> implements TypeTranslatorMap, TransactionListener
      * @return count of rows affected
      * @throws SormulaException if error
      */
-    @SuppressWarnings("resource") // updateAll method invokes close
     public int updateAll(Collection<R> rows) throws SormulaException
     {
         if (rows.size() > 0) return new UpdateOperation<R>(this).updateAll(rows);
@@ -1251,7 +1239,6 @@ public class Table<R> implements TypeTranslatorMap, TransactionListener
     {
         if (rows.size() > 0)
         {
-        	@SuppressWarnings("resource") // updateAll method invokes close
             UpdateOperation<R> operation = new UpdateOperation<R>(this);
             operation.setBatch(true);
             return operation.updateAll(rows);
@@ -1278,7 +1265,6 @@ public class Table<R> implements TypeTranslatorMap, TransactionListener
      * @return count of rows affected
      * @throws SormulaException if error
      */
-    @SuppressWarnings("resource") // delete method invokes close
     public int delete(Object... parameters) throws SormulaException
     {
         return new DeleteOperation<R>(this).delete(parameters);
@@ -1301,7 +1287,6 @@ public class Table<R> implements TypeTranslatorMap, TransactionListener
      * @return count of rows affected
      * @throws SormulaException if error
      */
-    @SuppressWarnings("resource") // delete method invokes close
     public int delete(R row) throws SormulaException
     {
         return new DeleteOperation<R>(this).delete(row);
@@ -1323,7 +1308,6 @@ public class Table<R> implements TypeTranslatorMap, TransactionListener
      * @return count of rows affected
      * @throws SormulaException if error
      */
-    @SuppressWarnings("resource") // deleteAll method invokes close
     public int deleteAll(Collection<R> rows) throws SormulaException
     {
         if (rows.size() > 0) return new DeleteOperation<R>(this).deleteAll(rows);
@@ -1346,7 +1330,6 @@ public class Table<R> implements TypeTranslatorMap, TransactionListener
     {
         if (rows.size() > 0)
         {
-        	@SuppressWarnings("resource") // deleteAll method invokes close
             DeleteOperation<R> operation = new DeleteOperation<R>(this);
             operation.setBatch(true);
             return operation.deleteAll(rows);
@@ -1370,7 +1353,6 @@ public class Table<R> implements TypeTranslatorMap, TransactionListener
      * @return count of rows affected
      * @throws SormulaException if error
      */
-    @SuppressWarnings("resource") // delete method invokes close
     public int deleteAll() throws SormulaException
     {
         return new DeleteOperation<R>(this, "").delete();
@@ -1385,7 +1367,6 @@ public class Table<R> implements TypeTranslatorMap, TransactionListener
      * @return count of rows affected
      * @throws SormulaException if error
      */
-    @SuppressWarnings("resource") // modify method invokes close
     public int save(R row) throws SormulaException
     {
         return new SaveOperation<R>(this).modify(row);
@@ -1400,7 +1381,6 @@ public class Table<R> implements TypeTranslatorMap, TransactionListener
      * @return count of rows affected
      * @throws SormulaException if error
      */
-    @SuppressWarnings("resource") // modifyAll method invokes close
     public int saveAll(Collection<R> rows) throws SormulaException
     {
         if (rows.size() > 0) return new SaveOperation<R>(this).modifyAll(rows);

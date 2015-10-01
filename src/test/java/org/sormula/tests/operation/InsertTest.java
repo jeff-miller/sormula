@@ -119,7 +119,6 @@ public class InsertTest extends DatabaseTest<SormulaTest4>
         }
         
         begin();
-        @SuppressWarnings("resource") // insertAll method invokes close
         InsertOperation<SormulaTest4> operation = new InsertOperation<>(getTable());
         operation.setBatch(true);
         operation.insertAll(list);

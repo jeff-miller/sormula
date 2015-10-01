@@ -60,7 +60,6 @@ public class SelectTest extends DatabaseTest<SormulaTestNP1>
         int testId = 102;
         
         begin();
-        @SuppressWarnings("resource") // selectAll method invokes close
         ArrayListSelectOperation<SormulaTestNP2> operation = new ArrayListSelectOperation<>(
                 getDatabase().getTable(SormulaTestNP2.class), "byParent");
         operation.setParameter("parentId", testId);
@@ -75,7 +74,6 @@ public class SelectTest extends DatabaseTest<SormulaTestNP1>
         int testId = 102;
         
         begin();
-        @SuppressWarnings("resource") // selectAll method invokes close
         ArrayListSelectOperation<SormulaTestNP2> operation = new ArrayListSelectOperation<>(
                 getDatabase().getTable(SormulaTestNP2.class), "byParent");
         operation.setParameter("parentId", 999); // confirm that this is NOT used
@@ -103,7 +101,6 @@ public class SelectTest extends DatabaseTest<SormulaTestNP1>
         int minLevel2Id = 222;
         
         begin();
-        @SuppressWarnings("resource") // selectAll method invokes close
         ArrayListSelectOperation<SormulaTestNP1> operation = new ArrayListSelectOperation<>(
                 getDatabase().getTable(SormulaTestNP1.class), "");
         operation.setParameter("minLevel2Id", minLevel2Id); // SormulaTestNP1 cascade uses $minLevel2Id

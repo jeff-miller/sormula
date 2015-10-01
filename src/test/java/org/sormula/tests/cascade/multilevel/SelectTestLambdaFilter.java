@@ -102,7 +102,6 @@ public class SelectTestLambdaFilter extends DatabaseTest<SormulaTestLevel1>
 	@SuppressWarnings("unchecked")
     protected void filterTest(BiPredicate<?, Boolean>... filterPredicates) throws SormulaException
     {
-    	@SuppressWarnings("resource") // selectAll method invokes close
         ArrayListSelectOperation<SormulaTestLevel1> filteredSelectOperation = 
                 new ArrayListSelectOperation<>(getTable(), "");
 

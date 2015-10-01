@@ -33,6 +33,7 @@ import org.sormula.operation.ScalarSelectOperation;
  * <code>public boolean accept(ScalarSelectOperation&lt;?&gt; source, T row, boolean cascadesCompleted)</code><br>
  * Return true to keep row, false to eliminate row from results.
  * 
+ * @deprecated Use {@link ScalarSelectOperation#addFilter(Class, java.util.function.BiPredicate)}
  * @since 3.1
  * @author Jeff Miller
  */

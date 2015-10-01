@@ -43,6 +43,7 @@ public class DeleteCascadeOperation<S, T> extends ModifyCascadeOperation<S, T>
      * @param targetTable cascade delete operation is performed on this table 
      * @param deleteCascadeAnnotation cascade operation
      * @since 3.0
+     * @deprecated Use {@link #DeleteCascadeOperation(Table, RowField, Table, DeleteCascade)}
      */
     @Deprecated
     public DeleteCascadeOperation(Table<S> sourceTable, SormulaField<S, ?> targetField, Table<T> targetTable, DeleteCascade deleteCascadeAnnotation)

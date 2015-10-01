@@ -51,6 +51,7 @@ public abstract class ModifyCascadeOperation<S, T> extends CascadeOperation<S, T
      * @param cascadeOperationClass class of cascade operation
      * false if cascade is performed before row execute (see {@link ModifyOperation#preExecute}
      * @since 3.0
+     * @deprecated Use {@link #ModifyCascadeOperation(Table, RowField, Table, Class)}
      */
     @Deprecated
     public ModifyCascadeOperation(Table<S> sourceTable, SormulaField<S, ?> targetField, Table<T> targetTable, 

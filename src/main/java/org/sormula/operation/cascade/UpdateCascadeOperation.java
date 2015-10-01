@@ -43,6 +43,7 @@ public class UpdateCascadeOperation<S, T> extends ModifyCascadeOperation<S, T>
      * @param targetTable cascade update operation is performed on this table 
      * @param updateCascadeAnnotation cascade operation
      * @since 3.0
+     * @deprecated Use {@link #UpdateCascadeOperation(Table, RowField, Table, UpdateCascade)}
      */
     @Deprecated
     public UpdateCascadeOperation(Table<S> sourceTable, SormulaField<S, ?> targetField, Table<T> targetTable, UpdateCascade updateCascadeAnnotation)

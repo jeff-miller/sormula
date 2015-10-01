@@ -44,6 +44,7 @@ public class InsertCascadeOperation<S, T> extends ModifyCascadeOperation<S, T>
      * @param targetTable cascade insert operation is performed on this table 
      * @param insertCascadeAnnotation cascade operation
      * @since 3.0
+     * @deprecated Use {@link #InsertCascadeOperation(Table, RowField, Table, InsertCascade)}
      */
     @Deprecated
     public InsertCascadeOperation(Table<S> sourceTable, SormulaField<S, ?> targetField, Table<T> targetTable, InsertCascade insertCascadeAnnotation)

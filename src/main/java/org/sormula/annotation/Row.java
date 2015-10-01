@@ -113,6 +113,7 @@ public @interface Row
      * @return true if post execute methods are performed unconditionally; false to
      * perform post execute methods only when database is modified
      * @since 3.0
+     * @deprecated Will be removed in version 4.0
      */
     @Deprecated
     boolean zeroRowCountPostExecute() default false;

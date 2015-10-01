@@ -266,6 +266,7 @@ public class RowTranslator<R> extends ColumnsTranslator<R>
      * post execute methods only when database has been modified by insert, update, or delete
      * @since 3.0
      * @see Row#zeroRowCountPostExecute()
+     * @deprecated Will be removed in version 4.0
      */
     @Deprecated
     public boolean isZeroRowCountPostExecute()
@@ -282,6 +283,7 @@ public class RowTranslator<R> extends ColumnsTranslator<R>
      * insert, update, or delete
      * @since 3.0
      * @see Row#zeroRowCountPostExecute()
+     * @deprecated Will be removed in version 4.0
      */
     @Deprecated
     public void setZeroRowCountPostExecute(boolean zeroRowCountPostExecute)

@@ -58,6 +58,7 @@ public abstract class AbstractColumnTranslator<R, T> implements ColumnTranslator
      * @param columnName name of column associated with row field
      * @return column translator
      * @throws TranslatorException if error
+     * @deprecated Use {@link #newInstance(Class, RowField, String)}
      */
     @Deprecated
 	public static ColumnTranslator<?> newInstance(Class<? extends ColumnTranslator> columnTranslatorClass, 
@@ -120,6 +121,7 @@ public abstract class AbstractColumnTranslator<R, T> implements ColumnTranslator
      * @param field java reflection Field that corresponds to column
      * @param columnName name of table column
      * @throws TranslatorException if error
+     * @deprecated Use {@link #AbstractColumnTranslator(RowField, String)}
      */
 	@Deprecated
     public AbstractColumnTranslator(Field field, String columnName) throws TranslatorException
@@ -240,8 +242,9 @@ public abstract class AbstractColumnTranslator<R, T> implements ColumnTranslator
     
 
     /**
-     * Gets the field as a {@link SormulaField}. Use {@link #getRowField()} instead of
-     * this method.
+     * Gets the field as a {@link SormulaField}. 
+     * 
+     * @deprecated Use {@link #getRowField()} instead of this method
      * 
      * @return {@link SormulaField} for field supplied in constructor
      */

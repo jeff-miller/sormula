@@ -69,6 +69,7 @@ public class SelectCascadeOperation<S, T> extends CascadeOperation<S, T>
      * @param targetTable cascade select operation is performed on this table 
      * @param selectCascadeAnnotation cascade operation
      * @since 3.0
+     * @deprecated Use {@link #SelectCascadeOperation(Table, RowField, Table, SelectCascade)}
      */
 	@Deprecated
     public SelectCascadeOperation(Table<S> sourceTable, SormulaField<S, ?> targetField, Table<T> targetTable, SelectCascade selectCascadeAnnotation)

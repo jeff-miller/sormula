@@ -860,6 +860,7 @@ public abstract class SqlOperation<R> implements AutoCloseable
      * @param targetField target of cascade
      * @return table for target class of annotation
      * @throws OperationException if error
+     * @deprecated Use {@link #getTargetTable(Class)}
      */
     @Deprecated
     protected Table<?> getTargetTable(Class<?> targetClass, Field targetField) throws OperationException
@@ -899,7 +900,7 @@ public abstract class SqlOperation<R> implements AutoCloseable
      * Creates a {@link SormulaField} from {@link Field}. Typically this method is used to create
      * a field that will receive value from a cascade.
      * 
-     * Use {@link #createRowField(Table, Field)} or {@link RowTranslator#createRowField} instead of this method.
+     * @deprecated {@link #createRowField(Table, Field)} or {@link RowTranslator#createRowField} instead of this method.
      * 
      * @param field creates for this field
      * @return sormula field based upon field parameter

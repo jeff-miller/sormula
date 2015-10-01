@@ -44,6 +44,7 @@ public class SaveCascadeOperation<S, T> extends ModifyCascadeOperation<S, T>
      * @param targetTable cascade save operation is performed on this table 
      * @param saveCascadeAnnotation cascade operation
      * @since 3.0
+     * @deprecated Use {@link #SaveCascadeOperation(Table, RowField, Table, SaveCascade)}
      */
     @Deprecated
     public SaveCascadeOperation(Table<S> sourceTable, SormulaField<S, ?> targetField, Table<T> targetTable, SaveCascade saveCascadeAnnotation)

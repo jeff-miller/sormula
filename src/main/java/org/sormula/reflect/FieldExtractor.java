@@ -50,6 +50,7 @@ public class FieldExtractor<R>
 	 * 
 	 * @param columnTranslatorList list of fields that are read/written to database
 	 * @throws ReflectException if error
+	 * @deprecated Use {@link #FieldExtractor(AbstractWhereTranslator)} or {@link #FieldExtractor(RowTranslator)}
 	 */
 	@Deprecated 
     public FieldExtractor(List<ColumnTranslator<R>> columnTranslatorList) throws ReflectException

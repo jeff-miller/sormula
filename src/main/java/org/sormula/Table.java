@@ -233,6 +233,7 @@ public class Table<R> implements TypeTranslatorMap, TransactionListener
 	 * having precedence over row  annotations.
 	 * @return true if table annotations have precedence over row annotations
 	 * @since 3.0
+	 * @deprecated Will be removed in version 4.0
 	 */
 	@Deprecated
     public boolean isLegacyAnnotationPrecedence()

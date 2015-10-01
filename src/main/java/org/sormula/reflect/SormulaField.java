@@ -31,6 +31,7 @@ import org.sormula.log.ClassLogger;
  *
  * @param <C> class containing the field
  * @param <T> class of field
+ * @deprecated Will be removed in version 4.0
  */
 @Deprecated
 public class SormulaField<C, T>

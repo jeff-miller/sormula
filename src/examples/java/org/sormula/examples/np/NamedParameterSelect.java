@@ -64,7 +64,6 @@ public class NamedParameterSelect extends ExampleBase
         System.out.println("\nOrders and their products obtained with named parameter $description:");
         
         Table<Order> ordertTable = database.getTable(Order.class);
-        @SuppressWarnings("resource") // selectAll method invokes close
         ArrayListSelectOperation<Order> selectOperation = new ArrayListSelectOperation<>(ordertTable, "" /* all */);
         
         // selects only products with description of "Product D"
@@ -92,7 +91,6 @@ public class NamedParameterSelect extends ExampleBase
         System.out.println("\nOrders as old as " + minimumAge + ":");
         
         Table<Order> ordertTable = database.getTable(Order.class);
-        @SuppressWarnings("resource") // selectAll method invokes close
         ArrayListSelectOperation<Order> selectOperation = new ArrayListSelectOperation<>(ordertTable, "asOldAs");
         selectOperation.setParameter("orderDate", minimumAge); // operand for @WhereField(name="orderDate", ...
         

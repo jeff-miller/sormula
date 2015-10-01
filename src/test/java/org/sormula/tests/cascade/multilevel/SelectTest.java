@@ -85,7 +85,6 @@ public class SelectTest extends DatabaseTest<SormulaTestLevel1>
     @SuppressWarnings("unchecked")
     protected void filterTest(SelectCascadeFilter<?>... selectCascadeFilters) throws SormulaException
     {
-    	@SuppressWarnings("resource") // selectAll method invokes close
         ArrayListSelectOperation<SormulaTestLevel1> filteredSelectOperation = 
                 new ArrayListSelectOperation<>(getTable(), "");
         filteredSelectOperation.setSelectCascadeFilters(selectCascadeFilters);
@@ -112,7 +111,7 @@ public class SelectTest extends DatabaseTest<SormulaTestLevel1>
         }
         
         // all selected rows should pass filter 
-        // confirms that all fitlered rows are permitted
+        // confirms that all filtered rows are permitted
         for (SormulaTestLevel1 row1 : filteredSelectOperationResults)
         {
             assert filter1.accept(null, row1, false) && filter1.accept(null, row1, true) : 

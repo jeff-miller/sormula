@@ -104,7 +104,6 @@ public class BasicSelect extends ExampleBase
         idList.add(8888);
         
         System.out.println("select where id in = " + idList);
-        @SuppressWarnings("resource") // selectAll method invokes close
 		ListSelectOperation<Student> operation = new ArrayListSelectOperation<>(table, "idin");
         operation.setTimings(true);
         printAll(operation.selectAll(idList));
@@ -112,7 +111,6 @@ public class BasicSelect extends ExampleBase
     }
     
     
-    @SuppressWarnings("resource") // selectAll method invokes close
 	void selectWhere2() throws SormulaException
     {
         System.out.println("select using SelectJohns class");

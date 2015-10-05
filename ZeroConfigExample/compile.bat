@@ -1,1 +1,1 @@
-javac -source 1.7 -target 1.7 -cp .;* *.java
+javac -source 1.8 -target 1.8 -cp .;* *.java

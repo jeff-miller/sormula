@@ -6,7 +6,7 @@
 
     <groupId>org.sormula</groupId>
     <artifactId>sormula</artifactId>
-    <version>3.5-SNAPSHOT</version>
+    <version>3.5</version>
     
     <!-- test with specific database: 
          mvn -P <profile-id> 

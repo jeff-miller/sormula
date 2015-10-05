@@ -51,7 +51,7 @@ public class AllLevelsFilterA implements SelectCascadeFilter<Object>
         }
         else
         {
-            keep = row.getLevel1Id() != 104; // none of 104 or decendants
+            keep = row.getLevel1Id() != 104; // none of 104 or descendants
         }
         
         return keep;
@@ -68,7 +68,7 @@ public class AllLevelsFilterA implements SelectCascadeFilter<Object>
         }
         else
         {
-            keep = row.getLevel2Id() > 211; // none of 211 or decendants
+            keep = row.getLevel2Id() > 211; // none of 211 or descendants
         }
         
         return keep;

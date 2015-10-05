@@ -43,7 +43,7 @@ public class InsertTest extends DatabaseTest<SormulaIdentityParent>
             openDatabase();
             createTable(SormulaIdentityParent.class, 
                 "CREATE TABLE " + getSchemaPrefix() + SormulaIdentityParent.class.getSimpleName() + " (" +
-                " parentid " + getIdentityColumnDDL() + " PRIMARY KEY," +
+                " parentid " + getIdentityColumnDDL() + "," +
                 " description VARCHAR(60)" +
                 ")"
             );
@@ -53,7 +53,7 @@ public class InsertTest extends DatabaseTest<SormulaIdentityParent>
             childN.openDatabase();
             childN.createTable(SormulaIdentityChildN.class, 
                     "CREATE TABLE " + getSchemaPrefix() + SormulaIdentityChildN.class.getSimpleName() + " (" +
-                    " childid " + getIdentityColumnDDL() + " PRIMARY KEY," +
+                    " childid " + getIdentityColumnDDL() + "," +
                     " parentid INTEGER NOT NULL," +
                     " description VARCHAR(60)" +
                     ")"

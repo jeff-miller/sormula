@@ -113,7 +113,6 @@ public class Table<R> implements TypeTranslatorMap, TransactionListener
     Map<String, TypeTranslator<?>> typeTranslatorMap; // key is row class canonical name
     List<Field> lazySelectCascadeFields;
     Cache<R> cache;
-    boolean legacyAnnotationPrecedence;
     Row rowAnnotation;
     String[] requiredCascades;
     
@@ -132,27 +131,11 @@ public class Table<R> implements TypeTranslatorMap, TransactionListener
         this.rowClass = rowClass;
         
         requiredCascades = new String[0];
-        
-        // LEGACY_ANNOTATION_PRECEDENCE=true means read table annotations prior to row annotations
-        // by default version 3.0 and later will read row annotations prior to table annotations
-        String lap = System.getenv("LEGACY_ANNOTATION_PRECEDENCE");
-        if (lap != null && Boolean.valueOf(lap)) legacyAnnotationPrecedence = true;
-        
         initTypeTranslatorMap();
-        
-        // process row annotation
-        if (legacyAnnotationPrecedence)
-        {
-            // table then row
-            rowAnnotation = getClass().getAnnotation(Row.class);
-            if (rowAnnotation == null) rowAnnotation = rowClass.getAnnotation(Row.class);
-        }
-        else
-        {
-            // row then table
-            rowAnnotation = rowClass.getAnnotation(Row.class); 
-            if (rowAnnotation == null) rowAnnotation = getClass().getAnnotation(Row.class); 
-        }
+
+        // row then table
+        rowAnnotation = rowClass.getAnnotation(Row.class); 
+        if (rowAnnotation == null) rowAnnotation = getClass().getAnnotation(Row.class); 
         
         nameTranslators = initNameTranslators(rowAnnotation);
         rowTranslator = initRowTranslator(rowAnnotation);
@@ -222,27 +205,10 @@ public class Table<R> implements TypeTranslatorMap, TransactionListener
 	        cache.evictAll();
 	    }
 	}
-	
-
-	/**
-	 * Indicates the order in which annotations are processed. Prior to version 3.0, table annotations
-	 * were read first and thus had precedence over row annotations. Returns false by default. Set
-	 * LEGACY_ANNOTATION_PRECEDENCE=true to have this method return true.
-	 * <p>
-	 * This method will be removed in some future version. Do not rely on table annotations
-	 * having precedence over row  annotations.
-	 * @return true if table annotations have precedence over row annotations
-	 * @since 3.0
-	 * @deprecated Will be removed in version 4.0
-	 */
-	@Deprecated
-    public boolean isLegacyAnnotationPrecedence()
-    {
-        return legacyAnnotationPrecedence;
-    }
     
     
     /**
+	 * @deprecated Will be removed in version 4.0
      * Sets the name(s) of cascades that should occur with this operation. Cascades with names that equal
      * any of the names specified in cascadeNames parameter will be executed. The default value for 
      * required cascade names is {""}. 
@@ -292,16 +258,8 @@ public class Table<R> implements TypeTranslatorMap, TransactionListener
         // process any type annotations
         try
         {
-            if (legacyAnnotationPrecedence)
-            {
-                // table then row
-                new ExplicitTypeAnnotationReader(this, this.getClass(), rowClass).install();
-            }
-            else
-            {
-                // row then table
-                new ExplicitTypeAnnotationReader(this, rowClass, this.getClass()).install();
-            }
+            // row then table
+            new ExplicitTypeAnnotationReader(this, rowClass, this.getClass()).install();
         }
         catch (Exception e)
         {
@@ -443,16 +401,8 @@ public class Table<R> implements TypeTranslatorMap, TransactionListener
      */
     protected Cached initCachedAnnotation()
     {
-        if (legacyAnnotationPrecedence)
-        {
-            // table, row, database
-            return new CachedAnnotationReader(getClass(), rowClass, database.getClass()).getAnnotation();
-        }
-        else
-        {
-            // row, table, database
-            return new CachedAnnotationReader(rowClass, getClass(), database.getClass()).getAnnotation();
-        }
+        // row, table, database
+        return new CachedAnnotationReader(rowClass, getClass(), database.getClass()).getAnnotation();
     }
     
 

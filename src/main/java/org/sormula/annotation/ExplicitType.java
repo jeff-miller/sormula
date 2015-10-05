@@ -17,6 +17,7 @@
 package org.sormula.annotation;
 
 import java.lang.annotation.ElementType;
+import java.lang.annotation.Repeatable;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
@@ -39,6 +40,7 @@ import org.sormula.translator.TypeTranslator;
  * @since 1.6 and 2.0
  * @author Jeff Miller
  */
+@Repeatable(ExplicitTypes.class)
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.TYPE, ElementType.ANNOTATION_TYPE})
 public @interface ExplicitType

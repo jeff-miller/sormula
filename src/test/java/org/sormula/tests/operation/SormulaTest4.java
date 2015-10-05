@@ -18,11 +18,9 @@ package org.sormula.tests.operation;
 
 import org.sormula.annotation.Column;
 import org.sormula.annotation.OrderBy;
-import org.sormula.annotation.OrderBys;
 import org.sormula.annotation.Row;
 import org.sormula.annotation.Where;
 import org.sormula.annotation.WhereField;
-import org.sormula.annotation.Wheres;
 
 
 /**
@@ -31,18 +29,17 @@ import org.sormula.annotation.Wheres;
  * 
  * @author Jeff Miller
  */
-@Wheres({
-    @Where(name="byType", fieldNames="type", 
-            selectInitialCapacity=50, fetchSize=44), // exercise branches that set these values
-    @Where(name="maximumRowsTest", fieldNames="type", maximumRows=10),            
-    @Where(name="idIn",  whereFields=@WhereField(name="id", comparisonOperator="in")),
-    @Where(name="idIn2", whereFields=@WhereField(name="id", comparisonOperator="in", operand="(6001, 6002)"))
-})
-@OrderBys({
-    @OrderBy(name="ob1", ascending="type"),
-    @OrderBy(name="ob2", ascending="description"),
-    @OrderBy(name="obId", ascending="id")
-})
+// tests repeated Where
+@Where(name="byType", fieldNames="type", selectInitialCapacity=50, fetchSize=44) // exercise branches that set these values
+@Where(name="maximumRowsTest", fieldNames="type", maximumRows=10)            
+@Where(name="idIn",  whereFields=@WhereField(name="id", comparisonOperator="in"))
+@Where(name="idIn2", whereFields=@WhereField(name="id", comparisonOperator="in", operand="(6001, 6002)"))
+
+// tests repeated OrderBy
+@OrderBy(name="ob1", ascending="type")
+@OrderBy(name="ob2", ascending="description")
+@OrderBy(name="obId", ascending="id")
+
 @Row(selectInitialCapacity=300, fetchSize=100) // exercise branch that sets these values
 public class SormulaTest4
 {

@@ -217,7 +217,7 @@ public class DatabaseTest<R>
         if (dataSourceName == null)
         {
             // use connection
-            if (log.isDebugEnabled()) log.info("open sormula database with connection");
+            if (log.isDebugEnabled()) log.debug("open sormula database with connection");
             dataSourceDatabase = false;
             Connection connection = getConnection();
             database = new TestDatabase(connection, schema);
@@ -225,7 +225,7 @@ public class DatabaseTest<R>
         else if (dataSourceName.equals(""))
         {
             // use data source directly (not through JNDI)
-            if (log.isDebugEnabled()) log.info("open sormula database with TestDataSource");
+            if (log.isDebugEnabled()) log.debug("open sormula database with TestDataSource");
             dataSourceDatabase = true;
             dataSource = new TestDataSource(this); // simulated data source
             database = new TestDatabase(dataSource, schema);
@@ -233,7 +233,7 @@ public class DatabaseTest<R>
         else 
         {
             // use data source from JNDI
-            if (log.isDebugEnabled()) log.info("open sormula database via JNDI");
+            if (log.isDebugEnabled()) log.debug("open sormula database via JNDI");
             dataSourceDatabase = true;
             dataSource = new TestDataSource(this); // simulated data source
             InitialContext ic = new InitialContext();
@@ -308,7 +308,7 @@ public class DatabaseTest<R>
         }
         catch (SQLException e)
         {
-            if (log.isDebugEnabled()) log.error("error creating table using " + ddl, e);
+            log.error("error creating table using " + ddl, e);
         }
         finally
         {
@@ -360,16 +360,16 @@ public class DatabaseTest<R>
             {
                 // database instance created without data source 
                 // database.close() only closes connection if data source used
-                if (log.isDebugEnabled()) log.info("close connection");
+                if (log.isDebugEnabled()) log.debug("close connection");
                 database.getConnection().close();
             }
             
-            if (log.isDebugEnabled()) log.info("close sormula database");
+            if (log.isDebugEnabled()) log.debug("close sormula database");
             database.close();
             
             if (sqlShutdown.length() > 0)
             {
-                if (log.isDebugEnabled()) log.info("execute sqlShutdown=" + sqlShutdown);
+                if (log.isDebugEnabled()) log.debug("execute sqlShutdown=" + sqlShutdown);
                 Connection connection = getConnection();
                 Statement statement = connection.createStatement();
                 statement.execute(sqlShutdown);
@@ -380,7 +380,7 @@ public class DatabaseTest<R>
             
             if (driverShutdown.length() > 0)
             {
-                if (log.isDebugEnabled()) log.info("execute driverShutdown=" + driverShutdown);
+                if (log.isDebugEnabled()) log.debug("execute driverShutdown=" + driverShutdown);
                 DriverManager.getConnection(driverShutdown);
             }
         }

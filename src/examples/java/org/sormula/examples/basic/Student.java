@@ -20,17 +20,14 @@ import java.util.Date;
 
 import org.sormula.annotation.Where;
 import org.sormula.annotation.WhereField;
-import org.sormula.annotation.Wheres;
 
 
 /**
  * Row class where table name is the same as class name and column names are the same class field names.
  * See {@link BasicInsert} for table definition.
  */
-@Wheres({
-    @Where(name="fn",   fieldNames="firstName"), // where firstname=?
-    @Where(name="idin", whereFields=@WhereField(name="id", comparisonOperator="IN")) // where id in (?, ?, ...)
-})
+@Where(name="fn",   fieldNames="firstName") // where firstname=?
+@Where(name="idin", whereFields=@WhereField(name="id", comparisonOperator="IN")) // where id in (?, ?, ...)
 public class Student
 {
     int id; // defaults to @Column(primaryKey=true)

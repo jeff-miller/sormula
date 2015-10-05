@@ -50,7 +50,6 @@ import org.sormula.annotation.cascade.Cascade;
 import org.sormula.annotation.cascade.OneToManyCascade;
 import org.sormula.annotation.cascade.OneToOneCascade;
 import org.sormula.log.ClassLogger;
-import org.sormula.operation.ModifyOperation;
 import org.sormula.reflect.FieldAccessType;
 import org.sormula.reflect.ReflectException;
 import org.sormula.reflect.RowField;
@@ -105,10 +104,6 @@ public class RowTranslator<R> extends ColumnsTranslator<R>
     String unusedColumnUpdateSql;
     ColumnTranslator<R> identityColumnTranslator;
     boolean inheritedFields;
-    
-    @Deprecated
-    boolean zeroRowCountPostExecute;
-    
     List<Field> cascadeFieldList;
     FieldAccessType fieldAccessType;
     
@@ -129,7 +124,6 @@ public class RowTranslator<R> extends ColumnsTranslator<R>
         if (rowAnnotation != null)
         {
             inheritedFields = rowAnnotation.inhertedFields();
-            zeroRowCountPostExecute = rowAnnotation.zeroRowCountPostExecute();
             fieldAccessType = rowAnnotation.fieldAccess();
         }
         else
@@ -260,39 +254,8 @@ public class RowTranslator<R> extends ColumnsTranslator<R>
 
 
     /**
-     * Reports when to invoke {@link ModifyOperation} post execute methods.
-     * 
-     * @return true to invoke post execute methods unconditionally; false to invoke 
-     * post execute methods only when database has been modified by insert, update, or delete
-     * @since 3.0
-     * @see Row#zeroRowCountPostExecute()
      * @deprecated Will be removed in version 4.0
-     */
-    @Deprecated
-    public boolean isZeroRowCountPostExecute()
-    {
-        return zeroRowCountPostExecute;
-    }
-
-
-    /**
-     * Sets when to invoke {@link ModifyOperation} post execute methods.
-     * 
-     * @param zeroRowCountPostExecute true to invoke post execute methods unconditionally; 
-     * false to invoke post execute methods only when database has been modified by 
-     * insert, update, or delete
-     * @since 3.0
-     * @see Row#zeroRowCountPostExecute()
      * @deprecated Will be removed in version 4.0
-     */
-    @Deprecated
-    public void setZeroRowCountPostExecute(boolean zeroRowCountPostExecute)
-    {
-        this.zeroRowCountPostExecute = zeroRowCountPostExecute;
-    }
-
-
-    /**
      * Gets all of the declared fields for {@link #getRowClass()}. Also gets declared fields for
      * subclass(es) if {@link #isInheritedFields()} is true. Subclass fields appear in array prior
      * to superclass fields.
@@ -602,13 +565,12 @@ public class RowTranslator<R> extends ColumnsTranslator<R>
     protected void initUnusedColumnSql(Class<R> rowClass) throws TranslatorException
     {
         // look for annotation on table subclass and row class
-        UnusedColumns unusedColumnsAnnotation = table.getClass().getAnnotation(UnusedColumns.class);
-        if (unusedColumnsAnnotation == null) unusedColumnsAnnotation = rowClass.getAnnotation(UnusedColumns.class);
+    	UnusedColumn[] unusedColumnAnnotations = table.getClass().getAnnotationsByType(UnusedColumn.class); 
+        if (unusedColumnAnnotations.length == 0) unusedColumnAnnotations = rowClass.getAnnotationsByType(UnusedColumn.class);
         
-        if (unusedColumnsAnnotation != null)
+        if (unusedColumnAnnotations.length > 0)
         {
             // at least one unused column
-            UnusedColumn[] unusedColumnAnnotations = unusedColumnsAnnotation.value();
             
             // allocate typical space needed
             StringBuilder insertNames = new StringBuilder(unusedColumnAnnotations.length * 20);

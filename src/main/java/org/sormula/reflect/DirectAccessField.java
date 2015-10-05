@@ -46,7 +46,7 @@ public class DirectAccessField<C, T> extends RowField<C, T>
      */
     public DirectAccessField(Field field) throws ReflectException
     {
-        super(field, false);
+        super(field);
         field.setAccessible(true);
     }
     

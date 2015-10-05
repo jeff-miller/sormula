@@ -22,7 +22,6 @@ import org.sormula.operation.OperationException;
 import org.sormula.operation.SaveOperation;
 import org.sormula.operation.SqlOperation;
 import org.sormula.reflect.RowField;
-import org.sormula.reflect.SormulaField;
 
 
 /**
@@ -43,24 +42,7 @@ public class SaveCascadeOperation<S, T> extends ModifyCascadeOperation<S, T>
      * @param targetField cascade save operation uses row(s) from this field
      * @param targetTable cascade save operation is performed on this table 
      * @param saveCascadeAnnotation cascade operation
-     * @since 3.0
      * @deprecated Use {@link #SaveCascadeOperation(Table, RowField, Table, SaveCascade)}
-     */
-    @Deprecated
-    public SaveCascadeOperation(Table<S> sourceTable, SormulaField<S, ?> targetField, Table<T> targetTable, SaveCascade saveCascadeAnnotation)
-    {
-        super(sourceTable, targetField, targetTable, saveCascadeAnnotation.operation());
-        setPost(saveCascadeAnnotation.post());
-    }
-    
-    
-    /**
-     * Constructor used by {@link SaveOperation}.
-     * 
-     * @param sourceTable cascade originates on row from this table
-     * @param targetField cascade save operation uses row(s) from this field
-     * @param targetTable cascade save operation is performed on this table 
-     * @param saveCascadeAnnotation cascade operation
      * @since 3.4
      */
     public SaveCascadeOperation(Table<S> sourceTable, RowField<S, ?> targetField, Table<T> targetTable, SaveCascade saveCascadeAnnotation)

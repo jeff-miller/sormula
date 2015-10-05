@@ -1,4 +1,4 @@
-sormula for JDK 7
+sormula for JDK 8
 - See SimpleExample directory for stand-alone example
 - See ZeroConfigExample directory for a stand-alone example using sormula with 
   nothing but sormula.jar in path and no configuration

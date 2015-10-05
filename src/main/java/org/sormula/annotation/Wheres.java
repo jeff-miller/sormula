@@ -18,6 +18,7 @@ package org.sormula.annotation;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Inherited;
+import java.lang.annotation.Repeatable;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
@@ -29,6 +30,8 @@ import org.sormula.operation.SqlOperation;
 /**
  * Defines two or more {@link Where} annotations for a row class. Annotates a row class,
  * {@link Table} subclass, or {@link SqlOperation}.
+ * <p>
+ * This annotation is optional since {@link Where} is {@link Repeatable} as of version 4.0.
  *
  * @since 1.0
  * @author Jeff Miller
@@ -39,7 +42,6 @@ import org.sormula.operation.SqlOperation;
 public @interface Wheres
 {
     /**
-     * 
      * @return array of {@link Where} annotations for a row class
      */
     Where[] value();

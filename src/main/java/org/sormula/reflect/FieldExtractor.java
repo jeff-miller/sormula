@@ -30,7 +30,7 @@ import org.sormula.translator.TranslatorException;
  * Utility to get field values from a row class as defined by {@link ColumnTranslator}. This class
  * is used by cache package classes to get a list of primary key values for use as a {@link CacheKey}. 
  * <p>
- * The constructor performs all of the reflection initialization once by creating {@link SormulaField}
+ * The constructor performs all of the reflection initialization once by creating {@link RowField}
  * objects for each desired field. Then {@link #getFieldValues(Object)} can simply invoke reflection 
  * methods to obtain the values for each row as needed.  
  * 
@@ -41,31 +41,10 @@ import org.sormula.translator.TranslatorException;
 public class FieldExtractor<R> 
 {
 	List<RowField<R, ?>> rowFieldList;
-	
-	
-	/**
-	 * Constructs from a list of {@link ColumnTranslator}. Use other constructors instead of this
-	 * one since field access type cannot be determined solely from {@link ColumnTranslator}. This
-	 * constructor always creates method access to field.
-	 * 
-	 * @param columnTranslatorList list of fields that are read/written to database
-	 * @throws ReflectException if error
-	 * @deprecated Use {@link #FieldExtractor(AbstractWhereTranslator)} or {@link #FieldExtractor(RowTranslator)}
-	 */
-	@Deprecated 
-    public FieldExtractor(List<ColumnTranslator<R>> columnTranslatorList) throws ReflectException
-    {
-    	rowFieldList = new ArrayList<RowField<R, ?>>(columnTranslatorList.size());
-    	
-    	for (ColumnTranslator<R> c: columnTranslatorList)
-    	{
-    	    // MethodAccessField is backward compatible with SormulaField prior to version 3.4
-    		rowFieldList.add(new MethodAccessField<R, Object>(c.getField())); 
-    	}
-    }
     
     
     /**
+	 * @deprecated Use {@link #FieldExtractor(AbstractWhereTranslator)} or {@link #FieldExtractor(RowTranslator)}
      * Constructs for where translator columns.
      * 
      * @param whereTranslator use fields from this translator

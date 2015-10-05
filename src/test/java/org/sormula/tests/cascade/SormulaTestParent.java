@@ -58,7 +58,8 @@ public class SormulaTestParent
     
     // tests general cascade and map type
     @Cascade(targetClass=SormulaTestChildM.class, // test targetClass  
-    		selects=@SelectCascade(operation=HashMapSelectOperation.class, sourceParameterFieldNames="id", targetWhereName="byParent", targetKeyMethodName="getId"),
+    		selects=@SelectCascade(operation=HashMapSelectOperation.class, sourceParameterFieldNames="id", targetWhereName="byParent", 
+    			targetKeyMethodName="#primaryKey"), // same as "getId" since version 4.0
 			inserts=@InsertCascade(),
             updates=@UpdateCascade(),
             saves=@SaveCascade(),

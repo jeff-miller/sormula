@@ -16,7 +16,7 @@
  */
 package org.sormula.tests.translator;
 
-
+import java.time.LocalTime;
 
 /**
  * Row class for {@link TimeTranslatorTest}.
@@ -26,6 +26,8 @@ public class SormulaTestTime
 {
     java.sql.Time testSqlTime1;
     java.sql.Time testSqlTime2;
+    LocalTime testLocalTime1;
+    LocalTime testLocalTime2;
     
     public java.sql.Time getTestSqlTime1()
     {
@@ -43,4 +45,20 @@ public class SormulaTestTime
     {
         this.testSqlTime2 = testSqlTime2;
     }
+	public LocalTime getTestLocalTime1()
+	{
+		return testLocalTime1;
+	}
+	public void setTestLocalTime1(LocalTime testLocalTime1) 
+	{
+		this.testLocalTime1 = testLocalTime1;
+	}
+	public LocalTime getTestLocalTime2() 
+	{
+		return testLocalTime2;
+	}
+	public void setTestLocalTime2(LocalTime testLocalTime2) 
+	{
+		this.testLocalTime2 = testLocalTime2;
+	}
 }

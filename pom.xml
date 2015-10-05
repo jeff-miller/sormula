@@ -6,7 +6,7 @@
 
     <groupId>org.sormula</groupId>
     <artifactId>sormula</artifactId>
-    <version>3.5</version>
+    <version>4.0</version>
     
     <!-- test with specific database: 
          mvn -P <profile-id> 
@@ -138,8 +138,8 @@
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>3.3</version>
                 <configuration>
-                    <source>1.7</source>
-                    <target>1.7</target>
+                    <source>1.8</source>
+                    <target>1.8</target>
                 </configuration>
             </plugin>
             

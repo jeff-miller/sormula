@@ -23,6 +23,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+import java.util.function.BiPredicate;
 
 import org.sormula.Table;
 import org.sormula.annotation.cascade.SelectCascade;
@@ -33,9 +34,9 @@ import org.sormula.operation.OperationException;
 import org.sormula.operation.ScalarSelectOperation;
 import org.sormula.operation.SelectOperation;
 import org.sormula.operation.filter.SelectCascadeFilter;
+import org.sormula.reflect.MethodAccessField;
 import org.sormula.reflect.ReflectException;
 import org.sormula.reflect.RowField;
-import org.sormula.reflect.SormulaField;
 import org.sormula.translator.ColumnTranslator;
 import org.sormula.translator.RowTranslator;
 import org.sormula.translator.TranslatorException;
@@ -58,26 +59,9 @@ public class SelectCascadeOperation<S, T> extends CascadeOperation<S, T>
 	ScalarSelectOperation<T> selectOperation;
 	String[] parameterFieldNames;
 	List<RowField<S, ?>> parameterFields;
-	SelectCascadeFilter<?>[] selectCascadeFilters;
-    
-    
-    /**
-     * Constructor used by {@link SelectOperation}.
-     *  
-     * @param sourceTable cascade originates on row from this table 
-     * @param targetField cascade select operation modifies this field
-     * @param targetTable cascade select operation is performed on this table 
-     * @param selectCascadeAnnotation cascade operation
-     * @since 3.0
-     * @deprecated Use {@link #SelectCascadeOperation(Table, RowField, Table, SelectCascade)}
-     */
 	@Deprecated
-    public SelectCascadeOperation(Table<S> sourceTable, SormulaField<S, ?> targetField, Table<T> targetTable, SelectCascade selectCascadeAnnotation)
-    {
-        super(sourceTable, targetField, targetTable, selectCascadeAnnotation.operation());
-        this.selectCascadeAnnotation = selectCascadeAnnotation;
-        setPost(selectCascadeAnnotation.post());
-    }
+	SelectCascadeFilter<?>[] selectCascadeFilters;
+	Map<Class<?>, BiPredicate<?, Boolean>> filterPredicateMap;
     
     
 	/**
@@ -104,7 +88,9 @@ public class SelectCascadeOperation<S, T> extends CascadeOperation<S, T>
      * @param selectCascadeFilters select filters to use or null if none
      * @since 3.1
      * @see ScalarSelectOperation#setSelectCascadeFilters(SelectCascadeFilter...)
+     * @deprecated Replaced by {@link #setFilterPredicateMap(Map)}
      */
+    @Deprecated
     public void setSelectCascadeFilters(SelectCascadeFilter<?>... selectCascadeFilters)
     {
         this.selectCascadeFilters = selectCascadeFilters;
@@ -117,7 +103,9 @@ public class SelectCascadeOperation<S, T> extends CascadeOperation<S, T>
      * @return select filters to use or null if none
      * @since 3.1
      * @see ScalarSelectOperation#getSelectCascadeFilters()
+     * @deprecated Replaced by {@link #getFilterPredicateMap()}
      */
+    @Deprecated
     public SelectCascadeFilter<?>[] getSelectCascadeFilters()
     {
         return selectCascadeFilters;
@@ -125,6 +113,37 @@ public class SelectCascadeOperation<S, T> extends CascadeOperation<S, T>
     
 
     /**
+     * Gets a map of all filters used by this operation and lower level cascades. Typically
+     * a filter corresponds to one row type. 
+     * <p>
+     * Key is class type to filter. Value is predicate to invoke for filtering. Filter parameters
+     * are row class and boolean that indicates true/false if cascade has been performed
+     * on row class.
+     * 
+     * @return map of class to filter
+     * @since 4.0
+     */
+    public Map<Class<?>, BiPredicate<?, Boolean>> getFilterPredicateMap() 
+    {
+		return filterPredicateMap;
+	}
+
+
+    /**
+     * Sets the map of all filters used by this operation and lower level cascades. See {@link #getFilterPredicateMap()}
+     * for details about the map. Typically this method is invoked by a select operation when preparing 
+     * lower level cascades.
+     * 
+     * @param filterPredicateMap map of class to filter
+     * @since 4.0
+     */
+	public void setFilterPredicateMap(Map<Class<?>, BiPredicate<?, Boolean>> filterPredicateMap) 
+	{
+		this.filterPredicateMap = filterPredicateMap;
+	}
+
+
+	/**
      * {@inheritDoc}
      */
     @Override
@@ -220,6 +239,7 @@ public class SelectCascadeOperation<S, T> extends CascadeOperation<S, T>
         selectOperation = (ScalarSelectOperation<T>)createOperation();
         selectOperation.setNamedParameterMap(getNamedParameterMap()); // from source
         selectOperation.setSelectCascadeFilters(selectCascadeFilters); // from source
+        selectOperation.setFilterPredicateMap(filterPredicateMap); // from source
         
         if (!isSourceTargetFieldNames())
         {
@@ -255,10 +275,29 @@ public class SelectCascadeOperation<S, T> extends CascadeOperation<S, T>
         	// map select operations need method that gets key from row
         	try
         	{
-        	    ((MapSelectOperation)selectOperation).setGetKeyMethodName(
-	        			selectCascadeAnnotation.targetKeyMethodName());
+        		String keyMethodName = selectCascadeAnnotation.targetKeyMethodName();
+        		if ("#primaryKey".equals(keyMethodName))
+        		{
+        			// use primary field for map key
+        			List<ColumnTranslator<T>> primaryKeyColumnTranslators = getTargetTable().getRowTranslator().
+        					getPrimaryKeyWhereTranslator().getColumnTranslatorList();
+        			if (primaryKeyColumnTranslators.size() == 1)
+        			{
+        				// primary field name
+        				MethodAccessField<T, ?> primaryKeyGetter = new MethodAccessField<>(
+        						primaryKeyColumnTranslators.get(0).getField());
+        				keyMethodName = primaryKeyGetter.getGetMethod().getName();
+        			}
+        			else
+        			{
+        				throw new OperationException("targetKeyMethodName=\"" + keyMethodName + 
+        						"\" can only be used when only 1 primary key field");
+        			}
+        		}
+        		
+        	    ((MapSelectOperation)selectOperation).setGetKeyMethodName(keyMethodName);
         	}
-        	catch (OperationException e) 
+        	catch (OperationException | ReflectException e)
         	{
         	    // new OperationException is redundant but message clarifies source of problem
         		throw new OperationException("error getting key method in SelectCascade.keyMethodName()=" +
@@ -503,7 +542,7 @@ public class SelectCascadeOperation<S, T> extends CascadeOperation<S, T>
                 WhereTranslator<T> whereTranslator = new WhereTranslator<T>(targetRowTranslator, getTargetForeignKeyValueFieldList().size());
                 
                 // for all foreign key fields in target
-                for (SormulaField<T, Object> tfk : getTargetForeignKeyValueFieldList())
+                for (RowField<T, Object> tfk : getTargetForeignKeyValueFieldList())
                 {
                     // look up target column translator of same name
                     if (log.isDebugEnabled()) log.debug("add field " + tfk.getField());

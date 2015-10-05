@@ -22,7 +22,6 @@ import org.sormula.operation.OperationException;
 import org.sormula.operation.SqlOperation;
 import org.sormula.operation.UpdateOperation;
 import org.sormula.reflect.RowField;
-import org.sormula.reflect.SormulaField;
 
 
 /**
@@ -42,24 +41,7 @@ public class UpdateCascadeOperation<S, T> extends ModifyCascadeOperation<S, T>
      * @param targetField cascade update operation uses row(s) from this field
      * @param targetTable cascade update operation is performed on this table 
      * @param updateCascadeAnnotation cascade operation
-     * @since 3.0
      * @deprecated Use {@link #UpdateCascadeOperation(Table, RowField, Table, UpdateCascade)}
-     */
-    @Deprecated
-    public UpdateCascadeOperation(Table<S> sourceTable, SormulaField<S, ?> targetField, Table<T> targetTable, UpdateCascade updateCascadeAnnotation)
-    {
-        super(sourceTable, targetField, targetTable, updateCascadeAnnotation.operation());
-        setPost(updateCascadeAnnotation.post()); 
-    }
-    
-    
-    /**
-     * Constructor used by {@link UpdateOperation}.
-     *  
-     * @param sourceTable cascade originates on row from this table 
-     * @param targetField cascade update operation uses row(s) from this field
-     * @param targetTable cascade update operation is performed on this table 
-     * @param updateCascadeAnnotation cascade operation
      * @since 3.4
      */
     public UpdateCascadeOperation(Table<S> sourceTable, RowField<S, ?> targetField, Table<T> targetTable, UpdateCascade updateCascadeAnnotation)

@@ -18,6 +18,7 @@ package org.sormula.annotation;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Inherited;
+import java.lang.annotation.Repeatable;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
@@ -30,7 +31,9 @@ import org.sormula.operation.SqlOperation;
  * Defines two or more order by phrases for row class. Use this annotation if
  * more than one {@link OrderBy} is needed. Annotates a row class,
  * {@link Table} subclass, {@link SqlOperation} or within {@link OrderBy}.
- *
+ * <p>
+ * This annotation is optional since {@link OrderBy} is {@link Repeatable} as of version 4.0.
+ * 
  * @since 1.0
  * @author Jeff Miller
  */
@@ -40,7 +43,6 @@ import org.sormula.operation.SqlOperation;
 public @interface OrderBys
 {
     /**
-     * 
      * @return array of {@link OrderBy} annotations
      */
     OrderBy[] value();

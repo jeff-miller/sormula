@@ -64,23 +64,10 @@ public class ExplicitTypeAnnotationReader
     {
         for (AnnotatedElement ae : sources)
         {
-            ExplicitType typeAnnotation = ae.getAnnotation(ExplicitType.class);
-            if (typeAnnotation != null) 
+            if (log.isDebugEnabled()) log.debug("read ExplicitTypes for " + ae);
+            for (ExplicitType t: ae.getAnnotationsByType(ExplicitType.class))
             {
-                if (log.isDebugEnabled()) log.debug("read ExplicitType for " + ae);
-                updateMap(typeAnnotation);
-            }
-
-            // look in Types in all sources
-            ExplicitTypes typesAnnotation = ae.getAnnotation(ExplicitTypes.class);
-            
-            if (typesAnnotation != null)
-            {
-                if (log.isDebugEnabled()) log.debug("read ExplicitTypes for " + ae);
-                for (ExplicitType t: typesAnnotation.value())
-                {
-                    updateMap(t);    
-                }
+                updateMap(t);    
             }
         }
     }

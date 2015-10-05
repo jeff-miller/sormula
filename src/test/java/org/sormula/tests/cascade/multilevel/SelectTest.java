@@ -130,7 +130,7 @@ public class SelectTest extends DatabaseTest<SormulaTestLevel1>
             }
         }
 
-        // filter graph of all based upon test fitler
+        // filter graph of all based upon test filter
         // result should be filtered1 is parallel graph to filteredSelectOperationResults
         // important: must perform depth-first since some filter tests depend upon children
         

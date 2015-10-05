@@ -33,7 +33,6 @@ import org.sormula.operation.OperationException;
 import org.sormula.operation.SqlOperation;
 import org.sormula.reflect.ReflectException;
 import org.sormula.reflect.RowField;
-import org.sormula.reflect.SormulaField;
 import org.sormula.translator.ColumnTranslator;
 import org.sormula.translator.RowTranslator;
 import org.sormula.translator.TranslatorException;
@@ -51,7 +50,7 @@ public abstract class CascadeOperation<S, T> implements AutoCloseable
 {
     private static final ClassLogger log = new ClassLogger();
     Table<S> sourceTable;
-    SormulaField<S, ?> targetField; // keep as SormulaField so get method is backward compatible
+    RowField<S, ?> targetField;
     Table<T> targetTable;
     Class <?> cascadeOperationClass;
     boolean post;
@@ -59,32 +58,11 @@ public abstract class CascadeOperation<S, T> implements AutoCloseable
     String foreignKeyReferenceFieldName;
     S sourceRow;
     List<RowField<S, Object>> sourceKeyFieldList;
-    List<SormulaField<T, Object>> targetForeignKeyValueFieldList; // keep as SormulaField so get method is backward compatible
+    List<RowField<T, Object>> targetForeignKeyValueFieldList;
     RowField<T, Object> targetForeignReferenceField;
     int keyFieldCount;
     String[] requiredCascades;
     Map<String, Object> namedParameterMap;
-    
-    
-    /**
-     * Constructs for field and table to be affected by cascade.
-     * 
-     * @param sourceTable cascade originates on row from this table
-     * @param targetField in source row to be affected by cascade operation
-     * @param targetTable sormula table that will be cascaded
-     * @param cascadeOperationClass class of cascade operation (used to create new instance)
-     * is to be performed before source row operation
-     * @since 3.0
-     * @deprecated Use {@link #CascadeOperation(Table, RowField, Table, Class)}
-     */
-    @Deprecated
-    public CascadeOperation(Table<S> sourceTable, SormulaField<S, ?> targetField, Table<T> targetTable, Class <?> cascadeOperationClass)
-    {
-        this.sourceTable = sourceTable;
-        this.targetField = targetField;
-        this.targetTable = targetTable;
-        this.cascadeOperationClass = cascadeOperationClass;
-    }
 
     
     /**
@@ -95,6 +73,7 @@ public abstract class CascadeOperation<S, T> implements AutoCloseable
      * @param targetTable sormula table that will be cascaded
      * @param cascadeOperationClass class of cascade operation (used to create new instance)
      * is to be performed before source row operation
+     * @deprecated Use {@link #CascadeOperation(Table, RowField, Table, Class)}
      * @since 3.4
      */
     public CascadeOperation(Table<S> sourceTable, RowField<S, ?> targetField, Table<T> targetTable, Class <?> cascadeOperationClass)
@@ -225,7 +204,7 @@ public abstract class CascadeOperation<S, T> implements AutoCloseable
 	 * fields in the source row which is also the same as the number of foreign key fields
 	 * in target row.
 	 *  
-	 * @return count of key fields used in foreign key mapping
+	 * @return count of key fields used in foreign key mapping; zero if no foreign key mapping
 	 * @since 3.0
 	 */
     public int getKeyFieldCount()
@@ -312,11 +291,11 @@ public abstract class CascadeOperation<S, T> implements AutoCloseable
 
 
     /**
-     * Gets target field as {@link SormulaField}.
+     * Gets target field as {@link RowField}.
      * 
      * @return field in source row to be affected by cascade operation
      */
-    public SormulaField<S, ?> getTargetField()
+    public RowField<S, ?> getTargetField()
     {
         return targetField;
     }
@@ -393,7 +372,7 @@ public abstract class CascadeOperation<S, T> implements AutoCloseable
             
             // parallel lists mapping source primary key(s) to target foreign key(s)
             sourceKeyFieldList = new ArrayList<RowField<S,Object>>(sourceKeyColumnTranslators.size());
-            targetForeignKeyValueFieldList = new ArrayList<SormulaField<T, Object>>(sourceKeyColumnTranslators.size());
+            targetForeignKeyValueFieldList = new ArrayList<RowField<T, Object>>(sourceKeyColumnTranslators.size());
             
             try
             {
@@ -577,7 +556,7 @@ public abstract class CascadeOperation<S, T> implements AutoCloseable
      * @return list of foreign key fields or null if none
      * @since 3.1
      */
-    protected List<SormulaField<T, Object>> getTargetForeignKeyValueFieldList()
+    protected List<RowField<T, Object>> getTargetForeignKeyValueFieldList()
     {
         return targetForeignKeyValueFieldList;
     }

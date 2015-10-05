@@ -17,6 +17,7 @@
 package org.sormula.annotation;
 
 import java.lang.annotation.ElementType;
+import java.lang.annotation.Repeatable;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
@@ -28,6 +29,8 @@ import org.sormula.Table;
  * Defines columns that are required for a table but are not used by row object. Allows updates
  * and inserts into a table where columns are required but not used by row class. 
  * Annotates a row class or {@link Table} subclass.
+ * <p>
+ * This annotation is optional since {@link UnusedColumn} is {@link Repeatable} as of version 4.0.
  * 
  * @since 1.0
  * @author Jeff Miller
@@ -37,7 +40,6 @@ import org.sormula.Table;
 public @interface UnusedColumns
 {
     /**
-     * 
      * @return array of {@link UnusedColumn} annotations for row class
      */
     UnusedColumn[] value();

@@ -16,7 +16,6 @@
  */
 package org.sormula.translator.standard;
 
-import java.lang.reflect.Field;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
@@ -46,13 +45,6 @@ import org.sormula.translator.AbstractColumnTranslator;
  */
 public class BooleanYNColumnTranslator<R> extends AbstractColumnTranslator<R, Boolean>
 {
-    @Deprecated
-    public BooleanYNColumnTranslator(Field field, String columnName) throws Exception
-    {
-        super(field, columnName);
-    }
-    
-    
     /**
      * Constructs for a {@link RowField} and column name.
      * 

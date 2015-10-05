@@ -17,6 +17,7 @@
 package org.sormula.annotation;
 
 import java.lang.annotation.ElementType;
+import java.lang.annotation.Repeatable;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
@@ -34,6 +35,8 @@ import org.sormula.translator.TypeTranslator;
  * {@link Table#putTypeTranslator(Class, TypeTranslator)}. When used on
  * a database, then type is added with 
  * {@link Database#putTypeTranslator(Class, TypeTranslator)}.
+ * <p>
+ * This annotation is optional since {@link ExplicitType} is {@link Repeatable} as of version 4.0.
  * 
  * @since 1.6 and 2.0
  * @author Jeff Miller

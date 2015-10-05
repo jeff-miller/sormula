@@ -17,6 +17,7 @@
 package org.sormula.operation.filter;
 
 import org.sormula.operation.ScalarSelectOperation;
+import org.sormula.operation.SelectOperation;
 
 
 /**
@@ -34,10 +35,12 @@ import org.sormula.operation.ScalarSelectOperation;
  * The second invocation of accept method (cascade parameter of true), allows you to filter based upon
  * child node values.
  * 
+ * @deprecated Use {@link SelectOperation#addFilter(Class, java.util.function.BiPredicate)}
  * @since 3.1
  * @author Jeff Miller
  * @param <R> class of row to be filtered
  */
+@Deprecated
 public interface SelectCascadeFilter<R>
 {
    /**

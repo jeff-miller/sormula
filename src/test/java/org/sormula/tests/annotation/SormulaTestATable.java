@@ -20,7 +20,6 @@ import org.sormula.Database;
 import org.sormula.SormulaException;
 import org.sormula.Table;
 import org.sormula.annotation.ExplicitType;
-import org.sormula.annotation.ExplicitTypes;
 import org.sormula.annotation.OrderBy;
 import org.sormula.annotation.OrderBys;
 import org.sormula.annotation.Row;
@@ -50,10 +49,10 @@ import org.sormula.annotation.Wheres;
 @UnusedColumns({ 
     @UnusedColumn(name="unusedInt", value="123")
 })
+
+// test repeatable ExplicitType
 @ExplicitType(type=Test1.class, translator=Test1Translator.class)
-@ExplicitTypes({
-    @ExplicitType(type=Test2.class, translator=Test2Translator.class)
-})
+@ExplicitType(type=Test2.class, translator=Test2Translator.class)
 public class SormulaTestATable extends Table<SormulaTestA>
 {
     public SormulaTestATable(Database database, Class<SormulaTestA> rowClass) throws SormulaException

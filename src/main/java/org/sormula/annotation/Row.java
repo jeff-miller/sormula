@@ -22,10 +22,8 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 import java.lang.reflect.Field;
 import java.sql.PreparedStatement;
-import java.sql.Statement;
 
 import org.sormula.Table;
-import org.sormula.operation.ModifyOperation;
 import org.sormula.operation.SelectOperation;
 import org.sormula.operation.SqlOperation;
 import org.sormula.reflect.FieldAccessType;
@@ -103,23 +101,7 @@ public @interface Row
     
     
     /**
-     * Indicates that post execute methods are invoked when {@link Statement#executeUpdate(String)} returns a
-     * row count of zero. A value of true means to invoke post execute methods unconditionally. A value of 
-     * false means that post execute methods are not invoked when no rows are modified.
-     * Post execute methods are postExecute and postExecuteCascade of {@link ModifyOperation}.
-     * <p>
-     * Typically this should be false. Set to true for pre-version 3.0 behavior.
-     * 
-     * @return true if post execute methods are performed unconditionally; false to
-     * perform post execute methods only when database is modified
-     * @since 3.0
      * @deprecated Will be removed in version 4.0
-     */
-    @Deprecated
-    boolean zeroRowCountPostExecute() default false;
-    
-    
-    /**
      * Defines the primary keys for table. Use this instead of {@link Column#primaryKey()} 
      * or {@link Column#identity()}.
      * 

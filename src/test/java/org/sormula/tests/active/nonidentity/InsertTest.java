@@ -42,7 +42,7 @@ public class InsertTest extends ActiveDatabaseTest<SormulaTestARNI>
             openDatabase();
             createTable(SormulaTestARNI.class, 
                 "CREATE TABLE " + getSchemaPrefix() + SormulaTestARNI.class.getSimpleName() + " (" +
-                " id " + getIdentityColumnDDL() + " PRIMARY KEY," +
+                " id " + getIdentityColumnDDL() + "," +
                 " description VARCHAR(30)" +
                 ")"
             );

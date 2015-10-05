@@ -18,11 +18,18 @@
 
 /**
  * Filters that allow filtering algorithms to be written in Java and applied
- * as rows are read from the database. {@link org.sormula.operation.filter.SelectCascadeFilter}
- * filters one row type. {@link org.sormula.operation.filter.AbstractSelectCascadeFilter} is a
+ * as rows are read from the database. Filters can be implemented for any row type with
+ * by adding lambda expression with 
+ * {@link org.sormula.operation.ScalarSelectOperation#addFilter(Class, java.util.function.BiPredicate)}:
+ * <blockquote><pre>
+ * SelectOperation&lt;Student&gt; operation = new ArrayListSelectOperation&lt;&gt;(...)
+ * operation.addFilter(Student.class, (row, cascaded) -&gt; { return row.getName().endsWith("Doe"); });
+ * </pre></blockquote> 
+ * <p>
+ * Deprecated filters can be implemented with {@link org.sormula.operation.filter.SelectCascadeFilter}
+ * for a single row type and {@link org.sormula.operation.filter.AbstractSelectCascadeFilter} is a
  * base class for a filter that filters all row types (one method per type). 
  * 
  * @since 3.1
  */
 package org.sormula.operation.filter;
-

@@ -47,7 +47,6 @@ public abstract class AbstractColumnTranslator<R, T> implements ColumnTranslator
     
     
     /**
-     * @deprecated Use {@link #AbstractColumnTranslator(RowField, String)}
      * Factory method for creating a new instance of a column translator for a row field.
      * Gets columnTranslatorClass constructor with parameters (RowField, String) and invokes
      * {@link Class#newInstance()}. {@link RowField} is needed instead of {@link Field} so
@@ -60,7 +59,6 @@ public abstract class AbstractColumnTranslator<R, T> implements ColumnTranslator
      * @throws TranslatorException if error
      * @since 3.4
      */
-    @Deprecated
     public static ColumnTranslator<?> newInstance(Class<? extends ColumnTranslator> columnTranslatorClass, 
             RowField<?, ?> rowField, String columnName) throws TranslatorException
     {

@@ -101,7 +101,6 @@ public @interface Row
     
     
     /**
-     * @deprecated Will be removed in version 4.0
      * Defines the primary keys for table. Use this instead of {@link Column#primaryKey()} 
      * or {@link Column#identity()}.
      * 

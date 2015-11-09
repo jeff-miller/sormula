@@ -2,6 +2,7 @@ Version History
 
 version-jdk             comments
 ------------------------------------------------------------------------------------------------------------
+4.1-jdk1.8              - un-deprecate Row.primaryKeyFields
 4.0-jdk1.8              - Select filters can be lambda expressions: see ScalarSelectOperation.addFilter  
                         - Annotations Where, OrderBy, ExplicitType, UnusedColumn are repeatable
                         - SelectCascade#targetKeyMethodName allows symbolic value of "#primaryKey"

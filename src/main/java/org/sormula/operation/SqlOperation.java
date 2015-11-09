@@ -851,7 +851,6 @@ public abstract class SqlOperation<R> implements AutoCloseable
     
     
     /**
-     * @deprecated Use {@link #getTargetTable(Class)}
      * Gets a table object from database associated with this operation.
      * 
      * @param targetClass class that cascade is to affect

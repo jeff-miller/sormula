@@ -208,7 +208,6 @@ public class Table<R> implements TypeTranslatorMap, TransactionListener
     
     
     /**
-	 * @deprecated Will be removed in version 4.0
      * Sets the name(s) of cascades that should occur with this operation. Cascades with names that equal
      * any of the names specified in cascadeNames parameter will be executed. The default value for 
      * required cascade names is {""}. 

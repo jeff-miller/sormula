@@ -254,8 +254,6 @@ public class RowTranslator<R> extends ColumnsTranslator<R>
 
 
     /**
-     * @deprecated Will be removed in version 4.0
-     * @deprecated Will be removed in version 4.0
      * Gets all of the declared fields for {@link #getRowClass()}. Also gets declared fields for
      * subclass(es) if {@link #isInheritedFields()} is true. Subclass fields appear in array prior
      * to superclass fields.

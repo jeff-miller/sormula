@@ -44,7 +44,6 @@ public class FieldExtractor<R>
     
     
     /**
-	 * @deprecated Use {@link #FieldExtractor(AbstractWhereTranslator)} or {@link #FieldExtractor(RowTranslator)}
      * Constructs for where translator columns.
      * 
      * @param whereTranslator use fields from this translator

@@ -49,7 +49,6 @@ public abstract class ModifyCascadeOperation<S, T> extends CascadeOperation<S, T
      * @param targetTable cascade operation is performed on this table 
      * @param cascadeOperationClass class of cascade operation
      * false if cascade is performed before row execute (see {@link ModifyOperation#preExecute}
-     * @deprecated Use {@link #ModifyCascadeOperation(Table, RowField, Table, Class)}
      * @since 3.4
      */
     public ModifyCascadeOperation(Table<S> sourceTable, RowField<S, ?> targetField, Table<T> targetTable, 

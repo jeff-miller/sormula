@@ -41,7 +41,6 @@ public class DeleteCascadeOperation<S, T> extends ModifyCascadeOperation<S, T>
      * @param targetField cascade delete operation uses row(s) from this field
      * @param targetTable cascade delete operation is performed on this table 
      * @param deleteCascadeAnnotation cascade operation
-     * @deprecated Use {@link #DeleteCascadeOperation(Table, RowField, Table, DeleteCascade)}
      * @since 3.4
      */
     public DeleteCascadeOperation(Table<S> sourceTable, RowField<S, ?> targetField, Table<T> targetTable, DeleteCascade deleteCascadeAnnotation)

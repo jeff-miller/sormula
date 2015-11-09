@@ -42,7 +42,6 @@ public class SaveCascadeOperation<S, T> extends ModifyCascadeOperation<S, T>
      * @param targetField cascade save operation uses row(s) from this field
      * @param targetTable cascade save operation is performed on this table 
      * @param saveCascadeAnnotation cascade operation
-     * @deprecated Use {@link #SaveCascadeOperation(Table, RowField, Table, SaveCascade)}
      * @since 3.4
      */
     public SaveCascadeOperation(Table<S> sourceTable, RowField<S, ?> targetField, Table<T> targetTable, SaveCascade saveCascadeAnnotation)

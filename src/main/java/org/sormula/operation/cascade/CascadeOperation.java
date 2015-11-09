@@ -73,7 +73,6 @@ public abstract class CascadeOperation<S, T> implements AutoCloseable
      * @param targetTable sormula table that will be cascaded
      * @param cascadeOperationClass class of cascade operation (used to create new instance)
      * is to be performed before source row operation
-     * @deprecated Use {@link #CascadeOperation(Table, RowField, Table, Class)}
      * @since 3.4
      */
     public CascadeOperation(Table<S> sourceTable, RowField<S, ?> targetField, Table<T> targetTable, Class <?> cascadeOperationClass)

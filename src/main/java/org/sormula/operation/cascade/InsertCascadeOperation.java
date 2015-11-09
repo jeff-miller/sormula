@@ -42,7 +42,6 @@ public class InsertCascadeOperation<S, T> extends ModifyCascadeOperation<S, T>
      * @param targetField cascade insert operation uses row(s) from this field
      * @param targetTable cascade insert operation is performed on this table 
      * @param insertCascadeAnnotation cascade operation
-     * @deprecated Use {@link #InsertCascadeOperation(Table, RowField, Table, InsertCascade)}
      * @since 3.4
      */
     public InsertCascadeOperation(Table<S> sourceTable, RowField<S, ?> targetField, Table<T> targetTable, InsertCascade insertCascadeAnnotation)

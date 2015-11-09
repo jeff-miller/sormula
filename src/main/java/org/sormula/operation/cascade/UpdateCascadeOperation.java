@@ -41,7 +41,6 @@ public class UpdateCascadeOperation<S, T> extends ModifyCascadeOperation<S, T>
      * @param targetField cascade update operation uses row(s) from this field
      * @param targetTable cascade update operation is performed on this table 
      * @param updateCascadeAnnotation cascade operation
-     * @deprecated Use {@link #UpdateCascadeOperation(Table, RowField, Table, UpdateCascade)}
      * @since 3.4
      */
     public UpdateCascadeOperation(Table<S> sourceTable, RowField<S, ?> targetField, Table<T> targetTable, UpdateCascade updateCascadeAnnotation)

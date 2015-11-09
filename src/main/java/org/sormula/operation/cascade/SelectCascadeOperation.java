@@ -33,7 +33,6 @@ import org.sormula.operation.MissingFieldException;
 import org.sormula.operation.OperationException;
 import org.sormula.operation.ScalarSelectOperation;
 import org.sormula.operation.SelectOperation;
-import org.sormula.operation.filter.SelectCascadeFilter;
 import org.sormula.reflect.MethodAccessField;
 import org.sormula.reflect.ReflectException;
 import org.sormula.reflect.RowField;
@@ -59,8 +58,6 @@ public class SelectCascadeOperation<S, T> extends CascadeOperation<S, T>
 	ScalarSelectOperation<T> selectOperation;
 	String[] parameterFieldNames;
 	List<RowField<S, ?>> parameterFields;
-	@Deprecated
-	SelectCascadeFilter<?>[] selectCascadeFilters;
 	Map<Class<?>, BiPredicate<?, Boolean>> filterPredicateMap;
     
     
@@ -78,37 +75,6 @@ public class SelectCascadeOperation<S, T> extends CascadeOperation<S, T>
         super(sourceTable, targetField, targetTable, selectCascadeAnnotation.operation());
         this.selectCascadeAnnotation = selectCascadeAnnotation;
         setPost(selectCascadeAnnotation.post());
-    }
-
-    
-    /**
-     * Sets the filter(s) to be used by this cascade. Typically this method is invoked by
-     * a {@link SelectOperation} with the filters used by the {@link SelectOperation}.
-     *  
-     * @param selectCascadeFilters select filters to use or null if none
-     * @since 3.1
-     * @see ScalarSelectOperation#setSelectCascadeFilters(SelectCascadeFilter...)
-     * @deprecated Replaced by {@link #setFilterPredicateMap(Map)}
-     */
-    @Deprecated
-    public void setSelectCascadeFilters(SelectCascadeFilter<?>... selectCascadeFilters)
-    {
-        this.selectCascadeFilters = selectCascadeFilters;
-    }
-    
-
-    /**
-     * Gets the select filters used by this cascade.
-     * 
-     * @return select filters to use or null if none
-     * @since 3.1
-     * @see ScalarSelectOperation#getSelectCascadeFilters()
-     * @deprecated Replaced by {@link #getFilterPredicateMap()}
-     */
-    @Deprecated
-    public SelectCascadeFilter<?>[] getSelectCascadeFilters()
-    {
-        return selectCascadeFilters;
     }
     
 
@@ -238,7 +204,6 @@ public class SelectCascadeOperation<S, T> extends CascadeOperation<S, T>
         super.prepare();
         selectOperation = (ScalarSelectOperation<T>)createOperation();
         selectOperation.setNamedParameterMap(getNamedParameterMap()); // from source
-        selectOperation.setSelectCascadeFilters(selectCascadeFilters); // from source
         selectOperation.setFilterPredicateMap(filterPredicateMap); // from source
         
         if (!isSourceTargetFieldNames())

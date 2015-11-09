@@ -23,7 +23,6 @@ import org.sormula.SormulaException;
 import org.sormula.examples.ExampleBase;
 import org.sormula.examples.manytomany.inherited.ManyToManyInsert1;
 import org.sormula.operation.ArrayListSelectOperation;
-import org.sormula.operation.filter.SelectCascadeFilter;
 
 
 /**
@@ -48,10 +47,6 @@ public class FilterSelect extends ExampleBase
         Connection connection = getConnection();
         database = new Database(connection, getSchema());
         
-        // abstract filter examples
-        selectOrders("A");
-        selectOrders("D");
-
         // lambda examples
         selectOrdersLambda("A");
         selectOrdersLambda("D");
@@ -59,27 +54,6 @@ public class FilterSelect extends ExampleBase
         // clean up
         database.close();
         closeDatabase();
-    }
-    
-    
-    void selectOrders(String productId) throws SormulaException
-    {
-        System.out.println("\nFilter with AbstractSelectCascadeFilter");
-        System.out.println("Orders that contain product " + productId + ":");
-        ArrayListSelectOperation<Order> selectOrders = new ArrayListSelectOperation<>(database.getTable(Order.class), "");
-        selectOrders.setSelectCascadeFilters(new ProductFilter(productId));
-        
-        // for all orders
-        for (Order o : selectOrders.selectAll())
-        {
-            System.out.println("\nOrder " + o.getOrderId());
-            
-            // for all order items
-            for (OrderItem oi : o.getOrderItems())
-            {
-                System.out.println("  " + oi.getItemNumber() + " " + oi.getProduct().getDescription());
-            }
-        }
     }
     
     

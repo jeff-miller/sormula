@@ -40,7 +40,6 @@ import org.sormula.log.ClassLogger;
 import org.sormula.operation.cascade.CascadeOperation;
 import org.sormula.operation.cascade.SelectCascadeOperation;
 import org.sormula.operation.cascade.lazy.LazySelectable;
-import org.sormula.operation.filter.SelectCascadeFilter;
 import org.sormula.operation.monitor.OperationTime;
 import org.sormula.reflect.RowField;
 import org.sormula.translator.OrderByTranslator;
@@ -73,10 +72,6 @@ public class ScalarSelectOperation<R> extends SqlOperation<R>
     boolean cacheContainsPrimaryKey; // set by execute() if cache hit
     boolean executed;
     
-    @Deprecated
-    SelectCascadeFilter<?>[] selectCascadeFilters; // TODO remove when SelectCascadeFilter is deleted
-    @Deprecated
-    SelectCascadeFilter<R> filter; // TODO remove when SelectCascadeFilter is deleted
     Map<Class<?>, BiPredicate<?, Boolean>> filterPredicateMap;
     BiPredicate<R, Boolean> filterPredicate;
     
@@ -341,34 +336,16 @@ public class ScalarSelectOperation<R> extends SqlOperation<R>
             {
                 // row from cache  
     		    // row is null if row is in cache but row has deleted state
-    			if (filterPredicateMap != null) // TODO remove if statement (keep block) test when SelectCascadeFilter is deleted 
-    			{
-    				// test for lambda filter 
-	                if (filterPredicate != null && row != null)
-	                {
-	                    // test for filter pass 
-	                    if (!filterPredicate.test(row, false) ||
-	                        (isCascading() && !filterPredicate.test(row, true)) )
-	                    {
-	                        // don't use this row based upon filter response
-	                        row = null;
-	                    }
-	                }
-    			}
-    			else // TODO remove else block when SelectCascadeFilter is deleted 
-    			{
-    				// test for legacy filter 
-	                if (filter != null && row != null)
-	                {
-	                    // test for filter pass 
-	                    if (!filter.accept(this, row, false) ||
-	                        (isCascading() && !filter.accept(this, row, true)) )
-	                    {
-	                        // don't use this row based upon filter response
-	                        row = null;
-	                    }
-	                }
-    			}
+                if (filterPredicate != null && row != null)
+                {
+                    // test for filter pass 
+                    if (!filterPredicate.test(row, false) ||
+                        (isCascading() && !filterPredicate.test(row, true)) )
+                    {
+                        // don't use this row based upon filter response
+                        row = null;
+                    }
+                }
             }
             else
             {
@@ -424,53 +401,25 @@ public class ScalarSelectOperation<R> extends SqlOperation<R>
                         if (row != null)  
                         {
                             // row has not been deleted in cache
-                            
-                        	if (filterPredicateMap != null)  // TODO remove if statement (keep block) test when SelectCascadeFilter is deleted 
-                        	{
-	                            // test for lambda filter pass
-	                            if (filterPredicate == null || filterPredicate.test(row, false))
-	                            {
-	                                // no filter or passes filter 
-	                                if (isCascading()) 
-	                                {
-	                                    postReadCascade(row);
-	                                    complete = filterPredicate == null || filterPredicate.test(row, true);
-	                                }
-	                                else
-	                                {
-	                                    // exit loop
-	                                    complete = true;
-	                                }
-	                            }
-	                            else
-	                            {
-	                                // did not pass filter
-	                                if (log.isDebugEnabled()) log.debug("row did not pass filter " + row);
-	                            }
-                        	}
-                        	else  // TODO remove else statement and corresponding block when SelectCascadeFilter is deleted 
-                        	{
-                        		// test for legacy filter pass
-	                            if (filter == null || filter.accept(this, row, false))
-	                            {
-	                                // no filter or passes filter 
-	                                if (isCascading()) 
-	                                {
-	                                    postReadCascade(row);
-	                                    complete = filter == null || filter.accept(this, row, true);
-	                                }
-	                                else
-	                                {
-	                                    // exit loop
-	                                    complete = true;
-	                                }
-	                            }
-	                            else
-	                            {
-	                                // did not pass filter
-	                                if (log.isDebugEnabled()) log.debug("row did not pass filter " + row);
-	                            }
-                        	}
+                            if (filterPredicate == null || filterPredicate.test(row, false))
+                            {
+                                // no filter or passes filter 
+                                if (isCascading()) 
+                                {
+                                    postReadCascade(row);
+                                    complete = filterPredicate == null || filterPredicate.test(row, true);
+                                }
+                                else
+                                {
+                                    // exit loop
+                                    complete = true;
+                                }
+                            }
+                            else
+                            {
+                                // did not pass filter
+                                if (log.isDebugEnabled()) log.debug("row did not pass filter " + row);
+                            }
                         }
                     
                         if (!complete)
@@ -647,67 +596,8 @@ public class ScalarSelectOperation<R> extends SqlOperation<R>
     {
         return notifyLazySelects;
     }
-
-
-    /**
-     * Sets filter to be used for selected rows. Cascade filters allow you to write filter
-     * algorithms in Java (instead of SQL). Sometimes it is easier and more powerful to write 
-     * filtering in Java instead of SQL joins and SQL where conditions. For example, a filter 
-     * allows a graph of objects to be read with selective pruning of nodes.
-     * <p>
-     * The filters set with this method will be used on all cascades that result from this
-     * operation.
-     * <p> 
-     * Note: if table is cached, then cache will contain filtered rows. For subsequent selects, you 
-     * may want to clear cache with {@link Table#getCache} and {@link Cache#evictAll()} or start with 
-     * new instance of {@link Table} to avoid reading filtered rows.
-     * 
-     * @param selectCascadeFilters filter(s) to use or null for none
-     * @since 3.1
-     * @deprecated Replaced by {@link #addFilter(Class, BiPredicate)} and {@link #setFilterPredicateMap(Map)}
-     */
-    @SuppressWarnings("unchecked")
-    @Deprecated
-    public void setSelectCascadeFilters(SelectCascadeFilter<?>... selectCascadeFilters)
-    {
-        this.selectCascadeFilters = selectCascadeFilters;
-        
-        if (selectCascadeFilters != null)
-        {
-            // find filter for this operation (linear search ok since small number?)
-            String objectClassName = Object.class.getName(); // wildcard match
-            String rowClassName = rowTranslator.getRowClass().getName();
-            filter = null;
-            for (SelectCascadeFilter<?> f : selectCascadeFilters)
-            {
-                String filterRowClassName = f.getRowClass().getName();
-                
-                if (filterRowClassName.equals(rowClassName)     // use filter for row class  
-                 || filterRowClassName.equals(objectClassName)) // use filter for all classes
-                {
-                    // found filter to use for this operation
-                    filter = (SelectCascadeFilter<R>)f;
-                    break;
-                }
-            }
-        }
-    }
     
 
-    /**
-     * Gets the select filters used for this operation.
-     * 
-     * @return filters used; null for none
-     * @since 3.1
-     * @deprecated Replaced by {@link #getFilterPredicateMap()}
-     */
-    @Deprecated
-    public SelectCascadeFilter<?>[] getSelectCascadeFilters()
-    {
-        return selectCascadeFilters;
-    }
-
-    
     /**
      * Adds a filter to use for a row type. Every row of type, rowClass, is 
      * is tested as the row is read from the database. 
@@ -991,7 +881,6 @@ public class ScalarSelectOperation<R> extends SqlOperation<R>
                             " for target field " + targetField.getField());
                     @SuppressWarnings("unchecked") // target field type is not known at compile time
                     SelectCascadeOperation<R, ?> operation = new SelectCascadeOperation(getTable(), targetField, targetTable, c);
-                    operation.setSelectCascadeFilters(selectCascadeFilters); // TODO remove when SelectCascadeFilter is deleted
                     operation.setFilterPredicateMap(filterPredicateMap);
                     operation.setNamedParameterMap(getNamedParameterMap());
                     if (c.setForeignKeyValues()) operation.setForeignKeyFieldNames(car.getForeignKeyValueFields());

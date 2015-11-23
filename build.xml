@@ -252,7 +252,7 @@
     	<delete dir="SimpleExample/simpleDB.tmp"/>
     	<delete dir="ZeroConfigExample/exampleDB.tmp"/>
     	<delete>
-    		<fileset dir="." includes="*.log sormula*.zip example*.zip"/>
+    		<fileset dir="." includes="*.log* sormula*.zip example*.zip"/>
     	</delete>
     	<mkdir dir="test-output"/> <!-- sqlite needs this -->
     </target>

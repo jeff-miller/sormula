@@ -2,7 +2,7 @@
 ^target/
 ^test-output/
 \.log$
-test.log
+.log
 \.orig
 dependency-reduced-pom.xml
 db.script

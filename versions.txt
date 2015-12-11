@@ -6,6 +6,7 @@ version-jdk             comments
                         - un-deprecate Row.primaryKeyFields, cascade constructors, SqlOperation.getTargetTable,
                           Table.setRequiredCascades, RowTranslator.getDeclaredFields,
                           AbstractColumnTranslator.newInstance
+                        - cascade debug logging
                           
 4.0-jdk1.8              - Select filters can be lambda expressions: see ScalarSelectOperation.addFilter  
                         - Annotations Where, OrderBy, ExplicitType, UnusedColumn are repeatable

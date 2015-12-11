@@ -370,11 +370,13 @@ public class SaveOperation<R> extends ModifyOperation<R>
             co = new ArrayList<CascadeOperation<R, ?>>(saveCascades.length);
             
             // for each cascade operation
+            int nextCascadeDepth = getCascadeDepth() + 1;
             for (SaveCascade c: saveCascades)
             {
                 if (log.isDebugEnabled()) log.debug("prepare cascade " + c.operation());
                 @SuppressWarnings("unchecked") // target field type is not known at compile time
                 CascadeOperation<R, ?> operation = new SaveCascadeOperation(getTable(), targetField, targetTable, c);
+                operation.setDepth(nextCascadeDepth);
                 operation.setNamedParameterMap(getNamedParameterMap());
                 if (c.setForeignKeyValues()) operation.setForeignKeyFieldNames(scar.getForeignKeyValueFields());
                 if (c.setForeignKeyReference()) operation.setForeignKeyReferenceFieldName(scar.getForeignKeyReferenceField());

@@ -100,12 +100,37 @@ public class FieldExtractor<R>
     	Object[] result = new Object[rowFieldList.size()];
     	int i = 0;
     	
-    	for (RowField<R, ?> s : rowFieldList)
+    	for (RowField<R, ?> rf : rowFieldList)
     	{
-    		//log.info("f=" + c.getField());
-    		result[i++] = s.get(row);
+    		result[i++] = rf.get(row);
     	}
     	
     	return result;
+    }
+    
+    
+    /**
+     * Gets field names and values for a row in the form of 
+     * "field1=value1 field2=value2 field3=value3..."
+     * Typically this method is used for debugging.
+     * 
+     * @param row extract field values from this row object
+     * @return string of all field names and corresponding values
+     * @throws ReflectException if error
+     * @since 4.1
+     */
+    public String toString(R row) throws ReflectException
+    {
+        StringBuilder sb = new StringBuilder(rowFieldList.size() * 16);
+
+        for (RowField<R, ?> rf : rowFieldList)
+        {
+            sb.append(rf.getField().getName());
+            sb.append("=");
+            sb.append(rf.get(row));
+            sb.append(" ");
+        }
+
+        return sb.toString();
     }
 }

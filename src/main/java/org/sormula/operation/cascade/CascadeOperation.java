@@ -63,7 +63,8 @@ public abstract class CascadeOperation<S, T> implements AutoCloseable
     int keyFieldCount;
     String[] requiredCascades;
     Map<String, Object> namedParameterMap;
-
+    int depth;
+    
     
     /**
      * Constructs for field and table to be affected by cascade.
@@ -106,6 +107,31 @@ public abstract class CascadeOperation<S, T> implements AutoCloseable
 	    return post;
 	}
     
+
+    /**
+     * Gets the depth of the cascade graph relative to the root cascade operation. Root
+     * cascade operation is depth 0.
+     * 
+     * @return depth of this cascade 
+     * @since 4.1
+     */
+    public int getDepth() 
+    {
+        return depth;
+    }
+
+
+    /**
+     * Sets the cascade depth. Typically set by {@link SqlOperation} when preparing cascades.
+     * 
+     * @param depth 0..n
+     * @since 4.1
+     */
+    public void setDepth(int depth) 
+    {
+        this.depth = depth;
+    }
+
 
     /**
      * Gets the field key value field names in target (child) rows.
@@ -335,6 +361,7 @@ public abstract class CascadeOperation<S, T> implements AutoCloseable
         {
             Constructor<?> constructor = cascadeOperationClass.getConstructor(Table.class);
             operation = (SqlOperation<?>)constructor.newInstance(getTargetTable());
+            operation.setCascadeDepth(depth);
             operation.setRequiredCascades(requiredCascades);
         }
         catch (NoSuchMethodException e)
@@ -551,7 +578,6 @@ public abstract class CascadeOperation<S, T> implements AutoCloseable
 
 
     /**
-     * Note: return type will be List&lt;RowField&lt;T, Object&gt;&gt; when SormulaField is removed
      * @return list of foreign key fields or null if none
      * @since 3.1
      */

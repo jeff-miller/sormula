@@ -46,7 +46,9 @@ import org.sormula.operation.cascade.CascadeOperation;
 import org.sormula.operation.monitor.NoOperationTime;
 import org.sormula.operation.monitor.OperationTime;
 import org.sormula.reflect.DirectAccessField;
+import org.sormula.reflect.FieldExtractor;
 import org.sormula.reflect.MethodAccessField;
+import org.sormula.reflect.ReflectException;
 import org.sormula.reflect.RowField;
 import org.sormula.translator.AbstractWhereTranslator;
 import org.sormula.translator.ColumnTranslator;
@@ -93,6 +95,7 @@ public abstract class SqlOperation<R> implements AutoCloseable
     boolean cascade;
     Where whereAnnotation;
     String[] requiredCascades;
+    int cascadeDepth;
     
 
     /**
@@ -263,6 +266,31 @@ public abstract class SqlOperation<R> implements AutoCloseable
     public void setQueryTimeout(int queryTimeout)
     {
         this.queryTimeout = queryTimeout;
+    }
+    
+
+    /**
+     * Gets the depth of the cascade graph relative to the root cascade operation. Root
+     * cascade operation is depth 0.
+     * 
+     * @return cascade depth (0..n)
+     * @since 4.1
+     */
+    public int getCascadeDepth() 
+    {
+        return cascadeDepth;
+    }
+
+
+    /**
+     * Sets the cascade depth. Typically set by {@link CascadeOperation}
+     * 
+     * @param cascadeDepth 0..n
+     * @since 4.1
+     */
+    public void setCascadeDepth(int cascadeDepth) 
+    {
+        this.cascadeDepth = cascadeDepth;
     }
 
 
@@ -843,6 +871,26 @@ public abstract class SqlOperation<R> implements AutoCloseable
             {
                 if (post && o.isPost() || !post && !o.isPost())
                 {
+                    if (log.isDebugEnabled())
+                    {
+                        String primaryKeys;
+                        try
+                        {
+                            primaryKeys = new FieldExtractor<R>(
+                                    table.getRowTranslator().getPrimaryKeyWhereTranslator()).toString(row);
+                        }
+                        catch (ReflectException e)
+                        {
+                            primaryKeys = "error " + e.getMessage();
+                        }
+
+                        Field targetField = o.getTargetField().getField();
+                        log.debug("cascade depth=" + cascadeDepth + " isPost=" + o.isPost() +
+                            " field=" + targetField.getName() +
+                            " class=" + targetField.getDeclaringClass().getCanonicalName() +
+                            " primary key(s): " + primaryKeys);
+                    }
+                    
                     o.cascade(row);
                 }
             }

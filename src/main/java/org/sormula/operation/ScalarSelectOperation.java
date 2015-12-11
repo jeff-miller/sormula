@@ -329,12 +329,14 @@ public class ScalarSelectOperation<R> extends SqlOperation<R>
         	{
         		// get from cache
         	    // must always try to select from cache so that cache miss status is correct
+        	    if (log.isDebugEnabled()) log.debug("select from cache"); 
         	    row = cache.select(parameters);
         	}
     		
     		if (cacheContainsPrimaryKey)
             {
-                // row from cache  
+                // row from cache
+    		    
     		    // row is null if row is in cache but row has deleted state
                 if (filterPredicate != null && row != null)
                 {
@@ -389,6 +391,7 @@ public class ScalarSelectOperation<R> extends SqlOperation<R>
                             {
                                 // assume cached row is authority
                                 row = cachedRow;
+                                if (log.isDebugEnabled()) log.debug("cache row is newer than selected row");
                             }   
                             else
                             {
@@ -450,7 +453,10 @@ public class ScalarSelectOperation<R> extends SqlOperation<R>
             throw new OperationException("readNext() error", e);
         }
         
-        if (row != null) ++rowsReadCount;
+        if (row != null)
+        {
+            ++rowsReadCount;
+        }
         
         return row;
     }
@@ -868,6 +874,7 @@ public class ScalarSelectOperation<R> extends SqlOperation<R>
             co = new ArrayList<>(selectCascades.length);
             
             // for each cascade operation
+            int nextCascadeDepth = getCascadeDepth() + 1;
             for (SelectCascade c: selectCascades)
             {
                 if (c.lazy())
@@ -881,6 +888,7 @@ public class ScalarSelectOperation<R> extends SqlOperation<R>
                             " for target field " + targetField.getField());
                     @SuppressWarnings("unchecked") // target field type is not known at compile time
                     SelectCascadeOperation<R, ?> operation = new SelectCascadeOperation(getTable(), targetField, targetTable, c);
+                    operation.setDepth(nextCascadeDepth);
                     operation.setFilterPredicateMap(filterPredicateMap);
                     operation.setNamedParameterMap(getNamedParameterMap());
                     if (c.setForeignKeyValues()) operation.setForeignKeyFieldNames(car.getForeignKeyValueFields());

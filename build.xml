@@ -67,6 +67,12 @@
     <target name="BasicDelete" description="Runs example">
         <antcall target="run-example"><param name="class" value="org.sormula.examples.basic.BasicDelete"/></antcall>
     </target>
+    <target name="BasicInsert2" description="Runs example">
+        <antcall target="run-example"><param name="class" value="org.sormula.examples.basic2.BasicInsert2"/></antcall>
+    </target>
+    <target name="BasicSelect2" description="Runs example">
+        <antcall target="run-example"><param name="class" value="org.sormula.examples.basic2.BasicSelect2"/></antcall>
+    </target>
 
 	<target name="NameInsert" description="Runs example">
         <antcall target="run-example"><param name="class" value="org.sormula.examples.name.NameInsert"/></antcall>

@@ -31,7 +31,7 @@ import org.sormula.operation.SqlOperation;
  * Defines two or more {@link Where} annotations for a row class. Annotates a row class,
  * {@link Table} subclass, or {@link SqlOperation}.
  * <p>
- * This annotation is optional since {@link Where} is {@link Repeatable} as of version 4.0.
+ * @deprecated No longer needed since {@link Where} is {@link Repeatable} as of version 4.0.
  *
  * @since 1.0
  * @author Jeff Miller
@@ -39,6 +39,7 @@ import org.sormula.operation.SqlOperation;
 @Inherited
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
+@Deprecated
 public @interface Wheres
 {
     /**

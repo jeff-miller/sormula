@@ -8,6 +8,7 @@ version-jdk             comments
                           AbstractColumnTranslator.newInstance
                         - cascade debug logging
                         - add org.sormula.examples.basic2
+                        - deprecate Wheres, OrderBys, UnusedColumns
                           
 4.0-jdk1.8              - Select filters can be lambda expressions: see ScalarSelectOperation.addFilter  
                         - Annotations Where, OrderBy, ExplicitType, UnusedColumn are repeatable

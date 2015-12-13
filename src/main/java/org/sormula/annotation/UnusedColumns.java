@@ -30,13 +30,14 @@ import org.sormula.Table;
  * and inserts into a table where columns are required but not used by row class. 
  * Annotates a row class or {@link Table} subclass.
  * <p>
- * This annotation is optional since {@link UnusedColumn} is {@link Repeatable} as of version 4.0.
+ * @deprecated No longer needed since {@link UnusedColumn} is {@link Repeatable} as of version 4.0.
  * 
  * @since 1.0
  * @author Jeff Miller
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
+@Deprecated
 public @interface UnusedColumns
 {
     /**

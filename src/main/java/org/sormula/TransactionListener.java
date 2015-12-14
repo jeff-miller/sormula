@@ -21,7 +21,7 @@ import java.sql.Connection;
 
 /**
  * Listener interface for {@link Transaction}. Used by {@link Table} to notify cache of
- * transactional boundaries.
+ * transaction boundaries.
  * 
  * @author Jeff Miller
  * @since 3.0

@@ -303,7 +303,7 @@ abstract public class AbstractLazySelector<R> implements LazySelectable, Seriali
             {
                 if (c.lazy())
                 {
-                    // select cascade currently does not use source table so can't write test to verfiy source table is correct
+                    // select cascade currently does not use source table so can't write test to verify source table is correct
                     @SuppressWarnings("unchecked") // source field type is not known at compile time
                     Table<R> sourceTable = (Table<R>)getDatabase().getTable(field.getDeclaringClass());
                     

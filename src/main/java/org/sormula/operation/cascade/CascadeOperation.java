@@ -168,7 +168,7 @@ public abstract class CascadeOperation<S, T> implements AutoCloseable
     /**
      * Gets the name of the foreign key reference field in the target (child) rows.
      * 
-     * @return name; null means dont set reference
+     * @return name; null means don't set reference
      * @since 3.0
      */
     public String getForeignKeyReferenceFieldName()

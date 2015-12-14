@@ -20,7 +20,7 @@ package org.sormula.active;
 /**
  * Indicates there is no active database defined but default was expected with 
  * {@link ActiveDatabase#getDefault()}. If no default {@link ActiveDatabase} is defined, then
- * one must be explictly set with {@link ActiveRecord#attach(ActiveDatabase)}.
+ * one must be explicitly set with {@link ActiveRecord#attach(ActiveDatabase)}.
  * 
  * @since 3.0
  * @author Jeff Miller

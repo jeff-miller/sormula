@@ -44,7 +44,7 @@ import org.sormula.operation.SqlOperation;
 public @interface Where
 {
     /**
-     * Name of where condition. Must be unique amoung all where conditions for a row class.
+     * Name of where condition. Must be unique among all where conditions for a row class.
      * 
      * @return name of where condition
      * @see SqlOperation#setWhere(String)  
@@ -80,7 +80,7 @@ public @interface Where
      * rows in result set may improve performance since collection/map that holds results will not 
      * need to be resized as much.
      * 
-     * @return initial capacity of results colllection/map 
+     * @return initial capacity of results collection/map 
      * @since 3.0
      */
     int selectInitialCapacity() default 20;

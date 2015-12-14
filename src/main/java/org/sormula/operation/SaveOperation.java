@@ -95,7 +95,7 @@ public class SaveOperation<R> extends ModifyOperation<R>
 			@Override
 			protected void preExecute(R row) throws OperationException 
 			{
-				// delegate to SaveOperation so that it may be overriden by subclass of SaveOperation
+				// delegate to SaveOperation so that it may be overridden by subclass of SaveOperation
 				invokeSuper = false;
 				SaveOperation.this.preExecute(row); // if subclass overrides then invokeSuper remains false
 				if (invokeSuper) super.preExecute(row);
@@ -104,7 +104,7 @@ public class SaveOperation<R> extends ModifyOperation<R>
 			@Override
 			protected void postExecute(R row) throws OperationException 
 			{
-				// delegate to SaveOperation so that it may be overriden by subclass of SaveOperation
+				// delegate to SaveOperation so that it may be overridden by subclass of SaveOperation
 				invokeSuper = false;
 				SaveOperation.this.postExecute(row); // if subclass overrides then invokeSuper remains false
 				if (invokeSuper) super.postExecute(row);
@@ -113,7 +113,7 @@ public class SaveOperation<R> extends ModifyOperation<R>
 			@Override
 			protected void preExecuteCascade(R row) throws OperationException 
 			{
-				// delegate to SaveOperation so that it may be overriden by subclass of SaveOperation
+				// delegate to SaveOperation so that it may be overridden by subclass of SaveOperation
 				invokeSuper = false;
 				SaveOperation.this.preExecuteCascade(row); // if subclass overrides then invokeSuper remains false
 				if (invokeSuper) super.preExecuteCascade(row);			

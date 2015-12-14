@@ -76,7 +76,7 @@ public class SimpleLazySelector<R> extends AbstractLazySelector<R>
     
     /**
      * Does nothing since {@link Database} from {@link #pendingLazySelects(Database)}
-     * is resued.
+     * is reused.
      * @since 1.9 and 2.3
      */
     @Override
@@ -87,7 +87,7 @@ public class SimpleLazySelector<R> extends AbstractLazySelector<R>
     
     /**
      * Does nothing since {@link Database} from {@link #pendingLazySelects(Database)}
-     * is resued.
+     * is reused.
      * @since 1.9 and 2.3
      */
     @Override

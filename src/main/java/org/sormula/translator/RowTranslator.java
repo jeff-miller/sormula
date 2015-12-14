@@ -316,7 +316,7 @@ public class RowTranslator<R> extends ColumnsTranslator<R>
     /**
      * Gets a declared field of {@link #getRowClass()}. Searches for declared fields in
      * subclass(es) of {@link #getRowClass()} if {@link #isInheritedFields()} is true. Subclasses 
-     * are searched prior to to superclasses.
+     * are searched prior to to super classes.
      *
      * @param fieldName get field for this name
      * @return field for row class (and optionally row class superclass(es)); null if field not found

@@ -42,7 +42,7 @@ import org.sormula.operation.SqlOperation;
  * explicitly flushed with {@link Table#flush()}, or {@link Database#flush()} or evicted with
  * {@link Cache#evict(Object)} or {@link Cache#evictAll()}.
  * <p>
- * This is a transactional cache which means that caching is performed relative to database transactional
+ * This is a transaction based cache which means that caching is performed relative to database transaction
  * boundaries of begin, commit, and rollback. Tables that are cached may not read/write unless a transaction 
  * is active. Tables that are cached must use {@link Transaction} obtained from {@link Database#getTransaction()}
  * or must use a subclass of {@link Transaction} that is set with {@link Database#setTransaction(Transaction)}.

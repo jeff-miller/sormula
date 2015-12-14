@@ -101,7 +101,7 @@ public class ElapsedTime
 
 
     /**
-     * Starts recording eplased time.
+     * Starts recording elapsed time.
      */
     public void start()
     {

@@ -558,7 +558,7 @@ public class Database implements TypeTranslatorMap, AutoCloseable
 
     /**
      * Gets table object for reading/writing row objects of type R from/to
-     * table. Table objects are cahced in map by canonical class name. If
+     * table. Table objects are cached in map by canonical class name. If
      * one exists, it is returned, otherwise a default one is created.
      * <p>
      * This method is optional. A table object may also be created with {@link Table} constructor.
@@ -646,7 +646,7 @@ public class Database implements TypeTranslatorMap, AutoCloseable
 	 * that have been recorded.
 	 * 
 	 * @param timings true to enable all operations to record execution timings; false for no
-	 * operation timings by default (can be overriden by each {@link SqlOperation}) 
+	 * operation timings by default (can be overridden by each {@link SqlOperation}) 
 	 * @since 1.5
 	 */
     public void setTimings(boolean timings)

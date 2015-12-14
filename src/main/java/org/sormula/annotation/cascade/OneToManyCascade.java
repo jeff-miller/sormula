@@ -135,7 +135,7 @@ public @interface OneToManyCascade
      * </pre></blockquote>
      * 
      * @return class of field that is involved in cascade; Object.class to indicate that class is
-     * to be obtained from field at runtime by relfection
+     * to be obtained from field at runtime by reflection
      */
     Class<?> targetClass() default Object.class;
     

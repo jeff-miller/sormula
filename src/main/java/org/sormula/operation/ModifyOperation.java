@@ -473,7 +473,7 @@ public abstract class ModifyOperation<R> extends SqlOperation<R>
     
     
     /**
-     * Invoked after JDBC execute. Override to modify the row after JDBC execute has occured.
+     * Invoked after JDBC execute. Override to modify the row after JDBC execute has occurred.
      * Default implementation does nothing. This method is not invoked when 
      * {@link ModifyOperation#setParameters(Object...)} is used since no row is available. 
      * 

@@ -503,7 +503,7 @@ public abstract class SqlOperation<R> implements AutoCloseable
         {
             try
             {
-                getTable().getCache().close(this);
+                table.getCache().close(this);
             }
             catch (CacheException e)
             {
@@ -628,7 +628,7 @@ public abstract class SqlOperation<R> implements AutoCloseable
                 }
     
                 // get database sum for id
-                Database database = getTable().getDatabase();
+                Database database = table.getDatabase();
                 OperationTime databaseTime = database.getOperationTime(id);
                 
                 if (databaseTime == null)
@@ -822,7 +822,7 @@ public abstract class SqlOperation<R> implements AutoCloseable
     protected void prepareCascades() throws OperationException
     {
         // for all fields
-        for (Field f: getTable().getRowTranslator().getCascadeFieldList())
+        for (Field f: table.getRowTranslator().getCascadeFieldList())
         {
             if (log.isDebugEnabled()) log.debug("prepare cascades for " + f);
             List<CascadeOperation<R, ?>> fieldCascades = prepareCascades(f);
@@ -911,13 +911,13 @@ public abstract class SqlOperation<R> implements AutoCloseable
         
         try
         {
-            targetTable = getTable().getDatabase().getTable(targetClass);
+            targetTable = table.getDatabase().getTable(targetClass);
         }
         catch (SormulaException e)
         {
             throw new OperationException("error getting table object for targetClass=" + 
                     targetClass.getCanonicalName() + " in class=" + 
-                    getTable().getRowTranslator().getRowClass().getCanonicalName(), e);
+                    table.getRowTranslator().getRowClass().getCanonicalName(), e);
         }
         
         return targetTable;
@@ -1270,7 +1270,7 @@ public abstract class SqlOperation<R> implements AutoCloseable
     {
         try
         {
-            RowTranslator<R> rowTranslator = getTable().getRowTranslator();
+            RowTranslator<R> rowTranslator = table.getRowTranslator();
             rowTranslator.setIncludeIdentityColumns(includeIdentityColumns);
             rowTranslator.setIncludeReadOnlyColumns(false);
             setNextParameter(rowTranslator.write(preparedStatement, getNextParameter(), row));

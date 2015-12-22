@@ -25,7 +25,7 @@ import org.sormula.SormulaException;
 
 
 /**
- * A sormula {@link Database}. Allows for common attributes and behaviour for most tests.
+ * A sormula {@link Database}. Allows for common attributes and behavior for most tests.
  * 
  * @author Jeff Miller
  */

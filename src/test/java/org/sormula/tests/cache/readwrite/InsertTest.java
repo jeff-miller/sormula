@@ -38,7 +38,7 @@ public class InsertTest extends CacheTest<SormulaCacheTestRW>
     @BeforeClass
     public void setUp() throws Exception
     {
-        openDatabase();
+        openDatabase(true); // true to use data source to test new connection after Database.close()
         createTable(SormulaCacheTestRW.class, 
             "CREATE TABLE " + getSchemaPrefix() + SormulaCacheTestRW.class.getSimpleName() + " (" +
             " id INTEGER NOT NULL PRIMARY KEY," +
@@ -64,7 +64,7 @@ public class InsertTest extends CacheTest<SormulaCacheTestRW>
         return test;
     }
     
-    
+
     @Test
     public void insertBasic() throws SormulaException
     {
@@ -196,6 +196,30 @@ public class InsertTest extends CacheTest<SormulaCacheTestRW>
             begin();
             confirmNotCached(test);
             confirmNotInDatabase(test);
+            commit();
+        }
+    }
+
+
+    @Test
+    // tests closing Database and then reusing it
+    public void insertAfterClose() throws SormulaException
+    {
+        if (isUseTransacation()) // only test if transactions are used
+        {
+            begin();
+            SormulaCacheTestRW test = insertTestRow(131);
+            confirmCached(test);
+            commit();
+            
+            // row should still be cached after database is closed
+            getDatabase().close();
+            getDatabase().close(); // multiple closes should not fail
+            
+            begin();
+            confirmCached(test); // fails if Cached.evictOnTransactionEnd()=true
+            confirmInDatabase(test);
+            insertTestRow(132); // should not fail
             commit();
         }
     }

@@ -293,4 +293,26 @@ public class UpdateTest extends CacheTest<SormulaCacheTestRW>
         
         commit();
     }
+    
+    
+    @Test
+    // tests closing Database and then reusing it
+    public void updateAfterClose() throws SormulaException
+    {
+        // insert test record into database
+        begin();
+        SormulaCacheTestRW test = insertTestRow(331);
+        confirmCached(test);
+        commit();
+        
+        // row should still be cached after database is closed
+        getDatabase().close();
+        
+        begin();
+        confirmInDatabase(test);
+        confirmCached(test);
+        SormulaCacheTestRW updated = updateTestRow(test);
+        confirmCached(updated);
+        commit();
+    }
 }

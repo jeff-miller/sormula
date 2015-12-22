@@ -18,7 +18,6 @@ package org.sormula;
 
 import java.math.BigDecimal;
 import java.sql.Connection;
-import java.sql.SQLException;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -158,17 +157,17 @@ public class Database implements TypeTranslatorMap, AutoCloseable
         {
             Context context = new InitialContext();
             dataSource = (DataSource)context.lookup(dataSourceName);
-            if (dataSource != null) init(dataSource.getConnection(), schema);
-            else throw new SormulaException("no data source found for dataSourceName=" + dataSourceName);
+            if (dataSource == null)
+            {
+                throw new SormulaException("no data source found for dataSourceName=" + dataSourceName);
+            }
         }
         catch (NamingException e)
         {
             throw new SormulaException("erroring getting data source", e);
         }
-        catch (SQLException e)
-        {
-            throw new SormulaException("erroring getting connection from data source", e);
-        }
+        
+        init(schema);
     }
 
     
@@ -211,14 +210,7 @@ public class Database implements TypeTranslatorMap, AutoCloseable
     public Database(DataSource dataSource, String schema) throws SormulaException
     {
         this.dataSource = dataSource;
-        try
-        {
-            init(dataSource.getConnection(), schema);
-        }
-        catch (SQLException e)
-        {
-            throw new SormulaException("erroring getting connection from data source", e);
-        }
+        init(schema);
     }
 
     
@@ -269,9 +261,11 @@ public class Database implements TypeTranslatorMap, AutoCloseable
      */
     public Database(Connection connection, String schema)
     {
+        this.connection = connection; 
+        
         try
         {
-            init(connection, schema);
+            init(schema);
         }
         catch (SormulaException e)
         {
@@ -284,6 +278,7 @@ public class Database implements TypeTranslatorMap, AutoCloseable
     
     
     /**
+     * @deprecated replaced by {@link #init(String)}.
      * Invoked by constructor to initialize.
      * 
      * @param connection JDBC connection
@@ -291,12 +286,33 @@ public class Database implements TypeTranslatorMap, AutoCloseable
      * {@link Connection#getCatalog()} is typically the schema name but jdbc drivers are not consistent
      * @throws SormulaException if error
      */
+    @Deprecated
     protected void init(Connection connection, String schema) throws SormulaException
     {
         this.connection = connection;
         this.schema = schema;
         tableMap = new HashMap<>();
         transaction = initTransaction(connection);
+        nameTranslatorClasses = new ArrayList<>(4);
+        operationTimeMap = new HashMap<>();
+        totalOperationTime = new OperationTime("Database totals");
+        totalOperationTime.setDescription("All operations for database");
+        initTypeTranslatorMap();
+    }
+    
+    
+    /**
+     * Invoked by constructor to initialize.
+     * 
+     * @param schema name of schema to be prefixed to table name in all table names in sql statements;
+     * {@link Connection#getCatalog()} is typically the schema name but jdbc drivers are not consistent
+     * @throws SormulaException if error
+     * @since 4.1
+     */
+    protected void init(String schema) throws SormulaException
+    {
+        this.schema = schema;
+        tableMap = new HashMap<>();
         nameTranslatorClasses = new ArrayList<>(4);
         operationTimeMap = new HashMap<>();
         totalOperationTime = new OperationTime("Database totals");
@@ -387,12 +403,13 @@ public class Database implements TypeTranslatorMap, AutoCloseable
      */
     protected Transaction initTransaction(Connection connection) throws SormulaException
     {
+        if (log.isDebugEnabled()) log.debug("create new Transaction"); 
         return new Transaction(connection);
     }
     
     
     /**
-     * Gets transaction for connection. A {@link Transaction} is optional for most situations. {@link Transaction}
+     * Gets transaction for connection. A {@link Transaction} is optional for some situations. {@link Transaction}
      * is provided for basic JDBC transaction support if desired. Since {@link Database} is
      * single threaded, only one {@link Transaction} object exists per instance of {@link Database}.
      * <p>
@@ -404,6 +421,29 @@ public class Database implements TypeTranslatorMap, AutoCloseable
      */
     public Transaction getTransaction() 
     {
+        if (transaction == null)
+        {
+            // no transaction instance yet, create one
+            try
+            {
+                if (log.isDebugEnabled()) log.debug("create new transaction");
+                transaction = initTransaction(getConnection());
+            }
+            catch (SormulaException e)
+            {
+                // don't throw for backward compatibility
+                log.error("error creating transaction", e);
+            }
+        }
+        else
+        {
+            if (transaction.getConnection() == null)
+            {
+                // existing connection requires new connection
+                getConnection();
+            }
+        }
+        
 		return transaction;
 	}
 
@@ -434,13 +474,16 @@ public class Database implements TypeTranslatorMap, AutoCloseable
 
 
     /**
-     * Dereferences all objects used. Does not close connection if these constructors were used:
-     * {@link #Database(Connection)} or {@link #Database(Connection, String)}.
+     * Closes connection if this class created the connection from a data source. Connection is 
+     * created by this class when any of the data source constructors are used. This method is 
+     * required when any of these data source constructors are used: {@link #Database(DataSource)}, 
+     * {@link #Database(DataSource, String)}, {@link #Database(String)}, {@link #Database(String, String)}.
      * <p>
-     * Closes connection if this class created the connection. Connection is created by this class
-     * when any of the data source constructors are used. This method is required when any of these
-     * data source constructors are used: {@link #Database(DataSource)}, {@link #Database(DataSource, String)},
-     * {@link #Database(String)}, {@link #Database(String, String)}.
+     * If the {@link Database} instance was created using a data source, then it may be reused after closing.
+     * A new connection will be obtained from the data source if needed.
+     * <p>
+     * Does not close connection if these constructors were used:
+     * {@link #Database(Connection)} or {@link #Database(Connection, String)}.
      */
     public void close()
     {
@@ -449,36 +492,51 @@ public class Database implements TypeTranslatorMap, AutoCloseable
             // assume connection was obtained from data source
             try
             {
+                if (log.isDebugEnabled()) log.debug("close JDBC connection");
                 connection.close();
+                
+                // force recreation if this instance is used again
+                connection = null;
+                transaction.setConnection(null); // force new connection
             }
-            catch (SQLException e)
+            catch (Exception e)
             {
                 // prior to v1.8, close did not use throws in signature, keep backward compatible
                 log.error("error closing connection", e);
             }
         }
-        
-        dataSourceName = null;
-        dataSource = null;
-        connection = null;
-        schema = null;
-        tableMap = null;
-        transaction = null;
-        nameTranslatorClasses = null;
-        operationTimeMap = null;
-        totalOperationTime = null;
-        typeTranslatorMap = null;
     }
     
 
     /**
-     * Gets connection to use for sql operations. Used by {@link SqlOperation} subclasses
+     * Gets connection to use for sql operations. Used by {@link SqlOperation} 
      * to obtain the connection to use for the operation methods.
      * 
      * @return JDBC connection
      */
     public Connection getConnection()
     {
+        if (connection == null && dataSource != null)
+        {
+            // no connection and data source is available
+            try
+            {
+                if (log.isDebugEnabled()) log.debug("get JDBC connection from data source");
+                connection = dataSource.getConnection();
+                
+                if (transaction != null)
+                {
+                    // existing transaction uses new connection
+                    transaction.setConnection(connection);
+                }
+            }
+            catch (Exception e)
+            {
+                // don't throw for backward compatibility
+                log.error("error getting connection", e);
+            }
+        }
+        
         return connection;
     }
 

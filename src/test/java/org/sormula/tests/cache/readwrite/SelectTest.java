@@ -35,7 +35,7 @@ public class SelectTest extends CacheTest<SormulaCacheTestRW>
     @BeforeClass
     public void setUp() throws Exception
     {
-        openDatabase();
+        openDatabase(true); // true to use data source to test new connection after Database.close()
         createTable(SormulaCacheTestRW.class);
     }
     
@@ -218,5 +218,25 @@ public class SelectTest extends CacheTest<SormulaCacheTestRW>
         {
             // expected path
         }
+    }
+    
+    
+    @Test
+    // tests closing Database and then reusing it
+    public void selectAfterClose() throws SormulaException
+    {
+        // insert test record into database
+        begin();
+        SormulaCacheTestRW test = insertTestRow(231);
+        commit();
+        
+        // row should still be cached after database is closed
+        getDatabase().close();
+        
+        // confirm that select is from cache
+        begin();
+        confirmCached(test);
+        confirmCached(getTable().select(test.getId()));
+        commit();
     }
 }

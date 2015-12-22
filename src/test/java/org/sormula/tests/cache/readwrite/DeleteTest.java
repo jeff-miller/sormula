@@ -257,4 +257,29 @@ public class DeleteTest extends CacheTest<SormulaCacheTestRW>
         assert tested : "no rows tested for " + test.getId();
         commit();
     }
+
+    
+    @Test
+    // tests closing Database and then reusing it
+    public void deleteAfterClose() throws SormulaException
+    {
+        // insert test record into database
+        begin();
+        SormulaCacheTestRW test = insertTestRow(431);
+        commit();
+        confirmInDatabase(test);
+
+        // row should still be cached after database is closed
+        getDatabase().close();
+        
+        // delete to start with UncommittedDeleteRow
+        begin();
+        confirmCached(test);
+        getTable().delete(test); // should not fail
+        commit();
+        
+        begin();
+        confirmNotInDatabase(test); // confirm delete occurred
+        commit();        
+    }
 }

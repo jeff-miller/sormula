@@ -65,6 +65,23 @@ public class Transaction
 	
 	
 	/**
+	 * Sets new connection for transaction.
+	 * <p>
+	 * Typically invoked by {@link Database} when a new connection is obtained. New connection
+	 * is obtained after {@link Database#close()} is used followed by invoking a method that accesses
+	 * the database.
+	 * 
+	 * @param connection JDBC connection to use; null if connection has been closed
+	 * @since 4.1
+	 */
+	public void setConnection(Connection connection) throws SormulaException
+	{
+	    if (active) throw new SormulaException("attempt to change connection while transaction is active");
+        this.connection = connection;
+    }
+
+
+    /**
 	 * Reports if transaction is ongoing.
 	 * 
 	 * @return true if {@link #begin()} has been invoked but not {@link #commit()} or {@link #rollback()}

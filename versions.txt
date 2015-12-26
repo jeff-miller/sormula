@@ -2,13 +2,14 @@ Version History
 
 version-jdk             comments
 ------------------------------------------------------------------------------------------------------------
-4.1-jdk1.8              - remove deprecated SelectCascadeFilter, AbstractSelectCascadeFilter
+4.1-jdk1.8              - Database objects may be reused after close if constructed with data source
+                        - remove deprecated SelectCascadeFilter, AbstractSelectCascadeFilter
                         - un-deprecate Row.primaryKeyFields, cascade constructors, SqlOperation.getTargetTable,
                           Table.setRequiredCascades, RowTranslator.getDeclaredFields,
                           AbstractColumnTranslator.newInstance
                         - cascade debug logging
                         - add org.sormula.examples.basic2
-                        - deprecate Wheres, OrderBys, UnusedColumns
+                        - deprecate Wheres, OrderBys, UnusedColumns annotations
                           
 4.0-jdk1.8              - Select filters can be lambda expressions: see ScalarSelectOperation.addFilter  
                         - Annotations Where, OrderBy, ExplicitType, UnusedColumn are repeatable

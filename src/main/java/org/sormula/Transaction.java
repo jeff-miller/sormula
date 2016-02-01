@@ -73,6 +73,7 @@ public class Transaction
 	 * 
 	 * @param connection JDBC connection to use; null if connection has been closed
 	 * @since 4.1
+	 * @throws SormulaException if error
 	 */
 	public void setConnection(Connection connection) throws SormulaException
 	{

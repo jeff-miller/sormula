@@ -53,7 +53,7 @@ public abstract class CascadeOperation<S, T> implements AutoCloseable
     @Deprecated Table<S> sourceTable; // TODO use source operation method
     RowField<S, ?> targetField;
     Table<T> targetTable;
-    Class <?> cascadeOperationClass; // TODO rename to cascadeSqlOperationClass to avoid confusion with CascadeOperation?
+    Class <?> cascadeSqlOperationClass;
     boolean post;
     String[] foreignKeyValueFieldNames;
     String foreignKeyReferenceFieldName;
@@ -73,18 +73,18 @@ public abstract class CascadeOperation<S, T> implements AutoCloseable
      * @param sourceTable cascade originates on row from this table
      * @param targetField in source row to be affected by cascade operation
      * @param targetTable sormula table that will be cascaded
-     * @param cascadeOperationClass class of cascade operation (used to create new instance)
+     * @param cascadeSqlOperationClass class of cascade operation (used to create new instance)
      * is to be performed before source row operation
      * @since 3.4
      * @deprecated replaced by {@link #CascadeOperation(SqlOperation, RowField, Table, Class)}
      */
     @Deprecated
-    public CascadeOperation(Table<S> sourceTable, RowField<S, ?> targetField, Table<T> targetTable, Class <?> cascadeOperationClass)
+    public CascadeOperation(Table<S> sourceTable, RowField<S, ?> targetField, Table<T> targetTable, Class <?> cascadeSqlOperationClass)
     {
         this.sourceTable = sourceTable;
         this.targetField = targetField;
         this.targetTable = targetTable;
-        this.cascadeOperationClass = cascadeOperationClass;
+        this.cascadeSqlOperationClass = cascadeSqlOperationClass;
     }
     
     
@@ -94,16 +94,16 @@ public abstract class CascadeOperation<S, T> implements AutoCloseable
      * @param sourceOperation operation where cascade originates 
      * @param targetField in source row to be affected by cascade operation
      * @param targetTable sormula table that will be cascaded
-     * @param cascadeOperationClass class of cascade operation (used to create new instance)
+     * @param cascadeSqlOperationClass class of cascade operation (used to create new instance)
      * is to be performed before source row operation
      * @since 4.1
      */
-    public CascadeOperation(SqlOperation<S> sourceOperation, RowField<S, ?> targetField, Table<T> targetTable, Class <?> cascadeOperationClass)
+    public CascadeOperation(SqlOperation<S> sourceOperation, RowField<S, ?> targetField, Table<T> targetTable, Class <?> cascadeSqlOperationClass)
     {
         this.sourceOperation = sourceOperation;
         this.targetField = targetField;
         this.targetTable = targetTable;
-        this.cascadeOperationClass = cascadeOperationClass;
+        this.cascadeSqlOperationClass = cascadeSqlOperationClass;
     }
 
     
@@ -393,7 +393,7 @@ public abstract class CascadeOperation<S, T> implements AutoCloseable
     
 
     /**
-     * Creates new instance of sql operation from {@link #cascadeOperationClass} supplied in the 
+     * Creates new instance of sql operation from {@link #cascadeSqlOperationClass} supplied in the 
      * constructor.
      * @return new instance of {@link SqlOperation} that will be used for cascade
      * @throws OperationException if error
@@ -404,7 +404,7 @@ public abstract class CascadeOperation<S, T> implements AutoCloseable
         
         try
         {
-            Constructor<?> constructor = cascadeOperationClass.getConstructor(Table.class);
+            Constructor<?> constructor = cascadeSqlOperationClass.getConstructor(Table.class);
             operation = (SqlOperation<?>)constructor.newInstance(getTargetTable());
             
             // TODO move all initialization of attributes to common place? 
@@ -413,12 +413,12 @@ public abstract class CascadeOperation<S, T> implements AutoCloseable
         }
         catch (NoSuchMethodException e)
         {
-            throw new OperationException("no constructor for " + cascadeOperationClass.getCanonicalName() +
+            throw new OperationException("no constructor for " + cascadeSqlOperationClass.getCanonicalName() +
                     " for field " + getTargetField().getField().getName());
         }
         catch (Exception e)
         {
-            throw new OperationException("error constructing " + cascadeOperationClass.getCanonicalName() +
+            throw new OperationException("error constructing " + cascadeSqlOperationClass.getCanonicalName() +
                     " for field " + getTargetField().getField().getName());
         }
         

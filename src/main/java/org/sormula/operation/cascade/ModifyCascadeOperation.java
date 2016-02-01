@@ -47,16 +47,16 @@ public abstract class ModifyCascadeOperation<S, T> extends CascadeOperation<S, T
      * @param sourceTable cascade originates on row from this table
      * @param targetField cascade operation uses row(s) from this field
      * @param targetTable cascade operation is performed on this table 
-     * @param cascadeOperationClass class of cascade operation
+     * @param cascadeSqlOperationClass class of cascade operation
      * false if cascade is performed before row execute (see {@link ModifyOperation#preExecute}
      * @since 3.4
      * @deprecated replaced by {@link #ModifyCascadeOperation(ModifyOperation, RowField, Table, Class)}
      */
     @Deprecated
     public ModifyCascadeOperation(Table<S> sourceTable, RowField<S, ?> targetField, Table<T> targetTable, 
-            Class <?> cascadeOperationClass)
+            Class <?> cascadeSqlOperationClass)
     {
-        super(sourceTable, targetField, targetTable, cascadeOperationClass);
+        super(sourceTable, targetField, targetTable, cascadeSqlOperationClass);
     }
     
     
@@ -66,14 +66,14 @@ public abstract class ModifyCascadeOperation<S, T> extends CascadeOperation<S, T
      * @param sourceOperation operation where cascade originates
      * @param targetField cascade operation uses row(s) from this field
      * @param targetTable cascade operation is performed on this table 
-     * @param cascadeOperationClass class of cascade operation
+     * @param cascadeSqlOperationClass class of cascade operation
      * false if cascade is performed before row execute (see {@link ModifyOperation#preExecute}
      * @since 4.1
      */
     public ModifyCascadeOperation(ModifyOperation<S> sourceOperation, RowField<S, ?> targetField, Table<T> targetTable, 
-            Class <?> cascadeOperationClass)
+            Class <?> cascadeSqlOperationClass)
     {
-        super(sourceOperation, targetField, targetTable, cascadeOperationClass);
+        super(sourceOperation, targetField, targetTable, cascadeSqlOperationClass);
     }
 
     

@@ -82,12 +82,11 @@ public abstract class ModifyCascadeOperation<S, T> extends CascadeOperation<S, T
      * TODO test cases
      * @return
      * @since 4.1
-     *
+     */
     public boolean isBatch()
     {
         return ((ModifyOperation<S>)sourceOperation).isBatch();
     }
-    */
 
 
     /**
@@ -164,7 +163,15 @@ public abstract class ModifyCascadeOperation<S, T> extends CascadeOperation<S, T
     {
         super.prepare();
         modifyOperation = (ModifyOperation<T>)createOperation();
-        modifyOperation.setNamedParameterMap(getNamedParameterMap()); // from source TODO needed?
+        deriveSqlOperationAttributes();
+    }
+
+
+    @Override
+    protected void deriveSqlOperationAttributes() 
+    {
+        super.deriveSqlOperationAttributes();
+        //modifyOperation.setBatch(isBatch()); // TODO
     }
 
 

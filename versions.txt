@@ -13,6 +13,8 @@ version-jdk             comments
                         - CascadeOperation constructor and subclasses use source operation as first parameter
                         - deprecate CascadeOperation(Table<S> sourceTable, ...), CascadeOperation#setRequiredCascades,
                           CascadeOperation#setNamedParameterMap, SelectCascadeOperation#setFilterPredicateMap
+                        - add CascadeOperation#deriveSqlOperationAttributes to obtain common attributes from
+                          source operation
                           
 4.0-jdk1.8              - Select filters can be lambda expressions: see ScalarSelectOperation.addFilter  
                         - Annotations Where, OrderBy, ExplicitType, UnusedColumn are repeatable

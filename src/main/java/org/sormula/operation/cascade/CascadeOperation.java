@@ -49,6 +49,7 @@ import org.sormula.translator.TranslatorException;
 public abstract class CascadeOperation<S, T> implements AutoCloseable
 {
     private static final ClassLogger log = new ClassLogger();
+    SqlOperation<?> sqlOperation;
     SqlOperation<S> sourceOperation;
     @Deprecated Table<S> sourceTable; // TODO use source operation method
     RowField<S, ?> targetField;
@@ -64,7 +65,7 @@ public abstract class CascadeOperation<S, T> implements AutoCloseable
     int keyFieldCount;
     @Deprecated String[] requiredCascades; // TODO use source operation method
     @Deprecated Map<String, Object> namedParameterMap; // TODO use source operation method
-    int depth;
+    @Deprecated int depth; // TODO use source operation method
     
     
     /**
@@ -139,6 +140,7 @@ public abstract class CascadeOperation<S, T> implements AutoCloseable
      */
     public int getDepth() 
     {
+        // TODO return sourceOperation.getCascadeDepth() + 1; and deprecate setDepth, remove setDepth use?
         return depth;
     }
 
@@ -400,16 +402,12 @@ public abstract class CascadeOperation<S, T> implements AutoCloseable
      */
     protected SqlOperation<?> createOperation() throws OperationException
     {
-        SqlOperation<?> operation = null;
+        sqlOperation = null;
         
         try
         {
             Constructor<?> constructor = cascadeSqlOperationClass.getConstructor(Table.class);
-            operation = (SqlOperation<?>)constructor.newInstance(getTargetTable());
-            
-            // TODO move all initialization of attributes to common place? 
-            operation.setCascadeDepth(depth);
-            operation.setRequiredCascades(getRequiredCascades());
+            sqlOperation = (SqlOperation<?>)constructor.newInstance(getTargetTable());
         }
         catch (NoSuchMethodException e)
         {
@@ -422,9 +420,23 @@ public abstract class CascadeOperation<S, T> implements AutoCloseable
                     " for field " + getTargetField().getField().getName());
         }
         
-        return operation;
+        return sqlOperation;
     }
 
+    
+    /**
+     * Sets the sql operation attributes that are the same as source attributes for 
+     * all levels. Cascade depth is also set as 1 + source depth.
+     * 
+     * @since 4.1
+     */
+    protected void deriveSqlOperationAttributes()
+    {
+        sqlOperation.setCascadeDepth(getDepth());
+        sqlOperation.setRequiredCascades(getRequiredCascades());
+        sqlOperation.setNamedParameterMap(getNamedParameterMap());
+    }
+    
     
     /**
      * Prepares accessors that will set foreign key(s) on cascaded target rows as defined by

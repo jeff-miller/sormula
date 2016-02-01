@@ -225,8 +225,7 @@ public class SelectCascadeOperation<S, T> extends CascadeOperation<S, T>
     {
         super.prepare();
         selectOperation = (ScalarSelectOperation<T>)createOperation();
-        selectOperation.setNamedParameterMap(getNamedParameterMap()); // from source
-        selectOperation.setFilterPredicateMap(getFilterPredicateMap()); // from source
+        deriveSqlOperationAttributes();
         
         if (!isSourceTargetFieldNames())
         {
@@ -301,6 +300,14 @@ public class SelectCascadeOperation<S, T> extends CascadeOperation<S, T>
         }
     }
     
+
+    @Override
+    protected void deriveSqlOperationAttributes()
+    {
+        super.deriveSqlOperationAttributes();
+        selectOperation.setFilterPredicateMap(getFilterPredicateMap()); // from source
+    }
+
     
     /**
      * @return true if {@link SelectCascade#sourceParameterFieldNames()} is "#primaryKeyFields"

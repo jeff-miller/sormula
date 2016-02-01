@@ -10,6 +10,9 @@ version-jdk             comments
                         - cascade debug logging
                         - add org.sormula.examples.basic2
                         - deprecate Wheres, OrderBys, UnusedColumns annotations
+                        - CascadeOperation constructor and subclasses use source operation as first parameter
+                        - deprecate CascadeOperation(Table<S> sourceTable, ...), CascadeOperation#setRequiredCascades,
+                          CascadeOperation#setNamedParameterMap, SelectCascadeOperation#setFilterPredicateMap
                           
 4.0-jdk1.8              - Select filters can be lambda expressions: see ScalarSelectOperation.addFilter  
                         - Annotations Where, OrderBy, ExplicitType, UnusedColumn are repeatable

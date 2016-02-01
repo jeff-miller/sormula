@@ -1183,9 +1183,8 @@ public abstract class SqlOperation<R> implements AutoCloseable
      * any of the names specified in cascadeNames parameter will be executed. The default value for 
      * required cascade names is {@link Table#getRequiredCascades()}. 
      * <p>
-     * For all cascades that are executed, cascadeNames is passed on to the cascade operation with
-     * {@link CascadeOperation#setRequiredCascades(String...)} so that all cascades for all levels use
-     * the same required cascade names. 
+     * For all cascades that are executed, cascadeNames is passed on to the cascade operation 
+     * so that all cascades for all levels use the same required cascade names. 
      * <p> 
      * The wildcard "*" parameter will result in {@link StackOverflowError} if cascade relationships form 
      * a cyclic graph and no termination condition exists to end the recursion.
@@ -1222,7 +1221,7 @@ public abstract class SqlOperation<R> implements AutoCloseable
     public boolean isRequiredCascade(String cascadeName) 
     {
         boolean required;
-        
+        assert (requiredCascades != null) : "requiredCascades is null?!";
         if (cascadeName.equals("*"))
         {
             // wildcard (cascade always)

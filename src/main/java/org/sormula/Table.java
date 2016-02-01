@@ -48,7 +48,6 @@ import org.sormula.operation.aggregate.SelectCountOperation;
 import org.sormula.operation.aggregate.SelectMaxOperation;
 import org.sormula.operation.aggregate.SelectMinOperation;
 import org.sormula.operation.aggregate.SelectSumOperation;
-import org.sormula.operation.cascade.CascadeOperation;
 import org.sormula.translator.NameTranslator;
 import org.sormula.translator.RowTranslator;
 import org.sormula.translator.TranslatorException;
@@ -212,9 +211,8 @@ public class Table<R> implements TypeTranslatorMap, TransactionListener
      * any of the names specified in cascadeNames parameter will be executed. The default value for 
      * required cascade names is {""}. 
      * <p>
-     * For all cascades that are executed, cascadeNames is passed on to the cascade operation with
-     * {@link CascadeOperation#setRequiredCascades(String...)} so that all cascades for all levels use
-     * the same required cascade names. 
+     * For all cascades that are executed, cascadeNames is passed on to the cascade operation 
+     * so that all cascades for all levels use the same required cascade names. 
      * <p> 
      * The wildcard "*" parameter will result in {@link StackOverflowError} if cascade relationships form 
      * a cyclic graph and no termination condition exists to end the recursion.

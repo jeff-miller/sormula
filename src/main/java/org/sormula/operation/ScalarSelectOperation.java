@@ -887,15 +887,10 @@ public class ScalarSelectOperation<R> extends SqlOperation<R>
                     if (log.isDebugEnabled()) log.debug("prepare cascade " + c.operation().getCanonicalName() + 
                             " for target field " + targetField.getField());
                     @SuppressWarnings("unchecked") // target field type is not known at compile time
-                    SelectCascadeOperation<R, ?> operation = new SelectCascadeOperation(getTable(), targetField, targetTable, c);
+                    SelectCascadeOperation<R, ?> operation = new SelectCascadeOperation(this, targetField, targetTable, c);
                     operation.setDepth(nextCascadeDepth);
-                    operation.setFilterPredicateMap(filterPredicateMap);
-                    operation.setNamedParameterMap(getNamedParameterMap());
                     if (c.setForeignKeyValues()) operation.setForeignKeyFieldNames(car.getForeignKeyValueFields());
                     if (c.setForeignKeyReference()) operation.setForeignKeyReferenceFieldName(car.getForeignKeyReferenceField());
-
-                    // cascade operation uses same required cascade names as this operation
-                    operation.setRequiredCascades(getRequiredCascades());
 
                     operation.prepare();
                     co.add(operation);

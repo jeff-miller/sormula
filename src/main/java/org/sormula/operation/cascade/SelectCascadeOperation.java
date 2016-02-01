@@ -58,7 +58,7 @@ public class SelectCascadeOperation<S, T> extends CascadeOperation<S, T>
 	ScalarSelectOperation<T> selectOperation;
 	String[] parameterFieldNames;
 	List<RowField<S, ?>> parameterFields;
-	Map<Class<?>, BiPredicate<?, Boolean>> filterPredicateMap;
+	@Deprecated Map<Class<?>, BiPredicate<?, Boolean>> filterPredicateMap; // TODO use source operation method
     
     
 	/**
@@ -69,10 +69,29 @@ public class SelectCascadeOperation<S, T> extends CascadeOperation<S, T>
      * @param targetTable cascade select operation is performed on this table 
      * @param selectCascadeAnnotation cascade operation
 	 * @since 3.4
+	 * @deprecated replaced by {@link #SelectCascadeOperation(ScalarSelectOperation, RowField, Table, SelectCascade)}
 	 */
+	@Deprecated
     public SelectCascadeOperation(Table<S> sourceTable, RowField<S, ?> targetField, Table<T> targetTable, SelectCascade selectCascadeAnnotation)
     {
         super(sourceTable, targetField, targetTable, selectCascadeAnnotation.operation());
+        this.selectCascadeAnnotation = selectCascadeAnnotation;
+        setPost(selectCascadeAnnotation.post());
+    }
+    
+    
+    /**
+     * Constructor used by {@link ScalarSelectOperation}.
+     *  
+     * @param sourceOperation cascade originates on row from this table 
+     * @param targetField cascade select operation modifies this field
+     * @param targetTable cascade select operation is performed on this table 
+     * @param selectCascadeAnnotation cascade operation
+     * @since 4.1
+     */
+    public SelectCascadeOperation(ScalarSelectOperation<S> sourceOperation, RowField<S, ?> targetField, Table<T> targetTable, SelectCascade selectCascadeAnnotation)
+    {
+        super(sourceOperation, targetField, targetTable, selectCascadeAnnotation.operation());
         this.selectCascadeAnnotation = selectCascadeAnnotation;
         setPost(selectCascadeAnnotation.post());
     }
@@ -91,7 +110,8 @@ public class SelectCascadeOperation<S, T> extends CascadeOperation<S, T>
      */
     public Map<Class<?>, BiPredicate<?, Boolean>> getFilterPredicateMap() 
     {
-		return filterPredicateMap;
+        if (getSourceOperation() == null) return filterPredicateMap; // assume deprecated constructor, remove when deprecated field is removed
+		return ((ScalarSelectOperation<S>)getSourceOperation()).getFilterPredicateMap();
 	}
 
 
@@ -102,7 +122,9 @@ public class SelectCascadeOperation<S, T> extends CascadeOperation<S, T>
      * 
      * @param filterPredicateMap map of class to filter
      * @since 4.0
+     * @deprecated no longer needed since map is obtained from source operation
      */
+    @Deprecated
 	public void setFilterPredicateMap(Map<Class<?>, BiPredicate<?, Boolean>> filterPredicateMap) 
 	{
 		this.filterPredicateMap = filterPredicateMap;
@@ -204,7 +226,7 @@ public class SelectCascadeOperation<S, T> extends CascadeOperation<S, T>
         super.prepare();
         selectOperation = (ScalarSelectOperation<T>)createOperation();
         selectOperation.setNamedParameterMap(getNamedParameterMap()); // from source
-        selectOperation.setFilterPredicateMap(filterPredicateMap); // from source
+        selectOperation.setFilterPredicateMap(getFilterPredicateMap()); // from source
         
         if (!isSourceTargetFieldNames())
         {

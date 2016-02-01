@@ -49,10 +49,11 @@ import org.sormula.translator.TranslatorException;
 public abstract class CascadeOperation<S, T> implements AutoCloseable
 {
     private static final ClassLogger log = new ClassLogger();
-    Table<S> sourceTable;
+    SqlOperation<S> sourceOperation;
+    @Deprecated Table<S> sourceTable; // TODO use source operation method
     RowField<S, ?> targetField;
     Table<T> targetTable;
-    Class <?> cascadeOperationClass;
+    Class <?> cascadeOperationClass; // TODO rename to cascadeSqlOperationClass to avoid confusion with CascadeOperation?
     boolean post;
     String[] foreignKeyValueFieldNames;
     String foreignKeyReferenceFieldName;
@@ -61,8 +62,8 @@ public abstract class CascadeOperation<S, T> implements AutoCloseable
     List<RowField<T, Object>> targetForeignKeyValueFieldList;
     RowField<T, Object> targetForeignReferenceField;
     int keyFieldCount;
-    String[] requiredCascades;
-    Map<String, Object> namedParameterMap;
+    @Deprecated String[] requiredCascades; // TODO use source operation method
+    @Deprecated Map<String, Object> namedParameterMap; // TODO use source operation method
     int depth;
     
     
@@ -75,10 +76,31 @@ public abstract class CascadeOperation<S, T> implements AutoCloseable
      * @param cascadeOperationClass class of cascade operation (used to create new instance)
      * is to be performed before source row operation
      * @since 3.4
+     * @deprecated replaced by {@link #CascadeOperation(SqlOperation, RowField, Table, Class)}
      */
+    @Deprecated
     public CascadeOperation(Table<S> sourceTable, RowField<S, ?> targetField, Table<T> targetTable, Class <?> cascadeOperationClass)
     {
         this.sourceTable = sourceTable;
+        this.targetField = targetField;
+        this.targetTable = targetTable;
+        this.cascadeOperationClass = cascadeOperationClass;
+    }
+    
+    
+    /**
+     * Constructs from source operation and targets of the cascade.
+     * 
+     * @param sourceOperation operation where cascade originates 
+     * @param targetField in source row to be affected by cascade operation
+     * @param targetTable sormula table that will be cascaded
+     * @param cascadeOperationClass class of cascade operation (used to create new instance)
+     * is to be performed before source row operation
+     * @since 4.1
+     */
+    public CascadeOperation(SqlOperation<S> sourceOperation, RowField<S, ?> targetField, Table<T> targetTable, Class <?> cascadeOperationClass)
+    {
+        this.sourceOperation = sourceOperation;
         this.targetField = targetField;
         this.targetTable = targetTable;
         this.cascadeOperationClass = cascadeOperationClass;
@@ -205,7 +227,9 @@ public abstract class CascadeOperation<S, T> implements AutoCloseable
      * 
      * @param cascadeNames names of cascades that will be executed 
      * @since 3.0
+     * @deprecated no longer needed since determined by {@link SqlOperation#getRequiredCascades()} of source operation
      */
+    @Deprecated
     public void setRequiredCascades(String... cascadeNames)
     {
         requiredCascades = cascadeNames;
@@ -213,14 +237,19 @@ public abstract class CascadeOperation<S, T> implements AutoCloseable
     
     
     /**
-     * Gets required cascade names set with {@link #setRequiredCascades(String...)}.
+     * If constructed with {@link #CascadeOperation(Table, RowField, Table, Class)} then
+     * gets required cascade names set with {@link #setRequiredCascades(String...)}.
+     * <p>
+     * If constructed with {@link #CascadeOperation(SqlOperation, RowField, Table, Class)} then
+     * returns source operation {@link SqlOperation#getRequiredCascades()}.
      * 
      * @return names of cascades that will be executed
      * @since 3.0
      */
     public String[] getRequiredCascades()
     {
-        return requiredCascades;
+        if (sourceOperation == null) return requiredCascades; // assume deprecated constructor, remove when deprecated field is removed
+        return sourceOperation.getRequiredCascades();
     }
 
 
@@ -249,7 +278,8 @@ public abstract class CascadeOperation<S, T> implements AutoCloseable
      */
     public Map<String, Object> getNamedParameterMap()
     {
-        return namedParameterMap;
+        if (sourceOperation == null) return namedParameterMap; // assume deprecated constructor, remove when deprecated field is removed
+        return sourceOperation.getNamedParameterMap();
     }
 
 
@@ -261,7 +291,9 @@ public abstract class CascadeOperation<S, T> implements AutoCloseable
      * @see SqlOperation#getParameter(String)
      * @see SqlOperation#setParameter(String, Object)
      * @see SqlOperation#getNamedParameterMap()
+     * @deprecated no longer needed since determined by {@link SqlOperation#getNamedParameterMap()} of source operation
      */
+    @Deprecated
     public void setNamedParameterMap(Map<String, Object> namedParameterMap)
     {
         this.namedParameterMap = namedParameterMap;
@@ -304,6 +336,18 @@ public abstract class CascadeOperation<S, T> implements AutoCloseable
     
 
     /**
+     * Gets operation that triggered this cascade.
+     * 
+     * @return source operation or null if deprecated constructor was used to create this 
+     * @since 4.1
+     */
+    public SqlOperation<S> getSourceOperation() 
+    {
+        return sourceOperation;
+    }
+
+
+    /**
      * Gets {@link Table} that originates (is source of) cascade.
      * 
      * @return parent (source) table of cascade
@@ -311,7 +355,8 @@ public abstract class CascadeOperation<S, T> implements AutoCloseable
      */
     public Table<S> getSourceTable()
     {
-        return sourceTable;
+        if (sourceOperation == null) return sourceTable; // assume deprecated constructor, remove when deprecated field is removed
+        return sourceOperation.getTable();
     }
 
 
@@ -345,7 +390,7 @@ public abstract class CascadeOperation<S, T> implements AutoCloseable
     {
         return sourceRow;
     }
-
+    
 
     /**
      * Creates new instance of sql operation from {@link #cascadeOperationClass} supplied in the 
@@ -361,8 +406,10 @@ public abstract class CascadeOperation<S, T> implements AutoCloseable
         {
             Constructor<?> constructor = cascadeOperationClass.getConstructor(Table.class);
             operation = (SqlOperation<?>)constructor.newInstance(getTargetTable());
+            
+            // TODO move all initialization of attributes to common place? 
             operation.setCascadeDepth(depth);
-            operation.setRequiredCascades(requiredCascades);
+            operation.setRequiredCascades(getRequiredCascades());
         }
         catch (NoSuchMethodException e)
         {
@@ -432,7 +479,7 @@ public abstract class CascadeOperation<S, T> implements AutoCloseable
                     else
                     {
                         throw new OperationException(targetFieldName + " does not exist in " + getTargetTable().getRowClass() + 
-                                " as specified with Cascade.foreignKeyValueFields in " + sourceTable.getRowClass());
+                                " as specified with Cascade.foreignKeyValueFields in " + getSourceTable().getRowClass());
                     }
                 }
             }

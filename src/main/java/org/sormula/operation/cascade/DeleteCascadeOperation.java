@@ -42,10 +42,28 @@ public class DeleteCascadeOperation<S, T> extends ModifyCascadeOperation<S, T>
      * @param targetTable cascade delete operation is performed on this table 
      * @param deleteCascadeAnnotation cascade operation
      * @since 3.4
+     * @deprecated replaced by {@link #DeleteCascadeOperation(DeleteOperation, RowField, Table, DeleteCascade)}
      */
+    @Deprecated
     public DeleteCascadeOperation(Table<S> sourceTable, RowField<S, ?> targetField, Table<T> targetTable, DeleteCascade deleteCascadeAnnotation)
     {
         super(sourceTable, targetField, targetTable, deleteCascadeAnnotation.operation());
+        setPost(deleteCascadeAnnotation.post());
+    }
+    
+    
+    /**
+     * Constructor used by {@link DeleteOperation}.
+     *  
+     * @param sourceOperation cascade originates on row from this table 
+     * @param targetField cascade delete operation uses row(s) from this field
+     * @param targetTable cascade delete operation is performed on this table 
+     * @param deleteCascadeAnnotation cascade operation
+     * @since 4.1
+     */
+    public DeleteCascadeOperation(DeleteOperation<S> sourceOperation, RowField<S, ?> targetField, Table<T> targetTable, DeleteCascade deleteCascadeAnnotation)
+    {
+        super(sourceOperation, targetField, targetTable, deleteCascadeAnnotation.operation());
         setPost(deleteCascadeAnnotation.post());
     }
 

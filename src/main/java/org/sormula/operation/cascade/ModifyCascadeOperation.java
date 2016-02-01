@@ -50,12 +50,44 @@ public abstract class ModifyCascadeOperation<S, T> extends CascadeOperation<S, T
      * @param cascadeOperationClass class of cascade operation
      * false if cascade is performed before row execute (see {@link ModifyOperation#preExecute}
      * @since 3.4
+     * @deprecated replaced by {@link #ModifyCascadeOperation(ModifyOperation, RowField, Table, Class)}
      */
+    @Deprecated
     public ModifyCascadeOperation(Table<S> sourceTable, RowField<S, ?> targetField, Table<T> targetTable, 
             Class <?> cascadeOperationClass)
     {
         super(sourceTable, targetField, targetTable, cascadeOperationClass);
     }
+    
+    
+    /**
+     * Constructs from source operation and targets of the cascade.
+     * 
+     * @param sourceOperation operation where cascade originates
+     * @param targetField cascade operation uses row(s) from this field
+     * @param targetTable cascade operation is performed on this table 
+     * @param cascadeOperationClass class of cascade operation
+     * false if cascade is performed before row execute (see {@link ModifyOperation#preExecute}
+     * @since 4.1
+     */
+    public ModifyCascadeOperation(ModifyOperation<S> sourceOperation, RowField<S, ?> targetField, Table<T> targetTable, 
+            Class <?> cascadeOperationClass)
+    {
+        super(sourceOperation, targetField, targetTable, cascadeOperationClass);
+    }
+
+    
+    /**
+     * TODO javadoc
+     * TODO test cases
+     * @return
+     * @since 4.1
+     *
+    public boolean isBatch()
+    {
+        return ((ModifyOperation<S>)sourceOperation).isBatch();
+    }
+    */
 
 
     /**
@@ -132,7 +164,7 @@ public abstract class ModifyCascadeOperation<S, T> extends CascadeOperation<S, T
     {
         super.prepare();
         modifyOperation = (ModifyOperation<T>)createOperation();
-        modifyOperation.setNamedParameterMap(getNamedParameterMap()); // from source
+        modifyOperation.setNamedParameterMap(getNamedParameterMap()); // from source TODO needed?
     }
 
 

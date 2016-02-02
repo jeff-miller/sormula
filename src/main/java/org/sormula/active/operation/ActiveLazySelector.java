@@ -21,6 +21,7 @@ import org.sormula.active.ActiveRecord;
 import org.sormula.active.ActiveTable;
 import org.sormula.annotation.cascade.SelectCascade;
 import org.sormula.annotation.cascade.SelectCascadeAnnotationReader;
+import org.sormula.operation.ScalarSelectOperation;
 import org.sormula.operation.cascade.SelectCascadeOperation;
 import org.sormula.reflect.RowField;
 
@@ -61,6 +62,11 @@ public class ActiveLazySelector<R extends ActiveRecord<? super R>> extends Activ
         @SuppressWarnings("unchecked") // target type not known at compile time
         RowField<R, ?> targetField = (RowField<R, ?>)targetTable.getRowTranslator().createRowField(scar.getSource());
         SelectCascade[] selectCascades = scar.getSelectCascades();
+
+        // use phantom operation to provide default values for cascade
+        // since operation that triggered cascade is not available
+        // see SelectCascadeOperation#deriveSqlOperationAttributes
+        ScalarSelectOperation<R> phantomSourceOperation = new ScalarSelectOperation<>(getTable());
         
         // field has select cascade annotation(s)
         for (SelectCascade c: selectCascades)
@@ -68,7 +74,7 @@ public class ActiveLazySelector<R extends ActiveRecord<? super R>> extends Activ
             if (c.lazy())
             {
                 try (@SuppressWarnings("unchecked") // target field type is not known at compile time
-                     SelectCascadeOperation<R, ?> operation = new SelectCascadeOperation(getTable(), targetField, targetTable, c))
+                     SelectCascadeOperation<R, ?> operation = new SelectCascadeOperation(phantomSourceOperation, targetField, targetTable, c))
                 {
                     // does it make sense to allow filters for lazy selects since filter must be specified when ActiveRecord#checkLazySelects is invoked?
                     // operation.setSelectCascadeFilters(selectCascadeFilters);

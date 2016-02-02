@@ -30,6 +30,7 @@ import org.sormula.annotation.Transient;
 import org.sormula.annotation.cascade.SelectCascade;
 import org.sormula.annotation.cascade.SelectCascadeAnnotationReader;
 import org.sormula.log.ClassLogger;
+import org.sormula.operation.ScalarSelectOperation;
 import org.sormula.operation.cascade.SelectCascadeOperation;
 import org.sormula.reflect.RowField;
 
@@ -297,7 +298,7 @@ abstract public class AbstractLazySelector<R> implements LazySelectable, Seriali
             RowField<R, ?> targetField = (RowField<R, ?>)targetTable.getRowTranslator().createRowField(scar.getSource());
             
             begin();
-            
+
             // for select cascade annotation(s)
             for (SelectCascade c: scar.getSelectCascades())
             {
@@ -307,8 +308,13 @@ abstract public class AbstractLazySelector<R> implements LazySelectable, Seriali
                     @SuppressWarnings("unchecked") // source field type is not known at compile time
                     Table<R> sourceTable = (Table<R>)getDatabase().getTable(field.getDeclaringClass());
                     
+                    // use phantom operation to provide default values for cascade 
+                    // since operation that triggered cascade is not available
+                    // see SelectCascadeOperation#deriveSqlOperationAttributes
+                    ScalarSelectOperation<R> phantomSourceOperation = new ScalarSelectOperation<>(sourceTable);
+                    
                     try (@SuppressWarnings("unchecked") // target field type is not known at compile time
-                         SelectCascadeOperation<R, ?> operation = new SelectCascadeOperation(sourceTable, targetField, targetTable, c))
+                         SelectCascadeOperation<R, ?> operation = new SelectCascadeOperation(phantomSourceOperation, targetField, targetTable, c))
                     {
                         // does it make sense to allow filters for lazy selects since filter must be specified when AbstractLazySelector#checkLazySelects is invoked?
                         // operation.setSelectCascadeFilters(selectCascadeFilters);

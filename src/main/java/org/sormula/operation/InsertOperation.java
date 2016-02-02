@@ -187,13 +187,11 @@ public class InsertOperation<R> extends ModifyOperation<R>
             co = new ArrayList<>(insertCascades.length);
             
             // for each cascade operation
-            int nextCascadeDepth = getCascadeDepth() + 1;
             for (InsertCascade c: insertCascades)
             {
                 if (log.isDebugEnabled()) log.debug("prepare cascade " + c.operation());
                 @SuppressWarnings("unchecked") // target field type is not known at compile time
                 CascadeOperation<R, ?> operation = new InsertCascadeOperation(this, targetField, targetTable, c);
-                operation.setDepth(nextCascadeDepth);
                 if (c.setForeignKeyValues()) operation.setForeignKeyFieldNames(car.getForeignKeyValueFields());
                 if (c.setForeignKeyReference()) operation.setForeignKeyReferenceFieldName(car.getForeignKeyReferenceField());
                 

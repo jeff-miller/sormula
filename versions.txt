@@ -15,6 +15,7 @@ version-jdk             comments
                           CascadeOperation#setNamedParameterMap, SelectCascadeOperation#setFilterPredicateMap
                         - add CascadeOperation#deriveSqlOperationAttributes to obtain common attributes from
                           source operation
+                        - deprecate CascadeOperation#setDepth since depth obtained by source operation
                           
 4.0-jdk1.8              - Select filters can be lambda expressions: see ScalarSelectOperation.addFilter  
                         - Annotations Where, OrderBy, ExplicitType, UnusedColumn are repeatable

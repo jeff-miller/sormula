@@ -51,7 +51,7 @@ public abstract class CascadeOperation<S, T> implements AutoCloseable
     private static final ClassLogger log = new ClassLogger();
     SqlOperation<?> sqlOperation;
     SqlOperation<S> sourceOperation;
-    @Deprecated Table<S> sourceTable; // TODO use source operation method
+    @Deprecated Table<S> sourceTable; // TODO get from source operation method
     RowField<S, ?> targetField;
     Table<T> targetTable;
     Class <?> cascadeSqlOperationClass;
@@ -63,9 +63,9 @@ public abstract class CascadeOperation<S, T> implements AutoCloseable
     List<RowField<T, Object>> targetForeignKeyValueFieldList;
     RowField<T, Object> targetForeignReferenceField;
     int keyFieldCount;
-    @Deprecated String[] requiredCascades; // TODO use source operation method
-    @Deprecated Map<String, Object> namedParameterMap; // TODO use source operation method
-    @Deprecated int depth; // TODO use source operation method
+    @Deprecated String[] requiredCascades; // TODO get from source operation method
+    @Deprecated Map<String, Object> namedParameterMap; // TODO get from source operation method
+    @Deprecated int depth; // TODO get from source operation method
     
     
     /**
@@ -140,8 +140,8 @@ public abstract class CascadeOperation<S, T> implements AutoCloseable
      */
     public int getDepth() 
     {
-        // TODO return sourceOperation.getCascadeDepth() + 1; and deprecate setDepth, remove setDepth use?
-        return depth;
+        if (sourceOperation == null) return depth; // assume deprecated constructor, remove when deprecated field is removed
+        return sourceOperation.getCascadeDepth() + 1;
     }
 
 
@@ -150,7 +150,9 @@ public abstract class CascadeOperation<S, T> implements AutoCloseable
      * 
      * @param depth 0..n
      * @since 4.1
+     * @deprecated no need to set depth since it is always source operation level + 1
      */
+    @Deprecated
     public void setDepth(int depth) 
     {
         this.depth = depth;
@@ -432,6 +434,7 @@ public abstract class CascadeOperation<S, T> implements AutoCloseable
      */
     protected void deriveSqlOperationAttributes()
     {
+        // TODO log.info("-->sd="+sourceOperation.getCascadeDepth() + " depth="+getDepth());
         sqlOperation.setCascadeDepth(getDepth());
         sqlOperation.setRequiredCascades(getRequiredCascades());
         sqlOperation.setNamedParameterMap(getNamedParameterMap());

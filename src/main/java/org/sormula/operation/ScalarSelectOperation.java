@@ -874,7 +874,6 @@ public class ScalarSelectOperation<R> extends SqlOperation<R>
             co = new ArrayList<>(selectCascades.length);
             
             // for each cascade operation
-            int nextCascadeDepth = getCascadeDepth() + 1;
             for (SelectCascade c: selectCascades)
             {
                 if (c.lazy())
@@ -888,7 +887,6 @@ public class ScalarSelectOperation<R> extends SqlOperation<R>
                             " for target field " + targetField.getField());
                     @SuppressWarnings("unchecked") // target field type is not known at compile time
                     SelectCascadeOperation<R, ?> operation = new SelectCascadeOperation(this, targetField, targetTable, c);
-                    operation.setDepth(nextCascadeDepth);
                     if (c.setForeignKeyValues()) operation.setForeignKeyFieldNames(car.getForeignKeyValueFields());
                     if (c.setForeignKeyReference()) operation.setForeignKeyReferenceFieldName(car.getForeignKeyReferenceField());
 

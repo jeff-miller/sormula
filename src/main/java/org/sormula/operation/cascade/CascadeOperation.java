@@ -51,7 +51,7 @@ public abstract class CascadeOperation<S, T> implements AutoCloseable
     private static final ClassLogger log = new ClassLogger();
     SqlOperation<?> sqlOperation;
     SqlOperation<S> sourceOperation;
-    @Deprecated Table<S> sourceTable; // TODO get from source operation method
+    @Deprecated Table<S> sourceTable; // remove when deprecated constructor CascadeOperation(Table<S>...) is removed
     RowField<S, ?> targetField;
     Table<T> targetTable;
     Class <?> cascadeSqlOperationClass;
@@ -63,9 +63,9 @@ public abstract class CascadeOperation<S, T> implements AutoCloseable
     List<RowField<T, Object>> targetForeignKeyValueFieldList;
     RowField<T, Object> targetForeignReferenceField;
     int keyFieldCount;
-    @Deprecated String[] requiredCascades; // TODO get from source operation method
-    @Deprecated Map<String, Object> namedParameterMap; // TODO get from source operation method
-    @Deprecated int depth; // TODO get from source operation method
+    @Deprecated String[] requiredCascades; // remove when deprecated constructor CascadeOperation(Table<S>...) is removed
+    @Deprecated Map<String, Object> namedParameterMap; // remove when deprecated constructor CascadeOperation(Table<S>...) is removed
+    @Deprecated int depth; // remove when deprecated constructor CascadeOperation(Table<S>...) is removed
     
     
     /**
@@ -434,7 +434,6 @@ public abstract class CascadeOperation<S, T> implements AutoCloseable
      */
     protected void deriveSqlOperationAttributes()
     {
-        // TODO log.info("-->sd="+sourceOperation.getCascadeDepth() + " depth="+getDepth());
         sqlOperation.setCascadeDepth(getDepth());
         sqlOperation.setRequiredCascades(getRequiredCascades());
         sqlOperation.setNamedParameterMap(getNamedParameterMap());

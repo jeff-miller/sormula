@@ -58,7 +58,7 @@ public class SelectCascadeOperation<S, T> extends CascadeOperation<S, T>
 	ScalarSelectOperation<T> selectOperation;
 	String[] parameterFieldNames;
 	List<RowField<S, ?>> parameterFields;
-	@Deprecated Map<Class<?>, BiPredicate<?, Boolean>> filterPredicateMap; // TODO use source operation method
+	@Deprecated Map<Class<?>, BiPredicate<?, Boolean>> filterPredicateMap; // remove when deprecated constructor SelectCascadeOperation(Table<S>...) is removed
     
     
 	/**

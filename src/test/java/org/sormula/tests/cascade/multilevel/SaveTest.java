@@ -16,6 +16,7 @@
  */
 package org.sormula.tests.cascade.multilevel;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.sormula.SormulaException;
@@ -93,6 +94,51 @@ public class SaveTest extends DatabaseTest<SormulaTestLevel1>
         commit();
     }
     
+
+    @Test
+    public void saveMultiLevelNewNode2Batch() throws SormulaException
+    {
+        begin();
+        Table<SormulaTestLevel1> table1 = getTable();
+        Table<SormulaTestLevel2> table2 = getDatabase().getTable(SormulaTestLevel2.class);
+        Table<SormulaTestLevel3> table3 = getDatabase().getTable(SormulaTestLevel3.class);
+        
+        // assumes node 101 exists from insert test
+        SormulaTestLevel1 node1 = table1.select(101);
+        
+        // add a new node2 to node1 but keep node3 children
+        // to test that node2 is inserted but node3 children are updated
+        List<SormulaTestLevel2> node1Children = node1.getChildList(); 
+        int lastNode2Index = node1Children.size() - 1;
+        SormulaTestLevel2 node2 = node1Children.get(lastNode2Index); 
+        SormulaTestLevel2 newNode2 = new SormulaTestLevel2(722222,
+                "batch: new node2 to insert with children of " + node2.getLevel2Id());
+        node1.add(newNode2);
+        
+        // move node2 children to newNode2
+        // should cause new record to be inserted but children are updated
+        for (SormulaTestLevel3 node3: node2.getChildList()) newNode2.add(node3); // sets node3 parent id
+        node2.setChildList(null); // children can have only one parent
+        
+        // save should update all nodes except it should insert new node2 722222
+        table1.saveBatch(node1);
+        
+        // verify that node2 722222 was inserted
+        SormulaTestLevel2 node2Test = table2.select(newNode2.getLevel2Id());
+        assert node2Test != null : "batch: node2 " + newNode2.getLevel2Id() + " was not inserted";
+        assert node2Test.getParentId() == node1.getLevel1Id() : "batch: node2 " + newNode2.getLevel2Id() + " wrong parent";
+        
+        // verify child node3 exist and have parent 722222
+        for (SormulaTestLevel3 node3Test: node2Test.getChildList())
+        {
+            SormulaTestLevel3 node3 = table3.select(node3Test.getLevel3Id());
+            assert node3 != null && node3.getParentId() == newNode2.getLevel2Id() : 
+                "batch: node3 " + node3Test.getLevel3Id() + " updated with wrong parent";
+        }
+            
+        commit();
+    }
+    
     
     @Test
     public void saveMultiLevelNewNode3() throws SormulaException
@@ -120,6 +166,34 @@ public class SaveTest extends DatabaseTest<SormulaTestLevel1>
         
         commit();
     }
+    
+    
+    @Test
+    public void saveMultiLevelNewNode3Batch() throws SormulaException
+    {
+        begin();
+        Table<SormulaTestLevel1> table1 = getTable();
+        Table<SormulaTestLevel3> table3 = getDatabase().getTable(SormulaTestLevel3.class);
+        
+        // assumes node 101 exists from insert test
+        SormulaTestLevel1 node1 = table1.select(101);
+        
+        // add a new leaf node3 to node2 
+        // to test that leaf node3 733333 is inserted but sibling nodes are updated
+        SormulaTestLevel2 node2 = node1.getChildList().get(0);
+        SormulaTestLevel3 node3 = new SormulaTestLevel3(733333, "batch: new leaf to insert with save()");
+        node2.add(node3);
+        
+        // save should update all nodes except it should insert new node3 733333
+        table1.saveBatch(node1);
+        
+        // verify that node3 733333 was inserted
+        SormulaTestLevel3 node3Test = table3.select(node3.getLevel3Id());
+        assert node3Test != null : "batch: node3 " + node3.getLevel3Id() + " was not inserted";
+        assert node3Test.getParentId() == node2.getLevel2Id() : "batch: node3 " + node3.getLevel3Id() + " wrong parent";
+        
+        commit();
+    }
 
     
     @Test
@@ -132,7 +206,7 @@ public class SaveTest extends DatabaseTest<SormulaTestLevel1>
         Table<SormulaTestLevel3> table3 = getDatabase().getTable(SormulaTestLevel3.class);
 
         SormulaTestLevel1 node1 = new SormulaTestLevel1(401, "Save parent 401");
-        SormulaTestLevel2 node2 = new SormulaTestLevel2(444, "Save middle node 444");
+        SormulaTestLevel2 node2 = new SormulaTestLevel2(442, "Save middle node 442");
         node1.add(node2);
         SormulaTestLevel3 node3 = new SormulaTestLevel3(4443, "Save leaf node 4443");
         node2.add(node3);
@@ -157,6 +231,48 @@ public class SaveTest extends DatabaseTest<SormulaTestLevel1>
         assert node1Child != null && node1Child.getLevel2Id() == node2.getLevel2Id() : " node2 not selected";
         SormulaTestLevel3 node2Child = node2Test.getChildList().get(0);
         assert node2Child != null && node2Child.getLevel3Id() == node3.getLevel3Id() : " node3 not selected";
+        
+        commit();
+    }
+
+    
+    @Test
+    public void saveAllNewNodesBatch() throws SormulaException
+    {
+        // test save cascade when all rows are new
+        begin();
+        Table<SormulaTestLevel1> table1 = getTable();
+        Table<SormulaTestLevel2> table2 = getDatabase().getTable(SormulaTestLevel2.class);
+        Table<SormulaTestLevel3> table3 = getDatabase().getTable(SormulaTestLevel3.class);
+
+        SormulaTestLevel1 node1 = new SormulaTestLevel1(7401, "batch: Save parent 7401");
+        SormulaTestLevel2 node2 = new SormulaTestLevel2(7442, "batch: Save middle node 7442");
+        node1.add(node2);
+        SormulaTestLevel3 node3 = new SormulaTestLevel3(74443, "batch: Save leaf node 74443");
+        node2.add(node3);
+
+        // should insert all 3 nodes
+        ArrayList<SormulaTestLevel1> list = new ArrayList<>();
+        list.add(node1);
+        table1.saveAllBatch(list); // test saveAllBatch method
+        
+        // confirm node1 was inserted
+        SormulaTestLevel1 node1Test = table1.select(node1.getLevel1Id());
+        assert node1Test != null : "batch: node1 " + node1.getLevel1Id() + " was not saved";
+        
+        // confirm node2 was inserted
+        SormulaTestLevel2 node2Test = table2.select(node2.getLevel2Id());
+        assert node2Test != null : "batch: node2 " + node2.getLevel2Id() + " was not saved";
+        
+        // confirm node3 was inserted
+        SormulaTestLevel3 node3Test = table3.select(node3.getLevel3Id());
+        assert node3Test != null : "batch: node3 " + node3.getLevel3Id() + " was not saved";
+        
+        // confirm all nodes selected from cascade
+        SormulaTestLevel2 node1Child = node1Test.getChildList().get(0);
+        assert node1Child != null && node1Child.getLevel2Id() == node2.getLevel2Id() : "batch: node2 not selected";
+        SormulaTestLevel3 node2Child = node2Test.getChildList().get(0);
+        assert node2Child != null && node2Child.getLevel3Id() == node3.getLevel3Id() : "batch: node3 not selected";
         
         commit();
     }

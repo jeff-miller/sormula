@@ -22,6 +22,7 @@ import org.sormula.active.ActiveTable;
 
 
 /**
+ * TODO add InsertBatch, UpdateBatch, DeleteBatch, SaveBatch, SaveAllBatch classes?
  * Delegate for {@link Table#insert(Object)}
  * 
  * @author Jeff Miller

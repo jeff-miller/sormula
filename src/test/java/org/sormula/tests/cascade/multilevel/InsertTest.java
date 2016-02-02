@@ -146,4 +146,62 @@ public class InsertTest extends DatabaseTest<SormulaTestLevel1>
             }
         }
     }
+    
+
+    @Test
+    public void insertMultiLevelBatch() throws SormulaException
+    {
+        insertMultiLevelBatch(7101, 7210, 73100);
+    }
+    void insertMultiLevelBatch(int level1Id, int level2BaseId, int level3BaseId) throws SormulaException
+    {
+        begin();
+        
+        // level 1 node
+        SormulaTestLevel1 node1 = new SormulaTestLevel1(level1Id, "Batch: Insert parent " + level1Id);
+        
+        // level 2 nodes
+        for (int i = 1; i <= 5; ++i)
+        {
+            SormulaTestLevel2 node2 = new SormulaTestLevel2(level2BaseId + i, "Batch: Child of parent " + node1.getLevel1Id());
+            node1.add(node2);
+            
+            // level 3 nodes
+            for (int j = 1; j <= 3; ++j)
+            {
+                SormulaTestLevel3 node3 = new SormulaTestLevel3(level3BaseId + i*10 + j, "Batch: Child of parent " + node2.getLevel2Id());
+                node2.add(node3);
+            }
+        }
+        
+        // inserts all nodes via cascades
+        assert getTable().insertBatch(node1) == 1 : "insertMultiLevelBatch did not insert level 1";
+        assert getTable().select(node1.getLevel1Id()) != null : "insertMultiLevelBatch did not insert level 1";
+        
+        // verify that all children were inserted
+        Table<SormulaTestLevel2> child2Table = getDatabase().getTable(SormulaTestLevel2.class);
+        Table<SormulaTestLevel3> child3Table = getDatabase().getTable(SormulaTestLevel3.class);
+        
+        try (ScalarSelectOperation<SormulaTestLevel2> select2 = new ScalarSelectOperation<>(child2Table);
+             ScalarSelectOperation<SormulaTestLevel3> select3 = new ScalarSelectOperation<>(child3Table))        
+        {
+            // test level 2 children
+            for (SormulaTestLevel2 node2: node1.getChildList())
+            {
+                select2.setParameters(node2.getLevel2Id());
+                select2.execute();
+                assert select2.readNext() != null : "Batch: level 2 child " + node2.getLevel2Id() + " was not inserted"; 
+                
+                // test level 3 children
+                for (SormulaTestLevel3 node3: node2.getChildList())
+                {
+                    select3.setParameters(node3.getLevel3Id());
+                    select3.execute();
+                    assert select3.readNext() != null : "Batch: level 3 child " + node3.getLevel3Id() + " was not inserted"; 
+                }
+            }
+        }
+        
+        commit();
+    }
 }

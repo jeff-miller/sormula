@@ -1057,6 +1057,26 @@ public class Table<R> implements TypeTranslatorMap, TransactionListener
     
     
     /**
+     * Inserts row into table in batch mode.
+     * <p>
+     * This method typically is only useful if inserted row has cascaded child rows that 
+     * should be inserted in batch mode. If row has no cascades, then this method is no
+     * more useful than {@link #insert(Object)}.
+     * 
+     * @param row row to insert
+     * @return count of rows affected
+     * @throws SormulaException if error
+     * @since 4.1
+     */
+    public int insertBatch(R row) throws SormulaException
+    {
+        InsertOperation<R> operation = new InsertOperation<R>(this);
+        operation.setBatch(true);
+        return operation.insert(row);
+    }
+    
+    
+    /**
      * Inserts a row into a table that was defined with an identity column but insert
      * does not use auto generated key for identity column. This allows you to insert
      * a row into a table when identity column value is obtained from the row object.
@@ -1151,7 +1171,7 @@ public class Table<R> implements TypeTranslatorMap, TransactionListener
      * you to insert rows into a table when identity column value for each row is obtained from 
      * the row object.
      * <p>
-     * Cascades are never performed for batch operations.
+     * Since 4.1, cascades are performed for batch operations.
      * 
      * @param rows rows to insert
      * @return count of rows affected
@@ -1194,6 +1214,26 @@ public class Table<R> implements TypeTranslatorMap, TransactionListener
     public int update(R row) throws SormulaException
     {
         return new UpdateOperation<R>(this).update(row);
+    }
+    
+    
+    /**
+     * Updates row in table by primary key in batch mode.
+     * <p>
+     * This method typically is only useful if updated row has cascaded child rows that 
+     * should be updated in batch mode. If row has no cascades, then this method is no
+     * more useful than {@link #update(Object)}.
+     * 
+     * @param row row to update
+     * @return count of rows affected
+     * @throws SormulaException if error
+     * @since 4.1
+     */
+    public int updateBatch(R row) throws SormulaException
+    {
+        UpdateOperation<R> operation = new UpdateOperation<R>(this);
+        operation.setBatch(true);
+        return operation.update(row);
     }
     
     
@@ -1292,6 +1332,27 @@ public class Table<R> implements TypeTranslatorMap, TransactionListener
     
     
     /**
+     * Deletes by primary key in batch mode. The primary key is defined by {@link Column#primaryKey()}, 
+     * {@link Column#identity()}, or {@link Row#primaryKeyFields()}.
+     * <p>
+     * This method typically is only useful if deleted row has cascaded child rows that 
+     * should be deleted in batch mode. If row has no cascades, then this method is no
+     * more useful than {@link #delete(Object)}.
+     * 
+     * @param row get primary key values from this row
+     * @return count of rows affected
+     * @throws SormulaException if error
+     * @since 4.1
+     */
+    public int deleteBatch(R row) throws SormulaException
+    {
+        DeleteOperation<R> operation = new DeleteOperation<R>(this);
+        operation.setBatch(true);
+        return operation.delete(row);
+    }
+    
+    
+    /**
      * Deletes many rows by primary key. The primary key is defined by {@link Column#primaryKey()}, 
      * {@link Column#identity()}, or {@link Row#primaryKeyFields()}.
      * <p>
@@ -1372,6 +1433,26 @@ public class Table<R> implements TypeTranslatorMap, TransactionListener
     
     
     /**
+     * Inserts or updates row in batch mode.
+     * <p>
+     * This method typically is only useful if saved row has cascaded child rows that 
+     * should be saved in batch mode. If row has no cascades, then this method is no
+     * more useful than {@link #save(Object)}.
+     * 
+     * @param row row to save
+     * @return count of rows affected
+     * @throws SormulaException if error
+     * @since 4.1
+     */
+    public int saveBatch(R row) throws SormulaException
+    {
+        SaveOperation<R> operation = new SaveOperation<R>(this);
+        operation.setBatch(true);
+        return operation.save(row);
+    }
+    
+    
+    /**
      * Uses {@link SaveOperation} to update an existing rows or insert rows if they
      * are not already in database.
      * 
@@ -1383,6 +1464,30 @@ public class Table<R> implements TypeTranslatorMap, TransactionListener
     {
         if (rows.size() > 0) return new SaveOperation<R>(this).modifyAll(rows);
         else return 0;
+    }
+    
+    
+    /**
+     * Saves a collection of rows in batch mode. See limitations about batch saves
+     * in {@link ModifyOperation#setBatch(boolean)}.
+     * 
+     * @param rows collection of new and/or existing rows to save (may be mixture of new and existing)
+     * @return count of rows affected
+     * @throws SormulaException if error
+     * @since 4.1
+     */
+    public int saveAllBatch(Collection<R> rows) throws SormulaException
+    {
+        if (rows.size() > 0)
+        {
+            SaveOperation<R> operation = new SaveOperation<R>(this);
+            operation.setBatch(true);
+            return operation.saveAll(rows);
+        }
+        else
+        {
+            return 0;
+        }
     }
     
     

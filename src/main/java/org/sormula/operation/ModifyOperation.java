@@ -151,7 +151,7 @@ public abstract class ModifyOperation<R> extends SqlOperation<R>
     /**
      * Gets batch mode.
      * 
-     * @return true if rows are to be inserted/updated/deleted in batch 
+     * @return true if rows are to be inserted/updated/deleted in batch mode
      * @since 1.9 and 2.3
      * @see PreparedStatement#executeBatch()
      */
@@ -163,9 +163,11 @@ public abstract class ModifyOperation<R> extends SqlOperation<R>
 
     /**
      * Sets batch mode. Set to true prior to {@link #execute()} to insert/update/delete rows using
-     * JDBC batch mode. Batch mode does not support identity columns or cascades. Auto commit must 
+     * JDBC batch mode. Batch mode does not support identity columns. Auto commit must 
      * be off for batch mode. {@link #preExecute(Object)} is invoked prior to batch add and 
      * {@link #postExecute(Object)} is invoked after batch execute.
+     * <p>
+     * Since version 4.1, cascades are performed for batch mode.
      * <p>
      * Batch modifications are not cached. So when batch is true and table is cached, then 
      * table cache is flushed prior to executing batch modifications to avoid inconsistencies in
@@ -238,6 +240,7 @@ public abstract class ModifyOperation<R> extends SqlOperation<R>
                     {
                         if (log.isDebugEnabled()) log.debug("write batch parameters from row=" + row);
                         setNextParameter(1);
+                        if (isCascading()) preExecuteCascade(row);
                         preExecute(row);
                         operationTime.startWriteTime();
                         writeColumns(row);
@@ -257,9 +260,17 @@ public abstract class ModifyOperation<R> extends SqlOperation<R>
                     operationTime.stop();
                     
                     // post execute
+                    int affectedIndex = 0;
                     for (R row: rows)
                     {
-                        postExecute(row);
+                        if (rowsAffected[affectedIndex] > 0)
+                        {
+                            // perform only if row was affected
+                            postExecute(row);
+                            if (isCascading()) postExecuteCascade(row);
+                        }
+                        
+                        ++affectedIndex;
                     }
                     
                     ps.clearBatch();
@@ -312,7 +323,6 @@ public abstract class ModifyOperation<R> extends SqlOperation<R>
                         if (updateCount > 0)
                         {
                             // perform the following only when database indicates that a modification occurred
-                            // or when zeroRowCountPostExecute is true
                             postExecute(row);
                             
                             if (isCascading()) postExecuteCascade(row);

@@ -16,6 +16,10 @@ version-jdk             comments
                         - add CascadeOperation#deriveSqlOperationAttributes to obtain common attributes from
                           source operation
                         - deprecate CascadeOperation#setDepth since depth obtained by source operation
+                        - ModifyOperation#setBatch value is used for all cascaded levels for all related
+                          subclasses of ModifyOperation 
+                        - batch methods support cascades
+                        - new Table batch methods insertBatch, updateBatch, deleteBatch, saveBatch, saveAllBatch
                           
 4.0-jdk1.8              - Select filters can be lambda expressions: see ScalarSelectOperation.addFilter  
                         - Annotations Where, OrderBy, ExplicitType, UnusedColumn are repeatable

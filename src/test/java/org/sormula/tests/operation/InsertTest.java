@@ -119,9 +119,11 @@ public class InsertTest extends DatabaseTest<SormulaTest4>
         }
         
         begin();
-        InsertOperation<SormulaTest4> operation = new InsertOperation<>(getTable());
-        operation.setBatch(true);
-        operation.insertAll(list);
+        try (InsertOperation<SormulaTest4> operation = new InsertOperation<>(getTable()))
+        {
+            operation.setBatch(true);
+            operation.insertAll(list);
+        }
         
         // success if selected is same as list size
         // NOTE: oracle returns 0 for rows affected instead of list size

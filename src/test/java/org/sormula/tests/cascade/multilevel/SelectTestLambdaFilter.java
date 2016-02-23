@@ -102,156 +102,157 @@ public class SelectTestLambdaFilter extends DatabaseTest<SormulaTestLevel1>
 	@SuppressWarnings("unchecked")
     protected void filterTest(BiPredicate<?, Boolean>... filterPredicates) throws SormulaException
     {
-        ArrayListSelectOperation<SormulaTestLevel1> filteredSelectOperation = 
-                new ArrayListSelectOperation<>(getTable(), "");
-
-        // filter1,2,3 are used to verify results
-    	BiPredicate<SormulaTestLevel1, Boolean> filter1; 
-    	BiPredicate<SormulaTestLevel2, Boolean> filter2;
-    	BiPredicate<SormulaTestLevel3, Boolean> filter3;
-    	
-        if (filterPredicates.length == 1)
-        {
-            // one filter for all row types, 
-        	// three references to the same filter for confirmation tests below
-            filter1 = (BiPredicate<SormulaTestLevel1, Boolean>)filterPredicates[0];
-            filter2 = (BiPredicate<SormulaTestLevel2, Boolean>)filterPredicates[0];
-            filter3 = (BiPredicate<SormulaTestLevel3, Boolean>)filterPredicates[0];
-            
-            // add filter once, it will be used for all levels
-            filteredSelectOperation.addFilter(Object.class, (BiPredicate<Object, Boolean>)filterPredicates[0]);
-        }
-        else
-        {
-            // different filters for each row type (assume order)
-            filter1 = (BiPredicate<SormulaTestLevel1, Boolean>)filterPredicates[0];
-            filter2 = (BiPredicate<SormulaTestLevel2, Boolean>)filterPredicates[1];
-            filter3 = (BiPredicate<SormulaTestLevel3, Boolean>)filterPredicates[2];
-            
-            filteredSelectOperation.addFilter(SormulaTestLevel1.class, filter1);
-            filteredSelectOperation.addFilter(SormulaTestLevel2.class, filter2);
-            filteredSelectOperation.addFilter(SormulaTestLevel3.class, filter3);
-        }
-
-        List<SormulaTestLevel1> filteredSelectOperationResults = filteredSelectOperation.selectAll();
-        //logGraph(filteredSelectOperationResults, "from db");
-        
-        // all selected rows should pass filter 
-        // confirms that all filtered rows are permitted
-        for (SormulaTestLevel1 row1 : filteredSelectOperationResults)
-        {
-            assert filter1.test(row1, false) && filter1.test(row1, true) : 
-                "level 1 row should not be selected id=" + row1.getLevel1Id();
-
-            for (SormulaTestLevel2 row2 : row1.getChildList())
+	    try (ArrayListSelectOperation<SormulaTestLevel1> filteredSelectOperation = 
+                new ArrayListSelectOperation<>(getTable(), ""))
+	    {
+            // filter1,2,3 are used to verify results
+        	BiPredicate<SormulaTestLevel1, Boolean> filter1; 
+        	BiPredicate<SormulaTestLevel2, Boolean> filter2;
+        	BiPredicate<SormulaTestLevel3, Boolean> filter3;
+        	
+            if (filterPredicates.length == 1)
             {
-                assert filter2.test(row2, false) && filter2.test(row2, true) : 
-                    "level 2 row should not be selected id=" + row2.getLevel2Id();
+                // one filter for all row types, 
+            	// three references to the same filter for confirmation tests below
+                filter1 = (BiPredicate<SormulaTestLevel1, Boolean>)filterPredicates[0];
+                filter2 = (BiPredicate<SormulaTestLevel2, Boolean>)filterPredicates[0];
+                filter3 = (BiPredicate<SormulaTestLevel3, Boolean>)filterPredicates[0];
                 
-                for (SormulaTestLevel3 row3 : row2.getChildList())
+                // add filter once, it will be used for all levels
+                filteredSelectOperation.addFilter(Object.class, (BiPredicate<Object, Boolean>)filterPredicates[0]);
+            }
+            else
+            {
+                // different filters for each row type (assume order)
+                filter1 = (BiPredicate<SormulaTestLevel1, Boolean>)filterPredicates[0];
+                filter2 = (BiPredicate<SormulaTestLevel2, Boolean>)filterPredicates[1];
+                filter3 = (BiPredicate<SormulaTestLevel3, Boolean>)filterPredicates[2];
+                
+                filteredSelectOperation.addFilter(SormulaTestLevel1.class, filter1);
+                filteredSelectOperation.addFilter(SormulaTestLevel2.class, filter2);
+                filteredSelectOperation.addFilter(SormulaTestLevel3.class, filter3);
+            }
+    
+            List<SormulaTestLevel1> filteredSelectOperationResults = filteredSelectOperation.selectAll();
+            //logGraph(filteredSelectOperationResults, "from db");
+            
+            // all selected rows should pass filter 
+            // confirms that all filtered rows are permitted
+            for (SormulaTestLevel1 row1 : filteredSelectOperationResults)
+            {
+                assert filter1.test(row1, false) && filter1.test(row1, true) : 
+                    "level 1 row should not be selected id=" + row1.getLevel1Id();
+    
+                for (SormulaTestLevel2 row2 : row1.getChildList())
                 {
-                    assert filter3.test(row3, false) && filter3.test(row3, true) : 
-                        "level 3 row should not be selected id=" + row3.getLevel3Id();
+                    assert filter2.test(row2, false) && filter2.test(row2, true) : 
+                        "level 2 row should not be selected id=" + row2.getLevel2Id();
+                    
+                    for (SormulaTestLevel3 row3 : row2.getChildList())
+                    {
+                        assert filter3.test(row3, false) && filter3.test(row3, true) : 
+                            "level 3 row should not be selected id=" + row3.getLevel3Id();
+                    }
                 }
             }
-        }
-
-        // filter graph of all based upon test filter
-        // result should be filtered1 is parallel graph to filteredSelectOperationResults
-        // important: must perform depth-first since some filter tests depend upon children
-        
-        // filter level 1 children
-        List<SormulaTestLevel1> unfiltered1 = getTable().selectAll();
-        List<SormulaTestLevel1> filtered1 = new ArrayList<>(unfiltered1.size());
-
-        for (SormulaTestLevel1 row1 : unfiltered1)
-        {
-            // filter level 2 children
-            List<SormulaTestLevel2> unfiltered2 = row1.getChildList();
-            List<SormulaTestLevel2> filtered2 = new ArrayList<>(unfiltered2.size());
-            row1.setChildList(filtered2);
-
-            for (SormulaTestLevel2 row2 : unfiltered2)
-            {
-                // filter level 3 children
-                List<SormulaTestLevel3> unfiltered3 = row2.getChildList();
-                List<SormulaTestLevel3> filtered3 = new ArrayList<>(unfiltered3.size()); 
-                row2.setChildList(filtered3);
+    
+            // filter graph of all based upon test filter
+            // result should be filtered1 is parallel graph to filteredSelectOperationResults
+            // important: must perform depth-first since some filter tests depend upon children
             
-                for (SormulaTestLevel3 row3 : unfiltered3)
+            // filter level 1 children
+            List<SormulaTestLevel1> unfiltered1 = getTable().selectAll();
+            List<SormulaTestLevel1> filtered1 = new ArrayList<>(unfiltered1.size());
+    
+            for (SormulaTestLevel1 row1 : unfiltered1)
+            {
+                // filter level 2 children
+                List<SormulaTestLevel2> unfiltered2 = row1.getChildList();
+                List<SormulaTestLevel2> filtered2 = new ArrayList<>(unfiltered2.size());
+                row1.setChildList(filtered2);
+    
+                for (SormulaTestLevel2 row2 : unfiltered2)
                 {
-                    if (filter3.test(row3, false) && filter3.test(row3, true))
+                    // filter level 3 children
+                    List<SormulaTestLevel3> unfiltered3 = row2.getChildList();
+                    List<SormulaTestLevel3> filtered3 = new ArrayList<>(unfiltered3.size()); 
+                    row2.setChildList(filtered3);
+                
+                    for (SormulaTestLevel3 row3 : unfiltered3)
                     {
-                        filtered3.add(row3);
+                        if (filter3.test(row3, false) && filter3.test(row3, true))
+                        {
+                            filtered3.add(row3);
+                        }
+                    }
+                    
+                    if (filter2.test(row2, false) && filter2.test(row2, true))
+                    {
+                        filtered2.add(row2);
                     }
                 }
                 
-                if (filter2.test(row2, false) && filter2.test(row2, true))
+                if (filter1.test(row1, false) && filter1.test(row1, true))
                 {
-                    filtered2.add(row2);
+                    filtered1.add(row1);
                 }
             }
+            //logGraph(filtered1, "created by test method");
             
-            if (filter1.test(row1, false) && filter1.test(row1, true))
+            // confirm that rows from filtered1 also exist in filteredSelectOperationResults from select operation
+            for (SormulaTestLevel1 f1 : filtered1)
             {
-                filtered1.add(row1);
-            }
-        }
-        //logGraph(filtered1, "created by test method");
-        
-        // confirm that rows from filtered1 also exist in filteredSelectOperationResults from select operation
-        for (SormulaTestLevel1 f1 : filtered1)
-        {
-            // linear search to find f1 in filteredSelectOperationResults
-            SormulaTestLevel1 filteredSelect1 = null;
-            for (SormulaTestLevel1 fso1 : filteredSelectOperationResults)
-            {
-                if (fso1.getLevel1Id() == f1.getLevel1Id())
+                // linear search to find f1 in filteredSelectOperationResults
+                SormulaTestLevel1 filteredSelect1 = null;
+                for (SormulaTestLevel1 fso1 : filteredSelectOperationResults)
                 {
-                    filteredSelect1 = fso1;
-                    break;
-                }
-            }
-            
-            // f1 should be in filtered results 
-            assert filteredSelect1 != null : "level 1 row=" + f1.getLevel1Id() + " should be in filtered results";
-        
-            // check level 2
-            for (SormulaTestLevel2 f2 : f1.childList)
-            {
-                // linear search to find f2 in filteredSelectOperationResults
-                SormulaTestLevel2 filteredSelect2 = null;
-                for (SormulaTestLevel2 fso2 : filteredSelect1.getChildList())
-                {
-                    if (fso2.getLevel2Id() == f2.getLevel2Id())
+                    if (fso1.getLevel1Id() == f1.getLevel1Id())
                     {
-                        filteredSelect2 = fso2;
+                        filteredSelect1 = fso1;
                         break;
                     }
                 }
                 
-                // f2 should be in filtered results 
-                assert filteredSelect2 != null : "level 2 row=" + f2.getLevel2Id() + " should be in filtered results";
-
-                // check level 3
-                for (SormulaTestLevel3 f3 : f2.childList)
+                // f1 should be in filtered results 
+                assert filteredSelect1 != null : "level 1 row=" + f1.getLevel1Id() + " should be in filtered results";
+            
+                // check level 2
+                for (SormulaTestLevel2 f2 : f1.childList)
                 {
-                    // linear search to find f3 in filteredSelectOperationResults
-                    SormulaTestLevel3 filteredSelect3 = null;
-                    for (SormulaTestLevel3 fso3 : filteredSelect2.getChildList())
+                    // linear search to find f2 in filteredSelectOperationResults
+                    SormulaTestLevel2 filteredSelect2 = null;
+                    for (SormulaTestLevel2 fso2 : filteredSelect1.getChildList())
                     {
-                        if (fso3.getLevel3Id() == f3.getLevel3Id())
+                        if (fso2.getLevel2Id() == f2.getLevel2Id())
                         {
-                            filteredSelect3 = fso3;
+                            filteredSelect2 = fso2;
                             break;
                         }
                     }
                     
-                    // f3 should be in filtered results
-                    assert filteredSelect3 != null : "level 3 row=" + f3.getLevel3Id() + " should be in filtered results";
+                    // f2 should be in filtered results 
+                    assert filteredSelect2 != null : "level 2 row=" + f2.getLevel2Id() + " should be in filtered results";
+    
+                    // check level 3
+                    for (SormulaTestLevel3 f3 : f2.childList)
+                    {
+                        // linear search to find f3 in filteredSelectOperationResults
+                        SormulaTestLevel3 filteredSelect3 = null;
+                        for (SormulaTestLevel3 fso3 : filteredSelect2.getChildList())
+                        {
+                            if (fso3.getLevel3Id() == f3.getLevel3Id())
+                            {
+                                filteredSelect3 = fso3;
+                                break;
+                            }
+                        }
+                        
+                        // f3 should be in filtered results
+                        assert filteredSelect3 != null : "level 3 row=" + f3.getLevel3Id() + " should be in filtered results";
+                    }
                 }
             }
-        }
+	    }
     }
 
     

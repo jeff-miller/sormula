@@ -113,14 +113,17 @@ public class SelectTest extends DatabaseTest<SormulaTestA>
         assert expectedCount > 0 : "no rows meet expected condition to test";
         
         // select all type 3 rows
-        List<SormulaTestA> selectedList = new ArrayListSelectOperation<>(getTable(), "byType").selectAll(3);
-
-        assert expectedCount == selectedList.size() : "simple select returned wrong number of rows";
-        
-        // all rows in selectedList should have type == 3
-        for (SormulaTestA r : selectedList)
+        try (ArrayListSelectOperation<SormulaTestA> operation = new ArrayListSelectOperation<>(getTable(), "byType"))
         {
-            assert r.getType() == 3 : r.getId() + " row is incorrect for where condition";
+            List<SormulaTestA> selectedList = operation.selectAll(3);
+    
+            assert expectedCount == selectedList.size() : "simple select returned wrong number of rows";
+            
+            // all rows in selectedList should have type == 3
+            for (SormulaTestA r : selectedList)
+            {
+                assert r.getType() == 3 : r.getId() + " row is incorrect for where condition";
+            }
         }
         
         commit();

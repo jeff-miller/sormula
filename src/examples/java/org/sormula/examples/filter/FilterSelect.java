@@ -61,37 +61,39 @@ public class FilterSelect extends ExampleBase
     {
         System.out.println("\nFilter with Lambda:");
         System.out.println("Orders that contain product " + productId + ":");
-        ArrayListSelectOperation<Order> selectOrders = new ArrayListSelectOperation<>(database.getTable(Order.class), "");
-        selectOrders.addFilter(Order.class, (order, cascadesCompleted) ->
+        try (ArrayListSelectOperation<Order> selectOrders = new ArrayListSelectOperation<>(database.getTable(Order.class), ""))
         {
-            if (!cascadesCompleted)
+            selectOrders.addFilter(Order.class, (order, cascadesCompleted) ->
             {
-                // assume order will be kept, test after cascades occur
-                return true;
-            }
-            else
-            {
-                // keep order if one order item contains desired product
-                for (OrderItem oi : order.getOrderItems())
+                if (!cascadesCompleted)
                 {
-                    if (oi.getProductId().equals(productId)) return true;
+                    // assume order will be kept, test after cascades occur
+                    return true;
                 }
-                
-                // assume product id was not in order
-                return false;
+                else
+                {
+                    // keep order if one order item contains desired product
+                    for (OrderItem oi : order.getOrderItems())
+                    {
+                        if (oi.getProductId().equals(productId)) return true;
+                    }
+                    
+                    // assume product id was not in order
+                    return false;
+                }
             }
-        }
-        );
-        
-        // for all orders
-        for (Order o : selectOrders.selectAll())
-        {
-            System.out.println("\nOrder " + o.getOrderId());
+            );
             
-            // for all order items
-            for (OrderItem oi : o.getOrderItems())
+            // for all orders
+            for (Order o : selectOrders.selectAll())
             {
-                System.out.println("  " + oi.getItemNumber() + " " + oi.getProduct().getDescription());
+                System.out.println("\nOrder " + o.getOrderId());
+                
+                // for all order items
+                for (OrderItem oi : o.getOrderItems())
+                {
+                    System.out.println("  " + oi.getItemNumber() + " " + oi.getProduct().getDescription());
+                }
             }
         }
     }

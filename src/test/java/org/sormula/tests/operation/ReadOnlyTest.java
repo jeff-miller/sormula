@@ -115,24 +115,26 @@ public class ReadOnlyTest extends DatabaseTest<SormulaTest4RO>
         
         // test readonly at operation level
         getDatabase().setReadOnly(false); // operation gets false when created
-        DeleteOperation<SormulaTest4RO> delete = new DeleteOperation<>(getTable());
-        assert !delete.isReadOnly() : "incorrect read-only state";
-        
-        delete.setReadOnly(true);
-        try
+        try (DeleteOperation<SormulaTest4RO> delete = new DeleteOperation<>(getTable()))
         {
-            delete.delete(getTable().selectAll().get(0));
-            throw new Exception("delete using read-only operation");
-        }
-        catch (OperationException e)
-        {
-            // delete should fail with a message about read-only
-            if (!e.getMessage().contains("read-only")) throw e;
-        }
-        finally
-        {
-            // put back to readonly in case more tests are to run
-            getDatabase().setReadOnly(true); 
+            assert !delete.isReadOnly() : "incorrect read-only state";
+            
+            delete.setReadOnly(true);
+            try
+            {
+                delete.delete(getTable().selectAll().get(0));
+                throw new Exception("delete using read-only operation");
+            }
+            catch (OperationException e)
+            {
+                // delete should fail with a message about read-only
+                if (!e.getMessage().contains("read-only")) throw e;
+            }
+            finally
+            {
+                // put back to readonly in case more tests are to run
+                getDatabase().setReadOnly(true); 
+            }
         }
         
         commit();

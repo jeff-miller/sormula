@@ -19,7 +19,6 @@ package org.sormula.operation;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.Collection;
-import java.util.Iterator;
 
 import org.sormula.Table;
 import org.sormula.annotation.Where;

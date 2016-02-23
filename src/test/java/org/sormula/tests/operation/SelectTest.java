@@ -100,9 +100,11 @@ public class SelectTest extends DatabaseTest<SormulaTest4>
         begin();
         int maxRows = getTable().<Integer>selectCount("id") / 2;
         assert maxRows > 0 : "no rows to test";
-        ArrayListSelectOperation<SormulaTest4> s = new ArrayListSelectOperation<>(getTable(), "");
-        s.setMaximumRowsRead(maxRows);
-        assert maxRows == s.selectAll().size() : "setMaximumRowsRead failed";
+        try (ArrayListSelectOperation<SormulaTest4> s = new ArrayListSelectOperation<>(getTable(), ""))
+        {
+            s.setMaximumRowsRead(maxRows);
+            assert maxRows == s.selectAll().size() : "setMaximumRowsRead failed";
+        }
         commit();
     }
 
@@ -204,15 +206,18 @@ public class SelectTest extends DatabaseTest<SormulaTest4>
         
         assert expectedCount > 0 : "no rows meet expected condition to test";
         
-        // select all type 3 rows
-        List<SormulaTest4> selectedList = new ArrayListSelectOperation<>(getTable(), "byType").selectAll(3);
-
-        assert expectedCount == selectedList.size() : "simple select returned wrong number of rows";
-        
-        // all rows in selectedList should have type == 3
-        for (SormulaTest4 r : selectedList)
+        try (ArrayListSelectOperation<SormulaTest4> operation = new ArrayListSelectOperation<>(getTable(), "byType"))
         {
-            assert r.getType() == 3 : r.getId() + " row is incorrect for where condition";
+            // select all type 3 rows
+            List<SormulaTest4> selectedList = operation.selectAll(3);
+    
+            assert expectedCount == selectedList.size() : "simple select returned wrong number of rows";
+            
+            // all rows in selectedList should have type == 3
+            for (SormulaTest4 r : selectedList)
+            {
+                assert r.getType() == 3 : r.getId() + " row is incorrect for where condition";
+            }
         }
         
         commit();

@@ -32,6 +32,7 @@ import org.sormula.operation.ArrayListSelectOperation;
 import org.sormula.operation.LinkedHashMapSelectOperation;
 import org.sormula.operation.ListSelectOperation;
 import org.sormula.operation.OperationException;
+import org.sormula.operation.ScalarSelectOperation;
 import org.sormula.operation.SelectIterator;
 import org.sormula.operation.aggregate.SelectAggregateOperation;
 import org.sormula.tests.DatabaseTest;
@@ -41,7 +42,7 @@ import org.testng.annotations.Test;
 
 
 /**
- * Tests all select operations and {@link Wheres} annotations.
+ * Tests all select operations and {@link Where} annotations.
  * 
  * @author Jeff Miller
  */
@@ -140,7 +141,7 @@ public class SelectTest extends DatabaseTest<SormulaTest4>
             }
         }
         
-        // sum with SQL using explict operation
+        // sum with SQL using explicit operation
         try (SelectAggregateOperation<SormulaTest4, Integer> selectSum = 
                 new SelectAggregateOperation<>(getTable(), "SUM", "id"))
         {
@@ -263,7 +264,7 @@ public class SelectTest extends DatabaseTest<SormulaTest4>
         // get all type 3 rows in id order
         List<SormulaTest4> type3List = getTable().selectAllWhereOrdered("byType", "obId", 3);
 
-        try (ArrayListSelectOperation<SormulaTest4> itop = new ArrayListSelectOperation<>(getTable(), "byType"))
+        try (ScalarSelectOperation<SormulaTest4> itop = new ScalarSelectOperation<>(getTable(), "byType"))
         {
             // set up iterator to iterate type 3 rows
             itop.setParameters(3);
@@ -299,7 +300,7 @@ public class SelectTest extends DatabaseTest<SormulaTest4>
         // get all type 3 rows in id order
         List<SormulaTest4> type3List = getTable().selectAllWhereOrdered("byType", "obId", 3);
 
-        try (ArrayListSelectOperation<SormulaTest4> itop = new ArrayListSelectOperation<>(getTable(), "byType"))
+        try (ScalarSelectOperation<SormulaTest4> itop = new ScalarSelectOperation<>(getTable(), "byType"))
         {
             // set up iterator to iterate type 3 rows
             itop.setParameters(3);

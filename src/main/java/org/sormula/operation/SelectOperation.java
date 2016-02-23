@@ -33,7 +33,7 @@ import org.sormula.annotation.Where;
  * @param <R> class type which contains members for columns of a row in a table
  * @param <C> collection type returned
  */
-public abstract class SelectOperation<R, C> extends ScalarSelectOperation<R> implements Iterable<R>
+public abstract class SelectOperation<R, C> extends ScalarSelectOperation<R>
 {
     int defaultReadAllSize;
     C selectedRows;
@@ -72,19 +72,6 @@ public abstract class SelectOperation<R, C> extends ScalarSelectOperation<R> imp
             // no where annotation so use default size
             setDefaultReadAllSize(20);
         }
-    }
-    
-    
-    /**
-     * Creates iterator for results of this operation.
-     * 
-     * @return {@link SelectIterator}
-     * 
-     * @since 3.0
-     */
-    public Iterator<R> iterator()
-    {
-        return new SelectIterator<R>(this);
     }
 
 

@@ -22,7 +22,7 @@ import org.sormula.log.ClassLogger;
 
 
 /**
- * Iterator for a {@link SelectOperation}. Returned by {@link SelectOperation#iterator()} or
+ * Iterator for a {@link ScalarSelectOperation}. Returned by {@link ScalarSelectOperation#iterator()} or
  * may be instantiated and used stand-alone. 
  * 
  * @since 3.0
@@ -32,11 +32,26 @@ import org.sormula.log.ClassLogger;
 public class SelectIterator<R> implements Iterator<R>
 {
     private static final ClassLogger log = new ClassLogger();
-    SelectOperation<R, ?> selectOperation;
+    ScalarSelectOperation<R> selectOperation;
     R next;
     
     
     /**
+     * Constructs for a select operation. All parameters must be set on operation prior to
+     * the first use of {@link #hasNext()}. If {@link ScalarSelectOperation#execute()} has not
+     * be invoked, then it will be upon first invocation of {@link #hasNext()}.
+     * 
+     * @param selectOperation operation to iterate over
+     * @since 4.1
+     */
+    public SelectIterator(ScalarSelectOperation<R> selectOperation)
+    {
+        this.selectOperation = selectOperation;
+    }
+
+    
+    /**
+     * @deprecated replaced by {@link #SelectIterator(ScalarSelectOperation)}
      * Constructs for a select operation. All parameters must be set on operation prior to
      * the first use of {@link #hasNext()}. If {@link SelectOperation#execute()} has not
      * be invoked, then it will be upon first invocation of {@link #hasNext()}.

@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.function.BiPredicate;
@@ -55,7 +56,7 @@ import org.sormula.translator.TranslatorException;
  * @author Jeff Miller
  * @param <R> class type which contains members for columns of a row in a table
  */
-public class ScalarSelectOperation<R> extends SqlOperation<R>
+public class ScalarSelectOperation<R> extends SqlOperation<R> implements Iterable<R>
 {
     private static final ClassLogger log = new ClassLogger();
     
@@ -104,6 +105,19 @@ public class ScalarSelectOperation<R> extends SqlOperation<R>
         rowTranslator = table.getRowTranslator();
         initBaseSql();
         setWhere(whereConditionName);
+    }
+    
+    
+    /**
+     * Creates iterator for results of this operation.
+     * 
+     * @return {@link SelectIterator}
+     * 
+     * @since 3.0s
+     */
+    public Iterator<R> iterator()
+    {
+        return new SelectIterator<R>(this);
     }
     
     

@@ -709,6 +709,7 @@ public abstract class SqlOperation<R> implements AutoCloseable
         {
             for (CascadeOperation<R, ?> o: cascadeOperations)
             {
+                if (log.isDebugEnabled()) log.debug("close cascade for " + o.getTargetField().getField());
                 o.close();
             }
             
@@ -839,7 +840,7 @@ public abstract class SqlOperation<R> implements AutoCloseable
                 cascadeOperations.addAll(fieldCascades);
             }
         }
-        
+
         cascadesPrepared = true;
     }
 

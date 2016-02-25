@@ -22,20 +22,20 @@ import org.sormula.active.ActiveTable;
 
 
 /**
- * Delegate for {@link Table#insert(Object)}
+ * Delegate for {@link Table#insertBatch(Object)}.
  * 
  * @author Jeff Miller
- * @since 1.7 and 2.1
+ * @since 4.1
  * @param <R> record type
  */
-public class Insert<R extends ActiveRecord<? super R>> extends ActiveOperation<R, Integer>
+public class InsertBatch<R extends ActiveRecord<? super R>> extends ActiveOperation<R, Integer>
 {
     R record;
     
     
-    public Insert(ActiveTable<R> activeTable, R record)
+    public InsertBatch(ActiveTable<R> activeTable, R record)
     {
-        super(activeTable, "error inserting active record");
+        super(activeTable, "error inserting active record in batch");
         this.record = record;
     }
 
@@ -44,6 +44,6 @@ public class Insert<R extends ActiveRecord<? super R>> extends ActiveOperation<R
     public Integer operate() throws Exception
     {
         attach(record);
-        return getTable().insert(record);
+        return getTable().insertBatch(record);
     }
 }

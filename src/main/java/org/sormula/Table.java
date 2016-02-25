@@ -95,7 +95,9 @@ import org.sormula.translator.TypeTranslatorMap;
  * MyCustomTable table = new MyCustomTable(database);
  * table.selectAll();
  * </pre></blockquote>
- * 
+ * <p>
+ * Since 4.1, related cascades are performed in batch mode for batch methods.
+ *  
  * @since 1.0
  * @author Jeff Miller
  * @param <R> type of row objects
@@ -1057,7 +1059,7 @@ public class Table<R> implements TypeTranslatorMap, TransactionListener
     
     
     /**
-     * Inserts row into table in batch mode.
+     * Inserts row into table in batch mode. Related cascades are batched also.
      * <p>
      * This method typically is only useful if inserted row has cascaded child rows that 
      * should be inserted in batch mode. If row has no cascades, then this method is no
@@ -1142,8 +1144,8 @@ public class Table<R> implements TypeTranslatorMap, TransactionListener
     
     
     /**
-     * Inserts a collection of rows in batch mode. See limitations about batch inserts
-     * in {@link ModifyOperation#setBatch(boolean)}.
+     * Inserts a collection of rows in batch mode. Related cascades are batched also. 
+     * See limitations about batch inserts in {@link ModifyOperation#setBatch(boolean)}.
      * 
      * @param rows rows to insert
      * @return count of rows affected
@@ -1167,11 +1169,11 @@ public class Table<R> implements TypeTranslatorMap, TransactionListener
     
     /**
      * Inserts a collection of rows into a table that was defined with an identity column as
-     * a batch operation. Insert does not use auto generated key for identity column. This allows 
+     * a batch operation.  Related cascades are batched also.
+     * <p>
+     * Insert does not use auto generated key for identity column. This allows 
      * you to insert rows into a table when identity column value for each row is obtained from 
      * the row object.
-     * <p>
-     * Since 4.1, cascades are performed for batch operations.
      * 
      * @param rows rows to insert
      * @return count of rows affected
@@ -1218,7 +1220,7 @@ public class Table<R> implements TypeTranslatorMap, TransactionListener
     
     
     /**
-     * Updates row in table by primary key in batch mode.
+     * Updates row in table by primary key in batch mode. Related cascades are batched also.
      * <p>
      * This method typically is only useful if updated row has cascaded child rows that 
      * should be updated in batch mode. If row has no cascades, then this method is no
@@ -1263,8 +1265,9 @@ public class Table<R> implements TypeTranslatorMap, TransactionListener
     
     
     /**
-     * Updates collection of rows using primary key in batch mode. The primary key 
-     * is defined by {@link Column#primaryKey()}, {@link Column#identity()}, or 
+     * Updates collection of rows using primary key in batch mode. Related cascades are batched also.
+     * <p>
+     * The primary key is defined by {@link Column#primaryKey()}, {@link Column#identity()}, or 
      * {@link Row#primaryKeyFields()}. See limitations about batch updates
      * in {@link ModifyOperation#setBatch(boolean)}.
      * 
@@ -1332,7 +1335,9 @@ public class Table<R> implements TypeTranslatorMap, TransactionListener
     
     
     /**
-     * Deletes by primary key in batch mode. The primary key is defined by {@link Column#primaryKey()}, 
+     * Deletes by primary key in batch mode.  Related cascades are batched also.
+     * <p>
+     * The primary key is defined by {@link Column#primaryKey()}, 
      * {@link Column#identity()}, or {@link Row#primaryKeyFields()}.
      * <p>
      * This method typically is only useful if deleted row has cascaded child rows that 
@@ -1375,8 +1380,9 @@ public class Table<R> implements TypeTranslatorMap, TransactionListener
     
     
     /**
-     * Deletes many rows by primary key in batch mode. The primary key is defined 
-     * by {@link Column#primaryKey()}, {@link Column#identity()}, or 
+     * Deletes many rows by primary key in batch mode. Related cascades are batched also.
+     * <p> 
+     * The primary key is defined by {@link Column#primaryKey()}, {@link Column#identity()}, or 
      * {@link Row#primaryKeyFields()}.  See limitations about batch deletes
      * in {@link ModifyOperation#setBatch(boolean)}.
      * 
@@ -1433,7 +1439,7 @@ public class Table<R> implements TypeTranslatorMap, TransactionListener
     
     
     /**
-     * Inserts or updates row in batch mode.
+     * Inserts or updates row in batch mode. Related cascades are batched also.
      * <p>
      * This method typically is only useful if saved row has cascaded child rows that 
      * should be saved in batch mode. If row has no cascades, then this method is no
@@ -1468,8 +1474,8 @@ public class Table<R> implements TypeTranslatorMap, TransactionListener
     
     
     /**
-     * Saves a collection of rows in batch mode. See limitations about batch saves
-     * in {@link ModifyOperation#setBatch(boolean)}.
+     * Saves a collection of rows in batch mode.  Related cascades are batched also.
+     * See limitations about batch saves in {@link ModifyOperation#setBatch(boolean)}.
      * 
      * @param rows collection of new and/or existing rows to save (may be mixture of new and existing)
      * @return count of rows affected

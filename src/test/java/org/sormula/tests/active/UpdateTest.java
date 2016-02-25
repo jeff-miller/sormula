@@ -83,6 +83,40 @@ public class UpdateTest extends ActiveDatabaseTest<SormulaTestAR>
         }
     }
     
+    
+    @Test
+    public void updateOneARBatch() 
+    {
+        // test with one transaction for entire test
+        ActiveTransaction transaction = new ActiveTransaction(activeDatabase);
+        
+        try
+        {
+            transaction.begin();
+            
+            ActiveTable<SormulaTestAR> table = getActiveTable();
+            selectTestRows(); // must perform each time since other tests are destructive
+            SormulaTestAR record = getRandom();
+            
+            // new values
+            record.setType(99);
+            record.setDescription("AR update by primary key in batch");
+            
+            assert record.updateBatch() == 1 : record.getDescription() + " failed";
+            
+            // read record to confirm that updates applied
+            SormulaTestAR record2 = table.select(record.getId());
+            assert record2 != null && record.getType() == record2.getType() && record.getDescription().equals(record2.getDescription()) :
+                record.getDescription() + " updated row not same";
+            
+            transaction.commit();
+        }
+        catch (ActiveException e)
+        {
+            transaction.rollback();
+        }
+    }
+    
 
     @Test
     public void updateCollectionAR() 

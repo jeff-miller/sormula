@@ -23,14 +23,18 @@ import org.sormula.SormulaException;
 import org.sormula.active.operation.Delete;
 import org.sormula.active.operation.DeleteAll;
 import org.sormula.active.operation.DeleteAllBatch;
+import org.sormula.active.operation.DeleteBatch;
 import org.sormula.active.operation.Insert;
 import org.sormula.active.operation.InsertAll;
 import org.sormula.active.operation.InsertAllBatch;
+import org.sormula.active.operation.InsertBatch;
 import org.sormula.active.operation.InsertNonIdentity;
 import org.sormula.active.operation.InsertNonIdentityAll;
 import org.sormula.active.operation.InsertNonIdentityAllBatch;
 import org.sormula.active.operation.Save;
 import org.sormula.active.operation.SaveAll;
+import org.sormula.active.operation.SaveAllBatch;
+import org.sormula.active.operation.SaveBatch;
 import org.sormula.active.operation.Select;
 import org.sormula.active.operation.SelectAll;
 import org.sormula.active.operation.SelectAllCustom;
@@ -46,6 +50,7 @@ import org.sormula.active.operation.SelectWhere;
 import org.sormula.active.operation.Update;
 import org.sormula.active.operation.UpdateAll;
 import org.sormula.active.operation.UpdateAllBatch;
+import org.sormula.active.operation.UpdateBatch;
 import org.sormula.annotation.Column;
 import org.sormula.annotation.OrderBy;
 import org.sormula.annotation.Row;
@@ -59,6 +64,8 @@ import org.sormula.operation.ModifyOperation;
  * created explicitly to invoke collection methods like, {@link #saveAll(Collection)},
  * {@link #insertAll(Collection)}, {@link #updateAll(Collection)}, {@link #deleteAll(Collection)},
  * and select methods.
+ * <p>
+ * Since 4.1, related cascades are performed in batch mode for batch operations.
  * 
  * @author Jeff Miller
  * @since 1.7 and 2.1
@@ -476,6 +483,24 @@ public class ActiveTable<R extends ActiveRecord<? super R>>
     {
         return new Save<R>(this, record).execute();
     }
+    
+    
+    /**
+     * Updates an existing record or insert record if it is not already in database in batch mode.
+     * Related cascades are batched also.
+     * {@link ActiveRecord#attach(ActiveDatabase)} is invoked on record to
+     * attach it to the active database of this table prior to save.
+     * Typically {@link ActiveRecord#save()} is used instead of this method.
+     * 
+     * @param record record to save
+     * @return count of records affected
+     * @throws ActiveException if error
+     * @since 4.1
+     */
+    public int saveBatch(R record) throws ActiveException
+    {
+        return new SaveBatch<R>(this, record).execute();
+    }
 
     
     /**
@@ -490,6 +515,24 @@ public class ActiveTable<R extends ActiveRecord<? super R>>
     public int saveAll(Collection<R> records) throws ActiveException
     {
         if (records.size() > 0) return new SaveAll<R>(this, records).execute();
+        else return 0;
+    }
+
+    
+    /**
+     * Updates an existing records or insert records if they are not already in database in batch mode.
+     * Related cascades are batched also.
+     * {@link ActiveRecord#attach(ActiveDatabase)} is invoked on records to
+     * attach them to the active database of this table prior to saving them.
+     * 
+     * @param records collection of new and/or existing records to save (may be mixture of new and existing)
+     * @return count of records affected
+     * @throws ActiveException if error
+     * @since 4.1
+     */
+    public int saveAllBatch(Collection<R> records) throws ActiveException
+    {
+        if (records.size() > 0) return new SaveAllBatch<R>(this, records).execute();
         else return 0;
     }
 
@@ -518,6 +561,23 @@ public class ActiveTable<R extends ActiveRecord<? super R>>
     public int insert(R record) throws ActiveException
     {
         return new Insert<R>(this, record).execute();
+    }
+    
+    
+    /**
+     * Inserts an a record in batch mode. Related cascades are also batched.
+     * {@link ActiveRecord#attach(ActiveDatabase)} is invoked on record to
+     * attach it to the active database of this table prior to insert.
+     * Typically {@link ActiveRecord#insertBatch()} is used instead of this method.
+     * 
+     * @param record record to insert
+     * @return count of records affected
+     * @throws ActiveException if error
+     * @since 4.1
+     */
+    public int insertBatch(R record) throws ActiveException
+    {
+        return new InsertBatch<R>(this, record).execute();
     }
 
     
@@ -548,7 +608,7 @@ public class ActiveTable<R extends ActiveRecord<? super R>>
     
 
     /**
-     * Inserts collection of records in batch mode.
+     * Inserts collection of records in batch mode. Related cascades are batched also.
      * <p>
      * {@link ActiveRecord#attach(ActiveDatabase)} is invoked on records to
      * attach them to the active database of this table prior to insert.
@@ -602,7 +662,7 @@ public class ActiveTable<R extends ActiveRecord<? super R>>
     /**
      * Inserts a collection of records using JDBC batch mode. The identity column is not 
      * generated by the database. Use this method when you want to insert a collection record 
-     * with a known values for the identity columns. 
+     * with a known values for the identity columns.  Related cascades are batched also.
      * <p>
      * {@link ActiveRecord#attach(ActiveDatabase)} is invoked on records to
      * attach them to the active database of this table prior to insert.
@@ -643,6 +703,21 @@ public class ActiveTable<R extends ActiveRecord<? super R>>
     {
         return new Update<R>(this, record).execute();
     }
+    
+    
+    /**
+     * Updates one record in table by primary key in batch mode. Related cascades are are
+     * also updated in batch mode.
+     * 
+     * @param record record to update
+     * @return count of records affected
+     * @throws ActiveException if error
+     * @since 4.1
+     */
+    public int updateBatch(R record) throws ActiveException
+    {
+        return new UpdateBatch<R>(this, record).execute();
+    }
 
     
     /**
@@ -673,7 +748,7 @@ public class ActiveTable<R extends ActiveRecord<? super R>>
     
     
     /**
-     * Updates collection of records using primary key in batch mode. 
+     * Updates collection of records using primary key in batch mode. Related cascades are batched also. 
      * The primary key is defined by {@link Column#primaryKey()}, 
      * {@link Column#identity()}, or {@link Row#primaryKeyFields()}.
      * <p>
@@ -714,6 +789,20 @@ public class ActiveTable<R extends ActiveRecord<? super R>>
     public int delete(R record) throws ActiveException
     {
         return new Delete<R>(this, record).execute();
+    }
+    
+    
+    /**
+     * Deletes by primary key in batch mode. Related cascades are deleted in batch mode also.
+     * 
+     * @param record get primary key values from this record
+     * @return count of records affected
+     * @throws ActiveException if error
+     * @since 4.1
+     */
+    public int deleteBatch(R record) throws ActiveException
+    {
+        return new DeleteBatch<R>(this, record).execute();
     }
 
     
@@ -765,7 +854,8 @@ public class ActiveTable<R extends ActiveRecord<? super R>>
 
     
     /**
-     * Deletes many records by primary key in batch mode. The primary key is defined by {@link Column#primaryKey()}, 
+     * Deletes many records by primary key in batch mode. Related cascades are batched also. 
+     * The primary key is defined by {@link Column#primaryKey()}, 
      * {@link Column#identity()}, or {@link Row#primaryKeyFields()}.
      * <p>
      * {@link ActiveRecord#attach(ActiveDatabase)} is invoked on records to

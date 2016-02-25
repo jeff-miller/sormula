@@ -61,6 +61,18 @@ public class SaveTest extends ActiveDatabaseTest<SormulaTestAR>
     
     
     @Test
+    public void saveOneAR1Batch()
+    {
+        ActiveTable<SormulaTestAR> table = getActiveTable();
+        SormulaTestAR record = table.newActiveRecord(); // creates SormulaTestAR and sets data source
+        record.setId(18001);
+        record.setType(8);
+        record.setDescription("Save one AR 1 batch");
+        assert record.saveBatch() == 1 : record.getDescription() + " failed";
+    }
+    
+    
+    @Test
     public void saveOneAR2()
     {
         // create record with new operator instead of with ActiveRecord.newActiveRecord()
@@ -117,5 +129,25 @@ public class SaveTest extends ActiveDatabaseTest<SormulaTestAR>
         
         // records exist so update should be performed
         assert table.saveAll(list) == list.size() : "save collection AR failed";
+    }
+    
+    
+    @Test
+    public void saveCollectionARBatch()
+    {
+        ArrayList<SormulaTestAR> list = new ArrayList<>();
+        
+        for (int i = 18501; i < 18599; ++i)
+        {
+            list.add(new SormulaTestAR(i, 88, "Save collection AR batch " + i));
+        }
+        
+        ActiveTable<SormulaTestAR> table = getActiveTable();
+        
+        // records are new so insert should be performed
+        assert table.saveAllBatch(list) == list.size() : "save collection AR batch failed";
+        
+        // records exist so update should be performed
+        assert table.saveAllBatch(list) == list.size() : "save collection AR batch failed";
     }
 }

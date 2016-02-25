@@ -62,6 +62,20 @@ public class DeleteTest extends ActiveDatabaseTest<SormulaTestAR>
     
     
     @Test
+    public void deleteOneARBatch() 
+    {
+        selectTestRows(); // must perform each time since other tests are destructive
+        SormulaTestAR record = getRandom();
+
+        assert record.deleteBatch() == 1 : "AR delete one row batch failed";
+        
+        // read row to confirm that delete applied
+        ActiveTable<SormulaTestAR> table = getActiveTable();
+        assert table.select(record.getId()) == null : "AR row was not deleted batch";
+    }
+    
+    
+    @Test
     public void deleteCollectionAR() 
     {
         selectTestRows(); // must perform each time since other tests are destructive

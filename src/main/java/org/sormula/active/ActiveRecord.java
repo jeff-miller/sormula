@@ -36,6 +36,8 @@ import org.sormula.translator.RowTranslator;
 /**
  * Base class for active records. See {@link #table(Class)} for an example how to add
  * a static member named table to the subclass that extends ActiveRecord.  
+ * <p>
+ * Since 4.1, related cascades are performed in batch mode for batch operations.
  * 
  * @author Jeff Miller
  * @since 1.7 and 2.1
@@ -145,6 +147,21 @@ public abstract class ActiveRecord<R extends ActiveRecord<? super R>> implements
     {
         return createTable().save(recordClass.cast(this));
     }
+    
+    
+    /**
+     * Saves record into database in batch mode. Delegates to {@link ActiveTable#saveBatch(ActiveRecord)}.
+     * The database used is {@link #getActiveDatabase()}. If no active database is set for
+     * this record, then the default active database is used, {@link ActiveDatabase#getDefault()}.
+     * 
+     * @return number of records affected; typically 1 if record was saved or 0 if not saved
+     * @throws ActiveException if error
+     * @since 4.1
+     */
+    public int saveBatch() throws ActiveException
+    {
+        return createTable().saveBatch(recordClass.cast(this));
+    }
 
 
     /**
@@ -158,6 +175,21 @@ public abstract class ActiveRecord<R extends ActiveRecord<? super R>> implements
     public int insert() throws ActiveException
     {
         return createTable().insert(recordClass.cast(this));
+    }
+    
+    
+    /**
+     * Inserts record into database in batch mode. Delegates to {@link ActiveTable#insertBatch(ActiveRecord)}.
+     * The database used is {@link #getActiveDatabase()}. If no active database is set for
+     * this record, then the default active database is used, {@link ActiveDatabase#getDefault()}.
+     * 
+     * @return number of records affected; typically 1 if record was inserted or 0 if not inserted
+     * @throws ActiveException if error
+     * @since 4.1
+     */
+    public int insertBatch() throws ActiveException
+    {
+        return createTable().insertBatch(recordClass.cast(this));
     }
     
     
@@ -188,6 +220,21 @@ public abstract class ActiveRecord<R extends ActiveRecord<? super R>> implements
     {
         return createTable().update(recordClass.cast(this));
     }
+
+    
+    /**
+     * Updates record in database in batch mode. Delegates to {@link ActiveTable#updateBatch(ActiveRecord)}.
+     * The database used is {@link #getActiveDatabase()}. If no active database is set for
+     * this record, then the default active database is used, {@link ActiveDatabase#getDefault()}.
+     * 
+     * @return number of records affected; typically 1 if record was updated or 0 if not updated
+     * @throws ActiveException if error
+     * @since 4.1
+     */
+    public int updateBatch() throws ActiveException
+    {
+        return createTable().updateBatch(recordClass.cast(this));
+    }
     
     
     /**
@@ -201,6 +248,21 @@ public abstract class ActiveRecord<R extends ActiveRecord<? super R>> implements
     public int delete() throws ActiveException
     {
         return createTable().delete(recordClass.cast(this));
+    }
+    
+    
+    /**
+     * Deletes record from database in batch mode. Delegates to {@link ActiveTable#deleteBatch(ActiveRecord)}.
+     * The database used is {@link #getActiveDatabase()}. If no active database is set for
+     * this record, then the default active database is used, {@link ActiveDatabase#getDefault()}.
+     * 
+     * @return number of records affected; typically 1 if record was deleted or 0 if not deleted
+     * @throws ActiveException if error
+     * @since 4.1
+     */
+    public int deleteBatch() throws ActiveException
+    {
+        return createTable().deleteBatch(recordClass.cast(this));
     }
     
     

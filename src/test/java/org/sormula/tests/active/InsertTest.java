@@ -67,11 +67,23 @@ public class InsertTest extends ActiveDatabaseTest<SormulaTestAR>
     
     
     @Test
+    public void insertOneAR1Batch() 
+    {
+        ActiveTable<SormulaTestAR> table = getActiveTable();
+        SormulaTestAR record = table.newActiveRecord(); // creates SormulaTestAR and sets data source
+        record.setId(19001);
+        record.setType(9);
+        record.setDescription("Insert one AR 1 batch");
+        assert record.insertBatch() == 1 : record.getDescription() + " failed";
+    }
+    
+    
+    @Test
     public void insertOneAR2() 
     {
         // create record with new operator instead of with ActiveRecord.newActiveRecord()
         SormulaTestAR record = new SormulaTestAR();  
-        record.attach(getActiveDatabase()); // record needs to know databasse
+        record.attach(getActiveDatabase()); // record needs to know database
         record.setId(9002);
         record.setType(9);
         record.setDescription("Insert one AR 2");
@@ -82,13 +94,26 @@ public class InsertTest extends ActiveDatabaseTest<SormulaTestAR>
     @Test
     public void insertOneAR3() 
     {
-        // an unconvential way to use ActiveRecordTable to do the work
+        // an unconventional way to use ActiveRecordTable to do the work
         SormulaTestAR record = new SormulaTestAR();
         record.setId(9003);
         record.setType(9);
         record.setDescription("Insert one AR 3");
         ActiveTable<SormulaTestAR> table = getActiveTable();
         assert table.insert(record) == 1 : record.getDescription() + " failed";
+    }
+    
+    
+    @Test
+    public void insertOneAR3Batch() 
+    {
+        // an unconventional way to use ActiveRecordTable to do the work
+        SormulaTestAR record = new SormulaTestAR();
+        record.setId(19003);
+        record.setType(9);
+        record.setDescription("Insert one AR 3 batch");
+        ActiveTable<SormulaTestAR> table = getActiveTable();
+        assert table.insertBatch(record) == 1 : record.getDescription() + " failed";
     }
     
     
@@ -111,7 +136,7 @@ public class InsertTest extends ActiveDatabaseTest<SormulaTestAR>
     {
         ArrayList<SormulaTestAR> list = new ArrayList<>();
         
-        int type = 9600;
+        int type = 19500;
         for (int i = 1; i < 20; ++i)
         {
             list.add(new SormulaTestAR(type + i, type, "Insert collection AR batch " + i));

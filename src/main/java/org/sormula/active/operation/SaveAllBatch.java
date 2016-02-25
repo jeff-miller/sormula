@@ -16,34 +16,36 @@
  */
 package org.sormula.active.operation;
 
+import java.util.Collection;
+
 import org.sormula.Table;
 import org.sormula.active.ActiveRecord;
 import org.sormula.active.ActiveTable;
 
 
 /**
- * Delegate for {@link Table#insert(Object)}
+ * Delegate for {@link Table#saveAllBatch(Collection)}.
  * 
  * @author Jeff Miller
- * @since 1.7 and 2.1
+ * @since 4.1
  * @param <R> record type
  */
-public class Insert<R extends ActiveRecord<? super R>> extends ActiveOperation<R, Integer>
+public class SaveAllBatch<R extends ActiveRecord<? super R>> extends ActiveOperation<R, Integer>
 {
-    R record;
+    Collection<R> records;
     
     
-    public Insert(ActiveTable<R> activeTable, R record)
+    public SaveAllBatch(ActiveTable<R> activeTable, Collection<R> records)
     {
-        super(activeTable, "error inserting active record");
-        this.record = record;
+        super(activeTable, "error saving active record collection in batch");
+        this.records = records;
     }
 
     
     @Override
     public Integer operate() throws Exception
     {
-        attach(record);
-        return getTable().insert(record);
+        attach(records);
+        return getTable().saveAllBatch(records);
     }
 }

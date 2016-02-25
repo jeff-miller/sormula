@@ -22,6 +22,7 @@ version-jdk             comments
                         - new Table batch methods insertBatch, updateBatch, deleteBatch, saveBatch, saveAllBatch
                         - move SelectOperation.iterator method to superclass ScalarSelectOperation.iterator and
                           add corresponding SelectIterator(ScalarSelectOperation) constructor
+                        - add batch methods to active record classes ActiveRecord and ActiveTable
                           
 4.0-jdk1.8              - Select filters can be lambda expressions: see ScalarSelectOperation.addFilter  
                         - Annotations Where, OrderBy, ExplicitType, UnusedColumn are repeatable

@@ -18,6 +18,8 @@ package org.sormula.translator.standard;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.sormula.Table;
 import org.sormula.annotation.EnumType;
@@ -55,6 +57,7 @@ public class EnumTranslator<T extends Enum<T>> implements TypeTranslator<Enum<T>
     Class<T> enumClass;
     String defaultEnumName;
     T defaultEnum;
+    Map<String, Enum<T>> columnEnumMap;
     
     
     /**
@@ -78,6 +81,11 @@ public class EnumTranslator<T extends Enum<T>> implements TypeTranslator<Enum<T>
     public void setEnumClass(Class<T> enumClass)
     {
         this.enumClass = enumClass;
+        
+        // create map of column values to enum for use in read method
+        T[] enums = enumClass.getEnumConstants();
+        columnEnumMap = new HashMap<>(enums.length * 2);
+        for (T e : enums) columnEnumMap.put(e.name(), e);
     }
 
 
@@ -161,16 +169,7 @@ public class EnumTranslator<T extends Enum<T>> implements TypeTranslator<Enum<T>
         
         if (name != null)
         {
-            // linear search should be fast enough since most enums are few in number
-            for (T e : enumClass.getEnumConstants())
-            {
-                if (name.equals(e.name()))
-                {
-                    // found
-                    result = e;
-                    break;
-                }
-            }
+            result = columnEnumMap.get(name);
             
             if (result == null)
             {

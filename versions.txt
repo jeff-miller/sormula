@@ -23,6 +23,7 @@ version-jdk             comments
                         - move SelectOperation.iterator method to superclass ScalarSelectOperation.iterator and
                           add corresponding SelectIterator(ScalarSelectOperation) constructor
                         - add batch methods to active record classes ActiveRecord and ActiveTable
+                        - EnumTranslator#read uses Map to get enum instead of linear search of enum constants
                           
 4.0-jdk1.8              - Select filters can be lambda expressions: see ScalarSelectOperation.addFilter  
                         - Annotations Where, OrderBy, ExplicitType, UnusedColumn are repeatable

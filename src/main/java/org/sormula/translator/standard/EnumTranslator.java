@@ -46,8 +46,10 @@ import org.sormula.translator.TypeTranslator;
  * This class is the default translator to use for Enum types when no annotation is specified for
  * an Enum field within a row class.
  * <p>
- * Subclass to create a custom {@link TypeTranslator} for Enum fields. Override
- * {@link #read(ResultSet, int)} and {@link #write(PreparedStatement, int, Enum)}.
+ * Create a subclass for a custom {@link TypeTranslator} for Enum fields. Override
+ * {@link #read(ResultSet, int)} and {@link #write(PreparedStatement, int, Enum)} if column
+ * is some type other than a String. Override {@link #enumToColumn(Enum)} to store
+ * something other than enum name in database.
  * 
  * @since 3.3
  * @author Jeff Miller
@@ -57,11 +59,11 @@ public class EnumTranslator<T extends Enum<T>> implements TypeTranslator<Enum<T>
     Class<T> enumClass;
     String defaultEnumName;
     T defaultEnum;
-    Map<String, Enum<T>> columnEnumMap;
+    Map<Object, Enum<T>> columnEnumMap;
     
     
     /**
-     * Gets the class to use to look up Enum by name using {@link Class#getEnumConstants()}.
+     * Gets the class of Enum that is translated.
      * 
      * @return Class of Enum to be translated 
      */
@@ -72,9 +74,10 @@ public class EnumTranslator<T extends Enum<T>> implements TypeTranslator<Enum<T>
 
 
     /**
-     * Sets the class to use to look up Enum by name using {@link Class#getEnumConstants()}. 
-     * This method is typically invoked by {@link RowTranslator} to initialize this translator
-     * when {@link Table} object is initialized that contains an Enum field
+     * Sets the class of Enum to translate. Uses {@link Class#getEnumConstants()} to find
+     * all enum constants. This method is typically invoked by {@link RowTranslator} to 
+     * initialize this translator when {@link Table} object is initialized that 
+     * contains an Enum field.
      * 
      * @param enumClass Class of Enum to be translated
      */
@@ -85,12 +88,12 @@ public class EnumTranslator<T extends Enum<T>> implements TypeTranslator<Enum<T>
         // create map of column values to enum for use in read method
         T[] enums = enumClass.getEnumConstants();
         columnEnumMap = new HashMap<>(enums.length * 2);
-        for (T e : enums) columnEnumMap.put(e.name(), e);
+        for (T e : enums) columnEnumMap.put(enumToColumn(e), e);
     }
 
 
     /**
-     * Gets the Enum name to use in {@link #read(ResultSet, int)} when the name read from 
+     * Gets the name of the Enum to use in {@link #read(ResultSet, int)} when the value read from 
      * database cannot be found in {@link Class#getEnumConstants()} of class {@link #getEnumClass()}.
      * 
      * @return default name of Enum to use; empty string for no default (null Enum)
@@ -102,8 +105,8 @@ public class EnumTranslator<T extends Enum<T>> implements TypeTranslator<Enum<T>
 
 
     /**
-     * Sets the Enum name to use in {@link #read(ResultSet, int)} when the Enum name read
-     * from the database is not a valid Enum name. If no default has been set then
+     * Sets the name of the Enum to use in {@link #read(ResultSet, int)} when the value read 
+     * from the database is not a valid Enum. If no default has been set then
      * {@link #read(ResultSet, int)} will return null.
      * <p>
      * {@link #setEnumClass(Class)} must be invoked prior to invoking this method. This method is 
@@ -143,41 +146,80 @@ public class EnumTranslator<T extends Enum<T>> implements TypeTranslator<Enum<T>
 
 
     /**
-     * Writes the name of the Enum parameter to database as a String. If parameter is null, then
-     * null is written to database.
-     * 
+     * Writes the return of {@link #enumToColumn(Enum)} for Enum parameter to database as a String. 
+     * By default {@link #enumToColumn(Enum)} returns {@link Enum#name()}. Override this method if
+     * a type other than String is to be written.
+     * <p>
+     * See {@link #enumToColumn(Enum)} for details about what will be written.
      * {@inheritDoc}
      */
     public void write(PreparedStatement preparedStatement, int parameterIndex, Enum<T> parameter) throws Exception
     {
-        if (parameter != null) preparedStatement.setString(parameterIndex, parameter.name());
-        else                   preparedStatement.setString(parameterIndex, null);
+        preparedStatement.setString(parameterIndex, (String)enumToColumn(parameter));
     }
     
     
     /**
-     * Reads the name of the Enum from the database and finds the corresponding Enum from
-     * {@link Class#getEnumConstants()}. If column is null then null is returned. If no Enum
-     * can be found, then Enum with name of {@link #getDefaultEnumName()} is returned.
-     * 
+     * Reads the column as a String and returns {@link #columnToEnum(Object)}. 
+     * If column is null then null is returned. If no Enum
+     * can be found, then {@link #getDefaultEnumName()} is returned.
+     * <p>
+     * See {@link #columnToEnum(Object)} for details about what will be returned.
      * {@inheritDoc}
      */
     public Enum<T> read(ResultSet resultSet, int columnIndex) throws Exception
     {
+        return columnToEnum(resultSet.getString(columnIndex));
+    }
+    
+    
+    /**
+     * Converts an enum constant to a value that will be stored in the
+     * table column. This method returns {@link Enum#name()}. Override this
+     * method to use a custom value.
+     * 
+     * @param enumValue the enum constant to convert
+     * @return {@link Enum#name()}; null if enumValue is null
+     * 
+     * @since 4.1
+     */
+    protected Object enumToColumn(Enum<T> enumValue)
+    {
+        if (enumValue != null) return enumValue.name();
+        return null;
+    }
+    
+    
+    /**
+     * Converts a table column value to an enum. This method looks up
+     * enum in map that was created by {@link #setEnumClass(Class)}. Key
+     * to map is {@link #enumToColumn(Enum)}.
+     * <p>
+     * This method may be overridden if desired. It is not likely that
+     * you will need to override if you've overridden {@link #enumToColumn(Enum)}.
+     * 
+     * @param columnValue value read from table column that stores enum
+     * @return enum where {@link #enumToColumn(Enum)} equals columnValue;
+     * null if columnValue is null; {@link #getDefaultEnum()} if columnValue
+     * cannot be found in map
+     * 
+     * @since 4.1
+     */
+    protected Enum<T> columnToEnum(Object columnValue)
+    {
         Enum<T> result = null;
-        String name = resultSet.getString(columnIndex);
         
-        if (name != null)
+        if (columnValue != null)
         {
-            result = columnEnumMap.get(name);
+            result = columnEnumMap.get(columnValue);
             
             if (result == null)
             {
-                // name was not found for enum
+                // column was not found, use default
                 result = defaultEnum;
             }
         }
-        
-        return result; 
+
+        return result;
     }
 }

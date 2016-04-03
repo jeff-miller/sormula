@@ -25,6 +25,7 @@ import org.sormula.annotation.EnumType;
 import org.sormula.annotation.Transient;
 import org.sormula.annotation.Where;
 import org.sormula.translator.standard.BooleanYNColumnTranslator;
+import org.sormula.translator.standard.EnumToStringTranslator;
 
 
 /**
@@ -71,6 +72,12 @@ public class SormulaTest1
     // no database i/o for this member
     @Transient
     String testTransient;
+    
+    @EnumType(translator=EnumToStringTranslator.class)
+    EnumFieldTS testEnumTS1;
+    
+    @EnumType(translator=EnumToStringTranslator.class, defaultEnumName="Warm")
+    EnumFieldTS testEnumTS2;
     
     // test that static members are not mapped
     static int staticMember;
@@ -275,5 +282,21 @@ public class SormulaTest1
     public void setTestEnum2(EnumField testEnum2)
     {
         this.testEnum2 = testEnum2;
+    }
+    public EnumFieldTS getTestEnumTS1() 
+    {
+        return testEnumTS1;
+    }
+    public void setTestEnumTS1(EnumFieldTS testEnumTS1) 
+    {
+        this.testEnumTS1 = testEnumTS1;
+    }
+    public EnumFieldTS getTestEnumTS2() 
+    {
+        return testEnumTS2;
+    }
+    public void setTestEnumTS2(EnumFieldTS testEnumTS2)
+    {
+        this.testEnumTS2 = testEnumTS2;
     }
 }

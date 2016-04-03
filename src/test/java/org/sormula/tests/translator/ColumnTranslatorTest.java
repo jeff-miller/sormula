@@ -72,7 +72,9 @@ public class ColumnTranslatorTest extends DatabaseTest<SormulaTest1>
             " testString1 VARCHAR(" + TEST_STRING_COLUMN_LENGTH + ")," +
             " ts2 CHAR(" + TEST_STRING_COLUMN_LENGTH + ")," +
             " testEnum1 VARCHAR(10)," +
-            " testEnum2 VARCHAR(10)" +
+            " testEnum2 VARCHAR(10)," +
+            " testEnumTS1 CHAR(1)," +
+            " testEnumTS2 CHAR(1)" +
             ")"
         );
     }
@@ -105,9 +107,11 @@ public class ColumnTranslatorTest extends DatabaseTest<SormulaTest1>
         inserted.setTestShort1((short)12345);
         inserted.setTestShort2((short)-12345);
         
-        // enum
+        // enums
         inserted.setTestEnum1(EnumField.Good);
         inserted.setTestEnum2(EnumField.Ugly);
+        inserted.setTestEnumTS1(EnumFieldTS.Hot);
+        inserted.setTestEnumTS2(EnumFieldTS.Cold);
         
         // string
         inserted.setTestString1(key);
@@ -129,7 +133,7 @@ public class ColumnTranslatorTest extends DatabaseTest<SormulaTest1>
         return inserted;
     }
     
-    
+
     @Test //(dependsOnMethods="insertTest")
     public void selectTest() throws SormulaException
     {
@@ -191,6 +195,8 @@ public class ColumnTranslatorTest extends DatabaseTest<SormulaTest1>
         // enum tests
         assert inserted.getTestEnum1().equals(selected.getTestEnum1()) : "testEnum1" + message;
         assert inserted.getTestEnum2().equals(selected.getTestEnum2()) : "testEnum2" + message;
+        assert inserted.getTestEnumTS1().equals(selected.getTestEnumTS1()) : "testEnumTS1" + message;
+        assert inserted.getTestEnumTS2().equals(selected.getTestEnumTS2()) : "testEnumTS2" + message;
         
         commit();
     }
@@ -235,6 +241,8 @@ public class ColumnTranslatorTest extends DatabaseTest<SormulaTest1>
         assert selected.getTestSqlTimestamp() == null : "testSqlTimestamp" + message;
         assert selected.getTestEnum1() == null : "testEnum1" + message;
         assert selected.getTestEnum2() == null : "testEnum2" + message;
+        assert selected.getTestEnumTS1() == null : "testEnumTS1" + message;
+        assert selected.getTestEnumTS2() == null : "testEnumTS2" + message;
         
         commit();
     }
@@ -250,15 +258,16 @@ public class ColumnTranslatorTest extends DatabaseTest<SormulaTest1>
         // change database column value to a non enum 
         Connection connection = getDatabase().getConnection();
         PreparedStatement statement = connection.prepareStatement("update " + 
-                getSchemaPrefix() + SormulaTest1.class.getSimpleName() + " set testEnum2='zzz' where testString1=?");
+                getSchemaPrefix() + SormulaTest1.class.getSimpleName() + " set testEnum2='zzz', testEnumTS2='z' where testString1=?");
         statement.setString(1, inserted.getTestString1());
-        assert statement.executeUpdate() == 1 : "testEnum2 column was not changed";
+        assert statement.executeUpdate() == 1 : "testEnum2 and testEnumTS2 columns were not changed";
         statement.close();
         
-        // testEnum2 should be read as 'zzz' and converted to EnumField.Bad
+        // testEnum2 should be read as 'zzz' and converted to default enum
         SormulaTest1 selected = getTable().selectWhere("forTestSting1", inserted.getTestString1());
         assert selected != null : "no test row";
         assert selected.getTestEnum2().equals(EnumField.Bad) : "testEnum2 did not use default enum";
+        assert selected.getTestEnumTS2().equals(EnumFieldTS.Warm) : "testEnumTS2 did not use default enum";
         commit();
     }
 }

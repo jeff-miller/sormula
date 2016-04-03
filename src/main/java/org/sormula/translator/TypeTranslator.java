@@ -42,7 +42,7 @@ public interface TypeTranslator<T>
     
     
     /**
-     * Sets parameter value n prepared statement.
+     * Sets parameter value in the prepared statement.
      * 
      * @param preparedStatement set column value as parameter in this statement
      * @param parameterIndex set parameter at this index

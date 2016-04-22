@@ -23,7 +23,6 @@ version-jdk             comments
                         - move SelectOperation.iterator method to superclass ScalarSelectOperation.iterator and
                           add corresponding SelectIterator(ScalarSelectOperation) constructor
                         - add batch methods to active record classes ActiveRecord and ActiveTable
-                        - EnumTranslator#read uses Map to get enum instead of linear search of enum constants
                         - update EnumTranslator for easier subclassing
                         - add EnumToStringTranslator
                         - add TrimTranslator

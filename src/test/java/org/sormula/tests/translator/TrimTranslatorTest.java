@@ -18,6 +18,7 @@ package org.sormula.tests.translator;
 
 import org.sormula.SormulaException;
 import org.sormula.Table;
+import org.sormula.log.ClassLogger;
 import org.sormula.tests.DatabaseTest;
 import org.sormula.translator.standard.TrimTranslator;
 import org.testng.annotations.AfterClass;
@@ -33,6 +34,8 @@ import org.testng.annotations.Test;
 @Test(singleThreaded=true, groups="translator")
 public class TrimTranslatorTest extends DatabaseTest<SormulaTrimTest>
 {
+    private static final ClassLogger log = new ClassLogger();
+    static final int CHAR_SIZE = 10;
     static final String nonPaddedTestString   = "abcd";
     static final String rightPaddedTestString = "abcd      "; // length of 10 since CHAR(10)
     
@@ -44,8 +47,8 @@ public class TrimTranslatorTest extends DatabaseTest<SormulaTrimTest>
         createTable(SormulaTrimTest.class, 
             "CREATE TABLE " + getSchemaPrefix() + SormulaTrimTest.class.getSimpleName() + " (" +
             " id INTEGER primary key," +
-            " charcolumn CHAR(10)," +
-            " varcharcolumn VARCHAR(10)" +
+            " charcolumn CHAR(" + CHAR_SIZE + ")," +
+            " varcharcolumn VARCHAR(" + CHAR_SIZE + ")" +
             ")"
         );
     }
@@ -77,7 +80,15 @@ public class TrimTranslatorTest extends DatabaseTest<SormulaTrimTest>
         
         // tests that char column is trimmed when written to db
         SormulaNoTrimTest selected = unTable.select(inserted.getId());
-        assert selected.getCharColumn().equals(rightPaddedTestString) : "char column was not trimmed";
+        if (selected.getCharColumn().length() != CHAR_SIZE)
+        {
+            // some databases (like H2) don't pad char() data type
+            log.warn("CHAR column is not padded with blanks");
+        }
+        else
+        {
+            assert selected.getCharColumn().equals(rightPaddedTestString) : "char column was not trimmed";
+        }
         
         // tests that varchar column is trimmed when written to db
         // note: some databases always trim varchar columns

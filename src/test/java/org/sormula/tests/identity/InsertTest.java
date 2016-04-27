@@ -47,7 +47,7 @@ public class InsertTest extends DatabaseTest<IdentityTest>
             createTable(IdentityTest.class, 
                 "CREATE TABLE " + getSchemaPrefix() + IdentityTest.class.getSimpleName() + " (" +
                 " id " + getIdentityColumnDDL() + "," +
-                " description VARCHAR(30)" +
+                " description VARCHAR(50)" +
                 ")"
             );
         }

@@ -59,6 +59,7 @@ import org.sormula.operation.ModifyOperation;
 
 
 /**
+ * TODO add saveNonIdentity, saveNonIdentityAll, saveNonIdentityAllBatch methods
  * Performs all database operations for {@link ActiveRecord} objects. This class is
  * used by {@link ActiveRecord} to perform single record operations. This class may also be 
  * created explicitly to invoke collection methods like, {@link #saveAll(Collection)},

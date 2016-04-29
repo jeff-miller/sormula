@@ -28,6 +28,7 @@ version-jdk             comments
                         - add TrimTranslator
                         - SaveOperation has 2 new constructors that allow non-identity inserts
                         - Add saveNonIdentity, saveNonIdentityAll, saveNonIdentityAllBatch to Table
+                        - Add saveNonIdentity, saveNonIdentityAll, saveNonIdentityAllBatch to active record classes
                           
 4.0-jdk1.8              - Select filters can be lambda expressions: see ScalarSelectOperation.addFilter  
                         - Annotations Where, OrderBy, ExplicitType, UnusedColumn are repeatable

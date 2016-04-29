@@ -26,13 +26,13 @@ import org.testng.annotations.Test;
 
 
 /**
- * Tests inserting active record that has identity column without using the identity
+ * Tests saving active record that has identity column without using the identity
  * generation.
  * 
  * @author Jeff Miller
  */
-@Test(singleThreaded=true, groups="active.insert")
-public class InsertTest extends ActiveDatabaseTest<SormulaTestARNI>
+@Test(singleThreaded=true, groups="active.save", dependsOnGroups="active.insert")
+public class SaveTest extends ActiveDatabaseTest<SormulaTestARNI>
 {
     @BeforeClass
     public void setUp() throws Exception
@@ -40,12 +40,7 @@ public class InsertTest extends ActiveDatabaseTest<SormulaTestARNI>
         if (isTestIdentity())
         {
             openDatabase();
-            createTable(SormulaTestARNI.class, 
-                "CREATE TABLE " + getSchemaPrefix() + SormulaTestARNI.class.getSimpleName() + " (" +
-                " id " + getIdentityColumnDDL() + "," +
-                " description VARCHAR(30)" +
-                ")"
-            );
+            createTable(SormulaTestARNI.class);
         }
     }
     
@@ -61,73 +56,73 @@ public class InsertTest extends ActiveDatabaseTest<SormulaTestARNI>
     
     
     @Test
-    public void insertOneARNI1() 
+    public void saveOneARNI1() 
     {
         if (isTestIdentity() && isTestIdentityOverride())
         {
             ActiveTable<SormulaTestARNI> table = getActiveTable();
             SormulaTestARNI insertedRecord = table.newActiveRecord(); // creates SormulaTestARNI and sets data source
-            int id = -1001; // use negative to avoid collisions with generated keys
+            int id = -4001; // use negative to avoid collisions with generated keys
             insertedRecord.setId(id);
-            insertedRecord.setDescription("Insert one ARNI 1");
-            insertedRecord.insertNonIdentity();
+            insertedRecord.setDescription("Save one ARNI 1");
+            insertedRecord.saveNonIdentity();
             
             // confirm
             SormulaTestARNI selectedRecord = table.select(id);
-            assert selectedRecord != null && selectedRecord.getId() == id : "Insert one ARNI failed for id=" + id;
+            assert selectedRecord != null && selectedRecord.getId() == id : "Save one ARNI failed for id=" + id;
         }
     }
     
     
     @Test
-    public void insertCollectionARNI() 
+    public void saveCollectionARNI() 
     {
         if (isTestIdentity() && isTestIdentityOverride())
         {
             // insert collection with known id's
-            int[] ids = {-2001, -2007, -2003}; // use negative to avoid collisions with generated keys
+            int[] ids = {-5001, -5007, -5003}; // use negative to avoid collisions with generated keys
             ArrayList<SormulaTestARNI> list = new ArrayList<>(ids.length);
             
             for (int id : ids)
             {
-                list.add(new SormulaTestARNI(id, "Insert collection ARNI " + id));
+                list.add(new SormulaTestARNI(id, "Save collection ARNI " + id));
             }
             
             ActiveTable<SormulaTestARNI> table = getActiveTable();
-            table.insertNonIdentityAll(list);
+            table.saveNonIdentityAll(list);
             
             // confirm
             for (int id : ids)
             {
                 SormulaTestARNI selectedRecord = table.select(id);
-                assert selectedRecord != null && selectedRecord.getId() == id : "Insert collection ARNI failed for id=" + id;
+                assert selectedRecord != null && selectedRecord.getId() == id : "Save collection ARNI failed for id=" + id;
             }
         }
     }
     
-    
+
     @Test
-    public void insertARNIBatch() 
+    public void saveARNIBatch() 
     {
         if (isTestIdentity() && isTestIdentityOverride())
         {
             // insert collection with known id's
-            int[] ids = {-3001, -3007, -3003}; // use negative to avoid collisions with generated keys
+            int[] ids = {-6001, -6007, -6003}; // use negative to avoid collisions with generated keys
             ArrayList<SormulaTestARNI> list = new ArrayList<>(ids.length);
             
             for (int id : ids)
             {
-                list.add(new SormulaTestARNI(id, "Insert batch ARNI " + id));
+                list.add(new SormulaTestARNI(id, "Save batch ARNI " + id));
             }
             
             ActiveTable<SormulaTestARNI> table = getActiveTable();
-            table.insertNonIdentityAllBatch(list);
+            table.saveNonIdentityAllBatch(list);
             
             // confirm
             for (int id : ids)
             {
                 SormulaTestARNI selectedRecord = table.select(id);
-                assert selectedRecord != null && selectedRecord.getId() == id : "Insert batch ARNI failed for id=" + id;
+                assert selectedRecord != null && selectedRecord.getId() == id : "Save batch ARNI failed for id=" + id;
             }
         }
     }

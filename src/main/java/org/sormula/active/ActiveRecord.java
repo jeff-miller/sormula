@@ -150,6 +150,21 @@ public abstract class ActiveRecord<R extends ActiveRecord<? super R>> implements
     
     
     /**
+     * Saves record into database. Delegates to {@link ActiveTable#saveNonIdentity(ActiveRecord)}.
+     * The database used is {@link #getActiveDatabase()}. If no active database is set for
+     * this record, then the default active database is used, {@link ActiveDatabase#getDefault()}.
+     * 
+     * @return number of records affected; typically 1 if record was saved or 0 if not saved
+     * @throws ActiveException if error
+     * @since 4.1
+     */
+    public int saveNonIdentity() throws ActiveException
+    {
+        return createTable().saveNonIdentity(recordClass.cast(this));
+    }
+    
+    
+    /**
      * Saves record into database in batch mode. Delegates to {@link ActiveTable#saveBatch(ActiveRecord)}.
      * The database used is {@link #getActiveDatabase()}. If no active database is set for
      * this record, then the default active database is used, {@link ActiveDatabase#getDefault()}.

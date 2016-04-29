@@ -157,6 +157,12 @@ public class DatabaseTest<R>
     }
     
     
+    public boolean isTestIdentityOverride()
+    {
+        return jdbcProperties.getBoolean("testIdentityOverride");
+    }
+    
+    
     public boolean isForeignKey()
     {
         return jdbcProperties.getBoolean("foreignKey");

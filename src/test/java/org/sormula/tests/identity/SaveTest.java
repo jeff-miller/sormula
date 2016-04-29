@@ -16,7 +16,10 @@
  */
 package org.sormula.tests.identity;
 
+import java.util.Set;
+
 import org.sormula.SormulaException;
+import org.sormula.Table;
 import org.sormula.annotation.Column;
 import org.sormula.log.ClassLogger;
 import org.sormula.operation.InsertOperation;
@@ -96,27 +99,56 @@ public class SaveTest extends DatabaseTest<IdentityTest>
     @Test
     public void saveOneNonIdentity() throws SormulaException
     {
-        // TODO need way to know if nonIdentityMethods should be tested since some db's may not allow normal insert for identity columns
-        // TODO add new property in jdbc.properties like testNonIdentityMethods?
-        if (isTestIdentity()) 
+        if (isTestIdentity() && isTestIdentityOverride()) 
         {
             begin();
-            selectTestRows(); // must perform each time since other tests are destructive
             
-            // choose random row
-            IdentityTest row = getRandom();
-            row.setId(-row.getId()); // use negative as primary key to force insert not update
-            int rowId = row.getId(); // remember original in case it is erroneously changed upon insert
+            // save with new id to test insert operation
+            IdentityTest newRow = new IdentityTest();
+            int rowId = -88888; // remember original in case it is erroneously changed upon insert
+            newRow.setId(rowId); // use negative to avoid collision with generated ids
     
             // new values
-            row.setDescription("save non identity by primary key");
+            newRow.setDescription("save non identity by primary key");
             
-            assert getTable().saveNonIdentity(row) == 1 : "save  non identity one row failed";
+            // save should use insert not update since id is not in database
+            assert getTable().saveNonIdentity(newRow) == 1 : "save  non identity one row failed";
             
             // read row to confirm that insert without identity was used
             IdentityTest row2 = getTable().select(rowId);
-            assert row2 != null && row2.getDescription().equals(row.getDescription()) : "saved row not same";
+            assert row2 != null && row2.getDescription().equals(newRow.getDescription()) : "saved non identity not same";
             
+            commit();
+        }
+    }
+    
+    
+    @Test
+    public void saveNonIdentityBatch() throws SormulaException
+    {
+        if (isTestIdentity() && isTestIdentityOverride())
+        {
+            begin();
+            selectTestRows(); // must perform each time since other tests are destructive
+            Set<IdentityTest> set = getRandomSet();
+            
+            // add one new row to test insert
+            int rowId = -77777; // remember original in case it is erroneously changed upon insert
+            IdentityTest newRow = new IdentityTest();
+            newRow.setId(rowId);
+            newRow.setDescription("save non identity batch");
+            set.add(newRow);
+            
+            // save where new row is inserted and others are updates
+            // insert should use id value from row and not create new identity
+            Table<IdentityTest> table = getTable();
+            table.saveNonIdentityAllBatch(set);
+            commit();
+            
+            // read row to confirm that insert without identity was used
+            begin();
+            IdentityTest row2 = getTable().select(rowId);
+            assert row2 != null && row2.getDescription().equals(newRow.getDescription()) : "saved non identity batch not same";
             commit();
         }
     }

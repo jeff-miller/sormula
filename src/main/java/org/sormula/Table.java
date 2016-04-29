@@ -1501,7 +1501,6 @@ public class Table<R> implements TypeTranslatorMap, TransactionListener
      * @return count of rows affected
      * @throws SormulaException if error
      * @since 4.1
-     * TODO write test
      */
     public int saveNonIdentityAll(Collection<R> rows) throws SormulaException
     {
@@ -1543,7 +1542,6 @@ public class Table<R> implements TypeTranslatorMap, TransactionListener
      * @return count of rows affected
      * @throws SormulaException if error
      * @since 4.1
-     * TODO write test
      */
     public int saveNonIdentityAllBatch(Collection<R> rows) throws SormulaException
     {

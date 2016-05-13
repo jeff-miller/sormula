@@ -35,9 +35,6 @@ import org.sormula.active.operation.Save;
 import org.sormula.active.operation.SaveAll;
 import org.sormula.active.operation.SaveAllBatch;
 import org.sormula.active.operation.SaveBatch;
-import org.sormula.active.operation.SaveNonIdentity;
-import org.sormula.active.operation.SaveNonIdentityAll;
-import org.sormula.active.operation.SaveNonIdentityAllBatch;
 import org.sormula.active.operation.Select;
 import org.sormula.active.operation.SelectAll;
 import org.sormula.active.operation.SelectAllCustom;
@@ -490,23 +487,6 @@ public class ActiveTable<R extends ActiveRecord<? super R>>
     
     
     /**
-     * Saves a record but the identity column is not generated if the record is new.
-     * Use this method when you want to save a record and use a known value for the
-     * identity column for inserts (new record).
-     *  
-     * @param record record to save
-     * @return number of records affected; typically 1 if record was inserted or updated
-     * @throws ActiveException if error
-     * @since 4.1
-     * TODO remove this method
-     */
-    public int saveNonIdentity(R record) throws ActiveException
-    {
-        return new SaveNonIdentity<R>(this, record).execute();
-    }
-    
-    
-    /**
      * Updates an existing record or insert record if it is not already in database in batch mode.
      * Related cascades are batched also.
      * {@link ActiveRecord#attach(ActiveDatabase)} is invoked on record to
@@ -541,25 +521,6 @@ public class ActiveTable<R extends ActiveRecord<? super R>>
 
     
     /**
-     * Updates an existing records or insert records if they are not already in database.
-     * Identity columns are not generated for new records that are inserted.
-     * {@link ActiveRecord#attach(ActiveDatabase)} is invoked on records to
-     * attach them to the active database of this table prior to saving them.
-     * 
-     * @param records collection of new and/or existing records to save (may be mixture of new and existing)
-     * @return count of records affected
-     * @throws ActiveException if error
-     * @since 4.1
-     * TODO remove this method
-     */
-    public int saveNonIdentityAll(Collection<R> records) throws ActiveException
-    {
-        if (records.size() > 0) return new SaveNonIdentityAll<R>(this, records).execute();
-        else return 0;
-    }
-
-    
-    /**
      * Updates an existing records or insert records if they are not already in database in batch mode.
      * Related cascades are batched also.
      * {@link ActiveRecord#attach(ActiveDatabase)} is invoked on records to
@@ -573,25 +534,6 @@ public class ActiveTable<R extends ActiveRecord<? super R>>
     public int saveAllBatch(Collection<R> records) throws ActiveException
     {
         if (records.size() > 0) return new SaveAllBatch<R>(this, records).execute();
-        else return 0;
-    }
-
-    
-    /**
-     * Updates an existing records or insert records if they are not already in database in batch mode.
-     * Related cascades are batched also. Identity columns are not generated for new records that are inserted.
-     * {@link ActiveRecord#attach(ActiveDatabase)} is invoked on records to
-     * attach them to the active database of this table prior to saving them.
-     * 
-     * @param records collection of new and/or existing records to save (may be mixture of new and existing)
-     * @return count of records affected
-     * @throws ActiveException if error
-     * @since 4.1
-     * TODO remove this method
-     */
-    public int saveNonIdentityAllBatch(Collection<R> records) throws ActiveException
-    {
-        if (records.size() > 0) return new SaveNonIdentityAllBatch<R>(this, records).execute();
         else return 0;
     }
 

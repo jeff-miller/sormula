@@ -157,6 +157,7 @@ public abstract class ActiveRecord<R extends ActiveRecord<? super R>> implements
      * @return number of records affected; typically 1 if record was saved or 0 if not saved
      * @throws ActiveException if error
      * @since 4.1
+     * TODO remove this method
      */
     public int saveNonIdentity() throws ActiveException
     {
@@ -216,7 +217,9 @@ public abstract class ActiveRecord<R extends ActiveRecord<? super R>> implements
      * @return number of records affected; typically 1 if record was inserted or 0 if not inserted
      * @throws ActiveException if error
      * @since 3.1
+     * @deprecated use TOOD
      */
+    @Deprecated
     public int insertNonIdentity() throws ActiveException
     {
         return createTable().insertNonIdentity(recordClass.cast(this));

@@ -28,6 +28,7 @@ import org.sormula.active.ActiveTable;
  * 
  * @author Jeff Miller
  * @since 4.1
+ * TODO remove this class
  * @param <R> record type
  */
 public class SaveNonIdentityAllBatch<R extends ActiveRecord<? super R>> extends ActiveOperation<R, Integer>

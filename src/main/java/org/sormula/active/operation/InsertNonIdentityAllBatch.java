@@ -29,7 +29,9 @@ import org.sormula.active.ActiveTable;
  * @author Jeff Miller
  * @since 3.1
  * @param <R> record type
+ * @deprecated TODO
  */
+@Deprecated
 public class InsertNonIdentityAllBatch<R extends ActiveRecord<? super R>> extends ActiveOperation<R, Integer>
 {
     Collection<R> records;

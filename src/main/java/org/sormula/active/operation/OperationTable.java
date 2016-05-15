@@ -3,7 +3,6 @@ package org.sormula.active.operation;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
-import org.sormula.Database;
 import org.sormula.SormulaException;
 import org.sormula.Table;
 import org.sormula.active.ActiveDatabase;

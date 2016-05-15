@@ -139,7 +139,7 @@ public class InsertTest extends DatabaseTest<SormulaTest4>
         begin();
         try (InsertOperation<SormulaTest4> operation = new InsertOperation<>(getTable()))
         {
-            // reverse order so that rows are natuarlly in order for order by tests
+            // reverse order so that rows are naturally in order for order by tests
             for (int i = 1010; i > 1000; --i)
             {
                 operation.setRow(new SormulaTest4(i, 3, "Insert operation " + i));

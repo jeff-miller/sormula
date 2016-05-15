@@ -17,6 +17,7 @@
 package org.sormula.operation;
 
 import java.sql.PreparedStatement;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -256,14 +257,22 @@ public abstract class ModifyOperation<R> extends SqlOperation<R>
                     for (int r: rowsAffected)
                     {
                         if (r > 0) allRowsAffected += r;
+                        else if (r == Statement.SUCCESS_NO_INFO) ++allRowsAffected; // assume 1 row
                     }
                     operationTime.stop();
+
+                    if (log.isDebugEnabled())
+                    {
+                        log.debug("batch rows affected:");
+                        for (int r: rowsAffected) log.debug(Integer.toString(r));
+                    }
                     
                     // post execute
                     int affectedIndex = 0;
                     for (R row: rows)
                     {
-                        if (rowsAffected[affectedIndex] > 0)
+                        int r = rowsAffected[affectedIndex];
+                        if (r > 0 || r == Statement.SUCCESS_NO_INFO)
                         {
                             // perform only if row was affected
                             postExecute(row);

@@ -181,7 +181,7 @@ public class InsertTest extends DatabaseTest<SormulaTestLevel1>
         // verify that all children were inserted
         Table<SormulaTestLevel2> child2Table = getDatabase().getTable(SormulaTestLevel2.class);
         Table<SormulaTestLevel3> child3Table = getDatabase().getTable(SormulaTestLevel3.class);
-        
+
         try (ScalarSelectOperation<SormulaTestLevel2> select2 = new ScalarSelectOperation<>(child2Table);
              ScalarSelectOperation<SormulaTestLevel3> select3 = new ScalarSelectOperation<>(child3Table))        
         {

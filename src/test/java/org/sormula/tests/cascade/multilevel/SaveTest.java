@@ -254,7 +254,7 @@ public class SaveTest extends DatabaseTest<SormulaTestLevel1>
         // should insert all 3 nodes
         ArrayList<SormulaTestLevel1> list = new ArrayList<>();
         list.add(node1);
-        table1.saveAllBatch(list); // test saveAllBatch method
+        table1.saveAllBatch(list); 
         
         // confirm node1 was inserted
         SormulaTestLevel1 node1Test = table1.select(node1.getLevel1Id());

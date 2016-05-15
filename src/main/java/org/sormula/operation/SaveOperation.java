@@ -317,6 +317,7 @@ public class SaveOperation<R> extends ModifyOperation<R>
     }
 
 
+    // TODO what to do if isBatch() is true? see ModifyOperation.execute()
     @Override
     public void execute() throws OperationException
     {

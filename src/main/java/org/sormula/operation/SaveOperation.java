@@ -57,6 +57,7 @@ public class SaveOperation<R> extends ModifyOperation<R>
     InsertOperation<R> insertOperation;
     UpdateOperation<R> updateOperation;
     boolean invokeSuper;
+    int[] modifyCounts;
     
     
     /**
@@ -228,6 +229,21 @@ public class SaveOperation<R> extends ModifyOperation<R>
 
     
     /**
+     * For each row saved, gets modify counts either from {@link UpdateOperation#getModifyCounts()}
+     * if row was updated or from {@link InsertOperation#getModifyCounts()} if row was inserted.
+     * 
+     * @return modify counts of all rows processed; each element is associated with one row processed
+     * @since 4.1
+     */
+    @Override
+    public int[] getModifyCounts()
+    {
+        // based upon return of insertOperation and updateOperation
+        return modifyCounts;
+    }
+
+
+    /**
      * Sets batch state for internal insert and update operations.
      * 
      * @param batch true for batch save 
@@ -317,7 +333,6 @@ public class SaveOperation<R> extends ModifyOperation<R>
     }
 
 
-    // TODO what to do if isBatch() is true? see ModifyOperation.execute()
     @Override
     public void execute() throws OperationException
     {
@@ -328,6 +343,8 @@ public class SaveOperation<R> extends ModifyOperation<R>
             if (rows != null)
             {
                 // operation parameters from rows
+                
+                /* TODO needed?
                 for (R row: rows)
                 {
                     if (isCached())
@@ -337,23 +354,44 @@ public class SaveOperation<R> extends ModifyOperation<R>
                         if (log.isDebugEnabled()) log.debug("save cache " + table.getRowClass());
                         notifyCacheModify(row); 
                     }
+                }
+                */
+                
+                // attempt to update all rows, for those not updated then insert
+                updateOperation.setRows(rows);
+                updateOperation.execute();
+                allRowsAffected = updateOperation.getRowsAffected();
+                modifyCounts = updateOperation.getModifyCounts();
+                
+                // build list of rows to insert - those with modify count of 0
+                List<R> insertRows = new ArrayList<>(rows.size());
+                int modifyRowIndex = 0;
+                for (R row: rows)
+                {
+                    if (modifyCounts[modifyRowIndex++] == 0)// TODO test for < 0?
+                    {
+                        // row was not updated, add to insert list
+                        insertRows.add(row); 
+                    }
+                }
+                
+                // insert rows that were not updated
+                insertOperation.setRows(insertRows);
+                insertOperation.execute();
+                allRowsAffected += insertOperation.getRowsAffected();
+                int[] insertModifyCounts = insertOperation.getModifyCounts();
+                
+                // for inserted rows, set modifyCounts
+                int insertRowIndex = 0;
+                for (modifyRowIndex = 0; modifyRowIndex < modifyCounts.length; ++modifyRowIndex)
+                {
+                    if (modifyCounts[modifyRowIndex] == 0)
+                    {
+                        // modifyRowIndex was not updated, set insert count
+                        modifyCounts[modifyRowIndex] = insertModifyCounts[insertRowIndex++];
+                    }
                     
-                    // try update first
-                    updateOperation.setRow(row);
-                    updateOperation.execute();
-
-                    if (updateOperation.getRowsAffected() == 1)
-                    {
-                        // update succeeded
-                        ++allRowsAffected;
-                    }
-                    else
-                    {
-                        // update did not succeed, assume record does not exist
-                        insertOperation.setRow(row);
-                        insertOperation.execute();
-                        allRowsAffected += insertOperation.getRowsAffected();
-                    }
+                    ++modifyRowIndex;
                 }
             }
             else if (getParameters() != null)
@@ -367,7 +405,8 @@ public class SaveOperation<R> extends ModifyOperation<R>
                 if (updateOperation.getRowsAffected() == 1)
                 {
                     // update succeeded
-                    ++allRowsAffected;
+                    allRowsAffected = 1;
+                    modifyCounts = updateOperation.getModifyCounts();
                 }
                 else
                 {
@@ -375,7 +414,18 @@ public class SaveOperation<R> extends ModifyOperation<R>
                     insertOperation.setParameters(getParameters());
                     insertOperation.execute();
                     allRowsAffected += insertOperation.getRowsAffected();
+                    modifyCounts = insertOperation.getModifyCounts();
                 }
+            }
+            else
+            {
+                // no rows
+                modifyCounts = new int[0];
+            }
+            
+            if (log.isDebugEnabled())
+            {
+                for (int i = 0; i < modifyCounts.length; ++i) log.debug("modifyCounts[" + i + "]=" + modifyCounts[i]);
             }
         }
         catch (Exception e)

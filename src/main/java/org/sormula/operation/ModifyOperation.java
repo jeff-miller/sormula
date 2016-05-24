@@ -49,6 +49,7 @@ public abstract class ModifyOperation<R> extends SqlOperation<R>
     Collection<R> rows;
     int rowsAffected;
     boolean batch;
+    int[] modifyCounts;
     
     
     /**
@@ -235,6 +236,7 @@ public abstract class ModifyOperation<R> extends SqlOperation<R>
                 if (rows != null && rows.size() > 0) 
                 {
                     // some drivers require at least one addBatch with executeBatch so perform only if there are rows
+                    modifyCounts = new int[rows.size()];
                     
                     // prepare
                     for (R row: rows)
@@ -254,10 +256,13 @@ public abstract class ModifyOperation<R> extends SqlOperation<R>
                     if (log.isDebugEnabled()) log.debug("execute batch");
                     operationTime.startExecuteTime();
                     int[] rowsAffected = ps.executeBatch(); 
+                    int rowIndex = 0;
                     for (int r: rowsAffected)
                     {
+                        modifyCounts[rowIndex++] = r;
                         if (r > 0) allRowsAffected += r;
                         else if (r == Statement.SUCCESS_NO_INFO) ++allRowsAffected; // assume 1 row
+                        //else if (r == Statement.EXECUTE_FAILED) throw new TODO
                     }
                     operationTime.stop();
 
@@ -277,6 +282,7 @@ public abstract class ModifyOperation<R> extends SqlOperation<R>
                             // perform only if row was affected
                             postExecute(row);
                             if (isCascading()) postExecuteCascade(row);
+                            // TODO throw error if SUCCESS_NO_INFO and cascading
                         }
                         
                         ++affectedIndex;
@@ -284,10 +290,17 @@ public abstract class ModifyOperation<R> extends SqlOperation<R>
                     
                     ps.clearBatch();
                 }
+                else
+                {
+                    // no rows 
+                    modifyCounts = new int[0];
+                }
             }
             else if (rows != null)
             {
                 // operation parameters from rows
+                modifyCounts = new int[rows.size()];
+                int rowIndex = 0;
                 for (R row: rows)
                 {
                     boolean cacheAuthority = false;
@@ -299,6 +312,7 @@ public abstract class ModifyOperation<R> extends SqlOperation<R>
                         {
                             // cache will modify database, assume 1 row will be modified
                             ++allRowsAffected;
+                            modifyCounts[rowIndex++] = 1;
                             cacheAuthority = true;
                             
                             if (isCascading())
@@ -326,6 +340,7 @@ public abstract class ModifyOperation<R> extends SqlOperation<R>
                         operationTime.startExecuteTime();
                         int updateCount = ps.executeUpdate();
                         allRowsAffected += updateCount;
+                        modifyCounts[rowIndex++] = updateCount;
                         if (log.isDebugEnabled()) log.debug("execute update =" + updateCount + " rows affected=" + allRowsAffected);
                         operationTime.stop();
                         
@@ -348,6 +363,7 @@ public abstract class ModifyOperation<R> extends SqlOperation<R>
             else if (getParameters() != null)
             {
                 // operation parameters from objects
+                modifyCounts = new int[1];
                 if (log.isDebugEnabled()) log.debug("write parameters from objects");
                 setNextParameter(1);
                 operationTime.startWriteTime();
@@ -356,7 +372,7 @@ public abstract class ModifyOperation<R> extends SqlOperation<R>
                 
                 if (log.isDebugEnabled()) log.debug("execute update");
                 operationTime.startExecuteTime();
-                allRowsAffected = ps.executeUpdate();
+                allRowsAffected = modifyCounts[0] = ps.executeUpdate();
                 operationTime.stop();
             }
         }
@@ -388,6 +404,27 @@ public abstract class ModifyOperation<R> extends SqlOperation<R>
     public int getRowsAffected()
     {
         return rowsAffected;
+    }
+    
+    
+    /**
+     * Gets the number of rows that were modified. The size of the array will be the
+     * size of {@link #getRows()} if not null or 1 if {@link #getParameters()} is not null. The
+     * value of each array element is determined by one of the following:
+     * <ul> 
+     * <li>return of {@link PreparedStatement#executeUpdate()} for each row in {@link #getRows()}</li>
+     * <li>return of {@link PreparedStatement#executeBatch()} if {@link #isBatch()} is true</li>
+     * <li>return of {@link PreparedStatement#executeUpdate()} if {@link #getParameters()} is not null</li>
+     * </ul>
+     * 
+     * @return array of counts of rows that were modified; for batch operations some values
+     * may be {@link Statement#SUCCESS_NO_INFO} for some databases  
+     * 
+     * @since 4.1
+     */
+    public int[] getModifyCounts()
+    {
+        return modifyCounts;
     }
 
 

@@ -17,6 +17,7 @@
 package org.sormula.operation;
 
 import java.lang.reflect.Field;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -333,6 +334,15 @@ public class SaveOperation<R> extends ModifyOperation<R>
     }
 
 
+    /**
+     * Executes by updating all row(s) using {@link UpdateOperation}. For all rows
+     * that are not updated, uses {@link InsertOperation} to insert them.
+     * 
+     * @throws OperationException if error
+     * @throws BatchException for batch operations if EXECUTE_FAILED is returned
+     * @throws BatchException for batch operations if SUCCESS_NO_INFO is returned and cascading is needed
+     * @throws BatchException for batch operations if SUCCESS_NO_INFO is returned for update
+     */
     @Override
     public void execute() throws OperationException
     {
@@ -368,11 +378,18 @@ public class SaveOperation<R> extends ModifyOperation<R>
                 int modifyRowIndex = 0;
                 for (R row: rows)
                 {
-                    if (modifyCounts[modifyRowIndex++] == 0)// TODO test for < 0?
+                    int count = modifyCounts[modifyRowIndex];
+                    if (count == 0)
                     {
                         // row was not updated, add to insert list
                         insertRows.add(row); 
                     }
+                    else if (count == Statement.SUCCESS_NO_INFO)
+                    {
+                        throw new BatchException("SUCCESS_NO_INFO returned for executeBatch() update; cannot determine if insert is needed");
+                    }
+                    
+                    ++modifyRowIndex;
                 }
                 
                 // insert rows that were not updated

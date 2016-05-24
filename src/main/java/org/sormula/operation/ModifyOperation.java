@@ -197,6 +197,8 @@ public abstract class ModifyOperation<R> extends SqlOperation<R>
      * {@link #getRowsAffected()} will return the sum of all rows affected.
      * 
      * @throws OperationException if error
+     * @throws BatchException for batch operations if EXECUTE_FAILED is returned
+     * @throws BatchException for batch operations if SUCCESS_NO_INFO is returned and cascading is needed
      */
     @Override
     public void execute() throws OperationException
@@ -262,7 +264,7 @@ public abstract class ModifyOperation<R> extends SqlOperation<R>
                         modifyCounts[rowIndex++] = r;
                         if (r > 0) allRowsAffected += r;
                         else if (r == Statement.SUCCESS_NO_INFO) ++allRowsAffected; // assume 1 row
-                        //else if (r == Statement.EXECUTE_FAILED) throw new TODO
+                        else if (r == Statement.EXECUTE_FAILED) throw new BatchException("EXECUTE_FAILED returned for executeBatch()");
                     }
                     operationTime.stop();
 
@@ -281,8 +283,16 @@ public abstract class ModifyOperation<R> extends SqlOperation<R>
                         {
                             // perform only if row was affected
                             postExecute(row);
-                            if (isCascading()) postExecuteCascade(row);
-                            // TODO throw error if SUCCESS_NO_INFO and cascading
+                            if (isCascading())
+                            {
+                                if (r == Statement.SUCCESS_NO_INFO)
+                                {
+                                    // cannot know if cascade should occur since no update count
+                                    throw new BatchException("SUCCESS_NO_INFO returned for executeBatch(); cascade cannot be determined");
+                                }
+                                
+                                postExecuteCascade(row);
+                            }
                         }
                         
                         ++affectedIndex;

@@ -167,6 +167,14 @@ public class DatabaseTest<R>
     {
         return jdbcProperties.getBoolean("foreignKey");
     }
+    
+    
+    // batch cascades and batch saves will work properly only if database returns update count
+    // test batch cascades and batch saves if true
+    public boolean isBatchReturnsUpdateCount()
+    {
+        return jdbcProperties.getBoolean("batchReturnsUpdateCount");
+    }
 
     
     public String getIdentityColumnDDL()

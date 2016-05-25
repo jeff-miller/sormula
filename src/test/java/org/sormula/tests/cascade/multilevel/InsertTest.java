@@ -18,6 +18,7 @@ package org.sormula.tests.cascade.multilevel;
 
 import org.sormula.SormulaException;
 import org.sormula.Table;
+import org.sormula.log.ClassLogger;
 import org.sormula.operation.ScalarSelectOperation;
 import org.sormula.tests.DatabaseTest;
 import org.testng.annotations.AfterClass;
@@ -33,6 +34,8 @@ import org.testng.annotations.Test;
 @Test(singleThreaded=true, groups="cascade.insert")
 public class InsertTest extends DatabaseTest<SormulaTestLevel1>
 {
+    private static final ClassLogger log = new ClassLogger();
+    
     @BeforeClass
     public void setUp() throws Exception
     {
@@ -151,7 +154,14 @@ public class InsertTest extends DatabaseTest<SormulaTestLevel1>
     @Test
     public void insertMultiLevelBatch() throws SormulaException
     {
-        insertMultiLevelBatch(7101, 7210, 73100);
+        if (isBatchReturnsUpdateCount())
+        {
+            insertMultiLevelBatch(7101, 7210, 73100);
+        }
+        else
+        {
+            log.info("skipping multilevel batch insert test");
+        }
     }
     void insertMultiLevelBatch(int level1Id, int level2BaseId, int level3BaseId) throws SormulaException
     {

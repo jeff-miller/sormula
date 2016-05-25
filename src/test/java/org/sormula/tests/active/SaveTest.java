@@ -20,6 +20,7 @@ import java.util.ArrayList;
 
 import org.sormula.active.ActiveDatabase;
 import org.sormula.active.ActiveTable;
+import org.sormula.log.ClassLogger;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
@@ -33,6 +34,9 @@ import org.testng.annotations.Test;
 @Test(singleThreaded=true, groups="active.save", dependsOnGroups="active.insert")
 public class SaveTest extends ActiveDatabaseTest<SormulaTestAR>
 {
+    private static final ClassLogger log = new ClassLogger();
+    
+    
     @BeforeClass
     public void setUp() throws Exception
     {
@@ -63,12 +67,19 @@ public class SaveTest extends ActiveDatabaseTest<SormulaTestAR>
     @Test
     public void saveOneAR1Batch()
     {
-        ActiveTable<SormulaTestAR> table = getActiveTable();
-        SormulaTestAR record = table.newActiveRecord(); // creates SormulaTestAR and sets data source
-        record.setId(18001);
-        record.setType(8);
-        record.setDescription("Save one AR 1 batch");
-        assert record.saveBatch() == 1 : record.getDescription() + " failed";
+        if (isBatchReturnsUpdateCount())
+        {
+            ActiveTable<SormulaTestAR> table = getActiveTable();
+            SormulaTestAR record = table.newActiveRecord(); // creates SormulaTestAR and sets data source
+            record.setId(18001);
+            record.setType(8);
+            record.setDescription("Save one AR 1 batch");
+            assert record.saveBatch() == 1 : record.getDescription() + " failed";
+        }
+        else
+        {
+            log.info("skipping active record batch save test");
+        }
     }
     
     
@@ -135,19 +146,26 @@ public class SaveTest extends ActiveDatabaseTest<SormulaTestAR>
     @Test
     public void saveCollectionARBatch()
     {
-        ArrayList<SormulaTestAR> list = new ArrayList<>();
-        
-        for (int i = 18501; i < 18599; ++i)
+        if (isBatchReturnsUpdateCount())
         {
-            list.add(new SormulaTestAR(i, 88, "Save collection AR batch " + i));
+            ArrayList<SormulaTestAR> list = new ArrayList<>();
+            
+            for (int i = 18501; i < 18599; ++i)
+            {
+                list.add(new SormulaTestAR(i, 88, "Save collection AR batch " + i));
+            }
+            
+            ActiveTable<SormulaTestAR> table = getActiveTable();
+            
+            // records are new so insert should be performed
+            assert table.saveAllBatch(list) == list.size() : "save collection AR batch failed";
+            
+            // records exist so update should be performed
+            assert table.saveAllBatch(list) == list.size() : "save collection AR batch failed";
         }
-        
-        ActiveTable<SormulaTestAR> table = getActiveTable();
-        
-        // records are new so insert should be performed
-        assert table.saveAllBatch(list) == list.size() : "save collection AR batch failed";
-        
-        // records exist so update should be performed
-        assert table.saveAllBatch(list) == list.size() : "save collection AR batch failed";
+        else
+        {
+            log.info("skipping active record batch save test");
+        }
     }
 }

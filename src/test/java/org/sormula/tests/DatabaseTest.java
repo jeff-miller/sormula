@@ -149,6 +149,12 @@ public class DatabaseTest<R>
     }
     
     
+    public boolean isTestRollback()
+    {
+        return jdbcProperties.getBoolean("testRollback");
+    }
+    
+    
     public boolean isTestIdentity()
     {
         String testIdentity = jdbcProperties.getString("testIdentity").trim();

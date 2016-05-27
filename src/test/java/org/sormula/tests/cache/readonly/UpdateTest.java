@@ -18,6 +18,7 @@ package org.sormula.tests.cache.readonly;
 
 import org.sormula.SormulaException;
 import org.sormula.cache.readonly.ReadOnlyCache;
+import org.sormula.log.ClassLogger;
 import org.sormula.tests.cache.CacheTest;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
@@ -32,6 +33,8 @@ import org.testng.annotations.Test;
 @Test(singleThreaded=true, groups="cache.readonly.update", dependsOnGroups="cache.readonly.insert")
 public class UpdateTest extends CacheTest<SormulaCacheTestRO>
 {
+    private static final ClassLogger log = new ClassLogger();
+    
     @BeforeClass
     public void setUp() throws Exception
     {
@@ -142,7 +145,7 @@ public class UpdateTest extends CacheTest<SormulaCacheTestRO>
     {
         // test that update followed by rollback does not update database
         
-        if (isUseTransacation()) // only test if transactions are used
+        if (isTestRollback() && isUseTransacation()) // only test if transactions are used
         {
             // insert test record into database
             begin();
@@ -159,6 +162,10 @@ public class UpdateTest extends CacheTest<SormulaCacheTestRO>
             confirmInDatabase(test);
             confirmNotInDatabase(updated);
             commit();
+        }
+        else
+        {
+            log.info("skipping rollback tests");
         }
     }
     

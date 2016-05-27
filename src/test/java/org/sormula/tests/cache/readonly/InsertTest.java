@@ -20,6 +20,7 @@ import java.util.HashMap;
 
 import org.sormula.SormulaException;
 import org.sormula.Table;
+import org.sormula.log.ClassLogger;
 import org.sormula.tests.cache.CacheTest;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
@@ -35,6 +36,8 @@ import org.testng.annotations.Test;
 @Test(singleThreaded=true, groups="cache.readonly.insert")
 public class InsertTest extends CacheTest<SormulaCacheTestRO>
 {
+    private static final ClassLogger log = new ClassLogger();
+    
     @BeforeClass
     public void setUp() throws Exception
     {
@@ -178,7 +181,7 @@ public class InsertTest extends CacheTest<SormulaCacheTestRO>
     @Test
     public void insertRollback() throws SormulaException
     {
-        if (isUseTransacation()) // only test if transactions are used
+        if (isTestRollback() && isUseTransacation()) // only test if transactions are used
         {
             begin();
             SormulaCacheTestRO test = insertTestRow(105);
@@ -190,6 +193,10 @@ public class InsertTest extends CacheTest<SormulaCacheTestRO>
             confirmNotCached(test);
             confirmNotInDatabase(test);
             commit();
+        }
+        else
+        {
+            log.info("skipping rollback tests");
         }
     }
 }

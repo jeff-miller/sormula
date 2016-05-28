@@ -36,7 +36,8 @@ version-jdk             comments
                         - SaveOperation updates and inserts as collections (not one row at-a-time)
                         - add BatchException for batch errors caused when PreparedStatement#executeBatch
                           returns SUCCESS_NO_INFO or EXECUTE_FAILED
-                        - batchReturnsUpdateCount property to skip batch tests for SUCCESS_NO_INFO
+                        - batchReturnsUpdateCount property for optional batch tests for SUCCESS_NO_INFO
+                        - testRollback property for optional rollback tests
                           
 4.0-jdk1.8              - Select filters can be lambda expressions: see ScalarSelectOperation.addFilter  
                         - Annotations Where, OrderBy, ExplicitType, UnusedColumn are repeatable

@@ -19,7 +19,6 @@ import org.sormula.active.ActiveTable;
 import org.sormula.annotation.Column;
 import org.sormula.annotation.Where;
 import org.sormula.annotation.WhereField;
-import org.sormula.annotation.Wheres;
 
 
 /**
@@ -27,10 +26,8 @@ import org.sormula.annotation.Wheres;
  * 
  * @author Jeff Miller
  */
-@Wheres({
-    @Where(name="manf", fieldNames="manufacturerId"), // where manf=?
-    @Where(name="partNumberIn", whereFields=@WhereField(name="partNumber", comparisonOperator="IN")) // where partnumber in (?, ?, ...)
-})
+@Where(name="manf", fieldNames="manufacturerId") // where manf=?
+@Where(name="partNumberIn", whereFields=@WhereField(name="partNumber", comparisonOperator="IN")) // where partnumber in (?, ?, ...)
 public class Inventory extends ActiveRecord<Inventory> 
 {
     private static final long serialVersionUID = 1L;

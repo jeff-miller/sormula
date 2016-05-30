@@ -17,7 +17,6 @@
 import org.sormula.annotation.Column;
 import org.sormula.annotation.Where;
 import org.sormula.annotation.WhereField;
-import org.sormula.annotation.Wheres;
 
 
 /**
@@ -25,10 +24,8 @@ import org.sormula.annotation.Wheres;
  * 
  * @author Jeff Miller
  */
-@Wheres({
-    @Where(name="manf", fieldNames="manufacturerId"), // where manf=?
-    @Where(name="partNumberIn", whereFields=@WhereField(name="partNumber", comparisonOperator="IN")) // where partnumber in (?, ?, ...)
-})
+@Where(name="manf", fieldNames="manufacturerId") // where manf=?
+@Where(name="partNumberIn", whereFields=@WhereField(name="partNumber", comparisonOperator="IN")) // where partnumber in (?, ?, ...)
 public class Inventory // table name defaults to "inventory", use @Row(tableName="...") to override 
 {
     @Column(primaryKey=true) // table column name defaults to "partnumber", column is primary key 

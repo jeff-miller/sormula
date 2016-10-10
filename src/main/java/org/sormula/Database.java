@@ -537,7 +537,7 @@ public class Database implements TypeTranslatorMap, AutoCloseable
                 
                 // force recreation if this instance is used again
                 connection = null;
-                transaction.setConnection(null); // force new connection
+                if (transaction != null) transaction.setConnection(null); // force new connection
             }
             catch (Exception e)
             {

@@ -580,6 +580,41 @@ public class Database implements TypeTranslatorMap, AutoCloseable
         return connection;
     }
 
+    
+    /**
+     * Sets new connection to use by this class and all related classes. This method is useful 
+     * for situations where Database and related {@link Table}, {@link SqlOperation}, etc. 
+     * objects are created and you want to reuse them for a different connection. This method
+     * is primarily intended to be used on {@link Database} objects that were created
+     * with the Connection constructors: {@link Database#Database(Connection)} and
+     * {@link Database#Database(Connection, String)}.
+     * <p>
+     * Warning: Do not use this method while the transaction for this {@link Database} is active.
+     * <p>
+     * Warning: If any of the datasource constructors were used to create Database then
+     * you must explicitly close the old connection to avoid a connection leak.
+     * <p>  
+     * Note: If any datasource constructor was used, then setting to null will force new connection 
+     * to be obtained from datasource but the old connection will not be closed. Old connection
+     * must be explicitly closed. Using {@link #close()} is a simpler way to achieve the same outcome.
+     * 
+     * @param connection new connection to use; null to force new connection from
+     * datasource
+     * 
+     * @throws SormulaException if the transaction ({@link #getTransaction()}) is active
+     * @since 4.2
+     */
+    public void setConnection(Connection connection) throws SormulaException
+    {
+        if (transaction != null)
+        {
+            // existing transaction uses new connection
+            transaction.setConnection(connection); // throws SormulaException if transaction is active
+        }
+        
+    	this.connection = connection;    
+	}
+    
 
     /**
      * Gets the schema name supplied in constructor.

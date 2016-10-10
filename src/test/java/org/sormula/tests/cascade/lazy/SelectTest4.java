@@ -58,7 +58,7 @@ public class SelectTest4 extends DatabaseTest<SormulaTestParentLazy4>
         
         // verify that children can be selected with different instance of database 
         closeDatabase();
-        openDatabase(true); // creates new DataSource but parent uses refence to old DataSource
+        openDatabase(true); // creates new DataSource but parent uses reference to old DataSource
         begin();
         
         // for comparing children selected directly instead of lazily

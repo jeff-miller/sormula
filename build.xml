@@ -87,6 +87,13 @@
         <antcall target="run-example"><param name="class" value="org.sormula.examples.name.NameDelete"/></antcall>
     </target>
 
+    <target name="HierarchyInsert" description="Runs example">
+        <antcall target="run-example"><param name="class" value="org.sormula.examples.hierarchy.HierarchyInsert"/></antcall>
+    </target>
+    <target name="HierarchySelect" description="Runs example">
+        <antcall target="run-example"><param name="class" value="org.sormula.examples.hierarchy.HierarchySelect"/></antcall>
+    </target>
+
     <target name="ComplexInsert" description="Runs example">
         <antcall target="run-example"><param name="class" value="org.sormula.examples.complex.ComplexInsert"/></antcall>
     </target>

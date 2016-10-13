@@ -27,7 +27,7 @@ import org.sormula.annotation.cascade.SelectCascade;
 /**
  * Row class for hierarchy example.
  */
-@Where(name="forParent", fieldNames="parentNodeId")
+@Where(name="forParent", fieldNames="parentNodeId") // not needed if using cascade 2
 public class HierarchyNode
 {
     @Column(primaryKey=true)
@@ -36,9 +36,18 @@ public class HierarchyNode
     String description;
     
     // must define OneToManyCascade explicitly
+    
+    // cascade 1
     @OneToManyCascade(selects=@SelectCascade(
     		sourceParameterFieldNames="nodeId", // defines that parameter from parent is nodeId 
     		targetWhereName="forParent"))		// defines that "forParent" where condition is used which selects where parentNodeId=?
+    		
+    /* cascade 2: an alternate way to define the cascade
+    @OneToManyCascade(selects=@SelectCascade(
+    		sourceParameterFieldNames="nodeId", 		// defines that parameter from parent is nodeId
+    		targetWhereName="#foreignKeyValueFields"), 	// defines where condition is used which selects where parentNodeId=?
+    		foreignKeyValueFields="parentNodeId")		// defines parentNodeId is foreign key
+    */
     List<HierarchyNode> children;
 
     

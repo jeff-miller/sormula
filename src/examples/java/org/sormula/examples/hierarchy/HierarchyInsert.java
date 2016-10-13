@@ -95,14 +95,18 @@ public class HierarchyInsert extends ExampleBase
 	    		List<HierarchyNode> children = new ArrayList<>();
 	    		parent.setChildren(children);
 	    		int childLevel = level + 1;
-	    		int childBaseNodeId = parent.getNodeId() * 10;
+	    		int childBaseNodeId = parent.getNodeId() * 10; // ensure that all child id's are unique
 	    		
 	    		for (int i = 1; i <= quantityChildren; ++i)
 	    		{
 	    			// create child
 	    			HierarchyNode child = new HierarchyNode();
 	    			child.setNodeId(childBaseNodeId + i);
-	    			child.setParentNodeId(parent.getNodeId());
+	    			
+	    			// sormula will do the following automatically if 
+	    			// OneToManyCascade has foreignKeyValueFields="parentNodeId"
+	    			child.setParentNodeId(parent.getNodeId());  
+	    			
 	    			child.setDescription("node " + child.getNodeId());
 	    			children.add(child);
 	    			

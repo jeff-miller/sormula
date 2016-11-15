@@ -6,8 +6,34 @@
 
     <groupId>org.sormula</groupId>
     <artifactId>sormula</artifactId>
-    <version>4.1</version>
+    <version>4.1.1-SNAPSHOT</version>
     
+    <name>${project.groupId}:${project.artifactId}</name>
+    <description>Object Relational Mapping for Java</description>
+    <url>http://www.sormula.org</url>
+
+    <licenses>
+        <license>
+            <name>GNU General Public License GPLv3</name>
+            <url>https://www.gnu.org/licenses/gpl.html</url>
+        </license>
+    </licenses>
+
+    <developers>
+        <developer>
+            <name>Jeff Miller</name>
+            <email>jeffmiller@sormula.org</email>
+            <organization>sormula</organization>
+            <organizationUrl>http://www.sormula.org</organizationUrl>
+        </developer>
+    </developers>
+
+    <scm>
+        <connection>scm:hg:https://jeff43017@bitbucket.org/jeff43017/sormula</connection>
+        <developerConnection>scm:hg:https://jeff43017@bitbucket.org/jeff43017/sormula</developerConnection>
+        <url>https://bitbucket.org/jeff43017/sormula</url>
+    </scm>
+  
     <!-- test with specific database: 
          mvn -P <profile-id> 
          where <profile-id> is hsqldb, h2, derby, etc.

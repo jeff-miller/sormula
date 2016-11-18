@@ -20,4 +20,7 @@ Zero-configuration, zero-annotation use is possible.
 
 Active record pattern may be used but is not required.
 
+Versions 4.1.1 and later are available on 
+[Maven Central](http://search.maven.org/#search|ga|1|sormula). GroupId is org.sormula. ArtifactId is sormula.
+
 [www.sormula.org](http://www.sormula.org)

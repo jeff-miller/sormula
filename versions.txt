@@ -5,6 +5,8 @@ version-jdk             comments
 4.2-jdk1.8              - add Database#setConnection to allow new connection without need to create new
                           sormula objects
                           
+4.1.1-jdk1.8            - add maven central required information to pom
+
 4.1-jdk1.8              - Database objects may be reused after close if constructed with data source
                         - remove deprecated SelectCascadeFilter, AbstractSelectCascadeFilter
                         - un-deprecate Row.primaryKeyFields, cascade constructors, SqlOperation.getTargetTable,

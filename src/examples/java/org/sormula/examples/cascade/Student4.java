@@ -34,7 +34,25 @@ public class Student4
     String lastName;
     Date graduationDate;
     
-    // not required since version 3.1 @OneToManyCascade
+    /* all of these are equivalent
+    @OneToManyCascade // optional since version 3.1
+    
+    @OneToManyCascade(foreignKeyValueFields="studentId") // Enrolled.studentId is foreign key
+
+    @OneToManyCascade(selects=@SelectCascade(
+        		sourceParameterFieldNames="studentId"), // Student4.studentId is parent key
+        		foreignKeyValueFields="studentId")		// Enrolled.studentId is foreign key
+
+    @OneToManyCascade(selects=@SelectCascade(
+        		sourceParameterFieldNames="#primaryKeyFields",	// Student4.studentId as parent key
+    			targetWhereName="#foreignKeyValueFields"),		// use the names defined by foreignKeyValueFields
+        		foreignKeyValueFields="studentId")				// Enrolled.studentId is foreign key
+
+    @OneToManyCascade(selects=@SelectCascade(
+    	sourceParameterFieldNames="#primaryKeyFields", 	// use Student4.studentId as parent key
+    	targetWhereName="#sourceFieldNames"))			// use same field name as source (Enrolled.studentId as foreign key)
+    */
+    
     List<Enrolled> enrollment;
     
     

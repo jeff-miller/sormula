@@ -23,16 +23,12 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-import org.sormula.Table;
-import org.sormula.operation.SqlOperation;
-
 
 /**
- * Defines two or more order by phrases for row class. Use this annotation if
- * more than one {@link OrderBy} is needed. Annotates a row class,
- * {@link Table} subclass, {@link SqlOperation} or within {@link OrderBy}.
+ * Defines two or more {@link OrderBy} annotations.
  * <p>
- * @deprecated No longer needed since {@link OrderBy} is {@link Repeatable} as of version 4.0.
+ * No longer required since {@link OrderBy} is {@link Repeatable} as of version 4.0. This class
+ * is used internally for {@link Repeatable}.
  * 
  * @since 1.0
  * @author Jeff Miller
@@ -40,7 +36,6 @@ import org.sormula.operation.SqlOperation;
 @Inherited
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
-@Deprecated
 public @interface OrderBys
 {
     /**

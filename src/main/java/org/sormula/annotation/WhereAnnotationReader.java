@@ -34,7 +34,7 @@ public class WhereAnnotationReader
     /**
      * Constructs for classes that may contain the annotation.
      * 
-     * @param sources classes that contain {@link Where} or {@link Wheres} annotations
+     * @param sources classes that contain {@link Where} annotations
      * @since 1.6 and 2.0
      */
     public WhereAnnotationReader(Class<?>... sources)  

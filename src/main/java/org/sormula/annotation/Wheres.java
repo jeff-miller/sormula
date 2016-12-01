@@ -23,15 +23,12 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-import org.sormula.Table;
-import org.sormula.operation.SqlOperation;
-
 
 /**
- * Defines two or more {@link Where} annotations for a row class. Annotates a row class,
- * {@link Table} subclass, or {@link SqlOperation}.
+ * Defines two or more {@link Where} annotations.
  * <p>
- * @deprecated No longer needed since {@link Where} is {@link Repeatable} as of version 4.0.
+ * No longer required since {@link Where} is {@link Repeatable} as of version 4.0. This class
+ * is used internally for {@link Repeatable}.
  *
  * @since 1.0
  * @author Jeff Miller
@@ -39,7 +36,6 @@ import org.sormula.operation.SqlOperation;
 @Inherited
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
-@Deprecated
 public @interface Wheres
 {
     /**

@@ -19,7 +19,6 @@ package org.sormula.tests.operation.np;
 import org.sormula.annotation.Row;
 import org.sormula.annotation.Where;
 import org.sormula.annotation.WhereField;
-import org.sormula.annotation.Wheres;
 
 
 /**
@@ -28,12 +27,11 @@ import org.sormula.annotation.Wheres;
  * @author Jeff Miller
  */
 @Row(primaryKeyFields="level2Id")
-@Wheres({
-        @Where(name="byParent", fieldNames="parentId"),
+@Where(name="byParent", fieldNames="parentId")
         
-        // where parentId=? AND level2Id>=?
-        @Where(name="byParentLevel2Id", whereFields={@WhereField(name="parentId"), @WhereField(name="level2Id", comparisonOperator=">=")})
-})
+// where parentId=? AND level2Id>=?
+@Where(name="byParentLevel2Id", whereFields={@WhereField(name="parentId"), @WhereField(name="level2Id", comparisonOperator=">=")})
+
 public class SormulaTestNP2
 {
     int level2Id;

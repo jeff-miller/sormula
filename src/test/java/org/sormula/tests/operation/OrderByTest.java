@@ -20,7 +20,6 @@ import org.sormula.SormulaException;
 import org.sormula.Table;
 import org.sormula.annotation.OrderBy;
 import org.sormula.annotation.OrderByField;
-import org.sormula.annotation.OrderBys;
 import org.sormula.operation.ArrayListSelectOperation;
 import org.sormula.operation.ListSelectOperation;
 import org.sormula.operation.OperationException;
@@ -31,7 +30,7 @@ import org.testng.annotations.Test;
 
 
 /**
- * Tests {@link OrderBys} annotation.
+ * Tests {@link OrderBy} annotation.
  * 
  * @author Jeff Miller
  */
@@ -114,8 +113,7 @@ public class OrderByTest extends DatabaseTest<SormulaTest4>
 
 
 /**
- * {@link @OrderBy} and {@link @OrderBys} annotations may be used on the operations instead of on 
- * the row class.
+ * {@link @OrderBy} annotation may be used on the operations instead of on the row class.
  */
 @OrderBy(name="ob2", orderByFields={
         @OrderByField(name="type", descending=true),
@@ -128,5 +126,4 @@ class ComplexOrderQuery extends ArrayListSelectOperation<SormulaTest4>
         setOrderBy("ob2");
         execute();
     }
-    
 }

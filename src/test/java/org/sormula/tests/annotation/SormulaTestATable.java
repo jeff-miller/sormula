@@ -21,13 +21,10 @@ import org.sormula.SormulaException;
 import org.sormula.Table;
 import org.sormula.annotation.ExplicitType;
 import org.sormula.annotation.OrderBy;
-import org.sormula.annotation.OrderBys;
 import org.sormula.annotation.Row;
 import org.sormula.annotation.UnusedColumn;
-import org.sormula.annotation.UnusedColumns;
 import org.sormula.annotation.Where;
 import org.sormula.annotation.WhereField;
-import org.sormula.annotation.Wheres;
 
 
 /**
@@ -38,17 +35,11 @@ import org.sormula.annotation.Wheres;
  */
 @Row(tableName="STA")
 @Where(name="byType", fieldNames="type")
-@Wheres({
-    @Where(name="idIn",  whereFields=@WhereField(name="id", comparisonOperator="in")),
-    @Where(name="idIn2", whereFields=@WhereField(name="id", comparisonOperator="in", operand="(6001, 6002)"))
-})
+@Where(name="idIn",  whereFields=@WhereField(name="id", comparisonOperator="in"))
+@Where(name="idIn2", whereFields=@WhereField(name="id", comparisonOperator="in", operand="(6001, 6002)"))
 @OrderBy(name="ob1", ascending="type")
-@OrderBys({
-    @OrderBy(name="ob2", ascending="description")
-})
-@UnusedColumns({ 
-    @UnusedColumn(name="unusedInt", value="123")
-})
+@OrderBy(name="ob2", ascending="description")
+@UnusedColumn(name="unusedInt", value="123")
 
 // test repeatable ExplicitType
 @ExplicitType(type=Test1.class, translator=Test1Translator.class)

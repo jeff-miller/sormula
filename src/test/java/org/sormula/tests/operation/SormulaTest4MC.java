@@ -19,7 +19,6 @@ package org.sormula.tests.operation;
 import org.sormula.annotation.Row;
 import org.sormula.annotation.Where;
 import org.sormula.annotation.WhereField;
-import org.sormula.annotation.Wheres;
 
 
 /**
@@ -28,12 +27,10 @@ import org.sormula.annotation.Wheres;
  * @author Jeff Miller
  */
 @Row(tableName="sormulatest4", primaryKeyFields={"id", "type"}) // use same table that was created in InsertTest
-@Wheres({
-    @Where(name="w1", fieldNames={"type", "id"}),
-    @Where(name="w2", whereFields={
-            @WhereField(name="type", comparisonOperator="<>"),
-            @WhereField(booleanOperator="OR", name="description", comparisonOperator="LIKE", operand="'%operation%'")
-    })
+@Where(name="w1", fieldNames={"type", "id"})
+@Where(name="w2", whereFields={
+        @WhereField(name="type", comparisonOperator="<>"),
+        @WhereField(booleanOperator="OR", name="description", comparisonOperator="LIKE", operand="'%operation%'")
 })
 public class SormulaTest4MC
 {

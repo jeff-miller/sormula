@@ -26,7 +26,6 @@ import org.sormula.SormulaException;
 import org.sormula.Table;
 import org.sormula.annotation.Where;
 import org.sormula.annotation.WhereField;
-import org.sormula.annotation.Wheres;
 import org.sormula.log.ClassLogger;
 import org.sormula.operation.ArrayListSelectOperation;
 import org.sormula.operation.LinkedHashMapSelectOperation;
@@ -461,8 +460,7 @@ public class SelectTest extends DatabaseTest<SormulaTest4>
 
 
 /**
- * {@link Where} and {@link Wheres} annotations may be used on the operations instead of on 
- * the row class.
+ * {@link Where} annotation may be used on the operations instead of on the row class.
  */
 @Where(name="desclike", whereFields=@WhereField(name="description", comparisonOperator="like", operand="'%operation%'"))
 class DescriptionSelect extends ArrayListSelectOperation<SormulaTest4>

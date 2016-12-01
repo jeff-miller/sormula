@@ -22,7 +22,6 @@ import org.sormula.annotation.Column;
 import org.sormula.annotation.Row;
 import org.sormula.annotation.Transient;
 import org.sormula.annotation.UnusedColumn;
-import org.sormula.annotation.UnusedColumns;
 import org.sormula.annotation.Where;
 
 
@@ -33,7 +32,7 @@ import org.sormula.annotation.Where;
  */
 @Row(tableName="studentthree")
 @Where(name="fn", fieldNames="firstName") // where firstname=?
-@UnusedColumns(@UnusedColumn(name="ssn", value="0")) // insert column ssn with value of 0
+@UnusedColumn(name="ssn", value="0") // insert column ssn with value of 0
 public class Student3
 {
     @Column(name="student_id", primaryKey=true)

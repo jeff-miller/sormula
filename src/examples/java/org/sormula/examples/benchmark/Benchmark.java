@@ -18,16 +18,13 @@ package org.sormula.examples.benchmark;
 
 import org.sormula.annotation.Column;
 import org.sormula.annotation.Where;
-import org.sormula.annotation.Wheres;
 
 
 /** 
  * Row class for benchmarks.
  */
-@Wheres({
-    @Where(name="forDescription", fieldNames="description"),
-    @Where(name="forUpdateMarker", fieldNames={"description", "integer2"})
-})
+@Where(name="forDescription", fieldNames="description")
+@Where(name="forUpdateMarker", fieldNames={"description", "integer2"})
 public class Benchmark
 {
     @Column(primaryKey=true)

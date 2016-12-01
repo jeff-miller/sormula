@@ -16,8 +16,9 @@
  */
 package org.sormula.tests.operation;
 
-import org.sormula.SormulaException;
+import org.sormula.Table;
 import org.sormula.tests.DatabaseTest;
+import org.sormula.tests.TestDatabase;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
@@ -47,15 +48,56 @@ public class SaveTestManyConnections extends DatabaseTest<SormulaTest4>
     
     
     @Test
-    public void saveExisting1() throws SormulaException
+    public void saveExisting1() throws Exception
     {
-    	// TODO like SaveText.saveExisting1()
+    	Table<SormulaTest4> testTable = getTable(); // same table object uses many connections
+    	
+    	begin();
+    	selectTestRows(); // must perform each time since other tests are destructive
+
+    	// choose random row
+        SormulaTest4 row = getRandom();
+        
+        // select by primary key
+        SormulaTest4 selected = testTable.select(row.getId());
+        assert selected != null && row.getId() == selected.getId() : "1st select by primary key failed";
+        
+        commit();
+        
+        // change the connection for the database and table objects
+        TestDatabase testDatabase = getDatabase();
+        testDatabase.getConnection().close(); // close current connection
+        testDatabase.setConnection(getConnection()); // use new connection
+        
+        // verify save works with new connection
+        begin();
+        testTable.save(selected);
+        SormulaTest4 selected2 = testTable.select(row.getId());
+        assert selected2 != null && row.getId() == selected2.getId() : "2nd select by primary key failed";
+        commit();
     }
     
     
     @Test
-    public void saveNew1() throws SormulaException
+    public void saveNew1() throws Exception
     {
-    	// TODO like SaveText.saveNew1()
+    	Table<SormulaTest4> testTable = getTable(); // same table object uses many connections
+    	
+    	begin();
+    	selectTestRows(); // arbitrary operations with first connection
+        commit();
+        
+        // change the connection for the database and table objects
+        TestDatabase testDatabase = getDatabase();
+        testDatabase.getConnection().close(); // close current connection
+        testDatabase.setConnection(getConnection()); // use new connection
+        
+        // verify save works with new connection
+        begin();
+        SormulaTest4 row = new SormulaTest4(4001, 4444, "many connection save");
+        testTable.save(row);
+        SormulaTest4 selected = testTable.select(row.getId());
+        assert selected != null && row.getId() == selected.getId() : "verify failed";
+        commit();
     }
 }

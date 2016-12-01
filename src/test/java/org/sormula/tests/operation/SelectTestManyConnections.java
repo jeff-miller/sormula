@@ -16,6 +16,7 @@
  */
 package org.sormula.tests.operation;
 
+import org.sormula.Table;
 import org.sormula.tests.DatabaseTest;
 import org.sormula.tests.TestDatabase;
 import org.testng.annotations.AfterClass;
@@ -49,6 +50,8 @@ public class SelectTestManyConnections extends DatabaseTest<SormulaTest4>
     @Test
     public void selectByPrimaryKey() throws Exception
     {
+    	Table<SormulaTest4> testTable = getTable(); // same table object uses many connections
+    	
     	begin();
     	selectTestRows(); // must perform each time since other tests are destructive
 
@@ -56,7 +59,7 @@ public class SelectTestManyConnections extends DatabaseTest<SormulaTest4>
         SormulaTest4 row = getRandom();
         
         // select by primary key
-        SormulaTest4 selected = getTable().select(row.getId());
+        SormulaTest4 selected = testTable.select(row.getId());
         assert selected != null && row.getId() == selected.getId() : "1st select by primary key failed";
         
         commit();
@@ -68,7 +71,7 @@ public class SelectTestManyConnections extends DatabaseTest<SormulaTest4>
         
         // select by primary key
         begin();
-        SormulaTest4 selected2 = getTable().select(row.getId());
+        SormulaTest4 selected2 = testTable.select(row.getId());
         assert selected2 != null && row.getId() == selected2.getId() : "2nd select by primary key failed";
         commit();
     }

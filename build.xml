@@ -268,8 +268,6 @@
         <delete dir="${target}"/>
     	<delete dir="javadoc"/>
     	<delete dir="test-output"/>
-    	<delete dir="SimpleExample/simpleDB.tmp"/>
-    	<delete dir="ZeroConfigExample/exampleDB.tmp"/>
     	<delete>
     		<fileset dir="." includes="*.log* sormula*.zip example*.zip"/>
     	</delete>
@@ -283,9 +281,9 @@
 	      	              org/sormula/tests/**/*"
 	        />
 		<!-- keep examples up-to-date -->
-		<copy preservelastmodified="true" file="${lib.jar}" todir="ActiveRecordExample" />
-		<copy preservelastmodified="true" file="${lib.jar}" todir="SimpleExample" />
-		<copy preservelastmodified="true" file="${lib.jar}" todir="ZeroConfigExample" />
+		<copy preservelastmodified="true" file="${lib.jar}" todir="${examples.solo}/ActiveRecordExample" />
+		<copy preservelastmodified="true" file="${lib.jar}" todir="${examples.solo}/SimpleExample" />
+		<copy preservelastmodified="true" file="${lib.jar}" todir="${examples.solo}/ZeroConfigExample" />
 	</target>
 	
     <target name="dist" description="Creates sormula.zip for distribution" depends="lib, javadoc">
@@ -319,20 +317,20 @@
 	    </target>
     
     <target name="active-record-example" description="Creates active-record-example.zip for distribution" depends="init">
-        <zip zipfile="active-record-example-${version}${dist.suffix}.zip" basedir="."
+        <zip zipfile="active-record-example-${version}${dist.suffix}.zip" basedir="${examples.solo}"
                 includes="ActiveRecordExample/**/*"
-                excludes="ActiveRecordExample/simpleDB.tmp ActiveRecordExample/.classpath ActiveRecordExample/.project"/>
+                excludes="ActiveRecordExample/.classpath ActiveRecordExample/.project **/ActiveRecordExample/.settings/**"/>
     </target>
     
-    <target name="example" description="Creates example.zip for distribution" depends="init">
-        <zip zipfile="example-${version}${dist.suffix}.zip" basedir="."
+    <target name="simple-example" description="Creates example.zip for distribution" depends="init">
+        <zip zipfile="simple-example-${version}${dist.suffix}.zip" basedir="${examples.solo}"
         	    includes="SimpleExample/**/*"
-                excludes="SimpleExample/simpleDB.tmp SimpleExample/.classpath SimpleExample/.project"/>
+                excludes="SimpleExample/.classpath SimpleExample/.project **/SimpleExample/.settings/**"/>
     </target>
     
     <target name="zero-config-example" description="Creates zero-config-example.zip for distribution" depends="init">
-        <zip zipfile="zero-config-example-${version}${dist.suffix}.zip" basedir="."
+        <zip zipfile="zero-config-example-${version}${dist.suffix}.zip" basedir="${examples.solo}"
     	        includes="ZeroConfigExample/**/*"
-                excludes="ZeroConfigExample/exampleDB.tmp ZeroConfigExample/.classpath ZeroConfigExample/.project"/>
+                excludes="ZeroConfigExample/.classpath ZeroConfigExample/.project **/ZeroConfigExample/.settings/**"/>
     </target>
 </project>

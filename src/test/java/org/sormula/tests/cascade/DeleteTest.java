@@ -48,6 +48,7 @@ public class DeleteTest extends DatabaseTest<SormulaTestParent>
     }
     
     
+    @Test
     public void deleteOneToOne() throws SormulaException
     {
         begin();

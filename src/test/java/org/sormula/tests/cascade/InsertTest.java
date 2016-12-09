@@ -189,9 +189,9 @@ public class InsertTest extends DatabaseTest<SormulaTestParent>
             {
                 operation.setParameters(c.getId());
                 operation.execute();
-            SormulaTestChildM testChild = operation.readNext();
-            assert testChild != null : "child " + c.getId() + " was not inserted";
-            assert testChild.getParentId() == parent.getId() : "child " + testChild.getId() + " has wrong parent";
+                SormulaTestChildM testChild = operation.readNext();
+                assert testChild != null : "child " + c.getId() + " was not inserted";
+                assert testChild.getParentId() == parent.getId() : "child " + testChild.getId() + " has wrong parent";
             }
         }
     }

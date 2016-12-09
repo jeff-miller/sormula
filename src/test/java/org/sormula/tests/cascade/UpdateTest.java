@@ -47,6 +47,7 @@ public class UpdateTest extends DatabaseTest<SormulaTestParent>
     }
     
     
+    @Test
     public void updateOneToOne() throws SormulaException
     {
         begin();

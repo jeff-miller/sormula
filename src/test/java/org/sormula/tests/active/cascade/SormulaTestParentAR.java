@@ -40,7 +40,7 @@ public class SormulaTestParentAR extends ActiveRecord<SormulaTestParentAR>
     
     // tests 1 to many relationship
     @OneToManyCascade( 
-            // not needed with version 3.1 selects=@SelectCascade(sourceParameterFieldNames="parentId", targetWhereName="byParent"),
+            // not needed since version 3.1 selects=@SelectCascade(sourceParameterFieldNames="parentId", targetWhereName="byParent"),
             foreignKeyValueFields="#") // tests foreignKeyValueFields for ActiveRecord
     List<SormulaTestChildNAR> childList;
     

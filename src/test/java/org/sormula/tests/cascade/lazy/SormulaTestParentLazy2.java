@@ -60,7 +60,6 @@ public class SormulaTestParentLazy2 extends DurableLazySelector<SormulaTestParen
     
     public SormulaTestParentLazy2(int id, String description)
     {
-        this();
         this.id = id;
         this.description = description;
     }

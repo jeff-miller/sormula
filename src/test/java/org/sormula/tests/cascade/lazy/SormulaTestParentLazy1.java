@@ -60,7 +60,6 @@ public class SormulaTestParentLazy1 extends SimpleLazySelector<SormulaTestParent
     
     public SormulaTestParentLazy1(int id, String description)
     {
-        this();
         this.id = id;
         this.description = description;
     }

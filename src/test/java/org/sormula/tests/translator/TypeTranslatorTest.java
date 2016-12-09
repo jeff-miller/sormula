@@ -135,7 +135,7 @@ class NegativeIntTranslator implements TypeTranslator<Integer>
 }
 
 
-// simplistic translator that stores uppercase
+// simplistic translator that stores upper case
 class UpperTranslator implements TypeTranslator<String>
 {
      public void write(PreparedStatement preparedStatement, int parameterIndex, String parameter) throws Exception

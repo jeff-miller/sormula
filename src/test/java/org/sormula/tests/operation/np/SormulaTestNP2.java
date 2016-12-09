@@ -46,7 +46,6 @@ public class SormulaTestNP2
     
     public SormulaTestNP2(int level2Id, String description)
     {
-        this();
         this.level2Id = level2Id;
         this.description = description;
     }

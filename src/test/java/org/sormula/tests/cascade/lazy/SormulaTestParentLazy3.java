@@ -68,7 +68,6 @@ public class SormulaTestParentLazy3 implements LazySelectable
     
     public SormulaTestParentLazy3(int id, String description)
     {
-        this();
         this.id = id;
         this.description = description;
     }

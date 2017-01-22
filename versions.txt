@@ -7,6 +7,7 @@ version-jdk             comments
                         - Wheres, OrderBys, and UnusedColumns are only required for internal use.   
                         - update sjl4j to version 1.7.22
                         - update log4j to version 1.2.17
+                        - update testng to version 6.10
                           
 4.1.1-jdk1.8            - add maven central required information to pom
 

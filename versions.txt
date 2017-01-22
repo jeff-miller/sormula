@@ -5,6 +5,7 @@ version-jdk             comments
 4.2-jdk1.8              - add Database#setConnection to allow new connection without need to create new
                           sormula objects
                         - Wheres, OrderBys, and UnusedColumns are only required for internal use.   
+                        - update sjl4j to version 1.7.22
                           
 4.1.1-jdk1.8            - add maven central required information to pom
 

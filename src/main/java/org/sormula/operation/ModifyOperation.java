@@ -199,11 +199,12 @@ public abstract class ModifyOperation<R> extends SqlOperation<R>
      * @throws OperationException if error
      * @throws BatchException for batch operations if EXECUTE_FAILED is returned
      * @throws BatchException for batch operations if SUCCESS_NO_INFO is returned and cascading is needed
+     * @throws ReadOnlyException if row or table is read only
      */
     @Override
     public void execute() throws OperationException
     {
-        if (readOnly) throw new OperationException("Attempt to modify with read-only operation");
+        if (readOnly) throw new ReadOnlyException("Attempt to modify when table or operation is read-only");
             
         if (isCached())
         {

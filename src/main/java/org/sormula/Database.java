@@ -39,6 +39,7 @@ import org.sormula.annotation.ExplicitTypeAnnotationReader;
 import org.sormula.annotation.ImplicitType;
 import org.sormula.log.ClassLogger;
 import org.sormula.operation.ModifyOperation;
+import org.sormula.operation.ReadOnlyException;
 import org.sormula.operation.SqlOperation;
 import org.sormula.operation.cascade.lazy.AbstractLazySelector;
 import org.sormula.operation.cascade.lazy.DurableLazySelector;
@@ -642,7 +643,7 @@ public class Database implements TypeTranslatorMap, AutoCloseable
 
     /**
      * Sets read-only indicator. When true, modify operations,
-     * {@link ModifyOperation} will fail with an exception. By default
+     * {@link ModifyOperation} will fail with a {@link ReadOnlyException}. By default
      * read-only is false. Set to true as a safe-guard to prevent accidental
      * modification of database.
      * 

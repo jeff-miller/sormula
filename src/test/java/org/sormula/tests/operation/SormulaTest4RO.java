@@ -17,6 +17,7 @@
 package org.sormula.tests.operation;
 
 import org.sormula.annotation.Column;
+import org.sormula.annotation.Row;
 
 
 
@@ -27,6 +28,7 @@ import org.sormula.annotation.Column;
  * 
  * @author Jeff Miller
  */
+@Row(readOnly=true) // used by ReadOnlyTest# insertReadOnly2; overridden by others with setReadOnly
 public class SormulaTest4RO
 {
     @Column(primaryKey=true)

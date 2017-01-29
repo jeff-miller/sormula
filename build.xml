@@ -188,7 +188,7 @@
 
 	<!-- ******* tests ******* -->
 	<target name="tests" description="Runs tests for groups in ${groups} for database ${db.dir} defined in build.properties" depends="compile-tests">
-        <testng verbose="${testng.verbose}" groups="${testng.groups}" parallel="false">
+        <testng verbose="${testng.verbose}" groups="${testng.groups}">
         	<sysproperty key="dbdir" value="${db.dir}"/>
         	<sysproperty key="seed" value="${seed}"/>
         	<sysproperty key="timings" value="${timings}"/>

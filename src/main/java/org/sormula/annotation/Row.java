@@ -24,6 +24,7 @@ import java.lang.reflect.Field;
 import java.sql.PreparedStatement;
 
 import org.sormula.Table;
+import org.sormula.operation.ReadOnlyException;
 import org.sormula.operation.SelectOperation;
 import org.sormula.operation.SqlOperation;
 import org.sormula.reflect.FieldAccessType;
@@ -58,6 +59,17 @@ public @interface Row
      * @return translators for mapping java names to sql names
      */
     Class<? extends NameTranslator>[] nameTranslators() default {};
+
+    
+    /**
+     * Indicates if operations using this row should never modify the database. Set to true as
+     * a way to safe-guard against accidental modification of a table. 
+     * 
+     * @return true to to fail with {@link ReadOnlyException} when modify operations are used; 
+     * false to allow all operations
+     * @since 4.2
+     */
+    boolean readOnly() default false;
     
     
     /**

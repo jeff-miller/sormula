@@ -20,8 +20,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.sormula.Database;
+import org.sormula.SormulaException;
+import org.sormula.Table;
 import org.sormula.operation.DeleteOperation;
-import org.sormula.operation.OperationException;
+import org.sormula.operation.ReadOnlyException;
 import org.sormula.operation.SqlOperation;
 import org.sormula.tests.DatabaseTest;
 import org.testng.annotations.AfterClass;
@@ -49,15 +51,17 @@ public class ReadOnlyTest extends DatabaseTest<SormulaTest4RO>
             ")"
         );
         
+        // insert test rows
         List<SormulaTest4RO> testRows = new ArrayList<>();
         for (int i = 1; i <= 20; ++i)
         {
             testRows.add(new SormulaTest4RO(i, 1, "ReadOnlyTest " + i));
         }
         begin();
-        getTable().insertAll(testRows);
+        Table<SormulaTest4RO> table = freshTableInstance();
+        table.setReadOnly(false); // explicitly set since table is annotated with @Row(readOnly=true)
+        table.insertAll(testRows);
         commit();
-        getDatabase().setReadOnly(true);
     }
     
     
@@ -66,22 +70,54 @@ public class ReadOnlyTest extends DatabaseTest<SormulaTest4RO>
     {
         closeDatabase();
     }
+    
+    
+    Table<SormulaTest4RO> freshTableInstance() throws SormulaException
+    {
+        // don't use getTable() to avoid affecting other tests
+        return new Table<SormulaTest4RO>(getDatabase(), SormulaTest4RO.class); 
+    }
 
 
     @Test
-    public void insertReadOnly() throws Exception
+    public void insertReadOnly1() throws Exception
     {
         begin();
         
         try
         {
-            getTable().insert(new SormulaTest4RO(666, 1, "Insert read-only"));
+            // test database is not read-only, table is
+            getDatabase().setReadOnly(false);
+            Table<SormulaTest4RO> table = freshTableInstance();
+            table.setReadOnly(true);
+            table.insert(new SormulaTest4RO(666, 1, "Insert read-only"));
             throw new Exception("insert using read-only operation");
         }
-        catch (OperationException e)
+        catch (ReadOnlyException e)
         {
-            // insert should fail with a message about read-only
-            if (!e.getMessage().contains("read-only")) throw e;
+            // insert should fail 
+        }
+        
+        commit();
+    }
+
+
+    @Test
+    public void insertReadOnly2() throws Exception
+    {
+        begin();
+        
+        try
+        {
+            // test database is not read-only, table is
+            getDatabase().setReadOnly(false);
+            Table<SormulaTest4RO> table = freshTableInstance(); // use read-only value from table annotation
+            table.insert(new SormulaTest4RO(666, 1, "Insert read-only"));
+            throw new Exception("insert using read-only operation");
+        }
+        catch (ReadOnlyException e)
+        {
+            // insert should fail 
         }
         
         commit();
@@ -95,13 +131,16 @@ public class ReadOnlyTest extends DatabaseTest<SormulaTest4RO>
         
         try
         {
-            getTable().updateAll(getTable().selectAll());
+            // test database is read-only, table is not
+            getDatabase().setReadOnly(true);
+            Table<SormulaTest4RO> table = freshTableInstance();
+            table.setReadOnly(false);
+            table.updateAll(table.selectAll());
             throw new Exception("update using read-only operation");
         }
-        catch (OperationException e)
+        catch (ReadOnlyException e)
         {
-            // update should fail with a message about read-only
-            if (!e.getMessage().contains("read-only")) throw e;
+            // update should fail 
         }
         
         commit();
@@ -113,27 +152,24 @@ public class ReadOnlyTest extends DatabaseTest<SormulaTest4RO>
     {
         begin();
         
-        // test readonly at operation level
-        getDatabase().setReadOnly(false); // operation gets false when created
-        try (DeleteOperation<SormulaTest4RO> delete = new DeleteOperation<>(getTable()))
+        // test read-only at operation level
+        getDatabase().setReadOnly(false); // causes operation to be read-write when created
+        Table<SormulaTest4RO> table = freshTableInstance();
+        table.setReadOnly(false); // causes operation to be read-write when created
+
+        try (DeleteOperation<SormulaTest4RO> delete = new DeleteOperation<>(table))
         {
-            assert !delete.isReadOnly() : "incorrect read-only state";
+            assert !delete.isReadOnly() : "operation should be read-only";
             
             delete.setReadOnly(true);
             try
             {
-                delete.delete(getTable().selectAll().get(0));
+                delete.delete(table.selectAll().get(0));
                 throw new Exception("delete using read-only operation");
             }
-            catch (OperationException e)
+            catch (ReadOnlyException e)
             {
-                // delete should fail with a message about read-only
-                if (!e.getMessage().contains("read-only")) throw e;
-            }
-            finally
-            {
-                // put back to readonly in case more tests are to run
-                getDatabase().setReadOnly(true); 
+                // delete should fail
             }
         }
         

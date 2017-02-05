@@ -318,30 +318,6 @@ public class Database implements TypeTranslatorMap, AutoCloseable
     
     
     /**
-     * @deprecated replaced by {@link #init(String)}.
-     * Invoked by constructor to initialize.
-     * 
-     * @param connection JDBC connection
-     * @param schema name of schema to be prefixed to table name in all table names in sql statements;
-     * {@link Connection#getCatalog()} is typically the schema name but jdbc drivers are not consistent
-     * @throws SormulaException if error
-     */
-    @Deprecated
-    protected void init(Connection connection, String schema) throws SormulaException
-    {
-        this.connection = connection;
-        this.schema = schema;
-        tableMap = new HashMap<>();
-        transaction = initTransaction(connection);
-        nameTranslatorClasses = new ArrayList<>(4);
-        operationTimeMap = new HashMap<>();
-        totalOperationTime = new OperationTime("Database totals");
-        totalOperationTime.setDescription("All operations for database");
-        initTypeTranslatorMap();
-    }
-    
-    
-    /**
      * Invoked by constructor to initialize.
      * 
      * @param schema name of schema to be prefixed to table name in all table names in sql statements;

@@ -21,7 +21,8 @@ version-jdk             comments
                           InsertCascadeOperation(Table<S>, RowField<S, ?>, Table<T>, InsertCascade)
                           UpdateCascadeOperation(Table<S>, RowField<S, ?>, Table<T>, UpdateCascade)
                           SaveCascadeOperation(Table<S>, RowField<S, ?>, Table<T>, SaveCascade)
-                        - remove deprecated CascadeOperation#setRequiredCascades  
+                        - remove deprecated CascadeOperation#setRequiredCascades 
+                        - remove deprecated CascadeOpeartion#setNamedParameterMap 
                           
 4.1.1-jdk1.8            - add maven central required information to pom
 

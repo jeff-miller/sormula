@@ -62,7 +62,6 @@ public abstract class CascadeOperation<S, T> implements AutoCloseable
     List<RowField<T, Object>> targetForeignKeyValueFieldList;
     RowField<T, Object> targetForeignReferenceField;
     int keyFieldCount;
-    @Deprecated Map<String, Object> namedParameterMap; // remove when deprecated constructor CascadeOperation(Table<S>...) is removed
     @Deprecated int depth; // remove when deprecated constructor CascadeOperation(Table<S>...) is removed
     
     
@@ -243,23 +242,6 @@ public abstract class CascadeOperation<S, T> implements AutoCloseable
     public Map<String, Object> getNamedParameterMap()
     {
         return sourceOperation.getNamedParameterMap();
-    }
-
-
-    /**
-     * Sets the map of named parameters. 
-     * 
-     * @param namedParameterMap map of name to value or null if no named parameters
-     * @since 3.1
-     * @see SqlOperation#getParameter(String)
-     * @see SqlOperation#setParameter(String, Object)
-     * @see SqlOperation#getNamedParameterMap()
-     * @deprecated no longer needed since determined by {@link SqlOperation#getNamedParameterMap()} of source operation
-     */
-    @Deprecated
-    public void setNamedParameterMap(Map<String, Object> namedParameterMap)
-    {
-        this.namedParameterMap = namedParameterMap;
     }
 
 

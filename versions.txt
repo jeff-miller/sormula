@@ -25,6 +25,7 @@ version-jdk             comments
                         - remove deprecated CascadeOpeartion#setNamedParameterMap
                         - remove deprecated CascadeOpeartion#setDepth
                         - remove deprecated SelectCascadeOperation#setFilterPredicateMap 
+                        - remove all deprecated non identity methods and classes
                           
 4.1.1-jdk1.8            - add maven central required information to pom
 

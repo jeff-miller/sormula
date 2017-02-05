@@ -62,25 +62,6 @@ public class InsertTest extends ActiveDatabaseTest<SormulaTestARNI>
     
     
     @Test
-    public void insertOneARNI1()
-    {
-        if (isTestIdentity() && isTestIdentityOverride())
-        {
-            ActiveTable<SormulaTestARNI> table = getActiveTable();
-            SormulaTestARNI insertedRecord = table.newActiveRecord(); // creates SormulaTestARNI and sets data source
-            int id = -1001; // use negative to avoid collisions with generated keys
-            insertedRecord.setId(id);
-            insertedRecord.setDescription("Insert one ARNI 1");
-            insertedRecord.insertNonIdentity();
-            
-            // confirm
-            SormulaTestARNI selectedRecord = table.select(id);
-            assert selectedRecord != null && selectedRecord.getId() == id : "Insert one ARNI failed for id=" + id;
-        }
-    }
-    
-    
-    @Test
     public void insertOneARNI2()
     {
         if (isTestIdentity() && isTestIdentityOverride())
@@ -103,33 +84,6 @@ public class InsertTest extends ActiveDatabaseTest<SormulaTestARNI>
             // confirm
             SormulaTestARNI selectedRecord = table.select(id);
             assert selectedRecord != null && selectedRecord.getId() == id : "Insert one ARNI failed for id=" + id;
-        }
-    }
-    
-    
-    @Test
-    public void insertCollectionARNI1()
-    {
-        if (isTestIdentity() && isTestIdentityOverride())
-        {
-            // insert collection with known id's
-            int[] ids = {-2001, -2007, -2003}; // use negative to avoid collisions with generated keys
-            ArrayList<SormulaTestARNI> list = new ArrayList<>(ids.length);
-            
-            for (int id : ids)
-            {
-                list.add(new SormulaTestARNI(id, "Insert collection ARNI " + id));
-            }
-            
-            ActiveTable<SormulaTestARNI> table = getActiveTable();
-            table.insertNonIdentityAll(list);
-            
-            // confirm
-            for (int id : ids)
-            {
-                SormulaTestARNI selectedRecord = table.select(id);
-                assert selectedRecord != null && selectedRecord.getId() == id : "Insert collection ARNI failed for id=" + id;
-            }
         }
     }
     
@@ -163,33 +117,6 @@ public class InsertTest extends ActiveDatabaseTest<SormulaTestARNI>
             {
                 SormulaTestARNI selectedRecord = table.select(id);
                 assert selectedRecord != null && selectedRecord.getId() == id : "Insert collection ARNI failed for id=" + id;
-            }
-        }
-    }
-    
-    
-    @Test
-    public void insertARNIBatch1()
-    {
-        if (isTestIdentity() && isTestIdentityOverride())
-        {
-            // insert collection with known id's
-            int[] ids = {-3001, -3007, -3003}; // use negative to avoid collisions with generated keys
-            ArrayList<SormulaTestARNI> list = new ArrayList<>(ids.length);
-            
-            for (int id : ids)
-            {
-                list.add(new SormulaTestARNI(id, "Insert batch ARNI " + id));
-            }
-            
-            ActiveTable<SormulaTestARNI> table = getActiveTable();
-            table.insertNonIdentityAllBatch(list);
-            
-            // confirm
-            for (int id : ids)
-            {
-                SormulaTestARNI selectedRecord = table.select(id);
-                assert selectedRecord != null && selectedRecord.getId() == id : "Insert batch ARNI failed for id=" + id;
             }
         }
     }

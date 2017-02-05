@@ -62,7 +62,6 @@ public abstract class CascadeOperation<S, T> implements AutoCloseable
     List<RowField<T, Object>> targetForeignKeyValueFieldList;
     RowField<T, Object> targetForeignReferenceField;
     int keyFieldCount;
-    @Deprecated int depth; // remove when deprecated constructor CascadeOperation(Table<S>...) is removed
     
     
     /**
@@ -117,20 +116,6 @@ public abstract class CascadeOperation<S, T> implements AutoCloseable
     public int getDepth() 
     {
         return sourceOperation.getCascadeDepth() + 1;
-    }
-
-
-    /**
-     * Sets the cascade depth. Typically set by {@link SqlOperation} when preparing cascades.
-     * 
-     * @param depth 0..n
-     * @since 4.1
-     * @deprecated no need to set depth since it is always source operation level + 1
-     */
-    @Deprecated
-    public void setDepth(int depth) 
-    {
-        this.depth = depth;
     }
 
 

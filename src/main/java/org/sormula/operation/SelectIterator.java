@@ -48,20 +48,6 @@ public class SelectIterator<R> implements Iterator<R>
     {
         this.selectOperation = selectOperation;
     }
-
-    
-    /**
-     * @deprecated replaced by {@link #SelectIterator(ScalarSelectOperation)}
-     * Constructs for a select operation. All parameters must be set on operation prior to
-     * the first use of {@link #hasNext()}. If {@link SelectOperation#execute()} has not
-     * be invoked, then it will be upon first invocation of {@link #hasNext()}.
-     * 
-     * @param selectOperation operation to iterate over
-     */
-    public SelectIterator(SelectOperation<R, ?> selectOperation)
-    {
-        this.selectOperation = selectOperation;
-    }
     
     
     /**

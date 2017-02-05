@@ -11,6 +11,7 @@ version-jdk             comments
                         - add Table#setReadOnly, Table#isReadOnly
                         - add Row#readOnly
                         - add ReadOnlyException
+                        - remove deprecated SelectIterator(SelectOperation<R, ?>) constructor
                           
 4.1.1-jdk1.8            - add maven central required information to pom
 

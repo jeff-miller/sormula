@@ -51,7 +51,6 @@ public abstract class CascadeOperation<S, T> implements AutoCloseable
     private static final ClassLogger log = new ClassLogger();
     SqlOperation<?> sqlOperation;
     SqlOperation<S> sourceOperation;
-    @Deprecated Table<S> sourceTable; // remove when deprecated constructor CascadeOperation(Table<S>...) is removed
     RowField<S, ?> targetField;
     Table<T> targetTable;
     Class <?> cascadeSqlOperationClass;

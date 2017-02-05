@@ -69,27 +69,6 @@ public abstract class CascadeOperation<S, T> implements AutoCloseable
     
     
     /**
-     * Constructs for field and table to be affected by cascade.
-     * 
-     * @param sourceTable cascade originates on row from this table
-     * @param targetField in source row to be affected by cascade operation
-     * @param targetTable sormula table that will be cascaded
-     * @param cascadeSqlOperationClass class of cascade operation (used to create new instance)
-     * is to be performed before source row operation
-     * @since 3.4
-     * @deprecated replaced by {@link #CascadeOperation(SqlOperation, RowField, Table, Class)}
-     */
-    @Deprecated
-    public CascadeOperation(Table<S> sourceTable, RowField<S, ?> targetField, Table<T> targetTable, Class <?> cascadeSqlOperationClass)
-    {
-        this.sourceTable = sourceTable;
-        this.targetField = targetField;
-        this.targetTable = targetTable;
-        this.cascadeSqlOperationClass = cascadeSqlOperationClass;
-    }
-    
-    
-    /**
      * Constructs from source operation and targets of the cascade.
      * 
      * @param sourceOperation operation where cascade originates 
@@ -140,7 +119,6 @@ public abstract class CascadeOperation<S, T> implements AutoCloseable
      */
     public int getDepth() 
     {
-        if (sourceOperation == null) return depth; // assume deprecated constructor, remove when deprecated field is removed
         return sourceOperation.getCascadeDepth() + 1;
     }
 
@@ -252,7 +230,6 @@ public abstract class CascadeOperation<S, T> implements AutoCloseable
      */
     public String[] getRequiredCascades()
     {
-        if (sourceOperation == null) return requiredCascades; // assume deprecated constructor, remove when deprecated field is removed
         return sourceOperation.getRequiredCascades();
     }
 
@@ -282,7 +259,6 @@ public abstract class CascadeOperation<S, T> implements AutoCloseable
      */
     public Map<String, Object> getNamedParameterMap()
     {
-        if (sourceOperation == null) return namedParameterMap; // assume deprecated constructor, remove when deprecated field is removed
         return sourceOperation.getNamedParameterMap();
     }
 
@@ -359,7 +335,6 @@ public abstract class CascadeOperation<S, T> implements AutoCloseable
      */
     public Table<S> getSourceTable()
     {
-        if (sourceOperation == null) return sourceTable; // assume deprecated constructor, remove when deprecated field is removed
         return sourceOperation.getTable();
     }
 

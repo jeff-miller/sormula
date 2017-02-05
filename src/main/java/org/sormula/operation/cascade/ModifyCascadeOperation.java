@@ -44,25 +44,6 @@ public abstract class ModifyCascadeOperation<S, T> extends CascadeOperation<S, T
     
     
     /**
-     * Constructs.
-     * 
-     * @param sourceTable cascade originates on row from this table
-     * @param targetField cascade operation uses row(s) from this field
-     * @param targetTable cascade operation is performed on this table 
-     * @param cascadeSqlOperationClass class of cascade operation
-     * false if cascade is performed before row execute (see {@link ModifyOperation#preExecute}
-     * @since 3.4
-     * @deprecated replaced by {@link #ModifyCascadeOperation(ModifyOperation, RowField, Table, Class)}
-     */
-    @Deprecated
-    public ModifyCascadeOperation(Table<S> sourceTable, RowField<S, ?> targetField, Table<T> targetTable, 
-            Class <?> cascadeSqlOperationClass)
-    {
-        super(sourceTable, targetField, targetTable, cascadeSqlOperationClass);
-    }
-    
-    
-    /**
      * Constructs from source operation and targets of the cascade.
      * 
      * @param sourceOperation operation where cascade originates
@@ -93,7 +74,6 @@ public abstract class ModifyCascadeOperation<S, T> extends CascadeOperation<S, T
      */
     public boolean isBatch()
     {
-        if (sourceOperation == null) return false; // assume deprecated constructor, remove when deprecated constructor is removed
         return ((ModifyOperation<S>)sourceOperation).isBatch();
     }
 

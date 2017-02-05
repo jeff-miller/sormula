@@ -61,25 +61,6 @@ public class SelectCascadeOperation<S, T> extends CascadeOperation<S, T>
 	@Deprecated Map<Class<?>, BiPredicate<?, Boolean>> filterPredicateMap; // remove when deprecated constructor SelectCascadeOperation(Table<S>...) is removed
     
     
-	/**
-     * Constructor used by {@link SelectOperation}.
-     *  
-     * @param sourceTable cascade originates on row from this table 
-     * @param targetField cascade select operation modifies this field
-     * @param targetTable cascade select operation is performed on this table 
-     * @param selectCascadeAnnotation cascade operation
-	 * @since 3.4
-	 * @deprecated replaced by {@link #SelectCascadeOperation(ScalarSelectOperation, RowField, Table, SelectCascade)}
-	 */
-	@Deprecated
-    public SelectCascadeOperation(Table<S> sourceTable, RowField<S, ?> targetField, Table<T> targetTable, SelectCascade selectCascadeAnnotation)
-    {
-        super(sourceTable, targetField, targetTable, selectCascadeAnnotation.operation());
-        this.selectCascadeAnnotation = selectCascadeAnnotation;
-        setPost(selectCascadeAnnotation.post());
-    }
-    
-    
     /**
      * Constructor used by {@link ScalarSelectOperation}.
      *  
@@ -110,7 +91,6 @@ public class SelectCascadeOperation<S, T> extends CascadeOperation<S, T>
      */
     public Map<Class<?>, BiPredicate<?, Boolean>> getFilterPredicateMap() 
     {
-        if (getSourceOperation() == null) return filterPredicateMap; // assume deprecated constructor, remove when deprecated field is removed
 		return ((ScalarSelectOperation<S>)getSourceOperation()).getFilterPredicateMap();
 	}
 

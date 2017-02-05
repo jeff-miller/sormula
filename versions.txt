@@ -13,6 +13,14 @@ version-jdk             comments
                         - add ReadOnlyException
                         - remove deprecated SelectIterator(SelectOperation<R, ?>) constructor
                         - remove deprecated Database#init(Connection connection, String schema)
+                        - remove deprecated constructors:
+                          CascadeOperation(Table<S>, RowField<S, ?>, Table<T>, Class <?>)
+                          ModifyCascadeOperation(Table<S>, RowField<S, ?>, Table<T>, Class <?>)
+                          SelectCascadeOperation(Table<S>, RowField<S, ?>, Table<T>, SelectCascade)
+                          DeleteCascadeOperation(Table<S>, RowField<S, ?>, Table<T>, DeleteCascade)
+                          InsertCascadeOperation(Table<S>, RowField<S, ?>, Table<T>, InsertCascade)
+                          UpdateCascadeOperation(Table<S>, RowField<S, ?>, Table<T>, UpdateCascade)
+                          SaveCascadeOperation(Table<S>, RowField<S, ?>, Table<T>, SaveCascade)
                           
 4.1.1-jdk1.8            - add maven central required information to pom
 

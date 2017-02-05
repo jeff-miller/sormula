@@ -38,25 +38,6 @@ public class InsertCascadeOperation<S, T> extends ModifyCascadeOperation<S, T>
     /**
      * Constructor used by {@link InsertOperation}.
      *
-     * @param sourceTable cascade originates on row from this table
-     * @param targetField cascade insert operation uses row(s) from this field
-     * @param targetTable cascade insert operation is performed on this table 
-     * @param insertCascadeAnnotation cascade operation
-     * @since 3.4
-     * @deprecated replaced by {@link #InsertCascadeOperation(InsertOperation, RowField, Table, InsertCascade)}
-     */
-    @Deprecated
-    public InsertCascadeOperation(Table<S> sourceTable, RowField<S, ?> targetField, Table<T> targetTable, InsertCascade insertCascadeAnnotation)
-    {
-        super(sourceTable, targetField, targetTable, insertCascadeAnnotation.operation());
-        this.insertCascadeAnnotation = insertCascadeAnnotation;
-        setPost(insertCascadeAnnotation.post());
-    }
-    
-    
-    /**
-     * Constructor used by {@link InsertOperation}.
-     *
      * @param sourceOperation operation where cascade originates 
      * @param targetField cascade insert operation uses row(s) from this field
      * @param targetTable cascade insert operation is performed on this table 

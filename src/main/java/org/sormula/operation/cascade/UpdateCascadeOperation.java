@@ -37,24 +37,6 @@ public class UpdateCascadeOperation<S, T> extends ModifyCascadeOperation<S, T>
     /**
      * Constructor used by {@link UpdateOperation}.
      *  
-     * @param sourceTable cascade originates on row from this table 
-     * @param targetField cascade update operation uses row(s) from this field
-     * @param targetTable cascade update operation is performed on this table 
-     * @param updateCascadeAnnotation cascade operation
-     * @since 3.4
-     * @deprecated replaced by {@link #UpdateCascadeOperation(UpdateOperation, RowField, Table, UpdateCascade)}
-     */
-    @Deprecated
-    public UpdateCascadeOperation(Table<S> sourceTable, RowField<S, ?> targetField, Table<T> targetTable, UpdateCascade updateCascadeAnnotation)
-    {
-        super(sourceTable, targetField, targetTable, updateCascadeAnnotation.operation());
-        setPost(updateCascadeAnnotation.post()); 
-    }
-    
-    
-    /**
-     * Constructor used by {@link UpdateOperation}.
-     *  
      * @param sourceOperation cascade originates on row from this table 
      * @param targetField cascade update operation uses row(s) from this field
      * @param targetTable cascade update operation is performed on this table 

@@ -62,7 +62,6 @@ public abstract class CascadeOperation<S, T> implements AutoCloseable
     List<RowField<T, Object>> targetForeignKeyValueFieldList;
     RowField<T, Object> targetForeignReferenceField;
     int keyFieldCount;
-    @Deprecated String[] requiredCascades; // remove when deprecated constructor CascadeOperation(Table<S>...) is removed
     @Deprecated Map<String, Object> namedParameterMap; // remove when deprecated constructor CascadeOperation(Table<S>...) is removed
     @Deprecated int depth; // remove when deprecated constructor CascadeOperation(Table<S>...) is removed
     
@@ -199,21 +198,6 @@ public abstract class CascadeOperation<S, T> implements AutoCloseable
             this.foreignKeyReferenceFieldName = foreignKeyReferenceFieldName;
         else
             this.foreignKeyReferenceFieldName = null;
-    }
-    
-    
-    /**
-     * Sets required cascade names to use. See {@link SqlOperation#setRequiredCascades(String...)} for 
-     * details.
-     * 
-     * @param cascadeNames names of cascades that will be executed 
-     * @since 3.0
-     * @deprecated no longer needed since determined by {@link SqlOperation#getRequiredCascades()} of source operation
-     */
-    @Deprecated
-    public void setRequiredCascades(String... cascadeNames)
-    {
-        requiredCascades = cascadeNames;
     }
     
     

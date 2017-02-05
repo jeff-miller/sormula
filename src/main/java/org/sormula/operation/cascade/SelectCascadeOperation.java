@@ -58,7 +58,6 @@ public class SelectCascadeOperation<S, T> extends CascadeOperation<S, T>
 	ScalarSelectOperation<T> selectOperation;
 	String[] parameterFieldNames;
 	List<RowField<S, ?>> parameterFields;
-	@Deprecated Map<Class<?>, BiPredicate<?, Boolean>> filterPredicateMap; // remove when deprecated constructor SelectCascadeOperation(Table<S>...) is removed
     
     
     /**
@@ -92,22 +91,6 @@ public class SelectCascadeOperation<S, T> extends CascadeOperation<S, T>
     public Map<Class<?>, BiPredicate<?, Boolean>> getFilterPredicateMap() 
     {
 		return ((ScalarSelectOperation<S>)getSourceOperation()).getFilterPredicateMap();
-	}
-
-
-    /**
-     * Sets the map of all filters used by this operation and lower level cascades. See {@link #getFilterPredicateMap()}
-     * for details about the map. Typically this method is invoked by a select operation when preparing 
-     * lower level cascades.
-     * 
-     * @param filterPredicateMap map of class to filter
-     * @since 4.0
-     * @deprecated no longer needed since map is obtained from source operation
-     */
-    @Deprecated
-	public void setFilterPredicateMap(Map<Class<?>, BiPredicate<?, Boolean>> filterPredicateMap) 
-	{
-		this.filterPredicateMap = filterPredicateMap;
 	}
 
 

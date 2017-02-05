@@ -268,7 +268,7 @@ public abstract class CascadeOperation<S, T> implements AutoCloseable
     /**
      * Gets operation that triggered this cascade.
      * 
-     * @return source operation or null if deprecated constructor was used to create this 
+     * @return source operation 
      * @since 4.1
      */
     public SqlOperation<S> getSourceOperation() 

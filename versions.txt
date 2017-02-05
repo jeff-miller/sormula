@@ -23,7 +23,8 @@ version-jdk             comments
                           SaveCascadeOperation(Table<S>, RowField<S, ?>, Table<T>, SaveCascade)
                         - remove deprecated CascadeOperation#setRequiredCascades 
                         - remove deprecated CascadeOpeartion#setNamedParameterMap
-                        - remove deprecated CascadeOpeartion#setDepth 
+                        - remove deprecated CascadeOpeartion#setDepth
+                        - remove deprecated SelectCascadeOperation#setFilterPredicateMap 
                           
 4.1.1-jdk1.8            - add maven central required information to pom
 

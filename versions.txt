@@ -2,7 +2,8 @@ Version History
 
 version-jdk             comments
 ------------------------------------------------------------------------------------------------------------
-4.2-jdk1.8              - add Database#setConnection to allow new connection without need to create new
+4.2-jdk1.8              - update hsqldb 2.4.0              
+                        - add Database#setConnection to allow new connection without need to create new
                           sormula objects
                         - Wheres, OrderBys, and UnusedColumns are only required for internal use.   
                         - update sjl4j to version 1.7.22

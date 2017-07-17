@@ -2,7 +2,7 @@ Version History
 
 version-jdk             comments
 ------------------------------------------------------------------------------------------------------------
-4.2-jdk1.8              - update hsqldb 2.4.0, firebird 2.2.13, h2 1.4.196, oracle 8 driver,              
+4.2-jdk1.8              - update hsqldb 2.4.0, firebird 2.2.13, h2 1.4.196, oracle 8 driver, sqlite 3.19.3              
                         - add Database#setConnection to allow new connection without need to create new
                           sormula objects
                         - Wheres, OrderBys, and UnusedColumns are only required for internal use.   

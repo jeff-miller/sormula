@@ -23,4 +23,20 @@ Active record pattern may be used but is not required.
 Versions 4.1.1 and later are available on 
 [Maven Central](http://search.maven.org/#search|ga|1|sormula). GroupId is org.sormula. ArtifactId is sormula.
 
+Maven
+```
+<dependency>
+    <groupId>org.sormula</groupId>
+    <artifactId>sormula</artifactId>
+    <version>4.1.1</version>
+</dependency>
+```
+
+Gradle
+```
+dependencies {
+    compile group: 'org.sormula', name: 'sormula', version: '4.1.1'
+}
+```
+
 [www.sormula.org](http://www.sormula.org)

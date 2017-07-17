@@ -332,6 +332,7 @@ public class DatabaseTest<R>
         }
         finally
         {
+            if (log.isDebugEnabled()) log.debug("close create table connection");
             connection.close();
         }
     }
@@ -358,6 +359,7 @@ public class DatabaseTest<R>
         }
         finally
         {
+            if (log.isDebugEnabled()) log.debug("close drop table connection");
             connection.close();
         }
     }
@@ -395,6 +397,7 @@ public class DatabaseTest<R>
                 statement.execute(sqlShutdown);
                 statement.close();
                 if (useTransacation) connection.commit();
+                if (log.isDebugEnabled()) log.debug("close shutdown connection");
                 connection.close();
             }
             

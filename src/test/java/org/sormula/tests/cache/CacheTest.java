@@ -48,8 +48,8 @@ public class CacheTest<R> extends DatabaseTest<R>
         // for getting column and primary key values from a row
         try
         {
-            primaryKeyExtractor = new FieldExtractor<R>(getTable().getRowTranslator().getPrimaryKeyWhereTranslator());
-            rowExtractor = new FieldExtractor<R>(getTable().getRowTranslator());
+            primaryKeyExtractor = new FieldExtractor<>(getTable().getRowTranslator().getPrimaryKeyWhereTranslator());
+            rowExtractor = new FieldExtractor<>(getTable().getRowTranslator());
         }
         catch (ReflectException e)
         {
@@ -57,7 +57,7 @@ public class CacheTest<R> extends DatabaseTest<R>
         }
         
         // for selecting rows directly from database
-        uncachedTable = new ScalarSelectOperation<R>(getTable());
+        uncachedTable = new ScalarSelectOperation<>(getTable());
         uncachedTable.setCached(false);
     }
 

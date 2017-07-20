@@ -67,7 +67,7 @@ public abstract class AbstractCache<R> implements Cache<R>
         
         try
         {
-            primaryKeyExtractor = new FieldExtractor<R>(table.getRowTranslator().getPrimaryKeyWhereTranslator());
+            primaryKeyExtractor = new FieldExtractor<>(table.getRowTranslator().getPrimaryKeyWhereTranslator());
         }
         catch (ReflectException e)
         {

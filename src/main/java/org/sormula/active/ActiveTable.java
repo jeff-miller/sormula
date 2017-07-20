@@ -177,7 +177,7 @@ public class ActiveTable<R extends ActiveRecord<? super R>>
      */
     public R select(Object... primaryKeys) throws ActiveException
     {
-        return new Select<R>(this, primaryKeys).execute();
+        return new Select<>(this, primaryKeys).execute();
     }
     
     
@@ -193,7 +193,7 @@ public class ActiveTable<R extends ActiveRecord<? super R>>
      */
     public R selectWhere(String whereConditionName, Object...parameters) throws ActiveException
     {
-        return new SelectWhere<R>(this, whereConditionName, parameters).execute();
+        return new SelectWhere<>(this, whereConditionName, parameters).execute();
     }
     
     
@@ -214,7 +214,7 @@ public class ActiveTable<R extends ActiveRecord<? super R>>
      */
     public R selectCustom(String customSql, Object... parameters) throws ActiveException
     {
-        return new SelectCustom<R>(this, customSql, parameters).execute();
+        return new SelectCustom<>(this, customSql, parameters).execute();
     }
     
     
@@ -234,7 +234,7 @@ public class ActiveTable<R extends ActiveRecord<? super R>>
      */
     public List<R> selectAll() throws ActiveException
     {
-        return new SelectAll<R>(this).execute();
+        return new SelectAll<>(this).execute();
     }
     
     
@@ -250,7 +250,7 @@ public class ActiveTable<R extends ActiveRecord<? super R>>
      */
     public List<R> selectAllWhere(String whereConditionName, Object... parameters) throws ActiveException
     {
-        return new SelectAllWhere<R>(this, whereConditionName, parameters).execute();
+        return new SelectAllWhere<>(this, whereConditionName, parameters).execute();
     }
     
     
@@ -267,7 +267,7 @@ public class ActiveTable<R extends ActiveRecord<? super R>>
      */
     public List<R> selectAllWhereOrdered(String whereConditionName, String orderByName, Object... parameters) throws ActiveException
     {
-        return new SelectAllWhereOrdered<R>(this, whereConditionName, orderByName, parameters).execute();
+        return new SelectAllWhereOrdered<>(this, whereConditionName, orderByName, parameters).execute();
     }
     
     
@@ -289,7 +289,7 @@ public class ActiveTable<R extends ActiveRecord<? super R>>
      */
     public List<R> selectAllCustom(String customSql, Object... parameters) throws ActiveException
     {
-        return new SelectAllCustom<R>(this, customSql, parameters).execute();
+        return new SelectAllCustom<>(this, customSql, parameters).execute();
     }
     
     
@@ -479,7 +479,7 @@ public class ActiveTable<R extends ActiveRecord<? super R>>
      */
     public int save(R record) throws ActiveException
     {
-        return new Save<R>(this, record).execute();
+        return new Save<>(this, record).execute();
     }
     
     
@@ -497,7 +497,7 @@ public class ActiveTable<R extends ActiveRecord<? super R>>
      */
     public int saveBatch(R record) throws ActiveException
     {
-        return new SaveBatch<R>(this, record).execute();
+        return new SaveBatch<>(this, record).execute();
     }
 
     
@@ -512,7 +512,7 @@ public class ActiveTable<R extends ActiveRecord<? super R>>
      */
     public int saveAll(Collection<R> records) throws ActiveException
     {
-        if (records.size() > 0) return new SaveAll<R>(this, records).execute();
+        if (records.size() > 0) return new SaveAll<>(this, records).execute();
         else return 0;
     }
 
@@ -530,7 +530,7 @@ public class ActiveTable<R extends ActiveRecord<? super R>>
      */
     public int saveAllBatch(Collection<R> records) throws ActiveException
     {
-        if (records.size() > 0) return new SaveAllBatch<R>(this, records).execute();
+        if (records.size() > 0) return new SaveAllBatch<>(this, records).execute();
         else return 0;
     }
 
@@ -558,7 +558,7 @@ public class ActiveTable<R extends ActiveRecord<? super R>>
      */
     public int insert(R record) throws ActiveException
     {
-        return new Insert<R>(this, record).execute();
+        return new Insert<>(this, record).execute();
     }
     
     
@@ -575,7 +575,7 @@ public class ActiveTable<R extends ActiveRecord<? super R>>
      */
     public int insertBatch(R record) throws ActiveException
     {
-        return new InsertBatch<R>(this, record).execute();
+        return new InsertBatch<>(this, record).execute();
     }
 
     
@@ -600,7 +600,7 @@ public class ActiveTable<R extends ActiveRecord<? super R>>
      */
     public int insertAll(Collection<R> records) throws ActiveException
     {
-        if (records.size() > 0) return new InsertAll<R>(this, records).execute();
+        if (records.size() > 0) return new InsertAll<>(this, records).execute();
         else return 0;
     }
     
@@ -619,7 +619,7 @@ public class ActiveTable<R extends ActiveRecord<? super R>>
      */
     public int insertAllBatch(Collection<R> records) throws ActiveException
     {
-        if (records.size() > 0) return new InsertAllBatch<R>(this, records).execute();
+        if (records.size() > 0) return new InsertAllBatch<>(this, records).execute();
         else return 0;
     }
     
@@ -645,7 +645,7 @@ public class ActiveTable<R extends ActiveRecord<? super R>>
      */
     public int update(R record) throws ActiveException
     {
-        return new Update<R>(this, record).execute();
+        return new Update<>(this, record).execute();
     }
     
     
@@ -660,7 +660,7 @@ public class ActiveTable<R extends ActiveRecord<? super R>>
      */
     public int updateBatch(R record) throws ActiveException
     {
-        return new UpdateBatch<R>(this, record).execute();
+        return new UpdateBatch<>(this, record).execute();
     }
 
     
@@ -686,7 +686,7 @@ public class ActiveTable<R extends ActiveRecord<? super R>>
      */
     public int updateAll(Collection<R> records) throws ActiveException
     {
-        if (records.size() > 0) return new UpdateAll<R>(this, records).execute();
+        if (records.size() > 0) return new UpdateAll<>(this, records).execute();
         else return 0;
     }
     
@@ -707,7 +707,7 @@ public class ActiveTable<R extends ActiveRecord<? super R>>
      */
     public int updateAllBatch(Collection<R> records) throws ActiveException
     {
-        return new UpdateAllBatch<R>(this, records).execute();
+        return new UpdateAllBatch<>(this, records).execute();
     }
     
     
@@ -732,7 +732,7 @@ public class ActiveTable<R extends ActiveRecord<? super R>>
      */
     public int delete(R record) throws ActiveException
     {
-        return new Delete<R>(this, record).execute();
+        return new Delete<>(this, record).execute();
     }
     
     
@@ -746,7 +746,7 @@ public class ActiveTable<R extends ActiveRecord<? super R>>
      */
     public int deleteBatch(R record) throws ActiveException
     {
-        return new DeleteBatch<R>(this, record).execute();
+        return new DeleteBatch<>(this, record).execute();
     }
 
     
@@ -764,7 +764,7 @@ public class ActiveTable<R extends ActiveRecord<? super R>>
      */
     public int deleteAll() throws ActiveException
     {
-        return new DeleteAll<R>(this).execute();
+        return new DeleteAll<>(this).execute();
     }
 
     
@@ -790,7 +790,7 @@ public class ActiveTable<R extends ActiveRecord<? super R>>
         // if records == null, don't execute since all records will be deleted
         if (records != null && records.size() > 0) 
         {
-            return new DeleteAll<R>(this, records).execute();
+            return new DeleteAll<>(this, records).execute();
         }
         
         return 0;
@@ -815,7 +815,7 @@ public class ActiveTable<R extends ActiveRecord<? super R>>
         // if records == null, don't execute since all records will be deleted
         if (records != null)
         {
-            return new DeleteAllBatch<R>(this, records).execute();
+            return new DeleteAllBatch<>(this, records).execute();
         }
         
         return 0;

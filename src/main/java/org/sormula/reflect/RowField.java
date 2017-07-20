@@ -52,11 +52,11 @@ public abstract class RowField<C, T>
     {
         if (fieldAccessType == FieldAccessType.Direct)
         {
-            return new DirectAccessField<C, T>(field);
+            return new DirectAccessField<>(field);
         }
         else if (fieldAccessType == FieldAccessType.Method)
         {
-            return new MethodAccessField<C, T>(field);
+            return new MethodAccessField<>(field);
         }
         else
         {

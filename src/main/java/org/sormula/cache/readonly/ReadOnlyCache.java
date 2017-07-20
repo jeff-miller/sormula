@@ -208,7 +208,7 @@ public class ReadOnlyCache<R> extends AbstractCache<R>
             {
                 // not in cache yet, new cache entry
                 if (log.isDebugEnabled()) log.debug("selected() new uncommitted select");
-                putUncommitted(new UncommittedSelect<R>(cacheKey, row));
+                putUncommitted(new UncommittedSelect<>(cacheKey, row));
                 cachedRow = row;
             }
         }
@@ -243,7 +243,7 @@ public class ReadOnlyCache<R> extends AbstractCache<R>
             else
             {
                 // row is not in cache, ok to insert
-                putUncommitted(new UncommittedInsert<R>(cacheKey, row));
+                putUncommitted(new UncommittedInsert<>(cacheKey, row));
             }
         }
     }
@@ -266,7 +266,7 @@ public class ReadOnlyCache<R> extends AbstractCache<R>
         else
         {
             // row is not in cache, remember update
-            putUncommitted(new UncommittedUpdate<R>(cacheKey, row));
+            putUncommitted(new UncommittedUpdate<>(cacheKey, row));
         }
     }
 
@@ -288,7 +288,7 @@ public class ReadOnlyCache<R> extends AbstractCache<R>
         else
         {
             // row is not in cache, remember save
-            putUncommitted(new UncommittedSave<R>(cacheKey, row));
+            putUncommitted(new UncommittedSave<>(cacheKey, row));
         }
     }
 
@@ -310,7 +310,7 @@ public class ReadOnlyCache<R> extends AbstractCache<R>
         else
         {
             // row is not in cache, remember delete
-            putUncommitted(new UncommittedDelete<R>(cacheKey, row));
+            putUncommitted(new UncommittedDelete<>(cacheKey, row));
         }
     }
     

@@ -61,7 +61,7 @@ public class UncommittedSave<R> extends UncommittedWritableRow<R>
         if (isWritten())
         {
             // save has occurred so update row
-            return new UncommittedUpdate<R>(getCacheKey(), row);
+            return new UncommittedUpdate<>(getCacheKey(), row);
         }
         else
         {
@@ -78,7 +78,7 @@ public class UncommittedSave<R> extends UncommittedWritableRow<R>
         if (isWritten())
         {
             // save has occurred so update row
-            return new UncommittedUpdate<R>(getCacheKey(), row);
+            return new UncommittedUpdate<>(getCacheKey(), row);
         }
         else
         {
@@ -93,7 +93,7 @@ public class UncommittedSave<R> extends UncommittedWritableRow<R>
     public UncommittedRow<R> delete(R row) throws CacheException
     {
         // delete on saved r1 row is equivalent to delete r2
-        return new UncommittedDelete<R>(getCacheKey(), row);
+        return new UncommittedDelete<>(getCacheKey(), row);
     }
     
 

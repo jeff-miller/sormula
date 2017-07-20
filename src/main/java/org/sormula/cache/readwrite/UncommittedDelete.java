@@ -52,7 +52,7 @@ public class UncommittedDelete<R> extends UncommittedWritableRow<R>
     public UncommittedRow<R> insert(R row) throws CacheException
     {
         // delete r1 followed by insert r2 is equivalent to save r2
-        return new UncommittedSave<R>(getCacheKey(), row);
+        return new UncommittedSave<>(getCacheKey(), row);
     }
 
 
@@ -68,7 +68,7 @@ public class UncommittedDelete<R> extends UncommittedWritableRow<R>
     public UncommittedRow<R> save(R row) throws CacheException
     {
         // delete r1 followed by save r2 is equivalent to save r2
-        return new UncommittedSave<R>(getCacheKey(), row);
+        return new UncommittedSave<>(getCacheKey(), row);
     }
 
 

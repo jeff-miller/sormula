@@ -75,7 +75,7 @@ public class ReadOnlyTest extends DatabaseTest<SormulaTest4RO>
     Table<SormulaTest4RO> freshTableInstance() throws SormulaException
     {
         // don't use getTable() to avoid affecting other tests
-        return new Table<SormulaTest4RO>(getDatabase(), SormulaTest4RO.class); 
+        return new Table<>(getDatabase(), SormulaTest4RO.class); 
     }
 
 

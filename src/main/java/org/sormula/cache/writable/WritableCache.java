@@ -77,7 +77,7 @@ public abstract class WritableCache<R> extends AbstractCache<R>
     {
         if (log.isDebugEnabled()) log.debug("write()");
 
-        try (WriteOperations<R> writeOperations = new WriteOperations<R>(this))
+        try (WriteOperations<R> writeOperations = new WriteOperations<>(this))
         {
             // init
             writeOperations.open();

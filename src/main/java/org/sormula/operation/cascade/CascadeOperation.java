@@ -383,8 +383,8 @@ public abstract class CascadeOperation<S, T> implements AutoCloseable
                     getPrimaryKeyWhereTranslator().getColumnTranslatorList();
             
             // parallel lists mapping source primary key(s) to target foreign key(s)
-            sourceKeyFieldList = new ArrayList<RowField<S,Object>>(sourceKeyColumnTranslators.size());
-            targetForeignKeyValueFieldList = new ArrayList<RowField<T, Object>>(sourceKeyColumnTranslators.size());
+            sourceKeyFieldList = new ArrayList<>(sourceKeyColumnTranslators.size());
+            targetForeignKeyValueFieldList = new ArrayList<>(sourceKeyColumnTranslators.size());
             
             try
             {

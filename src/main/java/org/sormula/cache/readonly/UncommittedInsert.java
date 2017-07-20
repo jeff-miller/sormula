@@ -59,7 +59,7 @@ public class UncommittedInsert<R> extends UncommittedReadOnlyRow<R>
     public UncommittedRow<R> updated(R row) throws CacheException
     {
         // insert has occurred so update row
-        return new UncommittedUpdate<R>(getCacheKey(), row);
+        return new UncommittedUpdate<>(getCacheKey(), row);
     }
 
 
@@ -67,7 +67,7 @@ public class UncommittedInsert<R> extends UncommittedReadOnlyRow<R>
     public UncommittedRow<R> saved(R row) throws CacheException
     {
         // insert has occurred so save row
-        return new UncommittedSave<R>(getCacheKey(), row);
+        return new UncommittedSave<>(getCacheKey(), row);
     }
 
 
@@ -75,7 +75,7 @@ public class UncommittedInsert<R> extends UncommittedReadOnlyRow<R>
     public UncommittedRow<R> deleted(R row) throws CacheException
     {
         // remember that it is now deleted
-        return new UncommittedDelete<R>(getCacheKey(), row);
+        return new UncommittedDelete<>(getCacheKey(), row);
     }
     
 

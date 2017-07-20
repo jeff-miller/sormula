@@ -71,7 +71,7 @@ public class FieldExtractor<R>
     
     private void init(RowTranslator<R> rowTranslator, List<ColumnTranslator<R>> columnTranslatorList) throws ReflectException
     {
-        rowFieldList = new ArrayList<RowField<R, ?>>(columnTranslatorList.size());
+        rowFieldList = new ArrayList<>(columnTranslatorList.size());
         
         try
         {

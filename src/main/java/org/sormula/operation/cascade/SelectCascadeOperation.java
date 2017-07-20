@@ -376,7 +376,7 @@ public class SelectCascadeOperation<S, T> extends CascadeOperation<S, T>
         {
             try
             {
-                parameterFields = new ArrayList<RowField<S, ?>>(parameterFieldNames.length);
+                parameterFields = new ArrayList<>(parameterFieldNames.length);
                 for (String name : parameterFieldNames)
                 {
                     if (name.startsWith("$"))
@@ -470,7 +470,7 @@ public class SelectCascadeOperation<S, T> extends CascadeOperation<S, T>
             {
                 if (log.isDebugEnabled()) log.debug("#sourceFieldNames where condition for " + getTargetTable().getRowClass());
                 RowTranslator<T> targetRowTranslator = getTargetTable().getRowTranslator();
-                WhereTranslator<T> whereTranslator = new WhereTranslator<T>(targetRowTranslator, parameterFields.size());
+                WhereTranslator<T> whereTranslator = new WhereTranslator<>(targetRowTranslator, parameterFields.size());
                 
                 // for all source parameter fields
                 for (RowField<S, ?> spf : parameterFields)
@@ -496,7 +496,7 @@ public class SelectCascadeOperation<S, T> extends CascadeOperation<S, T>
             {
                 if (log.isDebugEnabled()) log.debug("#foreignKeyValueFields where condition for " + getTargetTable().getRowClass());
                 RowTranslator<T> targetRowTranslator = getTargetTable().getRowTranslator();
-                WhereTranslator<T> whereTranslator = new WhereTranslator<T>(targetRowTranslator, getTargetForeignKeyValueFieldList().size());
+                WhereTranslator<T> whereTranslator = new WhereTranslator<>(targetRowTranslator, getTargetForeignKeyValueFieldList().size());
                 
                 // for all foreign key fields in target
                 for (RowField<T, Object> tfk : getTargetForeignKeyValueFieldList())

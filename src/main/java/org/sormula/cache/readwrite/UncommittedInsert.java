@@ -61,7 +61,7 @@ public class UncommittedInsert<R> extends UncommittedWritableRow<R>
         if (isWritten())
         {
             // insert has occurred so update row
-            return new UncommittedUpdate<R>(getCacheKey(), row);
+            return new UncommittedUpdate<>(getCacheKey(), row);
         }
         else
         {
@@ -78,7 +78,7 @@ public class UncommittedInsert<R> extends UncommittedWritableRow<R>
         if (isWritten())
         {
             // insert has occurred so update row
-            return new UncommittedUpdate<R>(getCacheKey(), row);
+            return new UncommittedUpdate<>(getCacheKey(), row);
         }
         else
         {

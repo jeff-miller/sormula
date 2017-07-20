@@ -876,7 +876,7 @@ public abstract class SqlOperation<R> implements AutoCloseable
                         String primaryKeys;
                         try
                         {
-                            primaryKeys = new FieldExtractor<R>(
+                            primaryKeys = new FieldExtractor<>(
                                     table.getRowTranslator().getPrimaryKeyWhereTranslator()).toString(row);
                         }
                         catch (ReflectException e)

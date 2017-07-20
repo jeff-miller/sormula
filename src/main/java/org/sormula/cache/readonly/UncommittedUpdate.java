@@ -68,7 +68,7 @@ public class UncommittedUpdate<R> extends UncommittedReadOnlyRow<R>
     public UncommittedRow<R> saved(R row) throws CacheException
     {
         // update r1 followed by save r2 is equivalent to save r2
-        return new UncommittedSave<R>(getCacheKey(), row);
+        return new UncommittedSave<>(getCacheKey(), row);
     }
 
 
@@ -76,7 +76,7 @@ public class UncommittedUpdate<R> extends UncommittedReadOnlyRow<R>
     public UncommittedRow<R> deleted(R row) throws CacheException
     {
         // update r1 followed by delete r2 is equivalent to delete r2
-        return new UncommittedDelete<R>(getCacheKey(), row);
+        return new UncommittedDelete<>(getCacheKey(), row);
     }
     
 

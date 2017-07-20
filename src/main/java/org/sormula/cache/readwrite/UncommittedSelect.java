@@ -59,7 +59,7 @@ public class UncommittedSelect<R> extends UncommittedWritableRow<R>
     public UncommittedRow<R> update(R row) throws CacheException
     {
         // select r1 followed by update r2 for same key is equivalent to update r2
-        return new UncommittedUpdate<R>(getCacheKey(), row);
+        return new UncommittedUpdate<>(getCacheKey(), row);
     }
 
     
@@ -67,7 +67,7 @@ public class UncommittedSelect<R> extends UncommittedWritableRow<R>
     public UncommittedRow<R> save(R row) throws CacheException
     {
         // select r1 followed by save r2 for same key is equivalent to save r2
-        return new UncommittedSave<R>(getCacheKey(), row);
+        return new UncommittedSave<>(getCacheKey(), row);
     }
 
     
@@ -75,7 +75,7 @@ public class UncommittedSelect<R> extends UncommittedWritableRow<R>
     public UncommittedRow<R> delete(R row) throws CacheException
     {
         // select r1 followed by delete r2 for same key is equivalent to delete r2
-        return new UncommittedDelete<R>(getCacheKey(), row);
+        return new UncommittedDelete<>(getCacheKey(), row);
     }
     
 

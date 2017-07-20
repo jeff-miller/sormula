@@ -52,7 +52,7 @@ public class UncommittedUpdate<R> extends UncommittedWritableRow<R>
     {
         // assume update is no-op because row does not yet exist in db, so insert will be ok
         // if assumption is wrong then can't know until commit which will fail  
-        return new UncommittedInsert<R>(getCacheKey(), row);
+        return new UncommittedInsert<>(getCacheKey(), row);
     }
 
 
@@ -70,7 +70,7 @@ public class UncommittedUpdate<R> extends UncommittedWritableRow<R>
     public UncommittedRow<R> save(R row) throws CacheException
     {
         // update r1 followed by save r2 is equivalent to save r2
-        return new UncommittedSave<R>(getCacheKey(), row);
+        return new UncommittedSave<>(getCacheKey(), row);
     }
 
 
@@ -78,7 +78,7 @@ public class UncommittedUpdate<R> extends UncommittedWritableRow<R>
     public UncommittedRow<R> delete(R row) throws CacheException
     {
         // update r1 followed by delete r2 is equivalent to delete r2
-        return new UncommittedDelete<R>(getCacheKey(), row);
+        return new UncommittedDelete<>(getCacheKey(), row);
     }
     
 

@@ -354,7 +354,7 @@ public abstract class ActiveRecord<R extends ActiveRecord<? super R>> implements
                 {
                     // cascade
                     SelectCascadeAnnotationReader scar = new SelectCascadeAnnotationReader(field);
-                    new ActiveLazySelector<R>(createTable(), recordClass.cast(this), scar).execute();
+                    new ActiveLazySelector<>(createTable(), recordClass.cast(this), scar).execute();
                     
                     // don't do field again
                     pendingLazySelectFieldNames.remove(fieldName);
@@ -394,8 +394,8 @@ public abstract class ActiveRecord<R extends ActiveRecord<? super R>> implements
     protected ActiveTable<R> createTable() throws ActiveException
     {
         ActiveTable<R> activeTable;
-        if (activeDatabase == null) activeTable = new ActiveTable<R>(recordClass);
-        else                        activeTable = new ActiveTable<R>(activeDatabase, recordClass);
+        if (activeDatabase == null) activeTable = new ActiveTable<>(recordClass);
+        else                        activeTable = new ActiveTable<>(activeDatabase, recordClass);
         if (log.isDebugEnabled()) log.debug("createTable() " + activeTable);
         return activeTable;
     }

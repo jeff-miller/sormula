@@ -113,10 +113,11 @@ public class BasicSelect extends ExampleBase
     }
     
     
-	void selectWhere2() throws SormulaException
+	@SuppressWarnings("resource") // Table#selectAll performs close
+    void selectWhere2() throws SormulaException
     {
         System.out.println("select using SelectJohns class");
-        printAll(new SelectJohns(table).selectAll()); // note: Table.selectAll performs close
+        printAll(new SelectJohns(table).selectAll());
     }
 }
 

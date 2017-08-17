@@ -186,11 +186,7 @@ public abstract class CascadeOperation<S, T> implements AutoCloseable
     
     
     /**
-     * If constructed with {@link #CascadeOperation(Table, RowField, Table, Class)} then
-     * gets required cascade names set with {@link #setRequiredCascades(String...)}.
-     * <p>
-     * If constructed with {@link #CascadeOperation(SqlOperation, RowField, Table, Class)} then
-     * returns source operation {@link SqlOperation#getRequiredCascades()}.
+     * Returns source operation {@link SqlOperation#getRequiredCascades()}.
      * 
      * @return names of cascades that will be executed
      * @since 3.0

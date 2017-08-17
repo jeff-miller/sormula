@@ -2,9 +2,9 @@ To have sormula log debug messages using log4j:
 
 
 1. Add the following jars to your classpath (copy from src/examples/resources):
-    slf4j-api-1.6.1.jar
-    slf4j-log4j12-1.6.1.jar
-    log4j-1.2.13.jar
+    slf4j-api-1.7.22.jar
+    slf4j-log4j12-1.7.22.jar
+    log4j-1.2.17.jar
 
 2. Create log4j.properties in your classpath (use src/examples/resources/log4j.properties as an example)
 

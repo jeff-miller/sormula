@@ -28,14 +28,14 @@ Maven
 <dependency>
     <groupId>org.sormula</groupId>
     <artifactId>sormula</artifactId>
-    <version>4.1.1</version>
+    <version>4.2</version>
 </dependency>
 ```
 
 Gradle
 ```
 dependencies {
-    compile group: 'org.sormula', name: 'sormula', version: '4.1.1'
+    compile group: 'org.sormula', name: 'sormula', version: '4.2'
 }
 ```
 

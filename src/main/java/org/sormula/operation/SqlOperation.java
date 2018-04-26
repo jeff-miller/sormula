@@ -19,6 +19,7 @@ package org.sormula.operation;
 import java.lang.reflect.Field;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
@@ -95,6 +96,7 @@ public abstract class SqlOperation<R> implements AutoCloseable
     Where whereAnnotation;
     String[] requiredCascades;
     int cascadeDepth;
+    int resultSetType = ResultSet.TYPE_FORWARD_ONLY; // TODO here or in ScalarSelectOperation?
     
 
     /**
@@ -517,6 +519,29 @@ public abstract class SqlOperation<R> implements AutoCloseable
 
     
     /**
+     * TODO
+     * @return
+     * @since 4.3
+     */
+    public int getResultSetType()
+    {
+        return resultSetType;
+    }
+
+
+    /**
+     * TODO
+     * TODO warn changing cursor position may break 
+     * @param resultSetType
+     * @since 4.3
+     */
+    public void setResultSetType(int resultSetType)
+    {
+        this.resultSetType = resultSetType;
+    }
+
+
+    /**
      * Gets the timing id for this operation. If none is set then the default is the
      * hexadecimal string of the hash code of {@link #getSql()}.
      * 
@@ -794,7 +819,7 @@ public abstract class SqlOperation<R> implements AutoCloseable
             {
                 // use prepareStatement(String) method for compatibility with 
                 // jdbc drivers that don't support identity columns
-                preparedStatement = connection.prepareStatement(preparedSql);
+                preparedStatement = connection.prepareStatement(preparedSql, resultSetType, ResultSet.CONCUR_READ_ONLY);
             }
             
             preparedStatement.setQueryTimeout(queryTimeout);

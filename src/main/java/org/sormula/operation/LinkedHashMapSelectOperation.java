@@ -36,7 +36,7 @@ public class LinkedHashMapSelectOperation<K, R> extends MapSelectOperation<K, R>
 {
 	/**
      * Constructs for a table to use primary key where condition. This is the standard 
-     * consturctor for all {@link SqlOperation} classes.
+     * constructor for all {@link SqlOperation} classes.
      * <p>
      * It is unlikely that you will want to use this constructor without also
      * changing the where condition since at most one row will be selected. Use 

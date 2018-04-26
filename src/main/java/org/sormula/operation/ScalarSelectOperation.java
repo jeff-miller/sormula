@@ -17,7 +17,9 @@
 package org.sormula.operation;
 
 import java.lang.reflect.Field;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -272,9 +274,10 @@ public class ScalarSelectOperation<R> extends SqlOperation<R> implements Iterabl
             
             try
             {
-                if (maximumRowsRead < Integer.MAX_VALUE) preparedStatement.setMaxRows(maximumRowsRead);
+                PreparedStatement ps = getPreparedStatement();
+                if (maximumRowsRead < Integer.MAX_VALUE) ps.setMaxRows(maximumRowsRead);
                 operationTime.startExecuteTime();
-                resultSet = preparedStatement.executeQuery();
+                resultSet = ps.executeQuery();
                 operationTime.stop();
             }
             catch (Exception e)
@@ -319,6 +322,48 @@ public class ScalarSelectOperation<R> extends SqlOperation<R> implements Iterabl
         }
         
         super.close();
+    }
+    
+    
+    /**
+     * TODO
+     * @param rowNumber
+     * @throws OperationException
+     * @since 4.3
+     * @see ResultSet#absolute(int)
+     */
+    // TODO name? absolute() like ResultSet? other?
+    public void positionAbsolute(int rowNumber) throws OperationException
+    {
+        try
+        {
+            resultSet.absolute(rowNumber);
+        }
+        catch (SQLException e)
+        {
+            throw new OperationException("cursor position error", e);
+        }
+    }
+    
+    
+    /**
+     * TODO
+     * @param rows
+     * @throws OperationException
+     * @since 4.3
+     * @see ResultSet#relative(int)
+     */
+    // TODO name? relative() like ResultSet? other?
+    public void positionRelative(int rows) throws OperationException
+    {
+        try
+        {
+            resultSet.relative(rows);
+        }
+        catch (SQLException e)
+        {
+            throw new OperationException("cursor position error", e);
+        }
     }
     
     
@@ -903,6 +948,7 @@ public class ScalarSelectOperation<R> extends SqlOperation<R> implements Iterabl
                     SelectCascadeOperation<R, ?> operation = new SelectCascadeOperation(this, targetField, targetTable, c);
                     if (c.setForeignKeyValues()) operation.setForeignKeyFieldNames(car.getForeignKeyValueFields());
                     if (c.setForeignKeyReference()) operation.setForeignKeyReferenceFieldName(car.getForeignKeyReferenceField());
+                    // TODO operation.setResultSetType()?
 
                     operation.prepare();
                     co.add(operation);

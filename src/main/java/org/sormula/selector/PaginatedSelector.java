@@ -51,6 +51,7 @@ public class PaginatedSelector<R, C> // TODO name Paginator?
     public void setPageNumber(int pageNumber) throws OperationException 
     {
         selectOperation.positionAbsolute(pageSize * (pageNumber - 1) + 1);
+        selectOperation.resetRowsReadCount();
         this.pageNumber = pageNumber;
     }
     
@@ -69,6 +70,13 @@ public class PaginatedSelector<R, C> // TODO name Paginator?
     
     // TODO stream method?
     
+    /**
+     * Note: if {@link #selectRow()} has been used since the most recent start of page, then {@link #selectPage()}
+     * return will contain remaining rows in the page and will not include rows read with {@link #selectRow()}.
+     * 
+     * @return
+     * @throws OperationException
+     */
     public C selectPage() throws OperationException
     {
         return selectOperation.readAll();

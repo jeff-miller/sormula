@@ -167,6 +167,15 @@ public class ScalarSelectOperation<R> extends SqlOperation<R> implements Iterabl
         return rowsReadCount;
     }
 
+    
+    /**
+     * TODO
+     */
+    public void resetRowsReadCount() // TODO name? change name if more than simply reseting count
+    {
+        rowsReadCount = 0;
+    }
+    
 
     /**
      * Set parameters using values from a row object. Use this instead of {@link #setParameters(Object...)}.
@@ -209,7 +218,7 @@ public class ScalarSelectOperation<R> extends SqlOperation<R> implements Iterabl
         cacheContainsPrimaryKey = false;
         initOperationTime();
         setNextParameter(1);
-        rowsReadCount = 0;
+        resetRowsReadCount();
         
         if (isCached())
         {
@@ -948,7 +957,7 @@ public class ScalarSelectOperation<R> extends SqlOperation<R> implements Iterabl
                     SelectCascadeOperation<R, ?> operation = new SelectCascadeOperation(this, targetField, targetTable, c);
                     if (c.setForeignKeyValues()) operation.setForeignKeyFieldNames(car.getForeignKeyValueFields());
                     if (c.setForeignKeyReference()) operation.setForeignKeyReferenceFieldName(car.getForeignKeyReferenceField());
-                    // TODO operation.setResultSetType()?
+                    // TODO operation.setResultSetType()? propogate type to all cascades?
 
                     operation.prepare();
                     co.add(operation);

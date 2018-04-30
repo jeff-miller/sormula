@@ -15,7 +15,7 @@ import org.sormula.operation.SelectOperation;
  */
 public class PaginatedSelector<R, C> // TODO name Paginator?
 {
-    int pageSize;
+    int pageSize; // TODO name rowsPerPage?
     int pageNumber;
     SelectOperation<R, C> selectOperation;
 
@@ -37,6 +37,7 @@ public class PaginatedSelector<R, C> // TODO name Paginator?
     
     protected void init(SelectOperation<R, C> selectOperation, int pageSize, int resultSetType) throws OperationException
     {
+        this.selectOperation = selectOperation;
         this.pageSize = pageSize;
         selectOperation.setMaximumRowsRead(pageSize);
         selectOperation.setResultSetType(resultSetType);
@@ -59,7 +60,7 @@ public class PaginatedSelector<R, C> // TODO name Paginator?
 
     public void setPageNumber(int pageNumber) throws OperationException 
     {
-        selectOperation.positionAbsolute(pageSize * (pageNumber - 1) + 1);
+        selectOperation.positionAbsolute(pageSize * (pageNumber - 1));
         selectOperation.resetRowsReadCount();
         this.pageNumber = pageNumber;
     }

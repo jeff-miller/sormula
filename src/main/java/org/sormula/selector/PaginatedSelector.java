@@ -18,19 +18,28 @@ public class PaginatedSelector<R, C> // TODO name Paginator?
     int pageSize;
     int pageNumber;
     SelectOperation<R, C> selectOperation;
+
+    
+    public PaginatedSelector(SelectOperation<R, C> selectOperation, int pageSize) throws OperationException
+    {
+        this(selectOperation, pageSize, false);
+    }
     
     
-    /**
-     * TODO
-     * @param pageSize
-     * @param selectOperation
-     * @throws OperationException
-     */
-    public PaginatedSelector(int pageSize, SelectOperation<R, C> selectOperation) throws OperationException
+    public PaginatedSelector(SelectOperation<R, C> selectOperation, int pageSize, boolean scrollSensitive) throws OperationException
+    {
+        int resultSetType;
+        if (scrollSensitive) resultSetType = ResultSet.TYPE_SCROLL_SENSITIVE;
+        else                 resultSetType = ResultSet.TYPE_SCROLL_INSENSITIVE;
+        init(selectOperation, pageSize, resultSetType);
+    }
+    
+    
+    protected void init(SelectOperation<R, C> selectOperation, int pageSize, int resultSetType) throws OperationException
     {
         this.pageSize = pageSize;
         selectOperation.setMaximumRowsRead(pageSize);
-        selectOperation.setResultSetType(ResultSet.TYPE_SCROLL_INSENSITIVE); // TODO allow both types of scroll
+        selectOperation.setResultSetType(resultSetType);
         selectOperation.execute();
         setPageNumber(1);
     }

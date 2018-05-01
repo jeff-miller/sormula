@@ -55,7 +55,14 @@ public class SelectPsTest extends DatabaseTest<SormulaPsTest>
     public void setUp() throws Exception
     {
         openDatabase();
-        createTable(SormulaPsTest.class);
+        if (isTestScrollableResultSets())
+        {
+            createTable(SormulaPsTest.class);
+        }
+        else
+        {
+            log.info("skipping tests for " + PaginatedSelector.class.getName());
+        }
     }
     
     
@@ -69,27 +76,29 @@ public class SelectPsTest extends DatabaseTest<SormulaPsTest>
     @Test
     public void selectPages() throws SormulaException
     {
-        // TODO test only if db property set? to allow skipping for some db's
-        selectByPage = true;
-        int[] testRowsPerPage = {25, 31, 99};
-        
-        for (int rowsPerPage : testRowsPerPage)
+        if (isTestScrollableResultSets())
         {
-        	begin();
-        	
-        	initExpectedPages(rowsPerPage, ""/*all*/, "orderById");
-        	testPages();
-        	
-            initExpectedPages(rowsPerPage, ""/*all*/, "orderByIdDescending");
-            testPages();
-        	
-            initExpectedPages(rowsPerPage, "selectByType", "orderById", 1);
-        	testPages();
-        	
-        	initExpectedPages(rowsPerPage, "selectByType", "orderById", 2);
-        	testPages();
+            selectByPage = true;
+            int[] testRowsPerPage = {25, 31, 99};
             
-        	commit();
+            for (int rowsPerPage : testRowsPerPage)
+            {
+            	begin();
+            	
+            	initExpectedPages(rowsPerPage, ""/*all*/, "orderById");
+            	testPages();
+            	
+                initExpectedPages(rowsPerPage, ""/*all*/, "orderByIdDescending");
+                testPages();
+            	
+                initExpectedPages(rowsPerPage, "selectByType", "orderById", 1);
+            	testPages();
+            	
+            	initExpectedPages(rowsPerPage, "selectByType", "orderById", 2);
+            	testPages();
+                
+            	commit();
+            }
         }
     }
 
@@ -97,16 +106,19 @@ public class SelectPsTest extends DatabaseTest<SormulaPsTest>
     @Test
     public void selectPagesByRow() throws SormulaException
     {
-        selectByPage = false;
-        begin();
-        
-        initExpectedPages(50, ""/*all*/, "orderByIdDescending");
-        testPages();
-        
-        initExpectedPages(14, "selectByType", "orderById", 2);
-        testPages();
-        
-        commit();
+        if (isTestScrollableResultSets())
+        {
+            selectByPage = false;
+            begin();
+            
+            initExpectedPages(50, ""/*all*/, "orderByIdDescending");
+            testPages();
+            
+            initExpectedPages(14, "selectByType", "orderById", 2);
+            testPages();
+            
+            commit();
+        }
     }
     
     

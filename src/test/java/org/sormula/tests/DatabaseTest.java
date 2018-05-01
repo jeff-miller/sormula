@@ -23,7 +23,9 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.sql.Connection;
+import java.sql.DatabaseMetaData;
 import java.sql.DriverManager;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.HashSet;
@@ -116,6 +118,7 @@ public class DatabaseTest<R>
     String driverShutdown;
     List<R> all;
     boolean dataSourceDatabase;
+    boolean testScrollableResultSets;
     
     
     public DatabaseTest() 
@@ -128,6 +131,12 @@ public class DatabaseTest<R>
         {
             log.error("error opening jdbc properties", e);
         }
+    }
+    
+    
+    public boolean isTestScrollableResultSets()
+    {
+        return testScrollableResultSets;
     }
     
     
@@ -267,6 +276,16 @@ public class DatabaseTest<R>
             // allows transaction listener notification for cached tests
             database.setTransaction(new NoOpTransaction(database.getConnection()));
         }
+        
+        initMetaDataProperties();
+    }
+    
+    
+    protected void initMetaDataProperties() throws SQLException
+    {
+        DatabaseMetaData databaseMetaData = getConnection().getMetaData();
+        testScrollableResultSets = databaseMetaData.supportsResultSetType(ResultSet.TYPE_SCROLL_INSENSITIVE) ||
+                databaseMetaData.supportsResultSetType(ResultSet.TYPE_SCROLL_SENSITIVE);
     }
     
     

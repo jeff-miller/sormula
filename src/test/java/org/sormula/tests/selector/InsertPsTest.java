@@ -33,19 +33,23 @@ import org.testng.annotations.Test;
  * @author Jeff Miller
  */
 @Test(singleThreaded=true, groups="operation.insert")
-public class PsInsert extends DatabaseTest<SormulaPsTest>
+public class InsertPsTest extends DatabaseTest<SormulaPsTest>
 {
     @BeforeClass
     public void setUp() throws Exception
     {
         openDatabase();
-        createTable(SormulaPsTest.class, 
-            "CREATE TABLE " + getSchemaPrefix() + SormulaPsTest.class.getSimpleName() + " (" +
-            " id INTEGER NOT NULL PRIMARY KEY," +
-            " type SMALLINT," +
-            " description VARCHAR(30)" +
-            ")"
-        );
+        
+        if (isTestScrollableResultSets())
+        {
+            createTable(SormulaPsTest.class, 
+                "CREATE TABLE " + getSchemaPrefix() + SormulaPsTest.class.getSimpleName() + " (" +
+                " id INTEGER NOT NULL PRIMARY KEY," +
+                " type SMALLINT," +
+                " description VARCHAR(30)" +
+                ")"
+            );
+        }
     }
     
     
@@ -59,26 +63,29 @@ public class PsInsert extends DatabaseTest<SormulaPsTest>
     @Test
     public void insert() throws SormulaException
     {
-        ArrayList<SormulaPsTest> list = new ArrayList<>(200);
-        
-        // insert 2 types so that subset can be selected for testing
-        // type 1 has 100 for testing page sizes with same number of rows
-        // type 2 has 173 for testing last page with different number of rows
-        int id = 1;
-        for ( ; id <= 100; ++id)
+        if (isTestScrollableResultSets())
         {
-            list.add(new SormulaPsTest(id, 1, "type 1 " + id));
+            ArrayList<SormulaPsTest> list = new ArrayList<>(200);
+            
+            // insert 2 types so that subset can be selected for testing
+            // type 1 has 100 for testing page sizes with same number of rows
+            // type 2 has 173 for testing last page with different number of rows
+            int id = 1;
+            for ( ; id <= 100; ++id)
+            {
+                list.add(new SormulaPsTest(id, 1, "type 1 " + id));
+            }
+            for (++id; id <= 173; ++id)
+            {
+                list.add(new SormulaPsTest(id, 2, "type 2 " + id));
+            }
+            
+            // insert in random order to avoid false positives that are coincidentally ordered in db
+            Collections.shuffle(list);
+            
+            begin();
+            assert getTable().insertAll(list) == list.size() : "insert test data failed";
+            commit();
         }
-        for (++id; id <= 173; ++id)
-        {
-            list.add(new SormulaPsTest(id, 2, "type 2 " + id));
-        }
-        
-        // insert in random order to avoid false positives that are coincidentally ordered in db
-        Collections.shuffle(list);
-        
-        begin();
-        assert getTable().insertAll(list) == list.size() : "insert test data failed";
-        commit();
     }
 }

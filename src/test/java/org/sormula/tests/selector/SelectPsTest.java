@@ -17,7 +17,7 @@
 package org.sormula.tests.selector;
 
 import java.util.ArrayList;
-import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -25,6 +25,7 @@ import java.util.Map;
 import org.sormula.SormulaException;
 import org.sormula.log.ClassLogger;
 import org.sormula.operation.ArrayListSelectOperation;
+import org.sormula.operation.OperationException;
 import org.sormula.selector.PaginatedSelector;
 import org.sormula.tests.DatabaseTest;
 import org.testng.annotations.AfterClass;
@@ -46,6 +47,7 @@ public class SelectPsTest extends DatabaseTest<SormulaPsTest>
 	String orderByName;
 	Object[] whereParameters;
 	Map<Integer, List<Integer>> pageIdMap;
+	PaginatedSelector<SormulaPsTest, List<SormulaPsTest>> selector;
 	
 	
     @BeforeClass
@@ -67,12 +69,21 @@ public class SelectPsTest extends DatabaseTest<SormulaPsTest>
     public void selectA() throws SormulaException
     {
         // TODO test only if db property set? to allow skipping for some db's
+        int[] testRowsPerPage = {25, 31, 99};
         
-    	begin();
-    	//initExpectedPages(25, ""/*all*/, "orderById");
-    	initExpectedPages(25, "selectByType", "orderById", 2);
-    	testPages();
-        commit();
+        for (int rowsPerPage : testRowsPerPage)
+        {
+        	begin();
+        	initExpectedPages(rowsPerPage, ""/*all*/, "orderById");
+        	testPages();
+            initExpectedPages(rowsPerPage, ""/*all*/, "orderByIdDescending");
+            testPages();
+        	initExpectedPages(rowsPerPage, "selectByType", "orderById", 1);
+        	testPages();
+        	initExpectedPages(rowsPerPage, "selectByType", "orderById", 2);
+        	testPages();
+            commit();
+        }
     }
     
     
@@ -84,7 +95,7 @@ public class SelectPsTest extends DatabaseTest<SormulaPsTest>
         this.whereParameters = whereParameters;
         
         // build a map for page number to list of ids on that page
-        List<SormulaPsTest> testRows = getTable().selectAllWhere(whereConditionName, whereParameters);
+        List<SormulaPsTest> testRows = getTable().selectAllWhereOrdered(whereConditionName, orderByName, whereParameters);
         pageIdMap = new HashMap<>(testRows.size() / rowsPerPage * 2);
         int pageNumber = 1;
         int pageRow = 1;
@@ -106,54 +117,95 @@ public class SelectPsTest extends DatabaseTest<SormulaPsTest>
             ++pageRow;
         }
         
-        // debug
-        for (pageNumber = 1; pageNumber <= pageIdMap.size(); ++pageNumber)
+        if (log.isDebugEnabled())
         {
-            log.info(pageNumber + " " + pageIdMap.get(pageNumber));
+            for (pageNumber = 1; pageNumber <= pageIdMap.size(); ++pageNumber)
+            {
+                log.debug(pageNumber + " " + pageIdMap.get(pageNumber));
+            }
         }
     }
     
     
     protected void testPages() throws SormulaException
     {
-        ArrayListSelectOperation<SormulaPsTest> selectOperation = new ArrayListSelectOperation<>(getTable(), whereConditionName); // TODO make class variable instead of parameter?
+        ArrayListSelectOperation<SormulaPsTest> selectOperation = new ArrayListSelectOperation<>(getTable(), whereConditionName);
         selectOperation.setOrderBy(orderByName);
         selectOperation.setParameters(whereParameters);
-        PaginatedSelector<SormulaPsTest, List<SormulaPsTest>> selector = new PaginatedSelector<>(selectOperation, rowsPerPage);
+        selector = new PaginatedSelector<>(selectOperation, rowsPerPage);
         int lastPage = pageIdMap.size() + 1; 
 
-        selector.setPageNumber(1);
-        testExpectedRows(selector);
-
-        selector.setPageNumber(2);
-        testExpectedRows(selector);
-
-        selector.setPageNumber(3);
-        testExpectedRows(selector);
+        int testPage;
+        
+        testPage = lastPage * 2 / 3;
+        if (testPage >= 1)
+        {
+            selector.setPageNumber(testPage);
+            testExpectedRows();
+    
+            if (testPage > 1)
+            {
+                selector.previousPage();
+                testExpectedRows();
+            }
+        }
+        
+        testPage = lastPage / 3;
+        if (testPage >= 1)
+        {
+            selector.setPageNumber(testPage);
+            testExpectedRows();
+            
+            selector.nextPage();
+            testExpectedRows();
+        }
+        
+        // test outside of page boundaries
+        try
+        {
+            selector.setPageNumber(-1);
+            throw new SormulaException("negative page number");
+        }
+        catch (OperationException e)
+        {
+            // expected
+        }
+        selector.setPageNumber(lastPage + 1);
+        testExpectedRows();
     }
     
     
-    protected <C extends Collection<SormulaPsTest>> void testExpectedRows(PaginatedSelector<SormulaPsTest, C> selector) throws SormulaException
+    protected void testExpectedRows() throws SormulaException
     {
+        if (log.isDebugEnabled()) log.debug("page=" + selector.getPageNumber());
+        
         // select rows for page
-        C selectedPageRows = selector.selectPage();
-        log.info("selectedPageRows.size()="+selectedPageRows.size());
+        List<SormulaPsTest> selectedPageRows = selector.selectPage();
+        if (log.isDebugEnabled()) log.debug("selectedPageRows.size()="+selectedPageRows.size());
         
         // get ids of page 
         List<Integer> selectedPageIds = new ArrayList<>(selectedPageRows.size());
         for (SormulaPsTest selectedRow : selectedPageRows) selectedPageIds.add(selectedRow.getId());
         
         // actual and select ids must be the same
-        List<Integer> actualPageIds = pageIdMap.get(selector.getPageNumber());
+        List<Integer> actualPageIds = getExpectedRows(selector.getPageNumber());
         assert selectedPageIds.size() == actualPageIds.size() : 
             "selected size=" + selectedPageIds.size() + " is not the same as actual size=" + actualPageIds.size();
         
         int testPageRows = actualPageIds.size();
-        for (int row = 0; row < testPageRows; ++row)
+        for (int i = 0; i < testPageRows; ++i)
         {
-            log.info((row+1) + " " + selectedPageIds.get(row) + " " + actualPageIds.get(row));
-            assert selectedPageIds.get(row).equals(actualPageIds.get(row)) : 
-                "row id's are not the same for page=" + selector.getPageNumber() + " row="+row;
+            if (log.isDebugEnabled()) log.debug("row=" + (i + 1) + " " + selectedPageIds.get(i) + " " + actualPageIds.get(i));
+            assert selectedPageIds.get(i).equals(actualPageIds.get(i)) : 
+                "row id's are not the same for page=" + selector.getPageNumber() + " row=" + (i + 1);
         }
+    }
+    
+    
+    protected List<Integer> getExpectedRows(int pageNumber)
+    {
+        List<Integer> actualPageIds = pageIdMap.get(pageNumber);
+        if (actualPageIds == null) return Collections.emptyList();
+        return actualPageIds;
     }
 }

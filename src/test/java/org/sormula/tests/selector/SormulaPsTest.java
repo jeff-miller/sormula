@@ -28,6 +28,7 @@ import org.sormula.annotation.Where;
  */
 @Where(name="selectByType", fieldNames="type")
 @OrderBy(name="orderById", ascending="id")
+@OrderBy(name="orderByIdDescending", descending="id")
 public class SormulaPsTest
 {
     @Column(primaryKey=true)

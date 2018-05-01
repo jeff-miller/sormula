@@ -5,6 +5,8 @@ import java.sql.ResultSet;
 import org.sormula.operation.OperationException;
 import org.sormula.operation.SelectOperation;
 
+// TODO OperationException should be replace with SelectorException
+
 /**
  * TODO 
  * 
@@ -13,7 +15,7 @@ import org.sormula.operation.SelectOperation;
  * @param <R> Class associated with a row in table
  * @param <C> collection type for one page
  */
-public class PaginatedSelector<R, C> // TODO name Paginator?
+public class PaginatedSelector<R, C>
 {
     int pageSize; // TODO name rowsPerPage?
     int pageNumber;
@@ -60,9 +62,16 @@ public class PaginatedSelector<R, C> // TODO name Paginator?
 
     public void setPageNumber(int pageNumber) throws OperationException 
     {
-        selectOperation.positionAbsolute(pageSize * (pageNumber - 1)); // selectOperation#readNext points to first row of page
-        selectOperation.resetRowsReadCount();
-        this.pageNumber = pageNumber;
+        if (pageNumber > 0)
+        {
+            selectOperation.positionAbsolute(pageSize * (pageNumber - 1)); // selectOperation#readNext points to first row of page
+            selectOperation.resetRowsReadCount();
+            this.pageNumber = pageNumber;
+        }
+        else
+        {
+            throw new OperationException("page number must be greater than zero");
+        }
     }
     
     

@@ -5,7 +5,6 @@ import java.sql.ResultSet;
 import org.sormula.operation.OperationException;
 import org.sormula.operation.SelectOperation;
 
-// TODO OperationException should be replace with SelectorException
 
 /**
  * TODO 
@@ -22,13 +21,13 @@ public class PaginatedSelector<R, C>
     SelectOperation<R, C> selectOperation;
 
     
-    public PaginatedSelector(SelectOperation<R, C> selectOperation, int pageSize) throws OperationException
+    public PaginatedSelector(SelectOperation<R, C> selectOperation, int pageSize) throws SelectorException
     {
         this(selectOperation, pageSize, false);
     }
     
     
-    public PaginatedSelector(SelectOperation<R, C> selectOperation, int pageSize, boolean scrollSensitive) throws OperationException
+    public PaginatedSelector(SelectOperation<R, C> selectOperation, int pageSize, boolean scrollSensitive) throws SelectorException
     {
         int resultSetType;
         if (scrollSensitive) resultSetType = ResultSet.TYPE_SCROLL_SENSITIVE;
@@ -37,13 +36,22 @@ public class PaginatedSelector<R, C>
     }
     
     
-    protected void init(SelectOperation<R, C> selectOperation, int pageSize, int resultSetType) throws OperationException
+    protected void init(SelectOperation<R, C> selectOperation, int pageSize, int resultSetType) throws SelectorException
     {
         this.selectOperation = selectOperation;
         this.pageSize = pageSize;
         selectOperation.setMaximumRowsRead(pageSize);
         selectOperation.setResultSetType(resultSetType);
-        selectOperation.execute();
+        
+        try
+        {
+            selectOperation.execute();
+        }
+        catch (OperationException e)
+        {
+            throw new SelectorException("initialization error", e);
+        }
+        
         setPageNumber(1);
     }
     
@@ -60,28 +68,36 @@ public class PaginatedSelector<R, C>
     }
 
 
-    public void setPageNumber(int pageNumber) throws OperationException 
+    public void setPageNumber(int pageNumber) throws SelectorException 
     {
         if (pageNumber > 0)
         {
-            selectOperation.positionAbsolute(pageSize * (pageNumber - 1)); // selectOperation#readNext points to first row of page
+            try
+            {
+                selectOperation.positionAbsolute(pageSize * (pageNumber - 1)); // selectOperation#readNext points to first row of page
+            }
+            catch (OperationException e)
+            {
+                throw new SelectorException("position to row error", e);
+            }
+                
             selectOperation.resetRowsReadCount();
             this.pageNumber = pageNumber;
         }
         else
         {
-            throw new OperationException("page number must be greater than zero");
+            throw new SelectorException("page number must be greater than zero");
         }
     }
     
     
-    public void nextPage() throws OperationException
+    public void nextPage() throws SelectorException
     {
         setPageNumber(pageNumber + 1);
     }
     
     
-    public void previousPage() throws OperationException
+    public void previousPage() throws SelectorException
     {
         setPageNumber(pageNumber - 1);
     }
@@ -94,16 +110,30 @@ public class PaginatedSelector<R, C>
      * return will contain remaining rows in the page and will not include rows read with {@link #selectRow()}.
      * 
      * @return
-     * @throws OperationException
+     * @throws SelectorException
      */
-    public C selectPage() throws OperationException
+    public C selectPage() throws SelectorException
     {
-        return selectOperation.readAll();
+        try
+        {
+            return selectOperation.readAll();
+        }
+        catch (OperationException e)
+        {
+            throw new SelectorException("select page error", e);
+        }
     }
     
     
-    public R selectRow() throws OperationException
+    public R selectRow() throws SelectorException
     {
-        return selectOperation.readNext();
+        try
+        {
+            return selectOperation.readNext();
+        }
+        catch (OperationException e)
+        {
+            throw new SelectorException("select page row error", e);
+        }
     }
 }

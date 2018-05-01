@@ -19,10 +19,11 @@ package org.sormula.tests.selector;
 import org.sormula.annotation.Column;
 import org.sormula.annotation.OrderBy;
 import org.sormula.annotation.Where;
+import org.sormula.selector.PaginatedSelector;
 
 
 /**
- * Row class for TODO.
+ * Row class for testing {@link PaginatedSelector}.
  * 
  * @author Jeff Miller
  */

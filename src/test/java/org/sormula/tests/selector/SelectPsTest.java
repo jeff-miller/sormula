@@ -25,8 +25,8 @@ import java.util.Map;
 import org.sormula.SormulaException;
 import org.sormula.log.ClassLogger;
 import org.sormula.operation.ArrayListSelectOperation;
-import org.sormula.operation.OperationException;
 import org.sormula.selector.PaginatedSelector;
+import org.sormula.selector.SelectorException;
 import org.sormula.tests.DatabaseTest;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
@@ -66,7 +66,7 @@ public class SelectPsTest extends DatabaseTest<SormulaPsTest>
 
     
     @Test
-    public void selectA() throws SormulaException
+    public void selectPages() throws SormulaException
     {
         // TODO test only if db property set? to allow skipping for some db's
         int[] testRowsPerPage = {25, 31, 99};
@@ -74,15 +74,20 @@ public class SelectPsTest extends DatabaseTest<SormulaPsTest>
         for (int rowsPerPage : testRowsPerPage)
         {
         	begin();
+        	
         	initExpectedPages(rowsPerPage, ""/*all*/, "orderById");
         	testPages();
+        	
             initExpectedPages(rowsPerPage, ""/*all*/, "orderByIdDescending");
             testPages();
-        	initExpectedPages(rowsPerPage, "selectByType", "orderById", 1);
+        	
+            initExpectedPages(rowsPerPage, "selectByType", "orderById", 1);
         	testPages();
+        	
         	initExpectedPages(rowsPerPage, "selectByType", "orderById", 2);
         	testPages();
-            commit();
+            
+        	commit();
         }
     }
     
@@ -166,7 +171,7 @@ public class SelectPsTest extends DatabaseTest<SormulaPsTest>
             selector.setPageNumber(-1);
             throw new SormulaException("negative page number");
         }
-        catch (OperationException e)
+        catch (SelectorException e)
         {
             // expected
         }

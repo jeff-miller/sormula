@@ -60,7 +60,7 @@ public class PaginatedSelector<R, C> // TODO name Paginator?
 
     public void setPageNumber(int pageNumber) throws OperationException 
     {
-        selectOperation.positionAbsolute(pageSize * (pageNumber - 1));
+        selectOperation.positionAbsolute(pageSize * (pageNumber - 1)); // selectOperation#readNext points to first row of page
         selectOperation.resetRowsReadCount();
         this.pageNumber = pageNumber;
     }

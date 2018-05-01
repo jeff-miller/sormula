@@ -140,12 +140,8 @@ public class ScalarSelectOperation<R> extends SqlOperation<R> implements Iterabl
      * Sets the maximum number of rows to read from result set. This method 
      * does NOT alter SQL to contain anything to limit query but only 
      * limits the number of rows read by {@link #readNext()} and 
-     * {@link SelectOperation#readAll()}. Limiting rows read is usefull to avoid
+     * {@link SelectOperation#readAll()}. Limiting rows read is useful to avoid
      * reading too many rows and thus creating memory or display problems.
-     * <P>
-     * In the future, when more databases support a standard way to limit rows,
-     * I will add support for SQL level limits through a method like 
-     * "setMaximumRows(int)" and SQL "FETCH FIRST n ROWS ONLY".
      * 
      * @param maximumRowsRead 0..{@link Integer#MAX_VALUE}
      * @since 1.4
@@ -284,7 +280,6 @@ public class ScalarSelectOperation<R> extends SqlOperation<R> implements Iterabl
             try
             {
                 PreparedStatement ps = getPreparedStatement();
-                if (maximumRowsRead < Integer.MAX_VALUE) ps.setMaxRows(maximumRowsRead);
                 operationTime.startExecuteTime();
                 resultSet = ps.executeQuery();
                 operationTime.stop();

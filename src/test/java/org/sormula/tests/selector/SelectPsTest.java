@@ -125,11 +125,11 @@ public class SelectPsTest extends DatabaseTest<SormulaPsTest>
         selector.setPageNumber(1);
         testExpectedRows(selector);
 
-        //selector.setPageNumber(2);
-        //testExpectedRows(selector);
+        selector.setPageNumber(2);
+        testExpectedRows(selector);
 
-        //selector.setPageNumber(3);
-        //testExpectedRows(selector);
+        selector.setPageNumber(3);
+        testExpectedRows(selector);
     }
     
     
@@ -151,7 +151,8 @@ public class SelectPsTest extends DatabaseTest<SormulaPsTest>
         int testPageRows = actualPageIds.size();
         for (int row = 0; row < testPageRows; ++row)
         {
-            assert selectedPageIds.get(row) == actualPageIds.get(row) : 
+            log.info((row+1) + " " + selectedPageIds.get(row) + " " + actualPageIds.get(row));
+            assert selectedPageIds.get(row).equals(actualPageIds.get(row)) : 
                 "row id's are not the same for page=" + selector.getPageNumber() + " row="+row;
         }
     }

@@ -46,6 +46,7 @@ public class SelectPsTest extends DatabaseTest<SormulaPsTest>
 	String whereConditionName;
 	String orderByName;
 	Object[] whereParameters;
+	boolean selectByPage;
 	Map<Integer, List<Integer>> pageIdMap;
 	PaginatedSelector<SormulaPsTest, List<SormulaPsTest>> selector;
 	
@@ -69,6 +70,7 @@ public class SelectPsTest extends DatabaseTest<SormulaPsTest>
     public void selectPages() throws SormulaException
     {
         // TODO test only if db property set? to allow skipping for some db's
+        selectByPage = true;
         int[] testRowsPerPage = {25, 31, 99};
         
         for (int rowsPerPage : testRowsPerPage)
@@ -89,6 +91,22 @@ public class SelectPsTest extends DatabaseTest<SormulaPsTest>
             
         	commit();
         }
+    }
+
+    
+    @Test
+    public void selectPagesByRow() throws SormulaException
+    {
+        selectByPage = false;
+        begin();
+        
+        initExpectedPages(50, ""/*all*/, "orderByIdDescending");
+        testPages();
+        
+        initExpectedPages(14, "selectByType", "orderById", 2);
+        testPages();
+        
+        commit();
     }
     
     
@@ -185,7 +203,20 @@ public class SelectPsTest extends DatabaseTest<SormulaPsTest>
         if (log.isDebugEnabled()) log.debug("page=" + selector.getPageNumber());
         
         // select rows for page
-        List<SormulaPsTest> selectedPageRows = selector.selectPage();
+        List<SormulaPsTest> selectedPageRows;
+        if (selectByPage)
+        {
+            selectedPageRows = selector.selectPage();
+        }
+        else
+        {
+            selectedPageRows = new ArrayList<>(rowsPerPage);
+            SormulaPsTest selectedRow; 
+            while ((selectedRow = selector.selectRow()) != null)
+            {
+                selectedPageRows.add(selectedRow);
+            }
+        }
         if (log.isDebugEnabled()) log.debug("selectedPageRows.size()="+selectedPageRows.size());
         
         // get ids of page 

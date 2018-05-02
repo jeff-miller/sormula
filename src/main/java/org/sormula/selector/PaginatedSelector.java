@@ -16,35 +16,33 @@ import org.sormula.operation.SelectOperation;
  */
 public class PaginatedSelector<R, C>
 {
-    int pageSize; // TODO name rowsPerPage?
+    int pageSize;
+    boolean scrollSensitive;
+    int resultSetType;
     int pageNumber;
     SelectOperation<R, C> selectOperation;
 
     
-    public PaginatedSelector(SelectOperation<R, C> selectOperation, int pageSize) throws SelectorException
+    public PaginatedSelector(int pageSize, SelectOperation<R, C> selectOperation) throws SelectorException
     {
-        this(selectOperation, pageSize, false);
+        this.pageSize = pageSize;
+        setScrollSensitive(false);
+        init(selectOperation);
     }
     
     
-    public PaginatedSelector(SelectOperation<R, C> selectOperation, int pageSize, boolean scrollSensitive) throws SelectorException
-    {
-        int resultSetType;
-        if (scrollSensitive) resultSetType = ResultSet.TYPE_SCROLL_SENSITIVE;
-        else                 resultSetType = ResultSet.TYPE_SCROLL_INSENSITIVE;
-        init(selectOperation, pageSize, resultSetType);
-    }
-    
-    
-    protected void init(SelectOperation<R, C> selectOperation, int pageSize, int resultSetType) throws SelectorException
+    protected void init(SelectOperation<R, C> selectOperation)
     {
         this.selectOperation = selectOperation;
-        this.pageSize = pageSize;
-        selectOperation.setMaximumRowsRead(pageSize);
-        selectOperation.setResultSetType(resultSetType);
-        
+    }
+    
+    
+    public void execute() throws SelectorException
+    {
         try
         {
+            selectOperation.setResultSetType(resultSetType);
+            selectOperation.setMaximumRowsRead(pageSize);
             selectOperation.execute();
         }
         catch (OperationException e)
@@ -56,9 +54,33 @@ public class PaginatedSelector<R, C>
     }
     
     
+    protected void confirmExecuted() throws SelectorException
+    {
+        if (!selectOperation.isExecuted()) throw new SelectorException("execute method must be invoked prior to page access");
+    }
+    
+    
     public int getPageSize()
     {
         return pageSize;
+    }
+
+
+    public boolean isScrollSensitive()
+    {
+        return scrollSensitive;
+    }
+
+
+    /**
+     * Note: Only has effect upon the next use of {@link #execute()}
+     * @param scrollSensitive
+     */
+    public void setScrollSensitive(boolean scrollSensitive)
+    {
+        this.scrollSensitive = scrollSensitive;
+        if (scrollSensitive) resultSetType = ResultSet.TYPE_SCROLL_SENSITIVE;
+        else                 resultSetType = ResultSet.TYPE_SCROLL_INSENSITIVE;
     }
 
 
@@ -72,6 +94,7 @@ public class PaginatedSelector<R, C>
     {
         if (pageNumber > 0)
         {
+            confirmExecuted();
             try
             {
                 selectOperation.positionAbsolute(pageSize * (pageNumber - 1)); // selectOperation#readNext points to first row of page
@@ -114,6 +137,7 @@ public class PaginatedSelector<R, C>
      */
     public C selectPage() throws SelectorException
     {
+        confirmExecuted();
         try
         {
             return selectOperation.readAll();
@@ -127,6 +151,7 @@ public class PaginatedSelector<R, C>
     
     public R selectRow() throws SelectorException
     {
+        confirmExecuted();
         try
         {
             return selectOperation.readNext();

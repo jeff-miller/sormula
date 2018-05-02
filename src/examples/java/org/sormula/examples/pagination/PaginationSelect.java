@@ -22,14 +22,13 @@ import org.sormula.Database;
 import org.sormula.SormulaException;
 import org.sormula.Table;
 import org.sormula.examples.ExampleBase;
-import org.sormula.operation.ArrayListSelectOperation;
-import org.sormula.selector.PaginatedSelector;
+import org.sormula.selector.PaginatedListSelector;
 
 
 public class PaginationSelect extends ExampleBase
 {
     Table<Book> table;
-    static int pageSize = 7; // rows per page, small for command line example
+    static int pageSize = 6; // rows per page, small for simple command line example
     
     
     public static void main(String[] args) throws Exception
@@ -57,9 +56,10 @@ public class PaginationSelect extends ExampleBase
     
     void selectAsPages() throws SormulaException
     {
-        ArrayListSelectOperation<Book> selectOperation = new ArrayListSelectOperation<>(table, "top20");
-        selectOperation.setOrderBy("titleOrder");
-        PaginatedSelector<Book, List<Book>> selector = new PaginatedSelector<>(selectOperation, pageSize);
+        PaginatedListSelector<Book> selector = new PaginatedListSelector<>(pageSize, table);
+        selector.setWhereConditionName("top15");
+        selector.setOrderByName("titleOrder");
+        selector.execute();
         
         int pageNumber = 1;
         while (true)

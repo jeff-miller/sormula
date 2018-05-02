@@ -22,7 +22,7 @@ import org.sormula.annotation.Where;
 import org.sormula.annotation.WhereField;
 
 
-@Where(name="top20", whereFields={@WhereField(name="id", comparisonOperator="<=", operand="20")})
+@Where(name="top15", whereFields={@WhereField(name="id", comparisonOperator="<=", operand="15")})
 @OrderBy(name="titleOrder", ascending="title")
 public class Book
 {

@@ -25,6 +25,7 @@ import java.util.Map;
 import org.sormula.SormulaException;
 import org.sormula.log.ClassLogger;
 import org.sormula.operation.ArrayListSelectOperation;
+import org.sormula.selector.PaginatedListSelector;
 import org.sormula.selector.PaginatedSelector;
 import org.sormula.selector.SelectorException;
 import org.sormula.tests.DatabaseTest;
@@ -86,16 +87,17 @@ public class SelectPsTest extends DatabaseTest<SormulaPsTest>
             	begin();
             	
             	initExpectedPages(rowsPerPage, ""/*all*/, "orderById");
-            	testPages();
+            	testPages1();
             	
                 initExpectedPages(rowsPerPage, ""/*all*/, "orderByIdDescending");
-                testPages();
+                testPages1();
             	
                 initExpectedPages(rowsPerPage, "selectByType", "orderById", 1);
-            	testPages();
+            	testPages1();
+                testPages2();
             	
             	initExpectedPages(rowsPerPage, "selectByType", "orderById", 2);
-            	testPages();
+            	testPages1();
                 
             	commit();
             }
@@ -112,10 +114,11 @@ public class SelectPsTest extends DatabaseTest<SormulaPsTest>
             begin();
             
             initExpectedPages(50, ""/*all*/, "orderByIdDescending");
-            testPages();
+            testPages1();
+            testPages2();
             
             initExpectedPages(14, "selectByType", "orderById", 2);
-            testPages();
+            testPages1();
             
             commit();
         }
@@ -162,12 +165,30 @@ public class SelectPsTest extends DatabaseTest<SormulaPsTest>
     }
     
     
-    protected void testPages() throws SormulaException
+    protected void testPages1() throws SormulaException
     {
         ArrayListSelectOperation<SormulaPsTest> selectOperation = new ArrayListSelectOperation<>(getTable(), whereConditionName);
         selectOperation.setOrderBy(orderByName);
         selectOperation.setParameters(whereParameters);
-        selector = new PaginatedSelector<>(selectOperation, rowsPerPage);
+        selector = new PaginatedSelector<>(rowsPerPage, selectOperation);
+        testPages();
+    }
+    
+    
+    protected void testPages2() throws SormulaException
+    {
+        PaginatedListSelector<SormulaPsTest> s = new PaginatedListSelector<>(rowsPerPage, getTable());
+        s.setOrderByName(orderByName);
+        s.setWhereConditionName(whereConditionName);
+        s.setWhereParameters(whereParameters);
+        selector = s;
+        testPages();
+    }
+    
+    
+    protected void testPages() throws SormulaException
+    {
+        selector.execute();
         int lastPage = pageIdMap.size() + 1; 
 
         int testPage;

@@ -17,6 +17,7 @@
 package org.sormula.operation;
 
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Collection;
 
@@ -37,6 +38,7 @@ public abstract class SelectOperation<R, C> extends ScalarSelectOperation<R>
     int defaultReadAllSize;
     C selectedRows;
     int fetchSize;
+    int resultSetType;
     
     
     /**
@@ -49,6 +51,7 @@ public abstract class SelectOperation<R, C> extends ScalarSelectOperation<R>
     public SelectOperation(Table<R> table) throws OperationException
     {
         super(table);
+        setResultSetType(ResultSet.TYPE_FORWARD_ONLY);
         setDefaultReadAllSize(20);
     }
     
@@ -65,6 +68,7 @@ public abstract class SelectOperation<R, C> extends ScalarSelectOperation<R>
     public SelectOperation(Table<R> table, String whereConditionName) throws OperationException
     {
         super(table, whereConditionName);
+        setResultSetType(ResultSet.TYPE_FORWARD_ONLY);
         
         if (getWhereAnnotation() == null)
         {
@@ -239,26 +243,38 @@ public abstract class SelectOperation<R, C> extends ScalarSelectOperation<R>
         this.fetchSize = fetchSize;
     }
 
-
+    
     /**
-     * {@inheritDoc}
-     * Invokes the superclass prepare and then sets the fetch size on the prepared statement.
-     * @since 3.0
+     * TODO
+     * @return
+     * @since 4.3
      */
-	@Override
-    protected void prepare() throws OperationException
+    public int getResultSetType()
     {
-        super.prepare();
-        try
-        {
-            getPreparedStatement().setFetchSize(fetchSize);
-        }
-        catch (SQLException e)
-        {
-            throw new OperationException("error setting fetch size", e);
-        }
+        return resultSetType;
     }
 
+
+    /**
+     * TODO
+     * TODO warn changing cursor position may break 
+     * @param resultSetType
+     * @since 4.3
+     */
+    public void setResultSetType(int resultSetType)
+    {
+        this.resultSetType = resultSetType;
+    }
+
+
+	@Override
+	protected PreparedStatement prepareStatement() throws SQLException
+	{
+	    PreparedStatement preparedStatement = getConnection().prepareStatement(preparedSql, resultSetType, ResultSet.CONCUR_READ_ONLY);
+	    preparedStatement.setFetchSize(fetchSize);
+	    return preparedStatement;
+	}
+	
 
     /**
      * Implement to create collection to use by {@link #readAll()}.

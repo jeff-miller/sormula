@@ -9,6 +9,7 @@ version-jdk             comments
                           page size  
                         - removed AllExamples ant task in build.xml
                         - PaginatedListSelector example
+                        - add SelectOperation#prepareStatement so that subclasses can override 
 
 4.2-jdk1.8              - update jdbc drivers: hsqldb 2.4.0, firebird/jaybird 3.0.1, h2 1.4.196, oracle 8, 
                           sqlite 3.19.3, postgresql 42.1.3, driver versions in pom.xml              

@@ -23,15 +23,21 @@ public class PaginatedListSelector<R> extends PaginatedSelector<R, List<R>>
     Object[] whereParameters;
     
     
-    public PaginatedListSelector(int pageSize, Table<R> table) throws SelectorException
+    public PaginatedListSelector(int pageSize, Table<R> table)
     {
-        super(pageSize, null); // operation created in #execute()
+        this(pageSize, table, false);
+    }
+    
+    
+    public PaginatedListSelector(int pageSize, Table<R> table, boolean scrollSensitive)
+    {
+        super(pageSize, scrollSensitive);
         this.table = table;
         
         // defaults
         orderByName = ""; // no order
         whereConditionName = ""; // all rows
-        whereParameters = new Object[0];
+        whereParameters = new Object[0]; // no parameters
     }
 
     
@@ -80,7 +86,7 @@ public class PaginatedListSelector<R> extends PaginatedSelector<R, List<R>>
     {
         return whereParameters;
     }
-    public void setWhereParameters(Object[] whereParameters)
+    public void setWhereParameters(Object... whereParameters)
     {
         this.whereParameters = whereParameters;
     }

@@ -25,6 +25,12 @@ import org.sormula.examples.ExampleBase;
 import org.sormula.selector.PaginatedListSelector;
 
 
+/**
+ * Display list of books grouped by {@link #pageSize} to demonstrate the use of
+ * {@link PaginatedListSelector}.
+ * 
+ * @author Jeff Miller
+ */
 public class PaginationSelect extends ExampleBase
 {
     Table<Book> table;
@@ -57,7 +63,8 @@ public class PaginationSelect extends ExampleBase
     void selectAsPages() throws SormulaException
     {
         PaginatedListSelector<Book> selector = new PaginatedListSelector<>(pageSize, table);
-        selector.setWhereConditionName("top15");
+        selector.setWhereConditionName("top");
+        selector.setWhereParameters(15);
         selector.setOrderByName("titleOrder");
         selector.execute();
         

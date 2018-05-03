@@ -24,6 +24,11 @@ import org.sormula.Table;
 import org.sormula.examples.ExampleBase;
 
 
+/**
+ * Inserts {@link Book} rows into database for use by related selector examples.
+ * 
+ * @author Jeff Miller
+ */
 public class PaginationInsert extends ExampleBase
 {
     Table<Book> table;

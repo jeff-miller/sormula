@@ -23,14 +23,29 @@ public class PaginatedSelector<R, C>
     SelectOperation<R, C> selectOperation;
 
     
-    public PaginatedSelector(int pageSize, SelectOperation<R, C> selectOperation) throws SelectorException
+    public PaginatedSelector(int pageSize, SelectOperation<R, C> selectOperation)
     {
-        this.pageSize = pageSize;
-        setScrollSensitive(false);
+        this(pageSize, selectOperation, false);
+    }
+
+    
+    public PaginatedSelector(int pageSize, SelectOperation<R, C> selectOperation, boolean scrollSensitive)
+    {
+        this(pageSize, scrollSensitive);
         init(selectOperation);
     }
     
     
+    protected PaginatedSelector(int pageSize, boolean scrollSensitive)
+    {
+        this.pageSize = pageSize;
+        this.scrollSensitive = scrollSensitive;
+        if (scrollSensitive) resultSetType = ResultSet.TYPE_SCROLL_SENSITIVE;
+        else                 resultSetType = ResultSet.TYPE_SCROLL_INSENSITIVE;
+    }
+    
+    
+    // TODO name?
     protected void init(SelectOperation<R, C> selectOperation)
     {
         this.selectOperation = selectOperation;
@@ -69,18 +84,6 @@ public class PaginatedSelector<R, C>
     public boolean isScrollSensitive()
     {
         return scrollSensitive;
-    }
-
-
-    /**
-     * Note: Only has effect upon the next use of {@link #execute()}
-     * @param scrollSensitive
-     */
-    public void setScrollSensitive(boolean scrollSensitive)
-    {
-        this.scrollSensitive = scrollSensitive;
-        if (scrollSensitive) resultSetType = ResultSet.TYPE_SCROLL_SENSITIVE;
-        else                 resultSetType = ResultSet.TYPE_SCROLL_INSENSITIVE;
     }
 
 

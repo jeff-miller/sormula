@@ -14,7 +14,7 @@ import org.sormula.operation.SelectOperation;
  * @param <R> Class associated with a row in table
  * @param <C> collection type for one page
  */
-public class PaginatedSelector<R, C>
+public class PaginatedSelector<R, C> implements AutoCloseable
 {
     int pageSize;
     boolean scrollSensitive;
@@ -162,6 +162,23 @@ public class PaginatedSelector<R, C>
         catch (OperationException e)
         {
             throw new SelectorException("select page row error", e);
+        }
+    }
+
+
+    @Override
+    public void close() throws SelectorException
+    {
+        if (selectOperation != null)
+        {
+            try
+            {
+                selectOperation.close();
+            }
+            catch (OperationException e)
+            {
+                throw new SelectorException("close error", e);
+            }
         }
     }
 }

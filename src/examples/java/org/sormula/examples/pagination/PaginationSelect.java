@@ -62,23 +62,25 @@ public class PaginationSelect extends ExampleBase
     
     void selectAsPages() throws SormulaException
     {
-        PaginatedListSelector<Book> selector = new PaginatedListSelector<>(pageSize, table);
-        selector.setWhereConditionName("top");
-        selector.setWhereParameters(15);
-        selector.setOrderByName("titleOrder");
-        selector.execute();
-        
-        int pageNumber = 1;
-        while (true)
+        try (PaginatedListSelector<Book> selector = new PaginatedListSelector<>(pageSize, table))
         {
-            selector.setPageNumber(pageNumber);
-            List<Book> pageBooks = selector.selectPage();
-            if (pageBooks.isEmpty()) break;
+            selector.setWhereConditionName("top");
+            selector.setWhereParameters(15);
+            selector.setOrderByName("titleOrder");
+            selector.execute();
             
-            System.out.println("Page " + pageNumber);
-            printAll(pageBooks);
-            System.out.println();
-            ++pageNumber;
+            int pageNumber = 1;
+            while (true)
+            {
+                selector.setPageNumber(pageNumber);
+                List<Book> pageBooks = selector.selectPage();
+                if (pageBooks.isEmpty()) break;
+                
+                System.out.println("Page " + pageNumber);
+                printAll(pageBooks);
+                System.out.println();
+                ++pageNumber;
+            }
         }
     }
 }

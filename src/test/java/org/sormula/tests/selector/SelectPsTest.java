@@ -48,8 +48,7 @@ public class SelectPsTest extends DatabaseTest<SormulaPsTest>
 	String orderByName;
 	Object[] whereParameters;
 	boolean selectByPage;
-	Map<Integer, List<Integer>> pageIdMap;
-	PaginatedSelector<SormulaPsTest, List<SormulaPsTest>> selector;
+	Map<Integer, List<Integer>> expectedPageIdMap;
 	
 	
     @BeforeClass
@@ -134,11 +133,11 @@ public class SelectPsTest extends DatabaseTest<SormulaPsTest>
         
         // build a map for page number to list of ids on that page
         List<SormulaPsTest> testRows = getTable().selectAllWhereOrdered(whereConditionName, orderByName, whereParameters);
-        pageIdMap = new HashMap<>(testRows.size() / rowsPerPage * 2);
+        expectedPageIdMap = new HashMap<>(testRows.size() / rowsPerPage * 2);
         int pageNumber = 1;
         int pageRow = 1;
         List<Integer> pageIdList = new ArrayList<>(rowsPerPage);
-        pageIdMap.put(pageNumber, pageIdList);
+        expectedPageIdMap.put(pageNumber, pageIdList);
         
         for (SormulaPsTest row : testRows)
         {
@@ -148,7 +147,7 @@ public class SelectPsTest extends DatabaseTest<SormulaPsTest>
                 ++pageNumber;
                 pageRow = 1;
                 pageIdList = new ArrayList<>(rowsPerPage);
-                pageIdMap.put(pageNumber, pageIdList);
+                expectedPageIdMap.put(pageNumber, pageIdList);
             }
             
             pageIdList.add(row.getId());
@@ -157,9 +156,9 @@ public class SelectPsTest extends DatabaseTest<SormulaPsTest>
         
         if (log.isDebugEnabled())
         {
-            for (pageNumber = 1; pageNumber <= pageIdMap.size(); ++pageNumber)
+            for (pageNumber = 1; pageNumber <= expectedPageIdMap.size(); ++pageNumber)
             {
-                log.debug(pageNumber + " " + pageIdMap.get(pageNumber));
+                log.debug(pageNumber + " " + expectedPageIdMap.get(pageNumber));
             }
         }
     }
@@ -170,26 +169,27 @@ public class SelectPsTest extends DatabaseTest<SormulaPsTest>
         ArrayListSelectOperation<SormulaPsTest> selectOperation = new ArrayListSelectOperation<>(getTable(), whereConditionName);
         selectOperation.setOrderBy(orderByName);
         selectOperation.setParameters(whereParameters);
-        selector = new PaginatedSelector<>(rowsPerPage, selectOperation);
-        testPages();
+        PaginatedSelector<SormulaPsTest, List<SormulaPsTest>> selector = new PaginatedSelector<>(rowsPerPage, selectOperation);
+        testPages(selector);
     }
     
     
     protected void testPages2() throws SormulaException
     {
-        PaginatedListSelector<SormulaPsTest> s = new PaginatedListSelector<>(rowsPerPage, getTable());
-        s.setOrderByName(orderByName);
-        s.setWhereConditionName(whereConditionName);
-        s.setWhereParameters(whereParameters);
-        selector = s;
-        testPages();
+        try (PaginatedListSelector<SormulaPsTest> selector = new PaginatedListSelector<>(rowsPerPage, getTable()))
+        {
+            selector.setOrderByName(orderByName);
+            selector.setWhereConditionName(whereConditionName);
+            selector.setWhereParameters(whereParameters);
+            testPages(selector);
+        }
     }
     
     
-    protected void testPages() throws SormulaException
+    protected void testPages(PaginatedSelector<SormulaPsTest, List<SormulaPsTest>> selector) throws SormulaException
     {
         selector.execute();
-        int lastPage = pageIdMap.size() + 1; 
+        int lastPage = expectedPageIdMap.size() + 1; 
 
         int testPage;
         
@@ -197,12 +197,12 @@ public class SelectPsTest extends DatabaseTest<SormulaPsTest>
         if (testPage >= 1)
         {
             selector.setPageNumber(testPage);
-            testExpectedRows();
+            testExpectedRows(selector);
     
             if (testPage > 1)
             {
                 selector.previousPage();
-                testExpectedRows();
+                testExpectedRows(selector);
             }
         }
         
@@ -210,10 +210,10 @@ public class SelectPsTest extends DatabaseTest<SormulaPsTest>
         if (testPage >= 1)
         {
             selector.setPageNumber(testPage);
-            testExpectedRows();
+            testExpectedRows(selector);
             
             selector.nextPage();
-            testExpectedRows();
+            testExpectedRows(selector);
         }
         
         // test outside of page boundaries
@@ -227,11 +227,11 @@ public class SelectPsTest extends DatabaseTest<SormulaPsTest>
             // expected
         }
         selector.setPageNumber(lastPage + 1);
-        testExpectedRows();
+        testExpectedRows(selector);
     }
     
     
-    protected void testExpectedRows() throws SormulaException
+    protected void testExpectedRows(PaginatedSelector<SormulaPsTest, List<SormulaPsTest>> selector) throws SormulaException
     {
         if (log.isDebugEnabled()) log.debug("page=" + selector.getPageNumber());
         
@@ -273,7 +273,7 @@ public class SelectPsTest extends DatabaseTest<SormulaPsTest>
     
     protected List<Integer> getExpectedRows(int pageNumber)
     {
-        List<Integer> actualPageIds = pageIdMap.get(pageNumber);
+        List<Integer> actualPageIds = expectedPageIdMap.get(pageNumber);
         if (actualPageIds == null) return Collections.emptyList();
         return actualPageIds;
     }

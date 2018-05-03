@@ -166,8 +166,9 @@ public class ScalarSelectOperation<R> extends SqlOperation<R> implements Iterabl
     
     /**
      * TODO
+     * @since 4.3
      */
-    public void resetRowsReadCount() // TODO name? change name if more than simply reseting count
+    public void resetRowsReadCount()
     {
         rowsReadCount = 0;
     }
@@ -331,12 +332,13 @@ public class ScalarSelectOperation<R> extends SqlOperation<R> implements Iterabl
     
     /**
      * TODO
-     * @param rowNumber
+     * @param rowNumber the number of the row to which the cursor should move. A value of zero indicates that the cursor will be 
+     * positioned before the first row; a positive number indicates the row number counting from the beginning of the result set; 
+     * a negative number indicates the row number counting from the end of the result set
      * @throws OperationException
      * @since 4.3
      * @see ResultSet#absolute(int)
      */
-    // TODO name? absolute() like ResultSet? other?
     public void positionAbsolute(int rowNumber) throws OperationException
     {
         try
@@ -352,17 +354,17 @@ public class ScalarSelectOperation<R> extends SqlOperation<R> implements Iterabl
     
     /**
      * TODO
-     * @param rows
+     * @param rowOffset - the number of rows to move from the current row; a positive number moves the cursor forward; 
+     * a negative number moves the cursor backward
      * @throws OperationException
      * @since 4.3
      * @see ResultSet#relative(int)
      */
-    // TODO name? relative() like ResultSet? other?
-    public void positionRelative(int rows) throws OperationException
+    public void positionRelative(int rowOffset) throws OperationException
     {
         try
         {
-            resultSet.relative(rows);
+            resultSet.relative(rowOffset);
         }
         catch (SQLException e)
         {
@@ -952,7 +954,6 @@ public class ScalarSelectOperation<R> extends SqlOperation<R> implements Iterabl
                     SelectCascadeOperation<R, ?> operation = new SelectCascadeOperation(this, targetField, targetTable, c);
                     if (c.setForeignKeyValues()) operation.setForeignKeyFieldNames(car.getForeignKeyValueFields());
                     if (c.setForeignKeyReference()) operation.setForeignKeyReferenceFieldName(car.getForeignKeyReferenceField());
-                    // TODO operation.setResultSetType()? propogate type to all cascades?
 
                     operation.prepare();
                     co.add(operation);

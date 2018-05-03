@@ -420,7 +420,6 @@ public abstract class CascadeOperation<S, T> implements AutoCloseable
             }
             catch (TranslatorException e)
             {
-                // TODO indicate type of access in message?
                 throw new OperationException("error creating access for Cascade", e);
             }
             

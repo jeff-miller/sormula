@@ -245,8 +245,10 @@ public abstract class SelectOperation<R, C> extends ScalarSelectOperation<R>
 
     
     /**
-     * TODO
-     * @return
+     * Gets the type of result set to use. 
+     * 
+     * @return {@link ResultSet#TYPE_FORWARD_ONLY}, {@link ResultSet#TYPE_SCROLL_INSENSITIVE}, or 
+     * {@link ResultSet#TYPE_SCROLL_SENSITIVE}
      * @since 4.3
      */
     public int getResultSetType()
@@ -256,9 +258,12 @@ public abstract class SelectOperation<R, C> extends ScalarSelectOperation<R>
 
 
     /**
-     * TODO
-     * TODO warn changing cursor position may break 
-     * @param resultSetType
+     * Sets the type of result set to use. The default is {@link ResultSet#TYPE_FORWARD_ONLY}. Use this
+     * method prior to {@link #execute()}. Setting result set type after {@link #execute()} has no affect. 
+     * 
+     * @param resultSetType {@link ResultSet#TYPE_FORWARD_ONLY}, {@link ResultSet#TYPE_SCROLL_INSENSITIVE}, or 
+     * {@link ResultSet#TYPE_SCROLL_SENSITIVE}
+     * 
      * @since 4.3
      */
     public void setResultSetType(int resultSetType)
@@ -267,6 +272,13 @@ public abstract class SelectOperation<R, C> extends ScalarSelectOperation<R>
     }
 
 
+    /**
+     * {@inheritDoc}
+     * Prepares statement with result set type supplied in {@link #setResultSetType(int)} and
+     * concurrency of {@link ResultSet#CONCUR_READ_ONLY}.
+     * 
+     * @since 4.3
+     */
 	@Override
 	protected PreparedStatement prepareStatement() throws SQLException
 	{

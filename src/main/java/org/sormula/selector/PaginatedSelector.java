@@ -1,5 +1,7 @@
 package org.sormula.selector;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
 import org.sormula.operation.OperationException;
@@ -7,7 +9,9 @@ import org.sormula.operation.SelectOperation;
 
 
 /**
- * TODO 
+ * The base class for all selectors that return pages of rows using some {@link SelectOperation}. The
+ * same select operation is used for all pages so that only one {@link PreparedStatement} is created
+ * for all pages.
  * 
  * @author Jeff Miller
  * @since 4.3
@@ -22,13 +26,27 @@ public class PaginatedSelector<R, C> implements AutoCloseable
     int pageNumber;
     SelectOperation<R, C> selectOperation;
 
-    
+
+    /**
+     * Constructs for a page size and select operation. Scroll sensitivity is false.
+     * 
+     * @param pageSize rows per page
+     * @param selectOperation the operation to select rows
+     */
     public PaginatedSelector(int pageSize, SelectOperation<R, C> selectOperation)
     {
         this(pageSize, selectOperation, false);
     }
 
     
+    /**
+     * Constructs for a page size, select operation, and scroll sensitivity.
+     * 
+     * @param pageSize rows per page
+     * @param selectOperation the operation to select rows
+     * @param scrollSensitive true to use result set type of {@link ResultSet#TYPE_SCROLL_SENSITIVE}, 
+     * false to use {@link ResultSet#TYPE_SCROLL_INSENSITIVE}
+     */
     public PaginatedSelector(int pageSize, SelectOperation<R, C> selectOperation, boolean scrollSensitive)
     {
         this(pageSize, scrollSensitive);
@@ -36,6 +54,15 @@ public class PaginatedSelector<R, C> implements AutoCloseable
     }
     
     
+    /**
+     * Constructs for a page size and scroll sensitivity. Select operation must be set with
+     * {@link #init(SelectOperation)}. This construct is for subclasses that initialize
+     * the select operation in a specialized way.
+     * 
+     * @param pageSize rows per page
+     * @param scrollSensitive true to use result set type of {@link ResultSet#TYPE_SCROLL_SENSITIVE}, 
+     * false to use {@link ResultSet#TYPE_SCROLL_INSENSITIVE}
+     */
     protected PaginatedSelector(int pageSize, boolean scrollSensitive)
     {
         this.pageSize = pageSize;
@@ -45,13 +72,18 @@ public class PaginatedSelector<R, C> implements AutoCloseable
     }
     
     
-    // TODO name?
     protected void init(SelectOperation<R, C> selectOperation)
     {
         this.selectOperation = selectOperation;
     }
     
     
+    /**
+     * Executes the select operation and positions to the first page.
+     * 
+     * @throws SelectorException if error
+     * @see SelectOperation#execute()
+     */
     public void execute() throws SelectorException
     {
         try
@@ -75,40 +107,55 @@ public class PaginatedSelector<R, C> implements AutoCloseable
     }
     
     
+    /**
+     * Gets the page size that was specified in the constructor.
+     * 
+     * @return rows per page
+     */
     public int getPageSize()
     {
         return pageSize;
     }
 
 
+    /**
+     * Gets the result set scroll sensitivity that was specified in the constructor.
+     * 
+     * @return true if scrolling is sensitive to changes in the table; false if not
+     * @see Connection#prepareStatement(String, int, int)
+     */
     public boolean isScrollSensitive()
     {
         return scrollSensitive;
     }
 
 
+    /**
+     * Gets the page number that was set with {@link #setPageNumber(int)}, {@link #nextPage()}, {@link #previousPage()}.
+     * 
+     * @return the page number to use for {@link #selectPage()}, {@link #selectRow()}
+     */
     public int getPageNumber()
     {
         return pageNumber;
     }
 
 
+    /**
+     * Positions result set cursor to a specific page. If page number is greater than the total number of
+     * pages, no exception will occur but {@link #selectPage()} will be empty and {@link #selectRow()} will return null.
+     * 
+     * @param pageNumber position to specific page, pages less than 1 will cause an exception
+     * @throws SelectorException if error
+     * @see SelectOperation#positionAbsolute(int)
+     */
     public void setPageNumber(int pageNumber) throws SelectorException 
     {
         if (pageNumber > 0)
         {
             confirmExecuted();
-            try
-            {
-                selectOperation.positionAbsolute(pageSize * (pageNumber - 1)); // selectOperation#readNext points to first row of page
-            }
-            catch (OperationException e)
-            {
-                throw new SelectorException("position to row error", e);
-            }
-                
-            selectOperation.resetRowsReadCount();
             this.pageNumber = pageNumber;
+            topOfPage();
         }
         else
         {
@@ -117,32 +164,43 @@ public class PaginatedSelector<R, C> implements AutoCloseable
     }
     
     
+    /**
+     * Move result set cursor to {@link #getPageNumber()} + 1
+     * @throws SelectorException if error
+     */
     public void nextPage() throws SelectorException
     {
         setPageNumber(pageNumber + 1);
     }
     
     
+    /**
+     * Move result set cursor to {@link #getPageNumber()} - 1
+     * @throws SelectorException if error
+     */
     public void previousPage() throws SelectorException
     {
         setPageNumber(pageNumber - 1);
     }
     
     
-    // TODO stream method?
-    
     /**
-     * Note: if {@link #selectRow()} has been used since the most recent start of page, then {@link #selectPage()}
-     * return will contain remaining rows in the page and will not include rows read with {@link #selectRow()}.
+     * Selects rows for current page. This method can be used multiple times to select the same page.
      * 
-     * @return
-     * @throws SelectorException
+     * @return collection of rows for the page; empty collection if page number is beyond the maximum page
+     * @throws SelectorException if error
      */
     public C selectPage() throws SelectorException
     {
         confirmExecuted();
         try
         {
+            if (selectOperation.getRowsReadCount() > 0)
+            {
+                // cursor is not at top of page
+                topOfPage();    
+            }
+            
             return selectOperation.readAll();
         }
         catch (OperationException e)
@@ -152,6 +210,14 @@ public class PaginatedSelector<R, C> implements AutoCloseable
     }
     
     
+    /**
+     * Selects next row from the current page. Invoke {@link #setPageNumber(int)} prior 
+     * to {@link #selectRow()} to start at top of page. Use this method instead of {@link #selectPage()}
+     * if you would like to read one row at-a-time rather than the whole page.
+     * 
+     * @return row or null if no more rows on the page
+     * @throws SelectorException if error
+     */
     public R selectRow() throws SelectorException
     {
         confirmExecuted();
@@ -166,6 +232,9 @@ public class PaginatedSelector<R, C> implements AutoCloseable
     }
 
 
+    /**
+     * Closes the select operation with {@link SelectOperation#close()}.
+     */
     @Override
     public void close() throws SelectorException
     {
@@ -180,5 +249,25 @@ public class PaginatedSelector<R, C> implements AutoCloseable
                 throw new SelectorException("close error", e);
             }
         }
+    }
+    
+    
+    /**
+     * Positions result set cursor to the top of the page.
+     * 
+     * @throws SelectorException if error
+     */
+    protected void topOfPage() throws SelectorException
+    {
+        try
+        {
+            selectOperation.positionAbsolute(pageSize * (pageNumber - 1)); // selectOperation#readNext points to first row of page
+        }
+        catch (OperationException e)
+        {
+            throw new SelectorException("position to row error", e);
+        }
+            
+        selectOperation.resetRowsReadCount();
     }
 }

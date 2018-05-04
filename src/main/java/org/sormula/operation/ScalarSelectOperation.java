@@ -165,7 +165,10 @@ public class ScalarSelectOperation<R> extends SqlOperation<R> implements Iterabl
 
     
     /**
-     * TODO
+     * Sets the number of rows read to zero. Use this method if {@link #setMaximumRowsRead(int)} has been
+     * used to limit the number of rows, some rows have already been read, and you would like to reset
+     * the counting of maximum number of rows. For example, after a page of rows is read.
+     * 
      * @since 4.3
      */
     public void resetRowsReadCount()
@@ -331,11 +334,12 @@ public class ScalarSelectOperation<R> extends SqlOperation<R> implements Iterabl
     
     
     /**
-     * TODO
+     * Positions the result set cursor to a specific row.
+     * 
      * @param rowNumber the number of the row to which the cursor should move. A value of zero indicates that the cursor will be 
      * positioned before the first row; a positive number indicates the row number counting from the beginning of the result set; 
      * a negative number indicates the row number counting from the end of the result set
-     * @throws OperationException
+     * @throws OperationException if error
      * @since 4.3
      * @see ResultSet#absolute(int)
      */
@@ -353,10 +357,11 @@ public class ScalarSelectOperation<R> extends SqlOperation<R> implements Iterabl
     
     
     /**
-     * TODO
+     * Positions the result set cursor to a row relative to the current row.
+     * 
      * @param rowOffset - the number of rows to move from the current row; a positive number moves the cursor forward; 
      * a negative number moves the cursor backward
-     * @throws OperationException
+     * @throws OperationException if error
      * @since 4.3
      * @see ResultSet#relative(int)
      */
@@ -570,7 +575,7 @@ public class ScalarSelectOperation<R> extends SqlOperation<R> implements Iterabl
     
     
     /** 
-     * Gets order by name set with {@link #setOrderBy(String)}.
+     * Gets order by name that was set with {@link #setOrderBy(String)}.
      * 
      * @return order by name 
      */

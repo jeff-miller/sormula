@@ -803,6 +803,7 @@ public abstract class SqlOperation<R> implements AutoCloseable
     /**
      * Creates the prepared statement. Allows for subclasses to override.
      * 
+     * @return prepared statement to use for this operation
      * @throws SQLException if error
      * @since 4.3
      */

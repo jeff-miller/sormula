@@ -122,6 +122,35 @@ public class SelectPsTest extends DatabaseTest<SormulaPsTest>
             commit();
         }
     }
+
+    
+    @Test
+    public void selectPagesnnn() throws SormulaException
+    {
+        if (isTestScrollableResultSets())
+        {
+            selectByPage = true;
+            begin();
+
+            initExpectedPages(50, ""/*all*/, "orderByIdDescending");
+            
+            try (PaginatedListSelector<SormulaPsTest> selector = new PaginatedListSelector<>(rowsPerPage, getTable()))
+            {
+                selector.setOrderByName(orderByName);
+                selector.setWhereConditionName(whereConditionName);
+                selector.setWhereParameters(whereParameters);
+                selector.execute();
+                
+                // test that all rows for a page are selected after a few have been read
+                selector.selectRow();
+                selector.selectRow();
+                selector.selectRow();
+                testExpectedRows(selector);
+            }
+            
+            commit();
+        }
+    }
     
     
     protected void initExpectedPages(int rowsPerPage, String whereConditionName, String orderByName, Object...whereParameters) throws SormulaException

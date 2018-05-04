@@ -103,7 +103,10 @@ public class PaginatedSelector<R, C> implements AutoCloseable
     
     protected void confirmExecuted() throws SelectorException
     {
-        if (!selectOperation.isExecuted()) throw new SelectorException("execute method must be invoked prior to page access");
+        if (selectOperation == null || !selectOperation.isExecuted())
+        {
+            throw new SelectorException("execute method must be invoked prior to page access");
+        }
     }
     
     

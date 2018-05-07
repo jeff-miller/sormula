@@ -28,7 +28,7 @@ import org.sormula.log.ClassLogger;
  */
 public class ElapsedTime
 {
-    private static final ClassLogger log = new ClassLogger();
+    private static final ClassLogger log = new ClassLogger(); // TODO convert warn to error for SormulaLogger 
     private static long nsPerSecond = 1000000000L;
     private static long nsPerMintue = 60 * nsPerSecond;
     private static long nsPerHour   = 60 * nsPerMintue;

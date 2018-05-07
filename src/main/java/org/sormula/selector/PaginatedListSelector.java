@@ -24,9 +24,7 @@ import org.sormula.operation.SqlOperation;
 public class PaginatedListSelector<R> extends PaginatedSelector<R, List<R>>
 {
     Table<R> table;
-    String orderByName;
-    String whereConditionName;
-    Object[] whereParameters;
+    ListSelectOperation<R> selectOperation;
     
     
     /**
@@ -34,8 +32,9 @@ public class PaginatedListSelector<R> extends PaginatedSelector<R, List<R>>
      * 
      * @param pageSize rows per page
      * @param table select rows from this table
+     * @throws SelectorException if error
      */
-    public PaginatedListSelector(int pageSize, Table<R> table)
+    public PaginatedListSelector(int pageSize, Table<R> table) throws SelectorException
     {
         this(pageSize, table, false);
     }
@@ -48,43 +47,25 @@ public class PaginatedListSelector<R> extends PaginatedSelector<R, List<R>>
      * @param table select rows from this table
      * @param scrollSensitive true to use result set type of {@link ResultSet#TYPE_SCROLL_SENSITIVE}, 
      * false to use {@link ResultSet#TYPE_SCROLL_INSENSITIVE}
+     * @throws SelectorException if error
      */
-    public PaginatedListSelector(int pageSize, Table<R> table, boolean scrollSensitive)
+    public PaginatedListSelector(int pageSize, Table<R> table, boolean scrollSensitive) throws SelectorException
     {
         super(pageSize, scrollSensitive);
         this.table = table;
         
-        // defaults
-        orderByName = ""; // no order
-        whereConditionName = ""; // all rows
-        whereParameters = new Object[0]; // no parameters
-    }
-
-    
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void execute() throws SelectorException
-    {
-        ListSelectOperation<R> selectOperation;
         try
         {
             selectOperation = new ArrayListSelectOperation<>(table);
-            selectOperation.setOrderBy(orderByName);
-            selectOperation.setWhere(whereConditionName);
-            selectOperation.setParameters(whereParameters);
+            init(selectOperation);
         }
         catch (OperationException e)
         {
             throw new SelectorException("error creating select operation", e);
         }
-        
-        init(selectOperation);
-        super.execute();
     }
 
-
+    
     /** 
      * Gets order by name that was set with {@link #setOrderByName(String)}.
      * 
@@ -93,7 +74,7 @@ public class PaginatedListSelector<R> extends PaginatedSelector<R, List<R>>
      */
     public String getOrderByName()
     {
-        return orderByName;
+        return selectOperation.getOrderByName();
     }
     
     
@@ -103,10 +84,18 @@ public class PaginatedListSelector<R> extends PaginatedSelector<R, List<R>>
      * 
      * @param orderByName the name of the {@link OrderBy} to use
      * @see ScalarSelectOperation#setOrderBy(String)
+     * @throws SelectorException if error
      */
-    public void setOrderByName(String orderByName)
+    public void setOrderByName(String orderByName) throws SelectorException
     {
-        this.orderByName = orderByName;
+        try
+        {
+            selectOperation.setOrderBy(orderByName);
+        }
+        catch (OperationException e)
+        {
+            throw new SelectorException("error initializing order by", e);
+        }
     }
 
 
@@ -118,7 +107,7 @@ public class PaginatedListSelector<R> extends PaginatedSelector<R, List<R>>
      */
     public String getWhereConditionName()
     {
-        return whereConditionName;
+        return selectOperation.getWhereConditionName();
     }
     
     
@@ -129,10 +118,18 @@ public class PaginatedListSelector<R> extends PaginatedSelector<R, List<R>>
      * 
      * @param whereConditionName the name of the {@link Where} to use
      * @see SqlOperation#setWhere(String)
+     * @throws SelectorException if error
      */
-    public void setWhereConditionName(String whereConditionName)
+    public void setWhereConditionName(String whereConditionName) throws SelectorException
     {
-        this.whereConditionName = whereConditionName;
+        try
+        {
+            selectOperation.setWhere(whereConditionName);
+        }
+        catch (OperationException e)
+        {
+            throw new SelectorException("error initializing where condition", e);
+        }
     }
 
 
@@ -143,7 +140,7 @@ public class PaginatedListSelector<R> extends PaginatedSelector<R, List<R>>
      */
     public Object[] getWhereParameters()
     {
-        return whereParameters;
+        return selectOperation.getParameters();
     }
     
     
@@ -156,7 +153,7 @@ public class PaginatedListSelector<R> extends PaginatedSelector<R, List<R>>
      */
     public void setWhereParameters(Object... whereParameters)
     {
-        this.whereParameters = whereParameters;
+        selectOperation.setParameters(whereParameters);
     }
 
 

@@ -41,7 +41,9 @@ import org.sormula.NoOpTransaction;
 import org.sormula.SormulaException;
 import org.sormula.Table;
 import org.sormula.cache.Cache;
-import org.sormula.log.ClassLogger;
+import org.sormula.log.SormulaConsoleLogger;
+import org.sormula.log.SormulaLogger;
+import org.sormula.log.SormulaLoggerFactory;
 
 
 /** 
@@ -51,7 +53,18 @@ import org.sormula.log.ClassLogger;
  */
 public class DatabaseTest<R>
 {
-    private static final ClassLogger log = new ClassLogger();
+    static 
+    {
+        try
+        {
+            SormulaLoggerFactory.setLoggerClassName(SormulaConsoleLogger.class.getName());
+        }
+        catch (SormulaException e)
+        {
+            e.printStackTrace();
+        }
+    }
+    private static final SormulaLogger log = SormulaLoggerFactory.getClassLogger();
     
     static long testSeed;
     
@@ -409,7 +422,7 @@ public class DatabaseTest<R>
         }
         catch (SQLException e)
         {
-            log.warn("error closing database", e);
+            log.error("error closing database", e);
         }
     }
     
@@ -520,7 +533,7 @@ public class DatabaseTest<R>
 class JdbcProperties extends Properties
 {
     private static final long serialVersionUID = 1L;
-    private static final ClassLogger log = new ClassLogger();
+    private static final SormulaLogger log = SormulaLoggerFactory.getClassLogger();
     
 
     public JdbcProperties(boolean logProperties) throws IOException

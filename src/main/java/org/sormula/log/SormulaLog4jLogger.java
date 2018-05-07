@@ -14,10 +14,9 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.sormula.log.log4j; // TODO separate package?
+package org.sormula.log;
 
 import org.apache.log4j.Logger;
-import org.sormula.log.SormulaLogger;
 
 /**
  * TODO

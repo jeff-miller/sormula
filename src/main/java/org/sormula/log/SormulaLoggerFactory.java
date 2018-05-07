@@ -86,6 +86,7 @@ public class SormulaLoggerFactory
     }
 
 
+    // TODO change parameter from String to Class<? extends SormulaLogger> ?
     public static void setLoggerClassName(String loggerClassName) throws SormulaException // TODO LoggerException?
     {
         try

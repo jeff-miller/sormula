@@ -103,7 +103,7 @@ public class PaginatedListSelector<R> extends PaginatedSelector<R, List<R>>
      * Gets where condition name supplied in {@link #setWhereConditionName(String)}
      * 
      * @return where condition name
-     * @see SqlOperation#setWhere(String)
+     * @see SqlOperation#getWhereConditionName()
      */
     public String getWhereConditionName()
     {
@@ -120,6 +120,7 @@ public class PaginatedListSelector<R> extends PaginatedSelector<R, List<R>>
      * @see SqlOperation#setWhere(String)
      * @throws SelectorException if error
      */
+    // TODO name setWhere?
     public void setWhereConditionName(String whereConditionName) throws SelectorException
     {
         try
@@ -136,8 +137,9 @@ public class PaginatedListSelector<R> extends PaginatedSelector<R, List<R>>
     /**
      * Gets the parameters that were set by {@link #setWhereParameters(Object...)}. 
      * @return parameters to use in the select operation (typically the where parameters)
-     * @see SqlOperation#setParameters(Object...)
+     * @see SqlOperation#getParameters()
      */
+    // TODO name getParameters?
     public Object[] getWhereParameters()
     {
         return selectOperation.getParameters();
@@ -149,13 +151,40 @@ public class PaginatedListSelector<R> extends PaginatedSelector<R, List<R>>
      * default is empty array which indicates no parameters.
      * 
      * @param whereParameters values to use for {@link Where} that was specified by {@link #setWhereConditionName(String)}
-     * @see SqlOperation#setWhere(String)
+     * @see SqlOperation#setParameters(Object...)
      */
+    // TODO name setParameters?
     public void setWhereParameters(Object... whereParameters)
     {
         selectOperation.setParameters(whereParameters);
     }
+    
+    
+    /**
+     * Gets value of named parameter set with {@link #setParameter(String, Object)}.
+     * 
+     * @param name name of parameter within a {@link Where} that begins with $
+     * @return parameter value or null if no value for name
+     * @see SqlOperation#getParameter(String)
+     */
+    public Object getParameter(String name)
+    {
+        return selectOperation.getParameter(name);
+    }
 
+    
+    /**
+     * Sets a named parameter for a {@link Where}.
+     * 
+     * @param name name of parameter within a {@link Where} that begins with $
+     * @param value value of parameter to use in prepared statement
+     * @see SqlOperation#setParameter(String, Object)
+     */
+    public void setParameter(String name, Object value)
+    {
+        selectOperation.setParameter(name, value);
+    }
+    
 
     /**
      * @return table supplied in constructor

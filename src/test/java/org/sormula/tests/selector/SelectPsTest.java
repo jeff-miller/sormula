@@ -125,7 +125,7 @@ public class SelectPsTest extends DatabaseTest<SormulaPsTest>
 
     
     @Test
-    public void selectPagesnnn() throws SormulaException
+    public void selectFromTopOfPage() throws SormulaException
     {
         if (isTestScrollableResultSets())
         {
@@ -145,6 +145,31 @@ public class SelectPsTest extends DatabaseTest<SormulaPsTest>
                 selector.selectRow();
                 selector.selectRow();
                 selector.selectRow();
+                testExpectedRows(selector);
+            }
+            
+            commit();
+        }
+    }
+
+    
+    @Test
+    public void selectPageNamedParameter() throws SormulaException
+    {
+        if (isTestScrollableResultSets())
+        {
+            selectByPage = true;
+            begin();
+
+            initExpectedPages(14, "selectByType", "orderById", 2);
+            
+            try (PaginatedListSelector<SormulaPsTest> selector = new PaginatedListSelector<>(rowsPerPage, getTable()))
+            {
+                selector.setOrderByName(orderByName);
+                selector.setWhereConditionName("selectByType");
+                selector.setParameter("type", 2);
+                selector.execute();
+                
                 testExpectedRows(selector);
             }
             

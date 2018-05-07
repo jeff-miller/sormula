@@ -149,7 +149,7 @@ public abstract class SqlOperation<R> implements AutoCloseable
      * {@link #setNamedParameterMap(Map)}.
      * 
      * @param name parameter name
-     * @return parameter value
+     * @return parameter value or null if no value for name
      * @since 3.1
      */
     public Object getParameter(String name)

@@ -137,8 +137,8 @@ public class SelectPsTest extends DatabaseTest<SormulaPsTest>
             try (PaginatedListSelector<SormulaPsTest> selector = new PaginatedListSelector<>(rowsPerPage, getTable()))
             {
                 selector.setOrderByName(orderByName);
-                selector.setWhereConditionName(whereConditionName);
-                selector.setWhereParameters(whereParameters);
+                selector.setWhere(whereConditionName);
+                selector.setParameters(whereParameters);
                 selector.execute();
                 
                 // test that all rows for a page are selected after a few have been read
@@ -166,7 +166,7 @@ public class SelectPsTest extends DatabaseTest<SormulaPsTest>
             try (PaginatedListSelector<SormulaPsTest> selector = new PaginatedListSelector<>(rowsPerPage, getTable()))
             {
                 selector.setOrderByName(orderByName);
-                selector.setWhereConditionName("selectByType");
+                selector.setWhere("selectByType");
                 selector.setParameter("type", 2);
                 selector.execute();
                 
@@ -233,8 +233,8 @@ public class SelectPsTest extends DatabaseTest<SormulaPsTest>
         try (PaginatedListSelector<SormulaPsTest> selector = new PaginatedListSelector<>(rowsPerPage, getTable()))
         {
             selector.setOrderByName(orderByName);
-            selector.setWhereConditionName(whereConditionName);
-            selector.setWhereParameters(whereParameters);
+            selector.setWhere(whereConditionName);
+            selector.setParameters(whereParameters);
             testPages(selector);
         }
     }

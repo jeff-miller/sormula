@@ -100,7 +100,7 @@ public class PaginatedListSelector<R> extends PaginatedSelector<R, List<R>>
 
 
     /** 
-     * Gets where condition name supplied in {@link #setWhereConditionName(String)}
+     * Gets where condition name supplied in {@link #setWhere(String)}
      * 
      * @return where condition name
      * @see SqlOperation#getWhereConditionName()
@@ -120,8 +120,7 @@ public class PaginatedListSelector<R> extends PaginatedSelector<R, List<R>>
      * @see SqlOperation#setWhere(String)
      * @throws SelectorException if error
      */
-    // TODO name setWhere?
-    public void setWhereConditionName(String whereConditionName) throws SelectorException
+    public void setWhere(String whereConditionName) throws SelectorException
     {
         try
         {
@@ -135,12 +134,11 @@ public class PaginatedListSelector<R> extends PaginatedSelector<R, List<R>>
 
 
     /**
-     * Gets the parameters that were set by {@link #setWhereParameters(Object...)}. 
+     * Gets the parameters that were set by {@link #setParameters(Object...)}. 
      * @return parameters to use in the select operation (typically the where parameters)
      * @see SqlOperation#getParameters()
      */
-    // TODO name getParameters?
-    public Object[] getWhereParameters()
+    public Object[] getParameters()
     {
         return selectOperation.getParameters();
     }
@@ -150,13 +148,12 @@ public class PaginatedListSelector<R> extends PaginatedSelector<R, List<R>>
      * Sets the parameters that correspond to {@link WhereField#operand()} that are "?". The
      * default is empty array which indicates no parameters.
      * 
-     * @param whereParameters values to use for {@link Where} that was specified by {@link #setWhereConditionName(String)}
+     * @param parameters values to use for {@link Where} that was specified by {@link #setWhere(String)}
      * @see SqlOperation#setParameters(Object...)
      */
-    // TODO name setParameters?
-    public void setWhereParameters(Object... whereParameters)
+    public void setParameters(Object... parameters)
     {
-        selectOperation.setParameters(whereParameters);
+        selectOperation.setParameters(parameters);
     }
     
     

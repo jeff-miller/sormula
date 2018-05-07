@@ -64,8 +64,8 @@ public class PaginationSelect extends ExampleBase
     {
         try (PaginatedListSelector<Book> selector = new PaginatedListSelector<>(pageSize, table))
         {
-            selector.setWhereConditionName("top");
-            selector.setWhereParameters(15);
+            selector.setWhere("top");
+            selector.setParameters(15);
             selector.setOrderByName("titleOrder");
             selector.execute();
             

@@ -21,9 +21,9 @@ package org.sormula.log; // TODO separate package?
  * @author Jeff Miller
  * @since 4.3
  */
-public class SormulaEmptyLogger implements SormulaLogger
+public class EmptySormulaLogger implements SormulaLogger
 {
-    public SormulaEmptyLogger(String className)
+    public EmptySormulaLogger(String className)
     {
     }
 

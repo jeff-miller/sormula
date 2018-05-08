@@ -53,9 +53,9 @@ import org.slf4j.LoggerFactory;
  * @see Logger
  * @author Jeff Miller
  */
-public class Slf4jLogger implements SormulaLogger
+public class Slf4jSormulaLogger implements SormulaLogger
 {
-    static final String classLoggerClassName = Slf4jLogger.class.getName();
+    static final String classLoggerClassName = Slf4jSormulaLogger.class.getName();
     static boolean loggerAvailable = false;
     static
     {
@@ -77,7 +77,7 @@ public class Slf4jLogger implements SormulaLogger
      * TODO
      * @param className
      */
-    public Slf4jLogger(String className)
+    public Slf4jSormulaLogger(String className)
     {
         if (loggerAvailable)
         {

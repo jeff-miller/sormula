@@ -23,13 +23,13 @@ package org.sormula.log;
  * @since 4.3
  */
 // TODO names ConsoleLogger?
-public class SormulaConsoleLogger implements SormulaLogger
+public class ConsoleSormulaLogger implements SormulaLogger
 {
     boolean debugEnabled;
     String className;
     
     
-    public SormulaConsoleLogger(String className)
+    public ConsoleSormulaLogger(String className)
     {
         this.className = className;
         setDebugEnabled(true);// TODO

@@ -53,6 +53,7 @@ import org.slf4j.Marker;
  * @see Logger
  * @author Jeff Miller
  */
+@Deprecated
 public class ClassLogger
 {
     static final String classLoggerClassName = ClassLogger.class.getName();

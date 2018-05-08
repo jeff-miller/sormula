@@ -23,12 +23,12 @@ import org.apache.log4j.Logger;
  * @author Jeff Miller
  * @since 4.3
  */
-public class SormulaLog4jLogger implements SormulaLogger
+public class Log4jSormulaLogger implements SormulaLogger
 {
     Logger logger;
     
     
-    public SormulaLog4jLogger(String className)
+    public Log4jSormulaLogger(String className)
     {
         this.logger = Logger.getLogger(className);
     }

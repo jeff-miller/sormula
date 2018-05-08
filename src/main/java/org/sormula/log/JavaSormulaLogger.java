@@ -24,12 +24,12 @@ import java.util.logging.Logger;
  * @author Jeff Miller
  * @since 4.3
  */
-public class SormulaJavaLogger implements SormulaLogger
+public class JavaSormulaLogger implements SormulaLogger
 {
     Logger logger;
     
     
-    public SormulaJavaLogger(String className)
+    public JavaSormulaLogger(String className)
     {
         this.logger = Logger.getLogger(className);
     }

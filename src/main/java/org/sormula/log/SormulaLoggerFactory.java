@@ -38,7 +38,7 @@ public class SormulaLoggerFactory
         try
         {
             //setLoggerClass(SormulaEmptyLogger.class);
-            setLoggerClass(Slf4jLogger.class);
+            setLoggerClass(Slf4jSormulaLogger.class);
         }
         catch (SormulaException e)
         {
@@ -76,7 +76,7 @@ public class SormulaLoggerFactory
         }
         
         // should never get here, avoid NullPointerException
-        return new SormulaEmptyLogger("");
+        return new EmptySormulaLogger("");
     }
     
     

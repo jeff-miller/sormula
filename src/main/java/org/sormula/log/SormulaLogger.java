@@ -19,6 +19,9 @@ package org.sormula.log;
 
 /**
  * TODO
+ * 
+ * Enables use of any logger API without dependency upon SLF4J.
+ * 
  * @author Jeff Miller
  * @since 4.3
  */

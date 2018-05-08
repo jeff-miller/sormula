@@ -32,13 +32,13 @@ public class SormulaLoggerFactory
     private static Class<? extends SormulaLogger> loggerClass;
     private static Constructor<? extends SormulaLogger> loggerConstructor;
     
-    // default logger is empty logger TODO or ClassLogger for backward compatibility?
+    // default logger is empty logger TODO or Slf4jLogger for backward compatibility?
     static
     {
         try
         {
             //setLoggerClass(SormulaEmptyLogger.class);
-            setLoggerClass(ClassLogger.class);
+            setLoggerClass(Slf4jLogger.class);
         }
         catch (SormulaException e)
         {
@@ -86,6 +86,14 @@ public class SormulaLoggerFactory
     }
 
 
+    /**
+     * TODO
+     * 
+     * Enables use of any logger API without dependency upon SLF4J.
+     * 
+     * @param loggerClass
+     * @throws SormulaException
+     */
     public static void setLoggerClass(Class<? extends SormulaLogger> loggerClass) throws SormulaException // TODO LoggerException?
     {
         String loggerClassName = loggerClass.getName();

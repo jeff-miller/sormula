@@ -19,7 +19,8 @@ package org.sormula.log;
 import org.apache.log4j.Logger;
 
 /**
- * TODO
+ * A {@link SormulaLogger} that logs using log4j api. 
+ * 
  * @author Jeff Miller
  * @since 4.3
  */
@@ -28,9 +29,9 @@ public class Log4jSormulaLogger implements SormulaLogger
     Logger logger;
     
     
-    public Log4jSormulaLogger(String className)
+    public Log4jSormulaLogger(String name)
     {
-        this.logger = Logger.getLogger(className);
+        this.logger = Logger.getLogger(name);
     }
 
 

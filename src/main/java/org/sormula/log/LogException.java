@@ -16,46 +16,39 @@
  */
 package org.sormula.log;
 
+import org.sormula.SormulaException;
+
+
 /**
- * A {@link SormulaLogger} that logs nothing.
+ * Exception that originates in the log package.
  * 
+ * @since 1.0
  * @author Jeff Miller
- * @since 4.3
  */
-public class EmptySormulaLogger implements SormulaLogger
+public class LogException extends SormulaException
 {
-    public EmptySormulaLogger(String name)
-    {
-    }
+    private static final long serialVersionUID = 1L;
 
 
-    @Override
-    public void info(String message)
+    /**
+     * Constructs for a message.
+     * 
+     * @param message exception message
+     */
+    public LogException(String message)
     {
-    }
-
-    
-    @Override
-    public void debug(String message)
-    {
+        super(message);
     }
 
     
-    @Override
-    public void error(String message)
+    /**
+     * Constructs for a message and cause.
+     * 
+     * @param message exception message
+     * @param cause cause of exception
+     */
+    public LogException(String message, Throwable cause)
     {
-    }
-
-    
-    @Override
-    public void error(String message, Throwable throwable)
-    {
-    }
-
-    
-    @Override
-    public boolean isDebugEnabled()
-    {
-        return false;
+        super(message, cause);
     }
 }

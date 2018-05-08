@@ -18,11 +18,20 @@ package org.sormula.log;
 
 import java.lang.reflect.Constructor;
 
-import org.sormula.SormulaException;
-
 
 /**
- * TODO
+ * Factory for supplying logger classes that are used by Sormula classes. This factory
+ * decouples Sormula logging from any specific logging library and allows you to use
+ * any or no logging library.
+ * <p> 
+ * Use {@link #setLoggerClass(Class)} to change the default logger to one of the implementations
+ * of {@link SormulaLogger} in org.sormula.log package or any implementation of
+ * {@link SormulaLogger}.
+ * <p>
+ * The default logger class is {@link Slf4jSormulaLogger} for backward compatibility since Sormula originally
+ * used {@link ClassLogger} which uses SLF4J if it is on the classpath. The default logger does not
+ * require any SLF4J jars if no logging is desired.
+ * 
  * @author Jeff Miller
  * @since 4.3
  */
@@ -32,15 +41,14 @@ public class SormulaLoggerFactory
     private static Class<? extends SormulaLogger> loggerClass;
     private static Constructor<? extends SormulaLogger> loggerConstructor;
     
-    // default logger is empty logger TODO or Slf4jLogger for backward compatibility?
+    // default logger is Slf4jLogger for backward compatibility
     static
     {
         try
         {
-            //setLoggerClass(SormulaEmptyLogger.class);
             setLoggerClass(Slf4jSormulaLogger.class);
         }
-        catch (SormulaException e)
+        catch (LogException e)
         {
             // should never occur
             e.printStackTrace();
@@ -48,16 +56,21 @@ public class SormulaLoggerFactory
     }
     
     
+    /**
+     * Gets a logger with logical log name as package name of the caller
+     * of this method. For example, org.sormula.something.SomeClass invokes
+     * {@link SormulaLoggerFactory#getClassLogger()} then a SormulaLogger with 
+     * the logical log name of org.sormula.something would be returned.
+     * 
+     * @return logger to use
+     */
     public static SormulaLogger getClassLogger()
     {
-        System.out.println("factoryClassName=");
-        System.out.println(factoryClassName);
         // search for SormulaLoggerFactory on stack
         StackTraceElement[] stes =  new Throwable().getStackTrace();
         int lastElementIndex = stes.length - 1;
         for (int i = 0; i < lastElementIndex; ++i) 
         {
-            System.out.println(stes[i].getClassName());
             if (stes[i].getClassName().equals(factoryClassName)) 
             {
                 // next on stack is the class that created me
@@ -67,8 +80,7 @@ public class SormulaLoggerFactory
                 }
                 catch (Exception e)
                 {
-                    // should not occur, don't use checked exception
-                    // TODO or convert to runtime exception?
+                    // should not occur since #setLoggerClass has tested constructor already
                     e.printStackTrace();
                     break;
                 }
@@ -80,6 +92,13 @@ public class SormulaLoggerFactory
     }
     
     
+    /**
+     * Gets the logger class to use in {@link #getClassLogger()}. The default
+     * is {@link Slf4jSormulaLogger} for backward compatibility since the original
+     * logger used by Sormula was {@link ClassLogger} which is dependent upon SLF4J.
+     * 
+     * @return class of logger to return with {@link #getClassLogger()}
+     */
     public static Class<? extends SormulaLogger> getLoggerClass()
     {
         return loggerClass;
@@ -87,43 +106,50 @@ public class SormulaLoggerFactory
 
 
     /**
-     * TODO
+     * Sets the logger class to be used by Sormula. New instances of the logger class will
+     * be created for use by Sormula. The logger class must have a constructor of one parameter 
+     * of type String.
+     * <p>
+     * Setting the logger class determines the logger for Sormula classes that are not already
+     * loaded by the class loader. Sormula classes have static reference to {@link SormulaLogger}
+     * objects that are initialized when the Sormula class was loaded into memory. Typically
+     * {@link #setLoggerClass(Class)} should be used prior to using any Sormula classes. 
      * 
-     * Enables use of any logger API without dependency upon SLF4J.
-     * 
-     * @param loggerClass
-     * @throws SormulaException
+     * @param loggerClass any class that implements {@link SormulaLogger} interface
+     * @throws LogException if error, see exception message for reason
      */
-    public static void setLoggerClass(Class<? extends SormulaLogger> loggerClass) throws SormulaException // TODO LoggerException?
+    public static void setLoggerClass(Class<? extends SormulaLogger> loggerClass) throws LogException
     {
         String loggerClassName = loggerClass.getName();
         
         try
         {
-            Constructor<? extends SormulaLogger> lc = loggerClass.getConstructor(String.class); //TODO thread safety?
+            Constructor<? extends SormulaLogger> loggerConstructor = loggerClass.getConstructor(String.class);
             
-            // test constructor here so exceptions are known here and assume no exceptions in getClassLogger()
-            lc.newInstance("");
+            // test constructor here so exceptions are detected here; avoid exceptions in getClassLogger()
+            loggerConstructor.newInstance("");
             
             // no errors, keep references
-            loggerConstructor = lc;
+            // no attempt for thread safety since typically set prior to any use of Sormula 
+            // if logger is changed after some Sormula objects are used, not likely to cause thread synchronization problems
+            SormulaLoggerFactory.loggerConstructor = loggerConstructor;
             SormulaLoggerFactory.loggerClass = loggerClass;
         }
         catch (NoSuchMethodException e)
         {
-            throw new SormulaException(loggerClassName + " must have constructor " + loggerClassName + "(String)", e);
+            throw new LogException(loggerClassName + " must have constructor " + loggerClassName + "(String)", e);
         }
         catch (IllegalAccessException e)
         {
-            throw new SormulaException(loggerClassName + " is not accessible", e);
+            throw new LogException(loggerClassName + " is not accessible", e);
         }
         catch (InstantiationException e)
         {
-            throw new SormulaException(loggerClassName + " must be concrete not abstract", e);
+            throw new LogException(loggerClassName + " must be concrete not abstract", e);
         }
         catch (Exception e)
         {
-            throw new SormulaException(loggerClassName + " constructor error", e);
+            throw new LogException(loggerClassName + " constructor error", e);
         }
     }
 }

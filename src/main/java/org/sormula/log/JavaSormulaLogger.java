@@ -20,7 +20,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- * TODO
+ * A {@link SormulaLogger} that logs using java.util.logging {@link Logger}. 
+ * 
  * @author Jeff Miller
  * @since 4.3
  */
@@ -29,9 +30,9 @@ public class JavaSormulaLogger implements SormulaLogger
     Logger logger;
     
     
-    public JavaSormulaLogger(String className)
+    public JavaSormulaLogger(String name)
     {
-        this.logger = Logger.getLogger(className);
+        this.logger = Logger.getLogger(name);
     }
 
 
@@ -42,13 +43,19 @@ public class JavaSormulaLogger implements SormulaLogger
     }
 
     
+    /**
+     * Logs {@link Level#FINE} level.
+     */
     @Override
     public void debug(String message)
     {
         logger.log(Level.FINE, message);
     }
 
-    
+
+    /**
+     * Logs {@link Level#SEVERE} level.
+     */
     @Override
     public void error(String message)
     {
@@ -56,6 +63,9 @@ public class JavaSormulaLogger implements SormulaLogger
     }
 
     
+    /**
+     * Logs {@link Level#SEVERE} level.
+     */
     @Override
     public void error(String message, Throwable throwable)
     {
@@ -63,6 +73,9 @@ public class JavaSormulaLogger implements SormulaLogger
     }
 
     
+    /**
+     * @return true if {@link Level#FINE} is enabled.
+     */
     @Override
     public boolean isDebugEnabled()
     {

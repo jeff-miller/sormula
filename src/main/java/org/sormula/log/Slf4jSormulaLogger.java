@@ -21,36 +21,12 @@ import org.slf4j.LoggerFactory;
 
 
 /**
- * TODO revise
- * A delegate for SLF4J logger that uses the import org.slf4j.LoggerFactory 
- * to create a logger based upon the class name that created ClassLogger. 
- * Use no-argument constructor to create a logger for your class. To use this class,
- * create an new instance and then invoke the log methods.
- * <pre>
- * package com.mycompany.something;
- * 
- * public class MyClass 
- * {
- *     final static ClassLogger log = new ClassLogger();
- * .
- * .
- * .
- *     public void SomeMethod()
- *     {
- *         log.info("hello, world");
- *     }
- * 
- * }     
- * </pre>
- * 
- * Log messages from MyClass will be logged with logical log name of
- * com.mycompany.something.MyClass
+ * A {@link SormulaLogger} that logs using the SLF4J logging facade library.
  * <p>
  * If no SLF4J jars are on the classpath, then no exceptions are thrown
  * and no logging will occur.
  * 
- * @since 1.0
- * @see Logger
+ * @since 4.3
  * @author Jeff Miller
  */
 public class Slf4jSormulaLogger implements SormulaLogger
@@ -73,15 +49,11 @@ public class Slf4jSormulaLogger implements SormulaLogger
     Logger logger;
     
     
-    /**
-     * TODO
-     * @param className
-     */
-    public Slf4jSormulaLogger(String className)
+    public Slf4jSormulaLogger(String name)
     {
         if (loggerAvailable)
         {
-            logger = LoggerFactory.getLogger(className);
+            logger = LoggerFactory.getLogger(name);
         }
     }
 

@@ -56,7 +56,7 @@ public class DatabaseTest<R>
     {
         try
         {
-            // TODO
+            // configure logger from build.properties
             String loggerClassName = System.getProperty("logger.class", "");
             System.out.println("logger.class=" + loggerClassName);
             if (loggerClassName.length() > 0)

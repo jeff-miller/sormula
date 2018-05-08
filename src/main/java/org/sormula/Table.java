@@ -135,7 +135,6 @@ public class Table<R> implements TypeTranslatorMap, TransactionListener
      */
     public Table(Database database, Class<R> rowClass) throws SormulaException
     {
-        log.info("test");//TODO
         this.database = database;
         this.rowClass = rowClass;
         

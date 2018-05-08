@@ -18,21 +18,20 @@ package org.sormula.log;
 
 
 /**
- * TODO
+ * A {@link SormulaLogger} that logs to {@link System#out}.
+ * 
  * @author Jeff Miller
  * @since 4.3
  */
-// TODO names ConsoleLogger?
 public class ConsoleSormulaLogger implements SormulaLogger
 {
     boolean debugEnabled;
-    String className;
+    String name;
     
     
-    public ConsoleSormulaLogger(String className)
+    public ConsoleSormulaLogger(String name)
     {
-        this.className = className;
-        setDebugEnabled(true);// TODO
+        this.name = name;
     }
 
 
@@ -80,6 +79,6 @@ public class ConsoleSormulaLogger implements SormulaLogger
     
     protected void log(String type, String message)
     {
-        System.out.println(type + " " + className + " " + message); 
+        System.out.println(type + " " + name + " " + message); 
     }
 }

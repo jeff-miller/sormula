@@ -18,20 +18,54 @@ package org.sormula.log;
 
 
 /**
- * TODO
- * 
- * Enables use of any logger API without dependency upon SLF4J.
+ * Logging interface used by Sormula. Implementing this interface enables use of any logger 
+ * API without requiring a dependency upon a logging facade library. 
  * 
  * @author Jeff Miller
  * @since 4.3
+ * 
+ * @see SormulaLoggerFactory#setLoggerClass(Class)
  */
 public interface SormulaLogger
 {
+    /**
+     * Logs informational message.
+     * 
+     * @param message message to log
+     */
     void info(String message);
+
+    
+    /**
+     * Logs debug level message.
+     * 
+     * @param message message to log
+     */
     void debug(String message);
+    
+    
+    /**
+     * Logs error message.
+     * 
+     * @param message message to log
+     */
     void error(String message);
+    
+    
+    /**
+     * Logs error message and cause.
+     * 
+     * @param message message to log
+     * @param throwable error/exception cause
+     */
     void error(String message, Throwable throwable);
     
+    
+    /**
+     * Reports when messages are logged with {@link #debug(String)}.
+     * 
+     * @return true to log messages with {@link #debug(String)}; false nothing will be logged with {@link #debug(String)}
+     */
     default boolean isDebugEnabled()
     {
         return false;

@@ -53,8 +53,7 @@ import org.slf4j.Marker;
  * @see Logger
  * @author Jeff Miller
  */
-@Deprecated
-public class ClassLogger
+public class ClassLogger implements SormulaLogger
 {
     static final String classLoggerClassName = ClassLogger.class.getName();
     static boolean loggerAvailable = false;
@@ -72,6 +71,19 @@ public class ClassLogger
         }
     }
     Logger log;
+    
+    
+    /**
+     * TODO
+     * @param className
+     */
+    public ClassLogger(String className)
+    {
+        if (loggerAvailable)
+        {
+            log = LoggerFactory.getLogger(className);
+        }
+    }
     
     
     /**

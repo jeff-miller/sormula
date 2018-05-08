@@ -41,7 +41,6 @@ import org.sormula.NoOpTransaction;
 import org.sormula.SormulaException;
 import org.sormula.Table;
 import org.sormula.cache.Cache;
-import org.sormula.log.SormulaLog4jLogger;
 import org.sormula.log.SormulaLogger;
 import org.sormula.log.SormulaLoggerFactory;
 
@@ -58,15 +57,21 @@ public class DatabaseTest<R>
         try
         {
             // TODO
-            //SormulaLoggerFactory.setLoggerClass(SormulaConsoleLogger.class);
-            //SormulaLoggerFactory.setLoggerClass(SormulaJavaLogger.class);
-            SormulaLoggerFactory.setLoggerClass(SormulaLog4jLogger.class);
+            String loggerClassName = System.getProperty("logger.class", "");
+            System.out.println("logger.class=" + loggerClassName);
+            if (loggerClassName.length() > 0)
+            {
+                @SuppressWarnings("unchecked")
+                Class<? extends SormulaLogger> loggerClass = (Class<? extends SormulaLogger>) Class.forName(loggerClassName);
+                SormulaLoggerFactory.setLoggerClass(loggerClass);
+            }
         }
-        catch (SormulaException e)
+        catch (Exception e)
         {
             e.printStackTrace();
         }
     }
+    
     private static final SormulaLogger log = SormulaLoggerFactory.getClassLogger();
     
     static long testSeed;

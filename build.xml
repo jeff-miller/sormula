@@ -171,6 +171,7 @@
             <sysproperty key="dbdir" value="${db.dir}"/>
         	<sysproperty key="seed" value="${seed}"/>
         	<sysproperty key="timings" value="${timings}"/>
+        	<sysproperty key="logger.class" value="${logger.class}"/>
         	<sysproperty key="cache.statistics" value="${cache.statistics}"/>
         	<sysproperty key="java.library.path" value="jdbc/${db.dir}"/> <!-- for type 2 JDBC drivers -->
             <classpath refid="examples.libpath"/>
@@ -192,6 +193,7 @@
         	<sysproperty key="dbdir" value="${db.dir}"/>
         	<sysproperty key="seed" value="${seed}"/>
         	<sysproperty key="timings" value="${timings}"/>
+        	<sysproperty key="logger.class" value="${logger.class}"/>
         	<sysproperty key="cache.statistics" value="${cache.statistics}"/>
         	<classpath refid="tests.libpath"/>
         	<classpath>

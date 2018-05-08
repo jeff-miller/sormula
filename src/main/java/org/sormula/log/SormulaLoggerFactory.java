@@ -32,12 +32,13 @@ public class SormulaLoggerFactory
     private static Class<? extends SormulaLogger> loggerClass;
     private static Constructor<? extends SormulaLogger> loggerConstructor;
     
-    // default logger is empty logger
+    // default logger is empty logger TODO or ClassLogger for backward compatibility?
     static
     {
         try
         {
-            setLoggerClass(SormulaEmptyLogger.class);
+            //setLoggerClass(SormulaEmptyLogger.class);
+            setLoggerClass(ClassLogger.class);
         }
         catch (SormulaException e)
         {

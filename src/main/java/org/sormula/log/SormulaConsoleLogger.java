@@ -22,6 +22,7 @@ package org.sormula.log;
  * @author Jeff Miller
  * @since 4.3
  */
+// TODO names ConsoleLogger?
 public class SormulaConsoleLogger implements SormulaLogger
 {
     boolean debugEnabled;

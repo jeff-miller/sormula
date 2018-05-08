@@ -27,7 +27,8 @@ import java.util.function.BiPredicate;
 
 import org.sormula.Table;
 import org.sormula.annotation.cascade.SelectCascade;
-import org.sormula.log.ClassLogger;
+import org.sormula.log.SormulaLogger;
+import org.sormula.log.SormulaLoggerFactory;
 import org.sormula.operation.MapSelectOperation;
 import org.sormula.operation.MissingFieldException;
 import org.sormula.operation.OperationException;
@@ -53,7 +54,7 @@ import org.sormula.translator.WhereTranslator;
  */
 public class SelectCascadeOperation<S, T> extends CascadeOperation<S, T>
 {
-    private static final ClassLogger log = new ClassLogger();
+    private static final SormulaLogger log = SormulaLoggerFactory.getClassLogger();
 	SelectCascade selectCascadeAnnotation;
 	ScalarSelectOperation<T> selectOperation;
 	String[] parameterFieldNames;

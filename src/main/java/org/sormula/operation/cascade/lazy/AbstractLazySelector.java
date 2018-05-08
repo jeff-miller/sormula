@@ -29,7 +29,8 @@ import org.sormula.Transaction;
 import org.sormula.annotation.Transient;
 import org.sormula.annotation.cascade.SelectCascade;
 import org.sormula.annotation.cascade.SelectCascadeAnnotationReader;
-import org.sormula.log.ClassLogger;
+import org.sormula.log.SormulaLogger;
+import org.sormula.log.SormulaLoggerFactory;
 import org.sormula.operation.ScalarSelectOperation;
 import org.sormula.operation.cascade.SelectCascadeOperation;
 import org.sormula.reflect.RowField;
@@ -54,7 +55,7 @@ import org.sormula.reflect.RowField;
 abstract public class AbstractLazySelector<R> implements LazySelectable, Serializable
 {
     private static final long serialVersionUID = 1L;
-    private static final ClassLogger log = new ClassLogger();
+    private static final SormulaLogger log = SormulaLoggerFactory.getClassLogger();
     
     @Transient
     R source;

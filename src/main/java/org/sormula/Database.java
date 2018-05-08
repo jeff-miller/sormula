@@ -37,7 +37,8 @@ import javax.sql.DataSource;
 import org.sormula.annotation.Column;
 import org.sormula.annotation.ExplicitTypeAnnotationReader;
 import org.sormula.annotation.ImplicitType;
-import org.sormula.log.ClassLogger;
+import org.sormula.log.SormulaLogger;
+import org.sormula.log.SormulaLoggerFactory;
 import org.sormula.operation.ModifyOperation;
 import org.sormula.operation.ReadOnlyException;
 import org.sormula.operation.SqlOperation;
@@ -91,7 +92,7 @@ import org.sormula.translator.standard.StringTranslator;
  */
 public class Database implements TypeTranslatorMap, AutoCloseable
 {
-    private static final ClassLogger log = new ClassLogger();
+    private static final SormulaLogger log = SormulaLoggerFactory.getClassLogger();
     String dataSourceName;
     DataSource dataSource;
     Connection connection;

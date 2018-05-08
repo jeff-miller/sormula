@@ -21,7 +21,8 @@ import java.util.Map;
 
 import org.sormula.Table;
 import org.sormula.annotation.Column;
-import org.sormula.log.ClassLogger;
+import org.sormula.log.SormulaLogger;
+import org.sormula.log.SormulaLoggerFactory;
 import org.sormula.operation.ModifyOperation;
 import org.sormula.operation.OperationException;
 import org.sormula.operation.SqlOperation;
@@ -39,7 +40,7 @@ import org.sormula.reflect.RowField;
  */
 public abstract class ModifyCascadeOperation<S, T> extends CascadeOperation<S, T>
 {
-    private static final ClassLogger log = new ClassLogger();
+    private static final SormulaLogger log = SormulaLoggerFactory.getClassLogger();
     ModifyOperation<T> modifyOperation;
     
     

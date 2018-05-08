@@ -20,7 +20,8 @@ import java.lang.reflect.AnnotatedElement;
 
 import org.sormula.Database;
 import org.sormula.Table;
-import org.sormula.log.ClassLogger;
+import org.sormula.log.SormulaLogger;
+import org.sormula.log.SormulaLoggerFactory;
 import org.sormula.translator.TypeTranslator;
 import org.sormula.translator.TypeTranslatorMap;
 
@@ -35,7 +36,7 @@ import org.sormula.translator.TypeTranslatorMap;
  */
 public class ExplicitTypeAnnotationReader
 {
-    private static final ClassLogger log = new ClassLogger();
+    private static final SormulaLogger log = SormulaLoggerFactory.getClassLogger();
     TypeTranslatorMap typeTranslatorMap;
     Class<?>[] sources;
     

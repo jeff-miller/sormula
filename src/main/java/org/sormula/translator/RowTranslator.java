@@ -49,7 +49,8 @@ import org.sormula.annotation.UnusedColumns;
 import org.sormula.annotation.cascade.Cascade;
 import org.sormula.annotation.cascade.OneToManyCascade;
 import org.sormula.annotation.cascade.OneToOneCascade;
-import org.sormula.log.ClassLogger;
+import org.sormula.log.SormulaLogger;
+import org.sormula.log.SormulaLoggerFactory;
 import org.sormula.reflect.FieldAccessType;
 import org.sormula.reflect.ReflectException;
 import org.sormula.reflect.RowField;
@@ -78,7 +79,7 @@ import org.sormula.translator.standard.StandardColumnTranslator;
  */
 public class RowTranslator<R> extends ColumnsTranslator<R>
 {
-    private static final ClassLogger log = new ClassLogger();
+    private static final SormulaLogger log = SormulaLoggerFactory.getClassLogger();
     
     // default enum type
     @EnumType

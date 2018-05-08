@@ -5,7 +5,8 @@ import java.sql.Connection;
 import org.sormula.SormulaException;
 import org.sormula.active.operation.OperationDatabase;
 import org.sormula.active.operation.OperationTransaction;
-import org.sormula.log.ClassLogger;
+import org.sormula.log.SormulaLogger;
+import org.sormula.log.SormulaLoggerFactory;
 
 
 /**
@@ -37,7 +38,7 @@ import org.sormula.log.ClassLogger;
  */
 public class ActiveTransaction 
 {
-    private static final ClassLogger log = new ClassLogger();
+    private static final SormulaLogger log = SormulaLoggerFactory.getClassLogger();
     ActiveDatabase activeDatabase;
     OperationTransaction operationTransaction;
     

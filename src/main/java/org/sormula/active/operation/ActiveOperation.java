@@ -27,7 +27,8 @@ import org.sormula.active.ActiveRecord;
 import org.sormula.active.ActiveTable;
 import org.sormula.active.ActiveTransaction;
 import org.sormula.active.NoDefaultActiveDatabaseException;
-import org.sormula.log.ClassLogger;
+import org.sormula.log.SormulaLogger;
+import org.sormula.log.SormulaLoggerFactory;
 
 
 /**
@@ -43,7 +44,7 @@ import org.sormula.log.ClassLogger;
  */
 public abstract class ActiveOperation<R extends ActiveRecord<? super R>, T>
 {
-    private static final ClassLogger log = new ClassLogger();
+    private static final SormulaLogger log = SormulaLoggerFactory.getClassLogger();
     ActiveTable<R> activeTable;
     String exceptionMessage;
     ActiveDatabase activeDatabase;

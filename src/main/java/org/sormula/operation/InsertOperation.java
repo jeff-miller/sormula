@@ -29,7 +29,8 @@ import org.sormula.annotation.cascade.InsertCascade;
 import org.sormula.annotation.cascade.InsertCascadeAnnotationReader;
 import org.sormula.cache.Cache;
 import org.sormula.cache.CacheException;
-import org.sormula.log.ClassLogger;
+import org.sormula.log.SormulaLogger;
+import org.sormula.log.SormulaLoggerFactory;
 import org.sormula.operation.cascade.CascadeOperation;
 import org.sormula.operation.cascade.InsertCascadeOperation;
 import org.sormula.reflect.RowField;
@@ -46,7 +47,7 @@ import org.sormula.translator.RowTranslator;
  */
 public class InsertOperation<R> extends ModifyOperation<R>
 {
-    private static final ClassLogger log = new ClassLogger();
+    private static final SormulaLogger log = SormulaLoggerFactory.getClassLogger();
     ColumnTranslator<R> identityColumnTranslator;
     
     

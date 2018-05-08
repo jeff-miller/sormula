@@ -27,7 +27,8 @@ import org.sormula.active.operation.OperationDatabase;
 import org.sormula.annotation.Transient;
 import org.sormula.annotation.cascade.SelectCascade;
 import org.sormula.annotation.cascade.SelectCascadeAnnotationReader;
-import org.sormula.log.ClassLogger;
+import org.sormula.log.SormulaLogger;
+import org.sormula.log.SormulaLoggerFactory;
 import org.sormula.operation.cascade.lazy.LazySelectable;
 import org.sormula.translator.RowTranslator;
 
@@ -46,7 +47,7 @@ import org.sormula.translator.RowTranslator;
  */
 public abstract class ActiveRecord<R extends ActiveRecord<? super R>> implements LazySelectable, Serializable
 {
-    private static final ClassLogger log = new ClassLogger();
+    private static final SormulaLogger log = SormulaLoggerFactory.getClassLogger();
     private static final long serialVersionUID = 1L;
     
     // the following are transient so that they not used as a column when Row.inheritedFields=true 

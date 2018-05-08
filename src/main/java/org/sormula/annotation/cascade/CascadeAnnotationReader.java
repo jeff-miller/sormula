@@ -6,7 +6,8 @@ import java.lang.reflect.Type;
 import java.util.Collection;
 import java.util.Map;
 
-import org.sormula.log.ClassLogger;
+import org.sormula.log.SormulaLogger;
+import org.sormula.log.SormulaLoggerFactory;
 import org.sormula.operation.HashMapSelectOperation;
 import org.sormula.translator.TypeTranslatorMap;
 
@@ -19,7 +20,7 @@ import org.sormula.translator.TypeTranslatorMap;
  */
 abstract public class CascadeAnnotationReader
 {
-    private static final ClassLogger log = new ClassLogger();
+    private static final SormulaLogger log = SormulaLoggerFactory.getClassLogger();
     
     @OneToOneCascade
     static Object defaultOneToOneCascadeHolder;

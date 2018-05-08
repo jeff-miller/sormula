@@ -41,7 +41,8 @@ import org.sormula.annotation.cascade.OneToOneCascade;
 import org.sormula.annotation.cascade.SelectCascade;
 import org.sormula.cache.CacheException;
 import org.sormula.cache.writable.WriteOperations;
-import org.sormula.log.ClassLogger;
+import org.sormula.log.SormulaLogger;
+import org.sormula.log.SormulaLoggerFactory;
 import org.sormula.operation.cascade.CascadeOperation;
 import org.sormula.operation.monitor.NoOperationTime;
 import org.sormula.operation.monitor.OperationTime;
@@ -67,7 +68,7 @@ import org.sormula.translator.WhereTranslator;
  */
 public abstract class SqlOperation<R> implements AutoCloseable
 {
-    private static final ClassLogger log = new ClassLogger();
+    private static final SormulaLogger log = SormulaLoggerFactory.getClassLogger();
     private static NoOperationTime noOperationTime = new NoOperationTime();
     
     Table<R> table;

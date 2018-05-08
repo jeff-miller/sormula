@@ -19,7 +19,8 @@ package org.sormula.operation.monitor;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.sormula.log.ClassLogger;
+import org.sormula.log.SormulaLogger;
+import org.sormula.log.SormulaLoggerFactory;
 import org.sormula.operation.SqlOperation;
 
 
@@ -40,7 +41,7 @@ import org.sormula.operation.SqlOperation;
  */
 public class OperationTime
 {
-    private static final ClassLogger log = new ClassLogger();
+    private static final SormulaLogger log = SormulaLoggerFactory.getClassLogger();
     
     String timingId;
     OperationTime parentOperationTime;
@@ -187,7 +188,7 @@ public class OperationTime
         {
             // warn but don't throw exception since stop may not have occurred if an exception
             // was thrown while timing was started
-            log.warn("start when " + active.getName() + " is already active, ignoring " + active.getName());            
+            log.error("start when " + active.getName() + " is already active, ignoring " + active.getName());            
         }
 
         // start recording 
@@ -238,7 +239,7 @@ public class OperationTime
         }
         else
         {
-            log.warn("attempt to pause without start");
+            log.error("attempt to pause without start");
         }
     }
     
@@ -255,7 +256,7 @@ public class OperationTime
         }
         else
         {
-            log.warn("attempt to resume without start");
+            log.error("attempt to resume without start");
         }
     }
 

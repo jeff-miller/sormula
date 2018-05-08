@@ -24,13 +24,14 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import org.sormula.examples.ExampleBase;
 import org.sormula.examples.benchmark.SormulaBenchmarkThread.CacheType;
-import org.sormula.log.ClassLogger;
+import org.sormula.log.SormulaLogger;
+import org.sormula.log.SormulaLoggerFactory;
 import org.sormula.operation.monitor.ElapsedTime;
 
 
 public class BenchmarkSuite extends ExampleBase
 {
-    private static final ClassLogger log = new ClassLogger();
+    private static final SormulaLogger log = SormulaLoggerFactory.getClassLogger();
     long seed;
     AtomicInteger idGenerator; // assumes this is only application that is inserting
     int maximumOperations;
@@ -233,7 +234,7 @@ public class BenchmarkSuite extends ExampleBase
             }
         }
         
-        if (!sameCounts) log.warn("row counts are not the same; benchmarks did not perform same operations?");
+        if (!sameCounts) log.error("row counts are not the same; benchmarks did not perform same operations?");
     }
     
     

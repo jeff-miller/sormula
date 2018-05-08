@@ -26,7 +26,8 @@ import java.util.Collection;
 import java.util.Properties;
 
 import org.sormula.SormulaException;
-import org.sormula.log.ClassLogger;
+import org.sormula.log.SormulaLogger;
+import org.sormula.log.SormulaLoggerFactory;
 
 
 /** 
@@ -36,7 +37,27 @@ import org.sormula.log.ClassLogger;
  */
 public class ExampleBase
 {
-    private static final ClassLogger log = new ClassLogger();
+    static 
+    {
+        try
+        {
+            // configure logger from build.properties
+            String loggerClassName = System.getProperty("logger.class", "");
+            System.out.println("logger.class=" + loggerClassName);
+            if (loggerClassName.length() > 0)
+            {
+                @SuppressWarnings("unchecked")
+                Class<? extends SormulaLogger> loggerClass = (Class<? extends SormulaLogger>) Class.forName(loggerClassName);
+                SormulaLoggerFactory.setLoggerClass(loggerClass);
+            }
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+    }
+
+    private static final SormulaLogger log = SormulaLoggerFactory.getClassLogger();
 
     Properties jdbcProperties;
     Connection connection;
@@ -199,7 +220,7 @@ public class ExampleBase
         }
         catch (SQLException e)
         {
-            log.warn("error closing database", e);
+            log.error("error closing database", e);
         }
     }
     

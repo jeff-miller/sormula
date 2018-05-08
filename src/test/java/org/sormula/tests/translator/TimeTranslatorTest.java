@@ -21,7 +21,8 @@ import java.time.LocalTime;
 import java.util.List;
 
 import org.sormula.SormulaException;
-import org.sormula.log.ClassLogger;
+import org.sormula.log.SormulaLogger;
+import org.sormula.log.SormulaLoggerFactory;
 import org.sormula.tests.DatabaseTest;
 import org.sormula.translator.standard.LocalTimeTranslator;
 import org.testng.annotations.AfterClass;
@@ -40,7 +41,7 @@ import org.testng.annotations.Test;
 @Test(singleThreaded=true, groups="translator")
 public class TimeTranslatorTest extends DatabaseTest<SormulaTestTime>
 {
-    private static final ClassLogger log = new ClassLogger();
+    private static final SormulaLogger log = SormulaLoggerFactory.getClassLogger();
     SormulaTestTime inserted;
     
     

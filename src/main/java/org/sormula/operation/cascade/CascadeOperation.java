@@ -27,7 +27,8 @@ import org.sormula.Table;
 import org.sormula.annotation.cascade.Cascade;
 import org.sormula.annotation.cascade.OneToManyCascade;
 import org.sormula.annotation.cascade.OneToOneCascade;
-import org.sormula.log.ClassLogger;
+import org.sormula.log.SormulaLogger;
+import org.sormula.log.SormulaLoggerFactory;
 import org.sormula.operation.MissingFieldException;
 import org.sormula.operation.OperationException;
 import org.sormula.operation.SqlOperation;
@@ -48,7 +49,7 @@ import org.sormula.translator.TranslatorException;
  */
 public abstract class CascadeOperation<S, T> implements AutoCloseable
 {
-    private static final ClassLogger log = new ClassLogger();
+    private static final SormulaLogger log = SormulaLoggerFactory.getClassLogger();
     SqlOperation<?> sqlOperation;
     SqlOperation<S> sourceOperation;
     RowField<S, ?> targetField;

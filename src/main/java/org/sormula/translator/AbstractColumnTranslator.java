@@ -22,7 +22,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
 import org.sormula.annotation.Column;
-import org.sormula.log.ClassLogger;
+import org.sormula.log.SormulaLogger;
+import org.sormula.log.SormulaLoggerFactory;
 import org.sormula.reflect.RowField;
 import org.sormula.translator.standard.ObjectTranslator;
 
@@ -37,7 +38,7 @@ import org.sormula.translator.standard.ObjectTranslator;
  */
 public abstract class AbstractColumnTranslator<R, T> implements ColumnTranslator<R>
 {
-    private static final ClassLogger log = new ClassLogger();
+    private static final SormulaLogger log = SormulaLoggerFactory.getClassLogger();
     
     String columnName;
     RowField<R, T> rowField;

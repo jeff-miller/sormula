@@ -23,7 +23,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.sormula.log.ClassLogger;
+import org.sormula.log.SormulaLogger;
+import org.sormula.log.SormulaLoggerFactory;
 
 
 /**
@@ -36,7 +37,7 @@ import org.sormula.log.ClassLogger;
  */
 public class ColumnsTranslator<R>
 {
-    private static final ClassLogger log = new ClassLogger();
+    private static final SormulaLogger log = SormulaLoggerFactory.getClassLogger();
     Class<R> rowClass;
     List<ColumnTranslator<R>> columnTranslatorList;
     Map<String, ColumnTranslator<R>> columnTranslatorMap; // key is field name

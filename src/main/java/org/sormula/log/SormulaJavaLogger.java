@@ -14,71 +14,58 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.sormula.log; 
+package org.sormula.log;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * TODO
  * @author Jeff Miller
  * @since 4.3
  */
-public class SormulaConsoleLogger implements SormulaLogger
+public class SormulaJavaLogger implements SormulaLogger
 {
-    boolean debugEnabled;
-    String className;
+    Logger logger;
     
     
-    public SormulaConsoleLogger(String className)
+    public SormulaJavaLogger(String className)
     {
-        this.className = className;
-        setDebugEnabled(true);// TODO
+        this.logger = Logger.getLogger(className);
     }
 
 
     @Override
     public void info(String message)
     {
-        log("INFO", message);
+        logger.info(message);
     }
 
     
     @Override
     public void debug(String message)
     {
-        if (debugEnabled) log("DEBUG", message);
+        logger.log(Level.FINE, message);
     }
 
     
     @Override
     public void error(String message)
     {
-        log("ERROR", message);
+        logger.log(Level.SEVERE, message);
     }
 
     
     @Override
     public void error(String message, Throwable throwable)
     {
-        error(message);
-        throwable.printStackTrace();
+        logger.log(Level.SEVERE, message, throwable);
     }
 
     
     @Override
     public boolean isDebugEnabled()
     {
-        return debugEnabled;
-    }
-
-
-    public void setDebugEnabled(boolean debugEnabled)
-    {
-        this.debugEnabled = debugEnabled;
-    }
-    
-    
-    protected void log(String type, String message)
-    {
-        System.out.println(type + " " + className + " " + message); 
+        return logger.isLoggable(Level.FINE);
     }
 }

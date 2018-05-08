@@ -29,25 +29,25 @@ public class SormulaEmptyLogger implements SormulaLogger
 
 
     @Override
-    public void info(Object message)
+    public void info(String message)
     {
     }
 
     
     @Override
-    public void debug(Object message)
+    public void debug(String message)
     {
     }
 
     
     @Override
-    public void error(Object message)
+    public void error(String message)
     {
     }
 
     
     @Override
-    public void error(Object message, Throwable throwable)
+    public void error(String message, Throwable throwable)
     {
     }
 

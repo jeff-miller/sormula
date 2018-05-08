@@ -1,4 +1,4 @@
-/* sormula - Simple object relational mapping
+/* sormula - Simple String relational mapping
  * Copyright (C) 2011-2012 Jeff Miller
  *
  * This program is free software: you can redistribute it and/or modify
@@ -35,28 +35,28 @@ public class SormulaLog4jLogger implements SormulaLogger
 
 
     @Override
-    public void info(Object message)
+    public void info(String message)
     {
         logger.info(message);
     }
 
     
     @Override
-    public void debug(Object message)
+    public void debug(String message)
     {
         logger.debug(message);
     }
 
     
     @Override
-    public void error(Object message)
+    public void error(String message)
     {
         logger.error(message);
     }
 
     
     @Override
-    public void error(Object message, Throwable throwable)
+    public void error(String message, Throwable throwable)
     {
         logger.error(message, throwable);
     }

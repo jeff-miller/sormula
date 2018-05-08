@@ -41,7 +41,7 @@ import org.sormula.NoOpTransaction;
 import org.sormula.SormulaException;
 import org.sormula.Table;
 import org.sormula.cache.Cache;
-import org.sormula.log.SormulaConsoleLogger;
+import org.sormula.log.SormulaLog4jLogger;
 import org.sormula.log.SormulaLogger;
 import org.sormula.log.SormulaLoggerFactory;
 
@@ -57,7 +57,10 @@ public class DatabaseTest<R>
     {
         try
         {
-            SormulaLoggerFactory.setLoggerClassName(SormulaConsoleLogger.class.getName());
+            // TODO
+            //SormulaLoggerFactory.setLoggerClass(SormulaConsoleLogger.class);
+            //SormulaLoggerFactory.setLoggerClass(SormulaJavaLogger.class);
+            SormulaLoggerFactory.setLoggerClass(SormulaLog4jLogger.class);
         }
         catch (SormulaException e)
         {

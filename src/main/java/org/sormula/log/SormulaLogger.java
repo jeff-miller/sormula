@@ -24,9 +24,13 @@ package org.sormula.log;
  */
 public interface SormulaLogger
 {
-    void info(Object message);
-    void debug(Object message);
-    void error(Object message);
-    void error(Object message, Throwable throwable);
-    boolean isDebugEnabled();
+    void info(String message);
+    void debug(String message);
+    void error(String message);
+    void error(String message, Throwable throwable);
+    
+    default boolean isDebugEnabled()
+    {
+        return false;
+    }
 }

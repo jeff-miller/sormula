@@ -17,7 +17,6 @@
 package org.sormula.log;
 
 import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
 
 import org.sormula.SormulaException;
 
@@ -30,7 +29,7 @@ import org.sormula.SormulaException;
 public class SormulaLoggerFactory
 {
     private static final String factoryClassName = SormulaLoggerFactory.class.getName();
-    private static String loggerClassName;
+    private static Class<? extends SormulaLogger> loggerClass;
     private static Constructor<? extends SormulaLogger> loggerConstructor;
     
     // default logger is empty logger
@@ -38,7 +37,7 @@ public class SormulaLoggerFactory
     {
         try
         {
-            setLoggerClassName(SormulaEmptyLogger.class.getName());
+            setLoggerClass(SormulaEmptyLogger.class);
         }
         catch (SormulaException e)
         {
@@ -80,40 +79,30 @@ public class SormulaLoggerFactory
     }
     
     
-    public static String getLoggerClassName()
+    public static Class<? extends SormulaLogger> getLoggerClass()
     {
-        return loggerClassName;
+        return loggerClass;
     }
 
 
-    // TODO change parameter from String to Class<? extends SormulaLogger> ?
-    public static void setLoggerClassName(String loggerClassName) throws SormulaException // TODO LoggerException?
+    public static void setLoggerClass(Class<? extends SormulaLogger> loggerClass) throws SormulaException // TODO LoggerException?
     {
+        String loggerClassName = loggerClass.getName();
+        
         try
         {
-            Class<?> loggerClass = Class.forName(loggerClassName);
+            Constructor<? extends SormulaLogger> lc = loggerClass.getConstructor(String.class); //TODO thread safety?
             
-            if (SormulaLogger.class.isAssignableFrom(loggerClass))
-            {
-                @SuppressWarnings("unchecked")
-                Class<? extends SormulaLogger> sormulaLoggerClass = (Class<? extends SormulaLogger>)loggerClass;
-                loggerConstructor = sormulaLoggerClass.getConstructor(String.class); //TODO thread safety?
-                
-                // test constructor here, will not throw exceptions in getClassLogger()
-                loggerConstructor.newInstance("");
-            }
-        }
-        catch (ClassNotFoundException e)
-        {
-            throw new SormulaException(loggerClassName + " class not in classpath", e);
+            // test constructor here so exceptions are known here and assume no exceptions in getClassLogger()
+            lc.newInstance("");
+            
+            // no errors, keep references
+            loggerConstructor = lc;
+            SormulaLoggerFactory.loggerClass = loggerClass;
         }
         catch (NoSuchMethodException e)
         {
             throw new SormulaException(loggerClassName + " must have constructor " + loggerClassName + "(String)", e);
-        }
-        catch (InvocationTargetException e)
-        {
-            throw new SormulaException(loggerClassName + " constructor error", e);
         }
         catch (IllegalAccessException e)
         {
@@ -122,6 +111,10 @@ public class SormulaLoggerFactory
         catch (InstantiationException e)
         {
             throw new SormulaException(loggerClassName + " must be concrete not abstract", e);
+        }
+        catch (Exception e)
+        {
+            throw new SormulaException(loggerClassName + " constructor error", e);
         }
     }
 }

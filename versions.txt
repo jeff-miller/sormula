@@ -2,6 +2,8 @@ Version History
 
 version-jdk             comments
 ------------------------------------------------------------------------------------------------------------
+4.3-jdk1.8              - logging use SormulaLoggerFactory, SormulaLogger for logging API independence
+
 4.2-jdk1.8              - update jdbc drivers: hsqldb 2.4.0, firebird/jaybird 3.0.1, h2 1.4.196, oracle 8, 
                           sqlite 3.19.3, postgresql 42.1.3, driver versions in pom.xml              
                         - add Database#setConnection to allow new connection without need to create new

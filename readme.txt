@@ -1,6 +1,6 @@
 sormula for JDK 8
-- See SimpleExample directory for stand-alone example
-- See ZeroConfigExample directory for a stand-alone example using sormula with 
+- See solo-examples/SimpleExample directory for stand-alone example
+- See solo-examples/ZeroConfigExample directory for a stand-alone example using sormula with 
   nothing but sormula.jar in path and no configuration
 - See src/examples directory for more complex examples
 
@@ -21,7 +21,7 @@ etc.
 To run benchmark comparison of Sormula vs. JDBC:
 ------------------------------------------------
 Set db.dir property in build.properties to indicate database to use (default is hsqldb)
-ant BenchmarkSuite
+ant BenchmarkSuite-medium
 
 
 To run tests:

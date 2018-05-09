@@ -106,7 +106,7 @@ public class SormulaLoggerFactory
     
     
     /**
-     * Loads loggerClassName and invokes {@link #setLoggerClass(Class)}.
+     * Loads class with name provided in loggerClassName and invokes {@link #setLoggerClass(Class)}.
      * 
      * @param loggerClassName the fully qualified name of the class that implements {@link SormulaLogger} 
      * @throws LogException if error, see exception message for reason

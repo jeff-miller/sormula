@@ -44,12 +44,7 @@ public class ExampleBase
             // configure logger from build.properties
             String loggerClassName = System.getProperty("logger.class", "");
             System.out.println("logger.class=" + loggerClassName);
-            if (loggerClassName.length() > 0)
-            {
-                @SuppressWarnings("unchecked")
-                Class<? extends SormulaLogger> loggerClass = (Class<? extends SormulaLogger>) Class.forName(loggerClassName);
-                SormulaLoggerFactory.setLoggerClass(loggerClass);
-            }
+            SormulaLoggerFactory.setLoggerClass(loggerClassName);
         }
         catch (Exception e)
         {

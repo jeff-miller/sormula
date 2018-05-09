@@ -22,15 +22,15 @@ import java.lang.reflect.Constructor;
 /**
  * Factory for supplying logger classes that are used by Sormula classes. This factory
  * decouples Sormula logging from any specific logging library and allows you to use
- * any or no logging library.
+ * the logging library of your choice or no logging library.
  * <p> 
  * Use {@link #setLoggerClass(Class)} to change the default logger to one of the implementations
  * of {@link SormulaLogger} in org.sormula.log package or any implementation of
  * {@link SormulaLogger}.
  * <p>
- * The default logger class is {@link Slf4jSormulaLogger} for backward compatibility since Sormula originally
- * used {@link ClassLogger} which uses SLF4J if it is on the classpath. The default logger does not
- * require any SLF4J jars if no logging is desired.
+ * The default logger class is {@link Slf4jSormulaLogger} for backward compatibility since previous
+ * versions of Sormula used {@link ClassLogger} which is dependent upon SLF4J. The default logger does
+ * not require any SLF4J jars to be on classpath at runtime if no logging is desired.
  * 
  * @author Jeff Miller
  * @since 4.3
@@ -102,6 +102,30 @@ public class SormulaLoggerFactory
     public static Class<? extends SormulaLogger> getLoggerClass()
     {
         return loggerClass;
+    }
+    
+    
+    /**
+     * Loads loggerClassName and invokes {@link #setLoggerClass(Class)}.
+     * 
+     * @param loggerClassName the fully qualified name of the class that implements {@link SormulaLogger} 
+     * @throws LogException if error, see exception message for reason
+     */
+    public static void setLoggerClass(String loggerClassName) throws LogException
+    {
+        if (loggerClassName.length() > 0)
+        {
+            try
+            {
+                @SuppressWarnings("unchecked")
+                Class<? extends SormulaLogger> loggerClass = (Class<? extends SormulaLogger>) Class.forName(loggerClassName);
+                SormulaLoggerFactory.setLoggerClass(loggerClass);
+            }
+            catch (ClassNotFoundException e)
+            {
+                throw new LogException(loggerClassName + " is not on the classpath", e);
+            }
+        }
     }
 
 

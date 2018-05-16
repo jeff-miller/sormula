@@ -56,7 +56,7 @@ public class PaginatedSelector<R, C> implements AutoCloseable
     
     /**
      * Constructs for a page size and scroll sensitivity. Select operation must be set with
-     * {@link #init(SelectOperation)}. This construct is for subclasses that initialize
+     * {@link #init(SelectOperation)}. This constructor is for subclasses that initialize
      * the select operation in a specialized way.
      * 
      * @param pageSize rows per page

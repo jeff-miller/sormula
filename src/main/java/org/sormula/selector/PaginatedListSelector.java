@@ -15,7 +15,7 @@ import org.sormula.operation.SqlOperation;
 
 
 /**
- * {@link PaginatedSelector} the is implemented with {@link ArrayListSelectOperation}. 
+ * {@link PaginatedSelector} that is implemented with {@link ArrayListSelectOperation}. 
  * 
  * @author Jeff Miller
  * @since 4.3

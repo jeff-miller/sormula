@@ -2,11 +2,12 @@ Version History
 
 version-jdk             comments
 ------------------------------------------------------------------------------------------------------------
-4.3-jdk1.8              - ScalarSelectOperation#execute does not use PreparedStatement#setMaxRows since it was
-                          redundant to limit tests within ScalarSelectOperation. Omitting setMaxRows also 
-                          allowed using #resetRowsReadCount to read again with the same prepared statement.
-                        - org.sormula.selector classes for selecting one or more pages of rows of user-specified
-                          page size  
+4.3-jdk1.8              - ScalarSelectOperation#execute does not use PreparedStatement#setMaxRows since it 
+                          was redundant to limit tests within ScalarSelectOperation. Omitting 
+                          PreparedStatement#setMaxRows also allowed for using #resetRowsReadCount so that 
+                          readNext method can be repeated again with the same prepared statement.
+                        - org.sormula.selector classes for selecting one or more pages of rows of 
+                          user-specified page size  
                         - removed AllExamples ant task in build.xml
                         - PaginatedListSelector example
                         - add SelectOperation#prepareStatement so that subclasses can override

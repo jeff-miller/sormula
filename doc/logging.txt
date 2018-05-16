@@ -14,9 +14,8 @@ To configure Sormula to use any logger:
    SormulaLoggerFactory.setLoggerClass(Class)  with class from step 1 
    SormulaLoggerFactory.setLoggerClass(String) with name of class from step 1
    
-   Example:
+   Examples:
    SormulaLoggerFactory.setLoggerClass(JavaSormulaLogger.class);
-   or
    SormulaLoggerFactory.setLoggerClass("org.sormula.log.Log4jSormulaLogger");
 
 

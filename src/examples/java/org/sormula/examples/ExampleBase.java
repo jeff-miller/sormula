@@ -65,6 +65,14 @@ public class ExampleBase
     boolean useTransacation;
     
     
+    public ExampleBase()
+    {
+        // some databases require security permissions, turn off all java security checks since this is not confidential information
+        // see DERBY-6648
+        System.setSecurityManager(null);
+    }
+
+
     /**
      * Gets the connection that was created with {@link #openDatabase()}. Connection will be closed
      * when {@link #closeDatabase()} is invoked. Connection is defined

@@ -147,6 +147,10 @@ public class DatabaseTest<R>
         {
             log.error("error opening jdbc properties", e);
         }
+        
+        // some databases require security permissions, turn off all java security checks since this is not confidential information
+        // see DERBY-6648
+        System.setSecurityManager(null);
     }
     
     

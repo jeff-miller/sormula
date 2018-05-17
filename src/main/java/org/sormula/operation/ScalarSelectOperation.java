@@ -115,8 +115,9 @@ public class ScalarSelectOperation<R> extends SqlOperation<R> implements Iterabl
      * 
      * @return {@link SelectIterator}
      * 
-     * @since 3.0s
+     * @since 3.0
      */
+    @Override
     public Iterator<R> iterator()
     {
         return new SelectIterator<>(this);

@@ -17,7 +17,9 @@
 package org.sormula.operation;
 
 import java.lang.reflect.Field;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -114,8 +116,9 @@ public class ScalarSelectOperation<R> extends SqlOperation<R> implements Iterabl
      * 
      * @return {@link SelectIterator}
      * 
-     * @since 3.0s
+     * @since 3.0
      */
+    @Override
     public Iterator<R> iterator()
     {
         return new SelectIterator<>(this);
@@ -139,12 +142,8 @@ public class ScalarSelectOperation<R> extends SqlOperation<R> implements Iterabl
      * Sets the maximum number of rows to read from result set. This method 
      * does NOT alter SQL to contain anything to limit query but only 
      * limits the number of rows read by {@link #readNext()} and 
-     * {@link SelectOperation#readAll()}. Limiting rows read is usefull to avoid
+     * {@link SelectOperation#readAll()}. Limiting rows read is useful to avoid
      * reading too many rows and thus creating memory or display problems.
-     * <P>
-     * In the future, when more databases support a standard way to limit rows,
-     * I will add support for SQL level limits through a method like 
-     * "setMaximumRows(int)" and SQL "FETCH FIRST n ROWS ONLY".
      * 
      * @param maximumRowsRead 0..{@link Integer#MAX_VALUE}
      * @since 1.4
@@ -166,6 +165,19 @@ public class ScalarSelectOperation<R> extends SqlOperation<R> implements Iterabl
         return rowsReadCount;
     }
 
+    
+    /**
+     * Sets the number of rows read to zero. Use this method if {@link #setMaximumRowsRead(int)} has been
+     * used to limit the number of rows, some rows have already been read, and you would like to reset
+     * the counting of maximum number of rows. For example, after a page of rows is read.
+     * 
+     * @since 4.3
+     */
+    public void resetRowsReadCount()
+    {
+        rowsReadCount = 0;
+    }
+    
 
     /**
      * Set parameters using values from a row object. Use this instead of {@link #setParameters(Object...)}.
@@ -208,7 +220,7 @@ public class ScalarSelectOperation<R> extends SqlOperation<R> implements Iterabl
         cacheContainsPrimaryKey = false;
         initOperationTime();
         setNextParameter(1);
-        rowsReadCount = 0;
+        resetRowsReadCount();
         
         if (isCached())
         {
@@ -273,9 +285,9 @@ public class ScalarSelectOperation<R> extends SqlOperation<R> implements Iterabl
             
             try
             {
-                if (maximumRowsRead < Integer.MAX_VALUE) preparedStatement.setMaxRows(maximumRowsRead);
+                PreparedStatement ps = getPreparedStatement();
                 operationTime.startExecuteTime();
-                resultSet = preparedStatement.executeQuery();
+                resultSet = ps.executeQuery();
                 operationTime.stop();
             }
             catch (Exception e)
@@ -320,6 +332,51 @@ public class ScalarSelectOperation<R> extends SqlOperation<R> implements Iterabl
         }
         
         super.close();
+    }
+    
+    
+    /**
+     * Positions the result set cursor to a specific row.
+     * 
+     * @param rowNumber the number of the row to which the cursor should move. A value of zero indicates that the cursor will be 
+     * positioned before the first row; a positive number indicates the row number counting from the beginning of the result set; 
+     * a negative number indicates the row number counting from the end of the result set
+     * @throws OperationException if error
+     * @since 4.3
+     * @see ResultSet#absolute(int)
+     */
+    public void positionAbsolute(int rowNumber) throws OperationException
+    {
+        try
+        {
+            resultSet.absolute(rowNumber);
+        }
+        catch (SQLException e)
+        {
+            throw new OperationException("cursor position error", e);
+        }
+    }
+    
+    
+    /**
+     * Positions the result set cursor to a row relative to the current row.
+     * 
+     * @param rowOffset - the number of rows to move from the current row; a positive number moves the cursor forward; 
+     * a negative number moves the cursor backward
+     * @throws OperationException if error
+     * @since 4.3
+     * @see ResultSet#relative(int)
+     */
+    public void positionRelative(int rowOffset) throws OperationException
+    {
+        try
+        {
+            resultSet.relative(rowOffset);
+        }
+        catch (SQLException e)
+        {
+            throw new OperationException("cursor position error", e);
+        }
     }
     
     
@@ -520,7 +577,7 @@ public class ScalarSelectOperation<R> extends SqlOperation<R> implements Iterabl
     
     
     /** 
-     * Gets order by name set with {@link #setOrderBy(String)}.
+     * Gets order by name that was set with {@link #setOrderBy(String)}.
      * 
      * @return order by name 
      */

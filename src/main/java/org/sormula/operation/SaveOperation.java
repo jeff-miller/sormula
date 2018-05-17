@@ -355,19 +355,6 @@ public class SaveOperation<R> extends ModifyOperation<R>
             {
                 // operation parameters from rows
                 
-                /* TODO needed?
-                for (R row: rows)
-                {
-                    if (isCached())
-                    {
-                        // must do this so that UncommittedSave is created in cache
-                        // if not, then UncommittedUpdate will erroneously be created in cache by updateOperation.execute() below 
-                        if (log.isDebugEnabled()) log.debug("save cache " + table.getRowClass());
-                        notifyCacheModify(row); 
-                    }
-                }
-                */
-                
                 // attempt to update all rows, for those not updated then insert
                 updateOperation.setRows(rows);
                 updateOperation.execute();

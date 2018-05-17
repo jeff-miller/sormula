@@ -3,10 +3,9 @@
 	<classpathentry kind="src" path="src/main/java"/>
 	<classpathentry kind="src" path="src/test/java"/>
 	<classpathentry kind="src" path="src/examples/java"/>
-	<classpathentry kind="lib" path="src/examples/resources/joda-time-2.0.jar"/>
-	<classpathentry kind="lib" path="src/test/resources/testng-6.10.jar"/>
-	<classpathentry kind="lib" path="src/main/resources/slf4j-api-1.7.22.jar" sourcepath="C:/Users/MILLER~1/AppData/Local/Temp/.org.sf.feeling.decompiler1525697525796/source/slf4j-api-1.7.22-sources.jar"/>
-	<classpathentry kind="lib" path="src/main/resources/log4j-1.2.17.jar" sourcepath="C:/Users/MILLER~1/AppData/Local/Temp/.org.sf.feeling.decompiler1525697525796/source/log4j-1.2.17-sources.jar"/>
+	<classpathentry kind="lib" path="src/main/resources/slf4j-api-1.7.22.jar"/>
+	<classpathentry kind="lib" path="src/test/resources/testng-6.14.3.jar"/>
+	<classpathentry kind="lib" path="src/main/resources/log4j-1.2.17.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="output" path="target"/>
 </classpath>

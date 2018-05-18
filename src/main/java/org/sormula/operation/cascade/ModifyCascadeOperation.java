@@ -23,6 +23,7 @@ import org.sormula.Table;
 import org.sormula.annotation.Column;
 import org.sormula.log.SormulaLogger;
 import org.sormula.log.SormulaLoggerFactory;
+import org.sormula.operation.InsertOperation;
 import org.sormula.operation.ModifyOperation;
 import org.sormula.operation.OperationException;
 import org.sormula.reflect.ReflectException;

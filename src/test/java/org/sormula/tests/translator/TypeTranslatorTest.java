@@ -63,7 +63,7 @@ public class TypeTranslatorTest extends DatabaseTest<SormulaTestTT>
             " testbooleanyesno2 CHAR(1)," +
             " testbooleanyesno3 CHAR(1)," +
             " testinteger INTEGER," +
-            " testdate TIMESTAMP," +
+            " testdate TIMESTAMP" + getTimeSecondsPrecisionDDL() + "," +
             " teststring VARCHAR(10), " +
             " testEnum SMALLINT " + // convert Enum to/from int's
             ")"

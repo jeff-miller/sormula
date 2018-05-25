@@ -47,6 +47,7 @@ public class ColumnTranslatorTest extends DatabaseTest<SormulaTest1>
     public void setUp() throws Exception
     {
         openDatabase();
+        String timeSecondsPrecisionDDL = getTimeSecondsPrecisionDDL();
         createTable(SormulaTest1.class, 
             "CREATE TABLE " + getSchemaPrefix() + SormulaTest1.class.getSimpleName() + " (" +
             " testBoolean1 " + getBooleanDDL() + "," +
@@ -63,13 +64,13 @@ public class ColumnTranslatorTest extends DatabaseTest<SormulaTest1>
             " testInteger2 INTEGER," +
             " testShort1 SMALLINT," +
             " testShort2 SMALLINT," +
-            " testDate TIMESTAMP," +
-            " testNullDate TIMESTAMP," +
+            " testDate TIMESTAMP" + timeSecondsPrecisionDDL +"," +
+            " testNullDate TIMESTAMP" + timeSecondsPrecisionDDL +"," +
             " testSqlDate DATE," +
-            " testSqlTimestamp TIMESTAMP," +
-            " testGc TIMESTAMP," +
+            " testSqlTimestamp TIMESTAMP" + timeSecondsPrecisionDDL +"," +
+            " testGc TIMESTAMP" + timeSecondsPrecisionDDL +"," +
             " testLocalDate DATE," +
-            " testInstant TIMESTAMP," +
+            " testInstant TIMESTAMP" + timeSecondsPrecisionDDL +"," +
             " testString1 VARCHAR(" + TEST_STRING_COLUMN_LENGTH + ")," +
             " ts2 CHAR(" + TEST_STRING_COLUMN_LENGTH + ")," +
             " testEnum1 VARCHAR(10)," +

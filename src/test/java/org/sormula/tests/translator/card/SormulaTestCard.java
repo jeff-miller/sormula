@@ -26,7 +26,7 @@ import org.sormula.annotation.Row;
  * @author Jeff Miller
  * @since 1.6 and 2.0
  */
-@Row(primaryKeyFields={"rank", "suit"})
+@Row(primaryKeyFields={"rank", "suit"}, nameTranslators=RankNameTranslator.class)
 public class SormulaTestCard
 {
     @ImplicitType(translator=RankTranslator.class)

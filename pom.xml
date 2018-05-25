@@ -133,6 +133,21 @@
                 </dependency>
             </dependencies>            
         </profile>
+        
+        <profile>
+            <id>mysql</id>
+            <properties>
+                <dbdir>mysql</dbdir>
+            </properties>
+            <dependencies>            
+                <dependency>
+                    <groupId>mysql</groupId>
+                    <artifactId>mysql-connector-java</artifactId>
+                    <version>8.0.11</version>
+                    <scope>test</scope>
+                </dependency>
+            </dependencies>            
+        </profile>
     </profiles>
     
     

@@ -221,6 +221,14 @@ public class DatabaseTest<R>
     }
     
     
+    public String getTimeSecondsPrecisionDDL()
+    {
+        String timeSecondPrecision = jdbcProperties.getString("timeSecondsPrecision").trim();
+        if (timeSecondPrecision.length() > 0) return "(" + timeSecondPrecision + ")";
+        else return "";
+    }
+    
+    
     public String getBooleanDDL()
     {
         return jdbcProperties.getString("booleanDDL").trim();

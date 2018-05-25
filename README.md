@@ -12,7 +12,7 @@ Sormula is a Java library that moves data between Java objects and relational da
 
 It provides select, insert, update, and delete, and many other common operations. One-to-one and one-to-many cascading for unlimited levels. Simplified IN operator parameter as java.util.Collection. Custom conversions between any Java class/type and column type.
 
-Works with any relational database. Tested with H2, HSQLDB, Derby, SQLiteJDBC, Firebird, DB2, Oracle 11g, PostgreSQL.
+Works with any relational database. Tested with H2, HSQLDB, Derby, SQLiteJDBC, MySQL, Firebird, DB2, Oracle 11g, PostgreSQL.
 
 Performs as fast as plain JDBC. Performs faster than plain JDBC when caching is enabled.
 

@@ -16,41 +16,19 @@
  */
 package org.sormula.tests.translator.card;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import org.sormula.translator.DelimitedNameTranslator;
 
-import org.sormula.annotation.Row;
-
-@Row(nameTranslators=RankNameTranslator.class)
-public class Rank 
+public class RankNameTranslator extends DelimitedNameTranslator
 {
-    static List<String> rank = new ArrayList<>(
-            Arrays.asList("", "A", "2", "3", "4", "5", "6", "7", "8", "9", "J", "Q", "K"));
-    int value;
-    
-    
-    public Rank(int value)
+    @Override
+    public String translate(String name, Class rowClass)
     {
-        this.value = value;
-    }
-    public Rank(String description)
-    {
-        value = rank.indexOf(description);
-    }
-
-    public int getValue()
-    {
-        return value;
-    }
-
-    public void setValue(int value)
-    {
-        this.value = value;
-    }
-
-    public String getDescription()
-    {
-        return rank.get(value);
+        if (name.equalsIgnoreCase("rank"))
+        {
+            // rank is a reserved word in some databases
+            return super.translate(name, rowClass);
+        }
+        
+        return name;
     }
 }

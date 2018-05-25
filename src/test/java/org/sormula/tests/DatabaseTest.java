@@ -227,6 +227,12 @@ public class DatabaseTest<R>
         if (timeSecondPrecision.length() > 0) return "(" + timeSecondPrecision + ")";
         else return "";
     }
+
+    
+    public String getTimestampNullKeyword()
+    {
+        return jdbcProperties.getString("timestampNullKeyword").trim();
+    }
     
     
     public String getBooleanDDL()

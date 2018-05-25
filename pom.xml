@@ -148,6 +148,21 @@
                 </dependency>
             </dependencies>            
         </profile>
+        
+        <profile>
+            <id>mariadb</id>
+            <properties>
+                <dbdir>mariadb</dbdir>
+            </properties>
+            <dependencies>            
+                <dependency>
+				    <groupId>org.mariadb.jdbc</groupId>
+				    <artifactId>mariadb-java-client</artifactId>
+				    <version>2.2.4</version>
+                    <scope>test</scope>
+                </dependency>
+            </dependencies>            
+        </profile>
     </profiles>
     
     

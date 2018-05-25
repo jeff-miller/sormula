@@ -105,7 +105,7 @@ public class SaveTest extends ActiveDatabaseTest<SormulaTestARNI>
     @Test
     public void saveARNIBatch() 
     {
-        if (isTestIdentity() && isTestIdentityOverride())
+        if (isTestIdentity() && isTestIdentityOverride() && isBatchReturnsUpdateCount())
         {
             // insert collection with known id's
             int[] ids = {-6001, -6007, -6003}; // use negative to avoid collisions with generated keys

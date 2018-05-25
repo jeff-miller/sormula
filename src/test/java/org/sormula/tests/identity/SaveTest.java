@@ -131,7 +131,7 @@ public class SaveTest extends DatabaseTest<IdentityTest>
     @Test
     public void saveNonIdentityBatch() throws SormulaException
     {
-        if (isTestIdentity() && isTestIdentityOverride())
+        if (isTestIdentity() && isTestIdentityOverride() && isBatchReturnsUpdateCount())
         {
             begin();
             selectTestRows(); // must perform each time since other tests are destructive

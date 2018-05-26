@@ -47,7 +47,7 @@ public class ColumnTranslatorTest extends DatabaseTest<SormulaTest1>
     public void setUp() throws Exception
     {
         openDatabase();
-        String timeSecondsPrecisionDDL = getTimeSecondsPrecisionDDL();
+        String secondsPrecisionDDL = getSecondsPrecisionDDL();
         String timestampNullKeyword = getTimestampNullKeyword(); // insure null values are stored as null
         createTable(SormulaTest1.class, 
             "CREATE TABLE " + getSchemaPrefix() + SormulaTest1.class.getSimpleName() + " (" +
@@ -65,13 +65,13 @@ public class ColumnTranslatorTest extends DatabaseTest<SormulaTest1>
             " testInteger2 INTEGER," +
             " testShort1 SMALLINT," +
             " testShort2 SMALLINT," +
-            " testDate TIMESTAMP"         + timeSecondsPrecisionDDL + "," +
-            " testNullDate TIMESTAMP"     + timeSecondsPrecisionDDL + " " + timestampNullKeyword + "," +
+            " testDate TIMESTAMP"         + secondsPrecisionDDL + "," +
+            " testNullDate TIMESTAMP"     + secondsPrecisionDDL + " " + timestampNullKeyword + "," +
             " testSqlDate DATE," +
-            " testSqlTimestamp TIMESTAMP" + timeSecondsPrecisionDDL + " " + timestampNullKeyword + "," +
-            " testGc TIMESTAMP"           + timeSecondsPrecisionDDL + " " + timestampNullKeyword + "," +
+            " testSqlTimestamp TIMESTAMP" + secondsPrecisionDDL + " " + timestampNullKeyword + "," +
+            " testGc TIMESTAMP"           + secondsPrecisionDDL + " " + timestampNullKeyword + "," +
             " testLocalDate DATE," +
-            " testInstant TIMESTAMP"      + timeSecondsPrecisionDDL + " " + timestampNullKeyword + "," +
+            " testInstant TIMESTAMP"      + secondsPrecisionDDL + " " + timestampNullKeyword + "," +
             " testString1 VARCHAR(" + TEST_STRING_COLUMN_LENGTH + ")," +
             " ts2 CHAR(" + TEST_STRING_COLUMN_LENGTH + ")," +
             " testEnum1 VARCHAR(10)," +

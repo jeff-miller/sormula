@@ -55,7 +55,7 @@ public class NameTranslatorTest2A extends DatabaseTest<SormulaTest2A>
             " test_boolean_yes_no CHAR(1)," +
             " test_double DECIMAL(8,3)," +
             " altname INTEGER," +
-            " test_date TIMESTAMP" + getTimeSecondsPrecisionDDL() + "," +
+            " test_date TIMESTAMP" + getSecondsPrecisionDDL() + "," +
             " test_string VARCHAR(10)" +
             ")"
         );

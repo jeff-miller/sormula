@@ -221,10 +221,10 @@ public class DatabaseTest<R>
     }
     
     
-    public String getTimeSecondsPrecisionDDL()
+    public String getSecondsPrecisionDDL()
     {
-        String timeSecondPrecision = jdbcProperties.getString("timeSecondsPrecision").trim();
-        if (timeSecondPrecision.length() > 0) return "(" + timeSecondPrecision + ")";
+        String secondsPrecision = jdbcProperties.getString("secondsPrecision").trim();
+        if (secondsPrecision.length() > 0) return "(" + secondsPrecision + ")";
         else return "";
     }
 

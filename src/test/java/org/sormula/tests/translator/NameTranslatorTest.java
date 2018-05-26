@@ -51,7 +51,7 @@ public class NameTranslatorTest extends DatabaseTest<SormulaTest2>
             " test_boolean_yes_no CHAR(1)," +
             " test_double DECIMAL(8,3)," +
             " altname INTEGER," +
-            " test_date TIMESTAMP" + getTimeSecondsPrecisionDDL() + "," +
+            " test_date TIMESTAMP" + getSecondsPrecisionDDL() + "," +
             " \"BETWEEN\" VARCHAR(10)" + // tests translators when column name is sql keyword 
             ")"
         );

@@ -18,7 +18,8 @@ package org.sormula.operation;
 
 import java.util.Iterator;
 
-import org.sormula.log.ClassLogger;
+import org.sormula.log.SormulaLogger;
+import org.sormula.log.SormulaLoggerFactory;
 
 
 /**
@@ -31,7 +32,7 @@ import org.sormula.log.ClassLogger;
  */
 public class SelectIterator<R> implements Iterator<R>
 {
-    private static final ClassLogger log = new ClassLogger();
+    private static final SormulaLogger log = SormulaLoggerFactory.getClassLogger();
     ScalarSelectOperation<R> selectOperation;
     R next;
     

@@ -16,7 +16,8 @@
  */
 package org.sormula.operation.monitor;
 
-import org.sormula.log.ClassLogger;
+import org.sormula.log.SormulaLogger;
+import org.sormula.log.SormulaLoggerFactory;
 
 
 /**
@@ -28,7 +29,7 @@ import org.sormula.log.ClassLogger;
  */
 public class ElapsedTime
 {
-    private static final ClassLogger log = new ClassLogger();
+    private static final SormulaLogger log = SormulaLoggerFactory.getClassLogger(); 
     private static long nsPerSecond = 1000000000L;
     private static long nsPerMintue = 60 * nsPerSecond;
     private static long nsPerHour   = 60 * nsPerMintue;
@@ -156,7 +157,7 @@ public class ElapsedTime
         }
         else
         {
-            log.warn("attempt to pause without start");
+            log.error("attempt to pause without start");
         }
     }
     
@@ -174,7 +175,7 @@ public class ElapsedTime
         }
         else
         {
-            log.warn("attempt to resume without pause");
+            log.error("attempt to resume without pause");
         }
     }
     

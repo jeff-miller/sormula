@@ -19,7 +19,8 @@ package org.sormula.operation.aggregate;
 import java.sql.ResultSet;
 
 import org.sormula.Table;
-import org.sormula.log.ClassLogger;
+import org.sormula.log.SormulaLogger;
+import org.sormula.log.SormulaLoggerFactory;
 import org.sormula.operation.OperationException;
 import org.sormula.operation.ScalarSelectOperation;
 import org.sormula.reflect.RowField;
@@ -45,7 +46,7 @@ import org.sormula.translator.ColumnTranslator;
  */
 public class SelectAggregateOperation<R, T> extends ScalarSelectOperation<R>
 {
-    private static final ClassLogger log = new ClassLogger(); 
+    private static final SormulaLogger log = SormulaLoggerFactory.getClassLogger(); 
     String function;
     String expression;
     ColumnTranslator<R> columnTranslator;

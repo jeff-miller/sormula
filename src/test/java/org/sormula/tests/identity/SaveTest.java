@@ -21,7 +21,8 @@ import java.util.Set;
 import org.sormula.SormulaException;
 import org.sormula.Table;
 import org.sormula.annotation.Column;
-import org.sormula.log.ClassLogger;
+import org.sormula.log.SormulaLogger;
+import org.sormula.log.SormulaLoggerFactory;
 import org.sormula.operation.InsertOperation;
 import org.sormula.operation.UpdateOperation;
 import org.sormula.tests.DatabaseTest;
@@ -43,7 +44,7 @@ import org.testng.annotations.Test;
 @Test(singleThreaded=true, groups="identity.update", dependsOnGroups="identity.insert")
 public class SaveTest extends DatabaseTest<IdentityTest>
 {
-    private static final ClassLogger log = new ClassLogger();
+    private static final SormulaLogger log = SormulaLoggerFactory.getClassLogger();
     
     @BeforeClass
     public void setUp() throws Exception
@@ -130,7 +131,7 @@ public class SaveTest extends DatabaseTest<IdentityTest>
     @Test
     public void saveNonIdentityBatch() throws SormulaException
     {
-        if (isTestIdentity() && isTestIdentityOverride())
+        if (isTestIdentity() && isTestIdentityOverride() && isBatchReturnsUpdateCount())
         {
             begin();
             selectTestRows(); // must perform each time since other tests are destructive

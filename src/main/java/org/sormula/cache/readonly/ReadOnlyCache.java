@@ -31,7 +31,8 @@ import org.sormula.cache.CacheKey;
 import org.sormula.cache.DuplicateCacheException;
 import org.sormula.cache.UncommittedRow;
 import org.sormula.cache.readwrite.UncommittedSave;
-import org.sormula.log.ClassLogger;
+import org.sormula.log.SormulaLogger;
+import org.sormula.log.SormulaLoggerFactory;
 import org.sormula.operation.SqlOperation;
 
 
@@ -58,7 +59,7 @@ import org.sormula.operation.SqlOperation;
  */
 public class ReadOnlyCache<R> extends AbstractCache<R>
 {
-    private static final ClassLogger log = new ClassLogger();
+    private static final SormulaLogger log = SormulaLoggerFactory.getClassLogger();
     
     
     /**

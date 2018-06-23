@@ -3,37 +3,6 @@
 	
 	
     <!-- ******* examples ******* -->
-	<target name="AllExamples" description="Runs all examples">
-		<antcall target="BasicDelete"/>
-		<antcall target="BasicInsert"/>
-		<antcall target="BasicSelect"/>
-		<antcall target="BasicUpdate"/>
-		<antcall target="BlobExample"/>
-		<antcall target="CascadeDelete"/>
-		<antcall target="CascadeInsert"/>
-		<antcall target="CascadeSelect"/>
-		<antcall target="CascadeUpdate"/>
-		<antcall target="ComplexDelete"/>
-		<antcall target="ComplexInsert"/>
-		<antcall target="IdentityInsert"/>
-		<antcall target="ComplexSelect"/>
-		<antcall target="FilterSelect"/>
-        <antcall target="HierarchyInsert"/>
-        <antcall target="HierarchySelect"/>
-        <antcall target="HierarchyUpdate"/>
-		<antcall target="ComplexUpdate"/>
-		<antcall target="ManyToManyInsert1"/>
-		<antcall target="ManyToManySelect1"/>
-		<antcall target="ManyToManyInsert2"/>
-		<antcall target="ManyToManySelect2"/>
-		<antcall target="NamedParameterInsert"/>
-		<antcall target="NamedParameterSelect"/>
-		<antcall target="NameDelete"/>
-		<antcall target="NameInsert"/>
-		<antcall target="NameSelect"/>
-		<antcall target="NameUpdate"/>
-		<antcall target="LocalDateExample"/>
-	</target>
     <target name="BenchmarkSuite" description="Runs comparisons of Sormula vs. plain JDBC (small size)">
         <antcall target="run-example">
         	<param name="class" value="org.sormula.examples.benchmark.BenchmarkSuite"/>
@@ -58,6 +27,14 @@
             <param name="arg2" value="2000"/>
         </antcall>
 	</target>
+	
+    <target name="PaginationInsert" description="Runs example">
+        <antcall target="run-example"><param name="class" value="org.sormula.examples.pagination.PaginationInsert"/></antcall>
+    </target>
+    <target name="PaginationSelect" description="Runs example">
+        <antcall target="run-example"><param name="class" value="org.sormula.examples.pagination.PaginationSelect"/></antcall>
+    </target>
+
     <target name="BasicInsert" description="Runs example">
         <antcall target="run-example"><param name="class" value="org.sormula.examples.basic.BasicInsert"/></antcall>
     </target>
@@ -159,10 +136,6 @@
         <antcall target="run-example"><param name="class" value="org.sormula.examples.blob.BlobExample"/></antcall>
     </target>
 
-    <target name="LocalDateExample" description="Runs example">
-        <antcall target="run-example"><param name="class" value="org.sormula.examples.jodatime.LocalDateExample"/></antcall>
-    </target>
-    
     <target name="run-example" description="called by other task to run an example" depends="compile-main, compile-examples">
         <echo>Run ${class} ${args}</echo>
         <java classname="${class}" maxmemory="${maxmem}">
@@ -171,6 +144,7 @@
             <sysproperty key="dbdir" value="${db.dir}"/>
         	<sysproperty key="seed" value="${seed}"/>
         	<sysproperty key="timings" value="${timings}"/>
+        	<sysproperty key="logger.class" value="${logger.class}"/>
         	<sysproperty key="cache.statistics" value="${cache.statistics}"/>
         	<sysproperty key="java.library.path" value="jdbc/${db.dir}"/> <!-- for type 2 JDBC drivers -->
             <classpath refid="examples.libpath"/>
@@ -192,6 +166,7 @@
         	<sysproperty key="dbdir" value="${db.dir}"/>
         	<sysproperty key="seed" value="${seed}"/>
         	<sysproperty key="timings" value="${timings}"/>
+        	<sysproperty key="logger.class" value="${logger.class}"/>
         	<sysproperty key="cache.statistics" value="${cache.statistics}"/>
         	<classpath refid="tests.libpath"/>
         	<classpath>

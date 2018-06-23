@@ -24,7 +24,8 @@ import java.util.Random;
 
 import org.sormula.Database;
 import org.sormula.Table;
-import org.sormula.log.ClassLogger;
+import org.sormula.log.SormulaLogger;
+import org.sormula.log.SormulaLoggerFactory;
 import org.sormula.operation.monitor.ElapsedTime;
 
 
@@ -34,7 +35,7 @@ import org.sormula.operation.monitor.ElapsedTime;
  */
 public abstract class BenchmarkThread extends Thread
 {
-    private static final ClassLogger log = new ClassLogger();
+    private static final SormulaLogger log = SormulaLoggerFactory.getClassLogger();
     static final Integer UPDATE_MARKER = 1234567890;
     
     BenchmarkSuite benchmarkSuite;

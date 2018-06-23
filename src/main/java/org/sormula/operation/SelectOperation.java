@@ -17,6 +17,7 @@
 package org.sormula.operation;
 
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Collection;
 
@@ -37,6 +38,7 @@ public abstract class SelectOperation<R, C> extends ScalarSelectOperation<R>
     int defaultReadAllSize;
     C selectedRows;
     int fetchSize;
+    int resultSetType;
     
     
     /**
@@ -49,6 +51,7 @@ public abstract class SelectOperation<R, C> extends ScalarSelectOperation<R>
     public SelectOperation(Table<R> table) throws OperationException
     {
         super(table);
+        setResultSetType(ResultSet.TYPE_FORWARD_ONLY);
         setDefaultReadAllSize(20);
     }
     
@@ -65,6 +68,7 @@ public abstract class SelectOperation<R, C> extends ScalarSelectOperation<R>
     public SelectOperation(Table<R> table, String whereConditionName) throws OperationException
     {
         super(table, whereConditionName);
+        setResultSetType(ResultSet.TYPE_FORWARD_ONLY);
         
         if (getWhereAnnotation() == null)
         {
@@ -239,26 +243,50 @@ public abstract class SelectOperation<R, C> extends ScalarSelectOperation<R>
         this.fetchSize = fetchSize;
     }
 
+    
+    /**
+     * Gets the type of result set to use. 
+     * 
+     * @return {@link ResultSet#TYPE_FORWARD_ONLY}, {@link ResultSet#TYPE_SCROLL_INSENSITIVE}, or 
+     * {@link ResultSet#TYPE_SCROLL_SENSITIVE}
+     * @since 4.3
+     */
+    public int getResultSetType()
+    {
+        return resultSetType;
+    }
+
+
+    /**
+     * Sets the type of result set to use. The default is {@link ResultSet#TYPE_FORWARD_ONLY}. Use this
+     * method prior to {@link #execute()}. Setting result set type after {@link #execute()} has no affect. 
+     * 
+     * @param resultSetType {@link ResultSet#TYPE_FORWARD_ONLY}, {@link ResultSet#TYPE_SCROLL_INSENSITIVE}, or 
+     * {@link ResultSet#TYPE_SCROLL_SENSITIVE}
+     * 
+     * @since 4.3
+     */
+    public void setResultSetType(int resultSetType)
+    {
+        this.resultSetType = resultSetType;
+    }
+
 
     /**
      * {@inheritDoc}
-     * Invokes the superclass prepare and then sets the fetch size on the prepared statement.
-     * @since 3.0
+     * Prepares statement with result set type supplied in {@link #setResultSetType(int)} and
+     * concurrency of {@link ResultSet#CONCUR_READ_ONLY}.
+     * 
+     * @since 4.3
      */
 	@Override
-    protected void prepare() throws OperationException
-    {
-        super.prepare();
-        try
-        {
-            getPreparedStatement().setFetchSize(fetchSize);
-        }
-        catch (SQLException e)
-        {
-            throw new OperationException("error setting fetch size", e);
-        }
-    }
-
+	protected PreparedStatement prepareStatement() throws SQLException
+	{
+	    PreparedStatement preparedStatement = getConnection().prepareStatement(preparedSql, resultSetType, ResultSet.CONCUR_READ_ONLY);
+	    preparedStatement.setFetchSize(fetchSize);
+	    return preparedStatement;
+	}
+	
 
     /**
      * Implement to create collection to use by {@link #readAll()}.

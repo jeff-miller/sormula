@@ -26,7 +26,8 @@ import javax.naming.NamingException;
 import javax.naming.spi.InitialContextFactory;
 import javax.naming.spi.InitialContextFactoryBuilder;
 
-import org.sormula.log.ClassLogger;
+import org.sormula.log.SormulaLogger;
+import org.sormula.log.SormulaLoggerFactory;
 
 
 /**
@@ -36,7 +37,7 @@ import org.sormula.log.ClassLogger;
  */
 public class TestContextFactoryBuilder implements InitialContextFactoryBuilder
 {
-    private static final ClassLogger log = new ClassLogger();
+    private static final SormulaLogger log = SormulaLoggerFactory.getClassLogger();
     private static final TestContextFactory testContextFactory = new TestContextFactory();
     public InitialContextFactory createInitialContextFactory(Hashtable<?, ?> environment) throws NamingException
     {
@@ -48,7 +49,7 @@ public class TestContextFactoryBuilder implements InitialContextFactoryBuilder
 
 class TestContextFactory implements InitialContextFactory
 {
-    private static final ClassLogger log = new ClassLogger();
+    private static final SormulaLogger log = SormulaLoggerFactory.getClassLogger();
     private static TestInitialContext testInitialContext;
     static 
     {
@@ -71,7 +72,7 @@ class TestContextFactory implements InitialContextFactory
 
 class TestInitialContext extends InitialContext
 {
-    private static final ClassLogger log = new ClassLogger();
+    private static final SormulaLogger log = SormulaLoggerFactory.getClassLogger();
     Map<String, Object> bindings = new HashMap<>();
 
     public TestInitialContext() throws NamingException

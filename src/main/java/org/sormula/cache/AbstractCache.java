@@ -24,7 +24,8 @@ import org.sormula.Table;
 import org.sormula.Transaction;
 import org.sormula.TransactionListener;
 import org.sormula.annotation.cache.Cached;
-import org.sormula.log.ClassLogger;
+import org.sormula.log.SormulaLogger;
+import org.sormula.log.SormulaLoggerFactory;
 import org.sormula.operation.ScalarSelectOperation;
 import org.sormula.reflect.FieldExtractor;
 import org.sormula.reflect.ReflectException;
@@ -43,7 +44,7 @@ import org.sormula.reflect.ReflectException;
  */
 public abstract class AbstractCache<R> implements Cache<R>
 {
-    private static final ClassLogger log = new ClassLogger();
+    private static final SormulaLogger log = SormulaLoggerFactory.getClassLogger();
     Table<R> table;
     Cached cachedAnnotation;
     FieldExtractor<R> primaryKeyExtractor;

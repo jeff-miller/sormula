@@ -18,7 +18,8 @@ package org.sormula.tests.translator;
 
 import org.sormula.SormulaException;
 import org.sormula.Table;
-import org.sormula.log.ClassLogger;
+import org.sormula.log.SormulaLogger;
+import org.sormula.log.SormulaLoggerFactory;
 import org.sormula.tests.DatabaseTest;
 import org.sormula.translator.standard.TrimTranslator;
 import org.testng.annotations.AfterClass;
@@ -34,7 +35,7 @@ import org.testng.annotations.Test;
 @Test(singleThreaded=true, groups="translator")
 public class TrimTranslatorTest extends DatabaseTest<SormulaTrimTest>
 {
-    private static final ClassLogger log = new ClassLogger();
+    private static final SormulaLogger log = SormulaLoggerFactory.getClassLogger();
     static final int CHAR_SIZE = 10;
     static final String nonPaddedTestString   = "abcd";
     static final String rightPaddedTestString = "abcd      "; // length of 10 since CHAR(10)
@@ -83,7 +84,7 @@ public class TrimTranslatorTest extends DatabaseTest<SormulaTrimTest>
         if (selected.getCharColumn().length() != CHAR_SIZE)
         {
             // some databases (like H2) don't pad char() data type
-            log.warn("CHAR column is not padded with blanks");
+            log.error("CHAR column is not padded with blanks");
         }
         else
         {

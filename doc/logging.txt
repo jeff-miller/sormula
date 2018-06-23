@@ -1,0 +1,29 @@
+To configure Sormula to use any logger:
+
+1. Implement SormulaLogger interface or choose one of the implementations in org.sormula.log:
+   ConsoleSormulaLogger
+   EmptySormulaLogger
+   JavaSormulaLogger
+   Log4jSormulaLogger
+   Slf4jSormulaLogger
+
+2. Add logging jar(s) (if any) and log configuration file(s) to classpath (if any). 
+   The files needed will be specific to the logging library that you are using.
+
+3. Prior to referencing any Sormula class, invoke one of the SormulaLoggerFactory methods:
+   SormulaLoggerFactory.setLoggerClass(Class)  with class from step 1 
+   SormulaLoggerFactory.setLoggerClass(String) with name of class from step 1
+   
+   Examples:
+   SormulaLoggerFactory.setLoggerClass(JavaSormulaLogger.class);
+   SormulaLoggerFactory.setLoggerClass("org.sormula.log.Log4jSormulaLogger");
+
+
+The default logger class is Slf4jSormulaLogger for backward compatibility since 
+previous versions of Sormula used org.sormula.log.ClassLogger which is dependent 
+upon SLF4J. The default logger does not require any SLF4J jars to be on classpath
+at runtime if no logging is desired.
+
+Slf4jSormulaLogger implements a subset of org.sormula.log.ClassLogger as defined by
+SormulaLogger interface. org.sormula.log.ClassLogger has been deprecated. ClassLogger
+use may used in conjunction with Slf4jSormulaLogger. 

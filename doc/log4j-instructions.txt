@@ -1,0 +1,34 @@
+To have sormula log debug messages using log4j:
+
+For versions 4.3 and later, see logging.txt for instructions to configure any logger.
+
+
+The following are instructions for versions prior to 4.3. They will still work
+for versions 4.3 and later with the default logger of Slf4jSormulaLogger:
+ 
+1. Add the following jars to your classpath (copy from src/examples/resources):
+    slf4j-api-1.7.22.jar
+    slf4j-log4j12-1.7.22.jar
+    log4j-1.2.17.jar
+
+2. Create log4j.properties in your classpath (use src/examples/resources/log4j.properties as an example)
+
+3. Turn on debug level in log4j.properties:
+    a) turn on debug for all packages
+       change log4j.logger.org.sormula=INFO to log4j.logger.org.sormula=DEBUG
+    
+    or
+    
+    b) turn on debug level for specific package(s), add one or more of
+       log4j.logger.org.sormula.annotation=DEBUG 
+       log4j.logger.org.sormula.annotation.cascade=DEBUG
+       log4j.logger.org.sormula.operation=DEBUG
+       log4j.logger.org.sormula.operation.aggregate=DEBUG
+       log4j.logger.org.sormula.operation.cascade=DEBUG
+       log4j.logger.org.sormula.operation.monitor=DEBUG
+       log4j.logger.org.sormula.reflect=DEBUG
+       log4j.logger.org.sormula.translator=DEBUG
+       log4j.logger.org.sormula.translator.standard=DEBUG
+           
+
+See www.slf4j.org and logging.apache.org for more details.

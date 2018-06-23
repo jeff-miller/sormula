@@ -26,7 +26,8 @@ import org.sormula.annotation.cache.Cached;
 import org.sormula.cache.Cache;
 import org.sormula.cache.readonly.ReadOnlyCache;
 import org.sormula.cache.readwrite.ReadWriteCache;
-import org.sormula.log.ClassLogger;
+import org.sormula.log.SormulaLogger;
+import org.sormula.log.SormulaLoggerFactory;
 import org.sormula.operation.ArrayListSelectOperation;
 import org.sormula.operation.ListSelectOperation;
 import org.sormula.operation.ScalarSelectOperation;
@@ -161,7 +162,7 @@ class RWCacheDatabase extends CachedDatabase
 
 class CachedDatabase extends Database
 {
-    private static final ClassLogger log = new ClassLogger();
+    private static final SormulaLogger log = SormulaLoggerFactory.getClassLogger();
     boolean logCacheStatistics;
     
     public CachedDatabase(Connection connection, String schema, boolean logCacheStatistics)

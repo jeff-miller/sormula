@@ -26,7 +26,8 @@ import java.util.Collection;
 import java.util.Properties;
 
 import org.sormula.SormulaException;
-import org.sormula.log.ClassLogger;
+import org.sormula.log.SormulaLogger;
+import org.sormula.log.SormulaLoggerFactory;
 
 
 /** 
@@ -36,7 +37,22 @@ import org.sormula.log.ClassLogger;
  */
 public class ExampleBase
 {
-    private static final ClassLogger log = new ClassLogger();
+    static 
+    {
+        try
+        {
+            // configure logger from build.properties
+            String loggerClassName = System.getProperty("logger.class", "");
+            System.out.println("logger.class=" + loggerClassName);
+            SormulaLoggerFactory.setLoggerClass(loggerClassName);
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+    }
+
+    private static final SormulaLogger log = SormulaLoggerFactory.getClassLogger();
 
     Properties jdbcProperties;
     Connection connection;
@@ -49,6 +65,14 @@ public class ExampleBase
     boolean useTransacation;
     
     
+    public ExampleBase()
+    {
+        // some databases require security permissions, turn off all java security checks since this is not confidential information
+        // see DERBY-6648
+        System.setSecurityManager(null);
+    }
+
+
     /**
      * Gets the connection that was created with {@link #openDatabase()}. Connection will be closed
      * when {@link #closeDatabase()} is invoked. Connection is defined
@@ -199,7 +223,7 @@ public class ExampleBase
         }
         catch (SQLException e)
         {
-            log.warn("error closing database", e);
+            log.error("error closing database", e);
         }
     }
     

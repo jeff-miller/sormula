@@ -16,7 +16,8 @@
  */
 package org.sormula.annotation;
 
-import org.sormula.log.ClassLogger;
+import org.sormula.log.SormulaLogger;
+import org.sormula.log.SormulaLoggerFactory;
 
 
 /**
@@ -27,7 +28,7 @@ import org.sormula.log.ClassLogger;
  */
 public class WhereAnnotationReader
 {
-    private static final ClassLogger log = new ClassLogger();
+    private static final SormulaLogger log = SormulaLoggerFactory.getClassLogger();
     Class<?>[] sources;
     
 

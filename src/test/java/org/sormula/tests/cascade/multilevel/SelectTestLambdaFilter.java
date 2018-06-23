@@ -21,7 +21,8 @@ import java.util.List;
 import java.util.function.BiPredicate;
 
 import org.sormula.SormulaException;
-import org.sormula.log.ClassLogger;
+import org.sormula.log.SormulaLogger;
+import org.sormula.log.SormulaLoggerFactory;
 import org.sormula.operation.ArrayListSelectOperation;
 import org.sormula.tests.DatabaseTest;
 import org.testng.annotations.AfterClass;
@@ -37,7 +38,7 @@ import org.testng.annotations.Test;
 @Test(singleThreaded=true, groups="cascade.select", dependsOnGroups="cascade.insert")
 public class SelectTestLambdaFilter extends DatabaseTest<SormulaTestLevel1>
 {
-    private static final ClassLogger log = new ClassLogger();
+    private static final SormulaLogger log = SormulaLoggerFactory.getClassLogger();
     
     
     @BeforeClass

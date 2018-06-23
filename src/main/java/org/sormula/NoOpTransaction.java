@@ -18,7 +18,8 @@ package org.sormula;
 
 import java.sql.Connection;
 
-import org.sormula.log.ClassLogger;
+import org.sormula.log.SormulaLogger;
+import org.sormula.log.SormulaLoggerFactory;
 
 
 /**
@@ -57,7 +58,7 @@ import org.sormula.log.ClassLogger;
  */
 public class NoOpTransaction extends Transaction
 {
-	private static final ClassLogger log = new ClassLogger();
+    private static final SormulaLogger log = SormulaLoggerFactory.getClassLogger();
 	
 	
 	/**

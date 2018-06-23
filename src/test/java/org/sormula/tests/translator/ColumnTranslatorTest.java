@@ -23,7 +23,8 @@ import java.time.LocalDate;
 import java.util.GregorianCalendar;
 
 import org.sormula.SormulaException;
-import org.sormula.log.ClassLogger;
+import org.sormula.log.SormulaLogger;
+import org.sormula.log.SormulaLoggerFactory;
 import org.sormula.tests.DatabaseTest;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
@@ -39,13 +40,15 @@ import org.testng.annotations.Test;
 @Test(singleThreaded=true, groups="translator")
 public class ColumnTranslatorTest extends DatabaseTest<SormulaTest1>
 {
-	private static final ClassLogger log = new ClassLogger();
+    private static final SormulaLogger log = SormulaLoggerFactory.getClassLogger();
     private static final int TEST_STRING_COLUMN_LENGTH = 20;
     
     @BeforeClass
     public void setUp() throws Exception
     {
         openDatabase();
+        String secondsPrecisionDDL = getSecondsPrecisionDDL();
+        String timestampNullKeyword = getTimestampNullKeyword(); // insure null values are stored as null
         createTable(SormulaTest1.class, 
             "CREATE TABLE " + getSchemaPrefix() + SormulaTest1.class.getSimpleName() + " (" +
             " testBoolean1 " + getBooleanDDL() + "," +
@@ -62,13 +65,13 @@ public class ColumnTranslatorTest extends DatabaseTest<SormulaTest1>
             " testInteger2 INTEGER," +
             " testShort1 SMALLINT," +
             " testShort2 SMALLINT," +
-            " testDate TIMESTAMP," +
-            " testNullDate TIMESTAMP," +
+            " testDate TIMESTAMP"         + secondsPrecisionDDL + "," +
+            " testNullDate TIMESTAMP"     + secondsPrecisionDDL + " " + timestampNullKeyword + "," +
             " testSqlDate DATE," +
-            " testSqlTimestamp TIMESTAMP," +
-            " testGc TIMESTAMP," +
+            " testSqlTimestamp TIMESTAMP" + secondsPrecisionDDL + " " + timestampNullKeyword + "," +
+            " testGc TIMESTAMP"           + secondsPrecisionDDL + " " + timestampNullKeyword + "," +
             " testLocalDate DATE," +
-            " testInstant TIMESTAMP," +
+            " testInstant TIMESTAMP"      + secondsPrecisionDDL + " " + timestampNullKeyword + "," +
             " testString1 VARCHAR(" + TEST_STRING_COLUMN_LENGTH + ")," +
             " ts2 CHAR(" + TEST_STRING_COLUMN_LENGTH + ")," +
             " testEnum1 VARCHAR(10)," +
@@ -179,7 +182,7 @@ public class ColumnTranslatorTest extends DatabaseTest<SormulaTest1>
         if (selected.getTestString2().length() != TEST_STRING_COLUMN_LENGTH)
         {
             // CHAR not always implemented consistently in all db's
-            log.warn("CHAR not padded with blanks length=" + selected.getTestString2().length());
+            log.error("CHAR not padded with blanks length=" + selected.getTestString2().length());
         }
         assert inserted.getTestString2()   .equals(selected.getTestString2().trim()) : "testString2" + message;
          

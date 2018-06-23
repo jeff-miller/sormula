@@ -18,7 +18,8 @@ package org.sormula.tests.cache.readonly;
 
 import org.sormula.SormulaException;
 import org.sormula.cache.readonly.ReadOnlyCache;
-import org.sormula.log.ClassLogger;
+import org.sormula.log.SormulaLogger;
+import org.sormula.log.SormulaLoggerFactory;
 import org.sormula.tests.cache.CacheTest;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
@@ -33,7 +34,7 @@ import org.testng.annotations.Test;
 @Test(singleThreaded=true, groups="cache.readonly.delete", dependsOnGroups="cache.readonly.insert")
 public class DeleteTest extends CacheTest<SormulaCacheTestRO>
 {
-    private static final ClassLogger log = new ClassLogger();
+    private static final SormulaLogger log = SormulaLoggerFactory.getClassLogger();
     
     @BeforeClass
     public void setUp() throws Exception

@@ -30,7 +30,8 @@ import org.sormula.annotation.cascade.OneToOneCascade;
 import org.sormula.annotation.cascade.SaveCascade;
 import org.sormula.annotation.cascade.SaveCascadeAnnotationReader;
 import org.sormula.cache.CacheException;
-import org.sormula.log.ClassLogger;
+import org.sormula.log.SormulaLogger;
+import org.sormula.log.SormulaLoggerFactory;
 import org.sormula.operation.cascade.CascadeOperation;
 import org.sormula.operation.cascade.SaveCascadeOperation;
 import org.sormula.reflect.RowField;
@@ -54,7 +55,7 @@ import org.sormula.reflect.RowField;
  */
 public class SaveOperation<R> extends ModifyOperation<R>
 {
-	private static ClassLogger log = new ClassLogger();
+    private static final SormulaLogger log = SormulaLoggerFactory.getClassLogger();
     InsertOperation<R> insertOperation;
     UpdateOperation<R> updateOperation;
     boolean invokeSuper;
@@ -353,19 +354,6 @@ public class SaveOperation<R> extends ModifyOperation<R>
             if (rows != null)
             {
                 // operation parameters from rows
-                
-                /* TODO needed?
-                for (R row: rows)
-                {
-                    if (isCached())
-                    {
-                        // must do this so that UncommittedSave is created in cache
-                        // if not, then UncommittedUpdate will erroneously be created in cache by updateOperation.execute() below 
-                        if (log.isDebugEnabled()) log.debug("save cache " + table.getRowClass());
-                        notifyCacheModify(row); 
-                    }
-                }
-                */
                 
                 // attempt to update all rows, for those not updated then insert
                 updateOperation.setRows(rows);

@@ -22,6 +22,8 @@ import org.slf4j.Marker;
 
 
 /**
+ * @deprecated Sormula no longer uses this class since version 4.3
+ * <p>
  * A delegate for SLF4J logger that uses the import org.slf4j.LoggerFactory 
  * to create a logger based upon the class name that created ClassLogger. 
  * Use no-argument constructor to create a logger for your class. To use this class,
@@ -53,6 +55,7 @@ import org.slf4j.Marker;
  * @see Logger
  * @author Jeff Miller
  */
+@Deprecated
 public class ClassLogger
 {
     static final String classLoggerClassName = ClassLogger.class.getName();

@@ -20,6 +20,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import org.sormula.annotation.Row;
+
+@Row(nameTranslators=RankNameTranslator.class)
 public class Rank 
 {
     static List<String> rank = new ArrayList<>(

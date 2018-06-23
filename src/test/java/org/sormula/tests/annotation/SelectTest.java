@@ -24,7 +24,8 @@ import java.util.Set;
 import org.sormula.Database;
 import org.sormula.SormulaException;
 import org.sormula.Table;
-import org.sormula.log.ClassLogger;
+import org.sormula.log.SormulaLogger;
+import org.sormula.log.SormulaLoggerFactory;
 import org.sormula.operation.ArrayListSelectOperation;
 import org.sormula.operation.LinkedHashMapSelectOperation;
 import org.sormula.operation.ListSelectOperation;
@@ -46,7 +47,7 @@ import org.testng.annotations.Test;
 @Test(singleThreaded=true, groups="annotation.select", dependsOnGroups="annotation.insert")
 public class SelectTest extends DatabaseTest<SormulaTestA>
 {
-    private static final ClassLogger log = new ClassLogger();
+    private static final SormulaLogger log = SormulaLoggerFactory.getClassLogger();
     TestDB db;
     
     @BeforeClass

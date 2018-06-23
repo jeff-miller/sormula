@@ -35,7 +35,8 @@ import org.sormula.annotation.cascade.SelectCascade;
 import org.sormula.annotation.cascade.SelectCascadeAnnotationReader;
 import org.sormula.cache.Cache;
 import org.sormula.cache.CacheException;
-import org.sormula.log.ClassLogger;
+import org.sormula.log.SormulaLogger;
+import org.sormula.log.SormulaLoggerFactory;
 import org.sormula.operation.ArrayListSelectOperation;
 import org.sormula.operation.DeleteOperation;
 import org.sormula.operation.InsertOperation;
@@ -106,7 +107,7 @@ import org.sormula.translator.TypeTranslatorMap;
  */
 public class Table<R> implements TypeTranslatorMap, TransactionListener
 {
-    private static final ClassLogger log = new ClassLogger();
+    private static final SormulaLogger log = SormulaLoggerFactory.getClassLogger();
     
     Database database;
     Class<R> rowClass;

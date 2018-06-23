@@ -19,8 +19,10 @@ package org.sormula.tests.translator;
 import java.util.List;
 
 import org.sormula.SormulaException;
-import org.sormula.log.ClassLogger;
+import org.sormula.log.SormulaLogger;
+import org.sormula.log.SormulaLoggerFactory;
 import org.sormula.tests.DatabaseTest;
+import org.sormula.translator.standard.LongTranslator;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
@@ -37,7 +39,7 @@ import org.testng.annotations.Test;
 @Test(singleThreaded=true, groups="translator")
 public class LongTranslatorTest extends DatabaseTest<SormulaTestLong>
 {
-    private static final ClassLogger log = new ClassLogger();
+    private static final SormulaLogger log = SormulaLoggerFactory.getClassLogger();
 	SormulaTestLong inserted;
     
     

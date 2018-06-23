@@ -40,13 +40,13 @@ public class CardTranslatorTest extends DatabaseTest<SormulaTestCard>
     {
         openDatabase();
         
-        // add RankTranslator to test programatic configuration
+        // add RankTranslator to test programmatic configuration
         // SuitTranslator is defined with annotation in SormulaTestCard
         //getDatabase().addTypeTranslator(Rank.class, new RankTranslator());
 
         createTable(SormulaTestCard.class, 
                 "CREATE TABLE " + getSchemaPrefix() + SormulaTestCard.class.getSimpleName() + " (" +
-                " rank INTEGER," +
+                " \"rank\" INTEGER," +
                 " suit INTEGER " +
                 ")"
             );

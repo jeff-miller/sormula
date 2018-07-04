@@ -23,7 +23,8 @@ import java.util.List;
 import java.util.Map;
 
 import org.sormula.SormulaException;
-import org.sormula.log.ClassLogger;
+import org.sormula.log.SormulaLogger;
+import org.sormula.log.SormulaLoggerFactory;
 import org.sormula.operation.ArrayListSelectOperation;
 import org.sormula.selector.PaginatedListSelector;
 import org.sormula.selector.PaginatedSelector;
@@ -42,7 +43,7 @@ import org.testng.annotations.Test;
 @Test(singleThreaded=true, groups={"operation.select"}, dependsOnGroups="operation.insert")
 public class SelectPsTest extends DatabaseTest<SormulaPsTest>
 {
-	private static final ClassLogger log = new ClassLogger();
+    private static final SormulaLogger log = SormulaLoggerFactory.getClassLogger();
 	int rowsPerPage;
 	String whereConditionName;
 	String orderByName;

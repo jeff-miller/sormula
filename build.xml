@@ -270,7 +270,8 @@
 	    	              ${p}/.hg/**/* 
 	    	              ${p}/target/**
 	    	              ${p}/test-output/**
-	    	              ${p}/*.log*"
+	    	              ${p}/*.log*
+	    	              ${p}/solo-examples/**/db.*"
 	      />
 	</target>
 	

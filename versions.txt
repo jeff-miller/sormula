@@ -3,8 +3,8 @@ Version History
 version-jdk             comments
 ------------------------------------------------------------------------------------------------------------
 4.3-jdk1.8              - logging use SormulaLoggerFactory, SormulaLogger for logging API independence
-                          PreparedStatement#setMaxRows also allowed for using #resetRowsReadCount so that 
-                          readNext method can be repeated again with the same prepared statement.
+                        - PreparedStatement#setMaxRows also allowed for using #resetRowsReadCount so that 
+                          readNext method can be repeated again with the same prepared statement
                         - org.sormula.selector classes for selecting one or more pages of rows of 
                           user-specified page size  
                         - removed AllExamples ant task in build.xml

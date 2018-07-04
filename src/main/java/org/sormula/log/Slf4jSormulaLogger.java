@@ -51,44 +51,41 @@ public class Slf4jSormulaLogger implements SormulaLogger
     
     public Slf4jSormulaLogger(String name)
     {
-        if (loggerAvailable)
-        {
-            logger = LoggerFactory.getLogger(name);
-        }
+        if (loggerAvailable) logger = LoggerFactory.getLogger(name);
     }
 
 
     @Override
     public void info(String message)
     {
-        logger.info(message);
+        if (loggerAvailable) logger.info(message);
     }
 
     
     @Override
     public void debug(String message)
     {
-        logger.debug(message);
+        if (loggerAvailable) logger.debug(message);
     }
 
     
     @Override
     public void error(String message)
     {
-        logger.error(message);
+        if (loggerAvailable) logger.error(message);
     }
 
     
     @Override
     public void error(String message, Throwable throwable)
     {
-        logger.error(message, throwable);
+        if (loggerAvailable) logger.error(message, throwable);
     }
 
     
     @Override
     public boolean isDebugEnabled()
     {
-        return logger.isDebugEnabled();
+        return loggerAvailable && logger.isDebugEnabled();
     }
 }

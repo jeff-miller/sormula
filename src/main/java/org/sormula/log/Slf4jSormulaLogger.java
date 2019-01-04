@@ -32,7 +32,8 @@ import org.slf4j.LoggerFactory;
 public class Slf4jSormulaLogger implements SormulaLogger
 {
     static final String classLoggerClassName = Slf4jSormulaLogger.class.getName();
-    static boolean loggerAvailable = false;
+    static boolean loggerAvailable;
+    static boolean loggerWarning;
     static
     {
         try
@@ -43,7 +44,7 @@ public class Slf4jSormulaLogger implements SormulaLogger
         catch (NoClassDefFoundError e)
         {
             // assume no slf4j logging desired since jars are not on classpath
-            System.out.println("no sormula logging since slf4j jars are not on classpath");
+            // warning will be printed to standard output upon first use of nonblank logger name
         }
     }
     Logger logger;
@@ -51,10 +52,19 @@ public class Slf4jSormulaLogger implements SormulaLogger
     
     public Slf4jSormulaLogger(String name)
     {
-        if (loggerAvailable) logger = LoggerFactory.getLogger(name);
+        if (loggerAvailable)
+        {
+            logger = LoggerFactory.getLogger(name);
+        }
+        else if (!loggerWarning && name.length() > 0)
+        {
+            // warning for first use when no slf4j logger is available
+            loggerWarning = true; // not synchronized worst case is warning printed multiple times
+            System.out.println("no sormula logging since slf4j jars are not on classpath");
+        }
     }
 
-
+    
     @Override
     public void info(String message)
     {

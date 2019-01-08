@@ -425,12 +425,6 @@ public abstract class SqlOperation<R> implements AutoCloseable
             // look for translator in table
             TypeTranslator<T> typeTranslator = (TypeTranslator<T>)table.getTypeTranslator(parameterClass);
             
-            if (typeTranslator == null)
-            {
-                // no table-specific translator, use database
-                typeTranslator = (TypeTranslator<T>)table.getDatabase().getTypeTranslator(parameterClass);
-            }
-            
             if (typeTranslator != null)
             {
                 if (log.isDebugEnabled())

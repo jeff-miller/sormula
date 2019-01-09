@@ -85,24 +85,33 @@ public class ExplicitTypeAnnotationReader
      * @param typeAnnotation definition of type to add
      * @throws Exception if error creating new instance of {@link TypeTranslator}
      */
+    @SuppressWarnings("unchecked")
     protected void updateMap(ExplicitType typeAnnotation) throws Exception
     {
         if (log.isDebugEnabled()) log.debug("check " + typeAnnotation);
         Class<?> typeClass = typeAnnotation.type();
         Class<? extends TypeTranslator> newTranslatorClass = typeAnnotation.translator();
         TypeTranslator<?> oldTranslator = typeTranslatorMap.getTypeTranslator(typeClass);
+        TypeTranslator<?> newTypeTranslator = null;
         
         if (oldTranslator == null)
         {
             // no type translator for type, add it
             if (log.isDebugEnabled()) log.debug("add translator=" + newTranslatorClass + " for type=" + typeClass);
-            typeTranslatorMap.putTypeTranslator(typeClass, newTranslatorClass.newInstance());
+            newTypeTranslator = newTranslatorClass.newInstance();
         }
         else if (oldTranslator.getClass() != newTranslatorClass)
         {
             // new is different from old, replace it
             if (log.isDebugEnabled()) log.debug("replace " + oldTranslator.getClass() + " with translator=" + newTranslatorClass + " for type=" + typeClass);
-            typeTranslatorMap.putTypeTranslator(typeClass, newTranslatorClass.newInstance());
+            newTypeTranslator = newTranslatorClass.newInstance();
+        }
+        
+        if (newTypeTranslator != null)
+        {
+            // new translator
+            newTypeTranslator.setClass((Class)typeClass);
+            typeTranslatorMap.putTypeTranslator(typeClass, newTypeTranslator);
         }
     }
 }

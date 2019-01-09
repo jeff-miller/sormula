@@ -413,82 +413,82 @@ public class RowTranslator<R> extends ColumnsTranslator<R>
             {
                 // transient column, don't translate
             	if (log.isDebugEnabled()) log.debug("transient " + f);
+            	continue; // skip transient
             }
-            else if (f.isAnnotationPresent(Cascade.class) ||
-                     f.isAnnotationPresent(OneToManyCascade.class) ||
-                     f.isAnnotationPresent(OneToOneCascade.class))
+            
+            if (f.isAnnotationPresent(Cascade.class) ||
+                f.isAnnotationPresent(OneToManyCascade.class) ||
+                f.isAnnotationPresent(OneToOneCascade.class))
             {
                 if (log.isDebugEnabled()) log.debug("explicit cascade for " + f);
                 cascadeFieldList.add(f);
+                continue; // avoid deep if/else nesting
             }
-            else 
+            
+            // field is not static, no transient annotation and no cascade annotation
+            
+            try
             {
-                // field is not static, no transient annotation and no cascade annotation
-                try
-                {
-                    // check for Type annotation on field type and field 
-                    new ImplicitTypeAnnotationReader(table, f).install();
-                }
-                catch (Exception e)
-                {
-                    throw new TranslatorException("error installing ImplicitType", e);
-                }
-                
-                // determine column translator to use
-                String columnName;
-                Class<? extends ColumnTranslator> columnTranslatorClass;
-                Column columnAnnotation = f.getAnnotation(Column.class);
-    
-                if (columnAnnotation != null)
-                {
-                    // use Column annotation
-                    columnTranslatorClass = (Class<? extends ColumnTranslator>)columnAnnotation.translator();
-                    columnName = columnAnnotation.name();
-                }
-                else
-                {
-                    // no Column annotation for field, use standard column translator
-                    columnTranslatorClass = (Class<? extends ColumnTranslator>)StandardColumnTranslator.class;
-                    columnName = "";
-                }
-                
-                if (columnName.length() == 0)
-                {
-                    // column name not supplied or no annotation, default is field name
-                    columnName = table.translateName(f.getName());
-                }
-                
-                // create column translator
-                ColumnTranslator<R> columnTranslator = (ColumnTranslator<R>)
-                    AbstractColumnTranslator.newInstance(columnTranslatorClass, createRowField(f), columnName);
+                // check for Type annotation on field type and field 
+                new ImplicitTypeAnnotationReader(table, f).install();
+            }
+            catch (Exception e)
+            {
+                throw new TranslatorException("error installing ImplicitType", e);
+            }
+            
+            // determine column translator to use
+            String columnName;
+            Class<? extends ColumnTranslator> columnTranslatorClass;
+            Column columnAnnotation = f.getAnnotation(Column.class);
 
-                if (columnTranslator instanceof AbstractColumnTranslator) 
+            if (columnAnnotation != null)
+            {
+                // use Column annotation
+                columnTranslatorClass = (Class<? extends ColumnTranslator>)columnAnnotation.translator();
+                columnName = columnAnnotation.name();
+            }
+            else
+            {
+                // no Column annotation for field, use standard column translator
+                columnTranslatorClass = (Class<? extends ColumnTranslator>)StandardColumnTranslator.class;
+                columnName = "";
+            }
+            
+            if (columnName.length() == 0)
+            {
+                // column name not supplied or no annotation, default is field name
+                columnName = table.translateName(f.getName());
+            }
+            
+            // create column translator
+            ColumnTranslator<R> columnTranslator = (ColumnTranslator<R>)
+                AbstractColumnTranslator.newInstance(columnTranslatorClass, createRowField(f), columnName);
+            
+            if (columnTranslator instanceof AbstractColumnTranslator) 
+            {
+                // column translator is some standard sormula column translator
+                Class<?> fieldType = f.getType();
+                TypeTranslator<?> configuredTypeTranslator = table.getTypeTranslator(fieldType);
+                
+                if (Enum.class.isAssignableFrom(fieldType))
                 {
-                    // column translator is some standard sormula column translator
+                    // field type is enum
                     EnumType enumTypeAnnotation = f.getAnnotation(EnumType.class);
-                    Class<?> fieldType = f.getType();
-                    TypeTranslator<?> typeTranslator = table.getTypeTranslator(fieldType);
+                    boolean defaultEnumValueDefined = enumTypeAnnotation != null && enumTypeAnnotation.defaultEnumName().length() > 0;
                     
-                    if (typeTranslator != null)
+                    if (configuredTypeTranslator == null || defaultEnumValueDefined)
                     {
-                        // type translator is defined for field type
-                        if (log.isDebugEnabled()) log.debug(f + " set type translator=" + typeTranslator + " on column translator=" + columnTranslator.getClass());
-                        addColumnTranslator(columnTranslator); // do this only if has type translator
-                        // set type translator for subclasses of AbstractColumnTranslator 
-                        ((AbstractColumnTranslator)columnTranslator).setTypeTranslator(typeTranslator);
-                    }
-                    else if (Enum.class.isAssignableFrom(fieldType) || enumTypeAnnotation != null)
-                    {
-                        // field type is enum but no type translator, use enum translator
+                        // no type translator defined or default value is unique to this column, create new enum translator
                         addColumnTranslator(columnTranslator);
                         
                         if (enumTypeAnnotation == null) enumTypeAnnotation = defaultEnumType; // default
                         
-                        Class<? extends EnumTranslator> translatorClass = enumTypeAnnotation.translator();
-                        if (log.isDebugEnabled()) log.debug("use " + translatorClass + " for " + fieldType);
+                        Class<? extends EnumTranslator> enumTranslatorClass = enumTypeAnnotation.translator();
+                        if (log.isDebugEnabled()) log.debug("use " + enumTranslatorClass + " for " + fieldType);
                         try
                         {
-                            EnumTranslator<? extends Enum<?>> enumTranslator = translatorClass.newInstance();
+                            EnumTranslator<? extends Enum<?>> enumTranslator = enumTranslatorClass.newInstance();
                             enumTranslator.setEnumClass((Class)fieldType);
                             enumTranslator.setDefaultEnumName(enumTypeAnnotation.defaultEnumName());
                             ((AbstractColumnTranslator)columnTranslator).setTypeTranslator(enumTranslator);
@@ -498,39 +498,55 @@ public class RowTranslator<R> extends ColumnsTranslator<R>
                             throw new TranslatorException("error constructing enum translator for " + f, e);
                         }
                     }
-                    else if (columnAnnotation != null)
+                    else if (configuredTypeTranslator != null)
                     {
-                        // custom column with no TypeTranslator but assume ColumnTranslator exists
-                        if (log.isDebugEnabled()) log.debug(f + " custom AbstractColumnTranslator " + columnTranslator.getClass());
+                        // type translator defined with no default value so reuse it
+                        log.info("$$ enum type translator exists fieldType="+ fieldType);
                         addColumnTranslator(columnTranslator);
+                        ((AbstractColumnTranslator)columnTranslator).setTypeTranslator(configuredTypeTranslator);
                     }
-                    else
-                    {
-                        // no type translator (likely a non primative class, map, list, array)
-                        // and no Column annotation
-                        // assume default cascade
-                        if (log.isDebugEnabled()) log.debug("default cascade for " + f);
-                        cascadeFieldList.add(f);
-                    }
+                }
+                else if (configuredTypeTranslator != null)
+                {
+                    // type translator is defined for field type
+                    if (log.isDebugEnabled()) log.debug(f + " set type translator=" + configuredTypeTranslator + 
+                            " on column translator=" + columnTranslator.getClass());
+                    addColumnTranslator(columnTranslator); // do this only if has type translator
+                    // set type translator for subclasses of AbstractColumnTranslator 
+                    ((AbstractColumnTranslator)columnTranslator).setTypeTranslator(configuredTypeTranslator);
+                }
+                else if (columnAnnotation != null)
+                {
+                    // custom column with no TypeTranslator but assume ColumnTranslator exists
+                    if (log.isDebugEnabled()) log.debug(f + " custom AbstractColumnTranslator " + columnTranslator.getClass());
+                    addColumnTranslator(columnTranslator);
                 }
                 else
                 {
-                    // assume some non sormula custom translator
-                    if (log.isDebugEnabled()) log.debug(f + " custom ColumnTranslator " + columnTranslator.getClass());
-                    addColumnTranslator(columnTranslator);
+                    // no type translator (likely a non primitive class, map, list, array)
+                    // and no Column annotation
+                    // assume default cascade
+                    if (log.isDebugEnabled()) log.debug("default cascade for " + f);
+                    cascadeFieldList.add(f);
                 }
-                
-                if (columnTranslator.isIdentity())
+            }
+            else
+            {
+                // assume some non sormula custom translator
+                if (log.isDebugEnabled()) log.debug(f + " custom ColumnTranslator " + columnTranslator.getClass());
+                addColumnTranslator(columnTranslator);
+            }
+            
+            if (columnTranslator.isIdentity())
+            {
+                if (identityColumnTranslator == null)
                 {
-                    if (identityColumnTranslator == null)
-                    {
-                        // first identity column encountered
-                        identityColumnTranslator = columnTranslator;
-                    }
-                    else
-                    {
-                        throw new TranslatorException("more than one identity column declared at " + f);
-                    }
+                    // first identity column encountered
+                    identityColumnTranslator = columnTranslator;
+                }
+                else
+                {
+                    throw new TranslatorException("more than one identity column declared at " + f);
                 }
             }
         }

@@ -251,10 +251,10 @@ public class ColumnTranslatorTest extends DatabaseTest<SormulaTest1>
     }
     
     
-    @Test //(dependsOnMethods="insertTest")
+    @Test
     public void defaultEnumTest() throws Exception
     {
-        SormulaTest1 inserted = insertTest("defaultEnumTest"); // use this instead, dependsOnMethods caused problems
+        SormulaTest1 inserted = insertTest("defaultEnumTest"); 
         
         begin();
         
@@ -269,8 +269,22 @@ public class ColumnTranslatorTest extends DatabaseTest<SormulaTest1>
         // testEnum2 should be read as 'zzz' and converted to default enum
         SormulaTest1 selected = getTable().selectWhere("forTestSting1", inserted.getTestString1());
         assert selected != null : "no test row";
-        assert selected.getTestEnum2().equals(EnumField.Bad) : "testEnum2 did not use default enum";
-        assert selected.getTestEnumTS2().equals(EnumFieldTS.Warm) : "testEnumTS2 did not use default enum";
+        assert EnumField.Bad.equals(selected.getTestEnum2()) : "testEnum2 did not use default enum";
+        assert EnumFieldTS.Warm.equals(selected.getTestEnumTS2()) : "testEnumTS2 did not use default enum";
+        commit();
+    }
+    
+
+    @Test
+    public void selectByEnumTest() throws Exception
+    {
+        SormulaTest1 inserted = insertTest("selectByEnumTest"); 
+        
+        begin();
+        
+        // select where parameter is an enum
+        SormulaTest1 selected = getTable().selectWhere("forTestEnum1", inserted.getTestEnum1());
+        assert selected != null : "no test row";
         commit();
     }
 }

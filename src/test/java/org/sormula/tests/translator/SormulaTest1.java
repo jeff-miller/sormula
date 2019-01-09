@@ -22,10 +22,13 @@ import java.util.GregorianCalendar;
 
 import org.sormula.annotation.Column;
 import org.sormula.annotation.EnumType;
+import org.sormula.annotation.ExplicitType;
 import org.sormula.annotation.Transient;
 import org.sormula.annotation.Where;
+import org.sormula.log.SormulaLoggerFactory;
 import org.sormula.translator.standard.BooleanYNColumnTranslator;
 import org.sormula.translator.standard.EnumToStringTranslator;
+import org.sormula.translator.standard.EnumTranslator;
 
 
 /**
@@ -33,8 +36,15 @@ import org.sormula.translator.standard.EnumToStringTranslator;
  * @author Jeff Miller
  */
 @Where(name="forTestSting1", fieldNames="testString1")
+@Where(name="forTestEnum1", fieldNames="testEnum1")
+@Where(name="forTestEnum2", fieldNames="testEnum2")
+@ExplicitType(type=EnumField.class, translator=EnumTranslator.class)
 public class SormulaTest1
 {
+    static
+    {
+        SormulaLoggerFactory.getClassLogger().info("zzz EnumField.class=" + EnumField.class);
+    }
     boolean testBoolean1;
     Boolean testBoolean2;
     

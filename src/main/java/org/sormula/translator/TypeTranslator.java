@@ -31,6 +31,16 @@ import java.sql.ResultSet;
 public interface TypeTranslator<T>
 {
     /**
+     * TODO
+     * @param clazz
+     * @since 4.31
+     */
+    default public void setClass(Class<T> clazz)
+    {
+    }
+
+    
+    /**
      * Reads value from result set.
      * 
      * @param resultSet read value from this result set

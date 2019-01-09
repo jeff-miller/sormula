@@ -81,6 +81,15 @@ public class EnumTranslator<T extends Enum<T>> implements TypeTranslator<Enum<T>
     {
         this.enumClass = enumClass;
     }
+    
+
+    // TODO
+    @SuppressWarnings("unchecked")
+    @Override
+    public void setClass(Class<Enum<T>> clazz)
+    {
+        setEnumClass((Class<T>)clazz);
+    }
 
 
     /**

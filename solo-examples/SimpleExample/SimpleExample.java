@@ -229,7 +229,8 @@ public class SimpleExample
 	        Table<Inventory> inventoryTable = database.getTable(Inventory.class);
 	        
 	        // select operation for range
-	        QuantityRangeSelect operation = new QuantityRangeSelect(inventoryTable);
+	        @SuppressWarnings("resource") // selectAll method closes
+			QuantityRangeSelect operation = new QuantityRangeSelect(inventoryTable);
 	        operation.setRange(minimumQuantity, maximumQuantity);
 	        
 	        // show results

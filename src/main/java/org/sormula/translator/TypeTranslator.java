@@ -19,6 +19,9 @@ package org.sormula.translator;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
+import org.sormula.annotation.ExplicitTypeAnnotationReader;
+import org.sormula.annotation.ImplicitTypeAnnotationReader;
+
 
 /**
  * Interface for getting a value from a result set and setting a value
@@ -31,9 +34,12 @@ import java.sql.ResultSet;
 public interface TypeTranslator<T>
 {
     /**
-     * TODO
-     * @param clazz
-     * @since 4.31
+     * Sets the class for the type T of this translator. Invoked by {@link ImplicitTypeAnnotationReader}
+     * and {@link ExplicitTypeAnnotationReader} when processing any annotation that defines a 
+     * {@link TypeTranslator}. The default implementation does nothing.
+     * 
+     * @param clazz the class of the type T
+     * @since 4.4
      */
     default public void setClass(Class<T> clazz)
     {

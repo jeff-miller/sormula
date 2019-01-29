@@ -45,7 +45,7 @@ import org.sormula.translator.TypeTranslator;
  */
 public class EnumToStringTranslator<T extends Enum<T>> extends EnumTranslator<T>
 {
-    Map<Object, Enum<T>> columnEnumMap;    
+    Map<Object, T> columnEnumMap;    
     
     
     /**
@@ -74,7 +74,7 @@ public class EnumToStringTranslator<T extends Enum<T>> extends EnumTranslator<T>
      * 
      * @return map of Enum's where key is {@link #enumToColumn(Enum)}
      */
-    public Map<Object, Enum<T>> getColumnEnumMap() 
+    public Map<Object, T> getColumnEnumMap() 
     {
         return columnEnumMap;
     }
@@ -110,9 +110,9 @@ public class EnumToStringTranslator<T extends Enum<T>> extends EnumTranslator<T>
      * cannot be found in {@link #getColumnEnumMap()}
      */
     @Override
-    protected Enum<T> columnToEnum(Object columnValue)
+    protected T columnToEnum(Object columnValue)
     {
-        Enum<T> result = null;
+        T result = null;
         
         if (columnValue != null)
         {

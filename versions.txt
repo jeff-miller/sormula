@@ -2,9 +2,13 @@ Version History
 
 version-jdk             comments
 ------------------------------------------------------------------------------------------------------------
-4.31-jdk1.8             - print slf4j warning upon first use instead of at initialization of factory
+4.4-jdk1.8              - print slf4j warning upon first use instead of at initialization of factory
                         - EnumTranslator works with ExplicitType annotation
-
+                        - Fix EnumTranslator base class declaration 
+                          from EnumTranslator<T extends Enum<T>> implements TypeTranslator<Enum<T>>
+                          to   EnumTranslator<T extends Enum<T>> implements TypeTranslator<T>
+                          This fix will break compiles of references to and subclasses of EnumTranslator 
+                          
 4.3-jdk1.8              - logging use SormulaLoggerFactory, SormulaLogger for logging API independence
                         - PreparedStatement#setMaxRows also allowed for using #resetRowsReadCount so that 
                           readNext method can be repeated again with the same prepared statement

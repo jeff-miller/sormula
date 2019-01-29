@@ -501,7 +501,6 @@ public class RowTranslator<R> extends ColumnsTranslator<R>
                     else if (configuredTypeTranslator != null)
                     {
                         // type translator defined with no default value so reuse it
-                        log.info("$$ enum type translator exists fieldType="+ fieldType);
                         addColumnTranslator(columnTranslator);
                         ((AbstractColumnTranslator)columnTranslator).setTypeTranslator(configuredTypeTranslator);
                     }

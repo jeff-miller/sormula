@@ -31,16 +31,16 @@ import org.sormula.translator.standard.EnumTranslator;
 public class CustomEnumTranslator extends EnumTranslator<EnumField>
 {
     @Override
-    public void write(PreparedStatement preparedStatement, int parameterIndex, Enum<EnumField> parameter) throws Exception
+    public void write(PreparedStatement preparedStatement, int parameterIndex, EnumField parameter) throws Exception
     {
         if (parameter != null) preparedStatement.setShort(parameterIndex, (short)parameter.ordinal());
         else                   preparedStatement.setNull(parameterIndex, Types.SMALLINT);
     }
 
     @Override
-    public Enum<EnumField> read(ResultSet resultSet, int columnIndex) throws Exception
+    public EnumField read(ResultSet resultSet, int columnIndex) throws Exception
     {
-        Enum<EnumField> result = null;
+        EnumField result = null;
         short ordinal = resultSet.getShort(columnIndex);
         
         if (!resultSet.wasNull())

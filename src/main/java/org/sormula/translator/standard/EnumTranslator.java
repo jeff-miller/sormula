@@ -52,7 +52,7 @@ import org.sormula.translator.TypeTranslator;
  * @since 3.3
  * @author Jeff Miller
  */
-public class EnumTranslator<T extends Enum<T>> implements TypeTranslator<Enum<T>>
+public class EnumTranslator<T extends Enum<T>> implements TypeTranslator<T>
 {
     Class<T> enumClass;
     String defaultEnumName;
@@ -83,12 +83,15 @@ public class EnumTranslator<T extends Enum<T>> implements TypeTranslator<Enum<T>
     }
     
 
-    // TODO
-    @SuppressWarnings("unchecked")
+    /**
+     * {@inheritDoc}
+     * Invokes {@link #setEnumClass(Class)}.
+     * @since 4.4
+     */
     @Override
-    public void setClass(Class<Enum<T>> clazz)
+    public void setClass(Class<T> clazz)
     {
-        setEnumClass((Class<T>)clazz);
+        setEnumClass(clazz);
     }
 
 
@@ -153,7 +156,7 @@ public class EnumTranslator<T extends Enum<T>> implements TypeTranslator<Enum<T>
      * See {@link #enumToColumn(Enum)} for details about what will be written.
      * {@inheritDoc}
      */
-    public void write(PreparedStatement preparedStatement, int parameterIndex, Enum<T> parameter) throws Exception
+    public void write(PreparedStatement preparedStatement, int parameterIndex, T parameter) throws Exception
     {
         preparedStatement.setString(parameterIndex, (String)enumToColumn(parameter));
     }
@@ -167,7 +170,7 @@ public class EnumTranslator<T extends Enum<T>> implements TypeTranslator<Enum<T>
      * See {@link #columnToEnum(Object)} for details about what will be returned.
      * {@inheritDoc}
      */
-    public Enum<T> read(ResultSet resultSet, int columnIndex) throws Exception
+    public T read(ResultSet resultSet, int columnIndex) throws Exception
     {
         return columnToEnum(resultSet.getString(columnIndex));
     }
@@ -201,9 +204,9 @@ public class EnumTranslator<T extends Enum<T>> implements TypeTranslator<Enum<T>
      * 
      * @since 4.1
      */
-    protected Enum<T> columnToEnum(Object columnValue)
+    protected T columnToEnum(Object columnValue)
     {
-        Enum<T> result = null;
+        T result = null;
         
         if (columnValue != null)
         {

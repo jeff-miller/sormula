@@ -25,7 +25,6 @@ import org.sormula.annotation.EnumType;
 import org.sormula.annotation.ExplicitType;
 import org.sormula.annotation.Transient;
 import org.sormula.annotation.Where;
-import org.sormula.log.SormulaLoggerFactory;
 import org.sormula.translator.standard.BooleanYNColumnTranslator;
 import org.sormula.translator.standard.EnumToStringTranslator;
 import org.sormula.translator.standard.EnumTranslator;
@@ -41,10 +40,6 @@ import org.sormula.translator.standard.EnumTranslator;
 @ExplicitType(type=EnumField.class, translator=EnumTranslator.class)
 public class SormulaTest1
 {
-    static
-    {
-        SormulaLoggerFactory.getClassLogger().info("zzz EnumField.class=" + EnumField.class);
-    }
     boolean testBoolean1;
     Boolean testBoolean2;
     

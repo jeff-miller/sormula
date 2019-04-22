@@ -95,6 +95,7 @@ public class SelectPsTest extends DatabaseTest<SormulaPsTest>
                 initExpectedPages(rowsPerPage, "selectByType", "orderById", 1);
             	testPages1();
                 testPages2();
+                testPages2Fluent();
             	
             	initExpectedPages(rowsPerPage, "selectByType", "orderById", 2);
             	testPages1();
@@ -116,6 +117,7 @@ public class SelectPsTest extends DatabaseTest<SormulaPsTest>
             initExpectedPages(50, ""/*all*/, "orderByIdDescending");
             testPages1();
             testPages2();
+            testPages2Fluent();
             
             initExpectedPages(14, "selectByType", "orderById", 2);
             testPages1();
@@ -177,6 +179,33 @@ public class SelectPsTest extends DatabaseTest<SormulaPsTest>
             commit();
         }
     }
+
+    
+    @Test
+    public void selectWithInitialPage() throws SormulaException
+    {
+        if (isTestScrollableResultSets())
+        {
+            selectByPage = true;
+            begin();
+
+            initExpectedPages(14, "selectByType", "orderById", 2);
+            
+            try (PaginatedListSelector<SormulaPsTest> selector = PaginatedListSelector.builder(rowsPerPage, getTable())
+            		.pageNumber(3) // start on page 3
+            		.build())
+            {
+                selector.setOrderByName(orderByName);
+                selector.setWhere("selectByType");
+                selector.setParameter("type", 2);
+                selector.execute();
+                
+                testExpectedRows(selector);
+            }
+            
+            commit();
+        }
+    }
     
     
     protected void initExpectedPages(int rowsPerPage, String whereConditionName, String orderByName, Object...whereParameters) throws SormulaException
@@ -226,6 +255,19 @@ public class SelectPsTest extends DatabaseTest<SormulaPsTest>
         selectOperation.setParameters(whereParameters);
         PaginatedSelector<SormulaPsTest, List<SormulaPsTest>> selector = new PaginatedSelector<>(rowsPerPage, selectOperation);
         testPages(selector);
+    }
+    
+    
+    protected void testPages2Fluent() throws SormulaException
+    {
+        try (PaginatedListSelector<SormulaPsTest> selector = PaginatedListSelector.builder(rowsPerPage, getTable())
+        		.build())
+        {
+            selector.setOrderByName(orderByName);
+            selector.setWhere(whereConditionName);
+            selector.setParameters(whereParameters);
+            testPages(selector);
+        }
     }
     
     

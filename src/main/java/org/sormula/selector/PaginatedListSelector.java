@@ -16,6 +16,36 @@ import org.sormula.operation.ListSelectOperation;
  */
 public class PaginatedListSelector<R> extends AbstractPaginatedListSelector<R>
 {
+	/**
+	 * TODO
+	 * @param <R>
+	 * @param pageSize
+	 * @param table
+	 * @return
+	 * @since 4.4
+	 */
+    public static <R> Builder<R> builder(int pageSize, Table<R> table)
+    {
+    	return new Builder<R>(pageSize, table);
+    }
+    
+    
+    public static class Builder<R> extends AbstractPaginatedListSelector.Builder<R>
+    {
+		public Builder(int pageSize, Table<R> table) {
+			super(pageSize, table);
+		}
+
+		@Override
+		public PaginatedListSelector<R> build() throws SelectorException
+		{
+			PaginatedListSelector<R> paginatedListSelector = new PaginatedListSelector<>(pageSize, table);
+			paginatedListSelector.setPageNumber(pageNumber);
+			return paginatedListSelector; 
+		}
+    }
+    
+    
     /**
      * Constructs for a page size and table. Scroll sensitivity is false.
      * 

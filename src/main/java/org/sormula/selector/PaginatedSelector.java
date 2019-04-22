@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
+import org.sormula.Table;
 import org.sormula.operation.OperationException;
 import org.sormula.operation.SelectOperation;
 
@@ -26,7 +27,30 @@ public class PaginatedSelector<R, C> implements AutoCloseable
     int pageNumber;
     SelectOperation<R, C> selectOperation;
 
+    
+    public abstract static class Builder<R>
+    {
+    	protected int pageSize;
+    	protected Table<R> table;
+    	protected int pageNumber;
+    	
+    	public Builder(int pageSize, Table<R> table) 
+    	{
+			this.pageSize = pageSize;
+			this.table = table;
+			pageNumber = 1;
+		}
+    	
+    	public Builder<R> pageNumber(int pageNumber)
+    	{
+    		this.pageNumber = pageNumber;
+    		return this;
+    	}
 
+		public abstract PaginatedListSelector<R> build() throws SelectorException;
+    }
+
+    
     /**
      * Constructs for a page size and select operation. Scroll sensitivity is false.
      * 
@@ -69,6 +93,7 @@ public class PaginatedSelector<R, C> implements AutoCloseable
         this.scrollSensitive = scrollSensitive;
         if (scrollSensitive) resultSetType = ResultSet.TYPE_SCROLL_SENSITIVE;
         else                 resultSetType = ResultSet.TYPE_SCROLL_INSENSITIVE;
+        pageNumber = 1;
     }
     
     
@@ -79,7 +104,8 @@ public class PaginatedSelector<R, C> implements AutoCloseable
     
     
     /**
-     * Executes the select operation and positions to the first page.
+     * Executes the select operation. Positions to specific page if {@link #setPageNumber(int)} has been
+     * used, otherwise positions to the first page.
      * 
      * @throws SelectorException if error
      * @see SelectOperation#execute()
@@ -97,16 +123,22 @@ public class PaginatedSelector<R, C> implements AutoCloseable
             throw new SelectorException("initialization error", e);
         }
         
-        setPageNumber(1);
+        setPageNumber(pageNumber);
     }
     
     
     protected void confirmExecuted() throws SelectorException
     {
-        if (selectOperation == null || !selectOperation.isExecuted())
+        if (!isExecuted())
         {
             throw new SelectorException("execute method must be invoked prior to page access");
         }
+    }
+    
+    
+    protected boolean isExecuted()
+    {
+    	return selectOperation != null && selectOperation.isExecuted();
     }
     
     
@@ -145,7 +177,10 @@ public class PaginatedSelector<R, C> implements AutoCloseable
 
 
     /**
-     * Positions result set cursor to a specific page. If page number is greater than the total number of
+     * Positions result set cursor to a specific page. If not yet executed, then page number will
+     * be the initial page upon {@link #execute()}.
+     * <p.
+     * If page number is greater than the total number of
      * pages, no exception will occur but {@link #selectPage()} will be empty and {@link #selectRow()} will return null.
      * 
      * @param pageNumber position to specific page, pages less than 1 will cause an exception
@@ -156,9 +191,8 @@ public class PaginatedSelector<R, C> implements AutoCloseable
     {
         if (pageNumber > 0)
         {
-            confirmExecuted();
             this.pageNumber = pageNumber;
-            topOfPage();
+            if (isExecuted()) topOfPage();
         }
         else
         {

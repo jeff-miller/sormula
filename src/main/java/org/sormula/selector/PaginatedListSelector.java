@@ -60,6 +60,7 @@ public class PaginatedListSelector<R> extends AbstractPaginatedListSelector<R>
     {
     	int pageSize;
     	Table<R> table;
+    	boolean scrollSensitive;
     	int pageNumber;
     	String whereConditionName;
     	Object[] parameters;
@@ -76,7 +77,7 @@ public class PaginatedListSelector<R> extends AbstractPaginatedListSelector<R>
 
 		public PaginatedListSelector<R> build() throws SelectorException
 		{
-			PaginatedListSelector<R> paginatedListSelector = new PaginatedListSelector<>(pageSize, table);
+			PaginatedListSelector<R> paginatedListSelector = new PaginatedListSelector<>(pageSize, table, scrollSensitive);
 			paginatedListSelector.setPageNumber(pageNumber);
 			paginatedListSelector.setWhere(whereConditionName);
 			if (parameters != null) paginatedListSelector.setParameters(parameters);
@@ -86,11 +87,17 @@ public class PaginatedListSelector<R> extends AbstractPaginatedListSelector<R>
 			return paginatedListSelector; 
 		}
 		
-    	public Builder<R> pageNumber(int pageNumber)
+    	public Builder<R> scrollSensitive(boolean scrollSensitive)
     	{
-    		this.pageNumber = pageNumber;
+    		this.scrollSensitive = scrollSensitive;
     		return this;
     	}   
+        
+        public Builder<R> pageNumber(int pageNumber)
+        {
+            this.pageNumber = pageNumber;
+            return this;
+        }   
     	
     	public Builder<R> where(String whereConditionName)
     	{

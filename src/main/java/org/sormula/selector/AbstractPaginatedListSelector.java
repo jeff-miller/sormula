@@ -27,15 +27,6 @@ public abstract class AbstractPaginatedListSelector<R> extends PaginatedSelector
     ListSelectOperation<R> listSelectOperation;
     
     
-    public abstract static class Builder<R> extends PaginatedSelector.Builder<R>
-    {
-    	public Builder(int pageSize, Table<R> table) 
-    	{
-			super(pageSize, table);
-		}
-    }
-    
-    
     /**
      * Constructs for a page size and table. Scroll sensitivity is false.
      * 

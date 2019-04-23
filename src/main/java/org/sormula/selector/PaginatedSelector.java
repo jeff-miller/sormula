@@ -4,7 +4,6 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
-import org.sormula.Table;
 import org.sormula.operation.OperationException;
 import org.sormula.operation.SelectOperation;
 
@@ -26,29 +25,6 @@ public class PaginatedSelector<R, C> implements AutoCloseable
     int resultSetType;
     int pageNumber;
     SelectOperation<R, C> selectOperation;
-
-    
-    public abstract static class Builder<R>
-    {
-    	protected int pageSize;
-    	protected Table<R> table;
-    	protected int pageNumber;
-    	
-    	public Builder(int pageSize, Table<R> table) 
-    	{
-			this.pageSize = pageSize;
-			this.table = table;
-			pageNumber = 1;
-		}
-    	
-    	public Builder<R> pageNumber(int pageNumber)
-    	{
-    		this.pageNumber = pageNumber;
-    		return this;
-    	}
-
-		public abstract PaginatedListSelector<R> build() throws SelectorException;
-    }
 
     
     /**
@@ -179,7 +155,7 @@ public class PaginatedSelector<R, C> implements AutoCloseable
     /**
      * Positions result set cursor to a specific page. If not yet executed, then page number will
      * be the initial page upon {@link #execute()}.
-     * <p.
+     * <p>
      * If page number is greater than the total number of
      * pages, no exception will occur but {@link #selectPage()} will be empty and {@link #selectRow()} will return null.
      * 

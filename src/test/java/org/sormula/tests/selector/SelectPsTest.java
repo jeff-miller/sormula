@@ -95,7 +95,7 @@ public class SelectPsTest extends DatabaseTest<SormulaPsTest>
                 initExpectedPages(rowsPerPage, "selectByType", "orderById", 1);
             	testPages1();
                 testPages2();
-                testPages2Fluent();
+                testPages2Builder();
             	
             	initExpectedPages(rowsPerPage, "selectByType", "orderById", 2);
             	testPages1();
@@ -117,10 +117,12 @@ public class SelectPsTest extends DatabaseTest<SormulaPsTest>
             initExpectedPages(50, ""/*all*/, "orderByIdDescending");
             testPages1();
             testPages2();
-            testPages2Fluent();
+            testPages2Builder();
             
             initExpectedPages(14, "selectByType", "orderById", 2);
             testPages1();
+            testPages2();
+            testPages2Builder();
             
             commit();
         }
@@ -172,7 +174,6 @@ public class SelectPsTest extends DatabaseTest<SormulaPsTest>
                 selector.setWhere("selectByType");
                 selector.setParameter("type", 2);
                 selector.execute();
-                
                 testExpectedRows(selector);
             }
             
@@ -191,18 +192,17 @@ public class SelectPsTest extends DatabaseTest<SormulaPsTest>
 
             initExpectedPages(14, "selectByType", "orderById", 2);
             
-            try (PaginatedListSelector<SormulaPsTest> selector = PaginatedListSelector.builder(rowsPerPage, getTable())
-            		.pageNumber(3) // start on page 3
-            		.build())
+            try (PaginatedListSelector<SormulaPsTest> selector = 
+            		 PaginatedListSelector.builder(rowsPerPage, getTable())
+            		 .where("selectByType")
+            		 .parameter("type", 2) // tests builder name, value parameter
+            		 .orderByName(orderByName)
+            		 .pageNumber(3) // start on page 3
+            		 .build())
             {
-                selector.setOrderByName(orderByName);
-                selector.setWhere("selectByType");
-                selector.setParameter("type", 2);
-                selector.execute();
-                
                 testExpectedRows(selector);
             }
-            
+
             commit();
         }
     }
@@ -254,18 +254,20 @@ public class SelectPsTest extends DatabaseTest<SormulaPsTest>
         selectOperation.setOrderBy(orderByName);
         selectOperation.setParameters(whereParameters);
         PaginatedSelector<SormulaPsTest, List<SormulaPsTest>> selector = new PaginatedSelector<>(rowsPerPage, selectOperation);
+        selector.execute();
         testPages(selector);
     }
     
     
-    protected void testPages2Fluent() throws SormulaException
+    protected void testPages2Builder() throws SormulaException
     {
-        try (PaginatedListSelector<SormulaPsTest> selector = PaginatedListSelector.builder(rowsPerPage, getTable())
+        try (PaginatedListSelector<SormulaPsTest> selector = 
+        		PaginatedListSelector.builder(rowsPerPage, getTable())
+        		.where(whereConditionName)
+        		.parameters(whereParameters)
+        		.orderByName(orderByName)
         		.build())
         {
-            selector.setOrderByName(orderByName);
-            selector.setWhere(whereConditionName);
-            selector.setParameters(whereParameters);
             testPages(selector);
         }
     }
@@ -278,6 +280,7 @@ public class SelectPsTest extends DatabaseTest<SormulaPsTest>
             selector.setOrderByName(orderByName);
             selector.setWhere(whereConditionName);
             selector.setParameters(whereParameters);
+            selector.execute();
             testPages(selector);
         }
     }
@@ -285,9 +288,7 @@ public class SelectPsTest extends DatabaseTest<SormulaPsTest>
     
     protected void testPages(PaginatedSelector<SormulaPsTest, List<SormulaPsTest>> selector) throws SormulaException
     {
-        selector.execute();
         int lastPage = expectedPageIdMap.size() + 1; 
-
         int testPage;
         
         testPage = lastPage * 2 / 3;

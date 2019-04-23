@@ -1,6 +1,8 @@
 package org.sormula.selector;
 
 import java.sql.ResultSet;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.sormula.Table;
 import org.sormula.operation.ArrayListSelectOperation;
@@ -17,11 +19,14 @@ import org.sormula.operation.ListSelectOperation;
 public class PaginatedListSelector<R> extends AbstractPaginatedListSelector<R>
 {
 	/**
-	 * TODO
-	 * @param <R>
-	 * @param pageSize
-	 * @param table
-	 * @return
+	 * Creates {@link Builder} that will be used to build a {@link PaginatedListSelector}.
+	 * Set builder parameters and then use {@link Builder#build()} to create an instance
+	 * of {@link PaginatedListSelector}.
+	 * 
+	 * @param <R> Class associated with a row in table
+     * @param pageSize rows per page
+     * @param table select rows from this table
+	 * @return builder instance
 	 * @since 4.4
 	 */
     public static <R> Builder<R> builder(int pageSize, Table<R> table)
@@ -30,20 +35,87 @@ public class PaginatedListSelector<R> extends AbstractPaginatedListSelector<R>
     }
     
     
-    public static class Builder<R> extends AbstractPaginatedListSelector.Builder<R>
+    /**
+     * Class for building a {@link PaginatedListSelector} using a fluent style.
+     * <p>
+     * Example:
+     * <blockquote><pre>
+     *     try (PaginatedListSelector&lt;SormulaPsTest&gt; selector = 
+     *         PaginatedListSelector.builder(rowsPerPage, getTable())
+     *         .where("selectByType")
+     *         .parameter("type", 2)
+     *         .orderByName(orderByName)
+     *         .pageNumber(3)
+     *         .build())
+     *     {
+     *         List&lt;SormulaPsTest&gt; selectedPageRows = selector.selectPage();
+     *     }
+     * </pre></blockquote>
+     *  
+     * @author Jeff Miller
+     * @since 4.4
+     * @param <R> Class associated with a row in table
+     */
+    public static class Builder<R>
     {
-		public Builder(int pageSize, Table<R> table) {
-			super(pageSize, table);
+    	int pageSize;
+    	Table<R> table;
+    	int pageNumber;
+    	String whereConditionName;
+    	Object[] parameters;
+    	Map<String, Object> parameterMap;
+    	String orderByName;
+
+		public Builder(int pageSize, Table<R> table) 
+		{
+			this.pageSize = pageSize;
+			this.table = table;
+			pageNumber = 1;
+			parameterMap = new HashMap<>();
 		}
 
-		@Override
 		public PaginatedListSelector<R> build() throws SelectorException
 		{
 			PaginatedListSelector<R> paginatedListSelector = new PaginatedListSelector<>(pageSize, table);
 			paginatedListSelector.setPageNumber(pageNumber);
+			paginatedListSelector.setWhere(whereConditionName);
+			if (parameters != null) paginatedListSelector.setParameters(parameters);
+			parameterMap.forEach((k, v) -> paginatedListSelector.setParameter(k, v));
+			paginatedListSelector.setOrderByName(orderByName);
+			paginatedListSelector.execute();
 			return paginatedListSelector; 
 		}
-    }
+		
+    	public Builder<R> pageNumber(int pageNumber)
+    	{
+    		this.pageNumber = pageNumber;
+    		return this;
+    	}   
+    	
+    	public Builder<R> where(String whereConditionName)
+    	{
+    		this.whereConditionName = whereConditionName;
+    		return this;
+    	}
+    	
+    	public Builder<R> parameters(Object... parameters)
+    	{
+    		this.parameters = parameters;
+    		return this;
+    	}
+    	
+    	public Builder<R> parameter(String name, Object value)
+    	{
+    		parameterMap.put(name, value);
+    		return this;
+    	}
+		
+    	public Builder<R> orderByName(String orderByName)
+    	{
+    		this.orderByName = orderByName;
+    		return this;
+    	}
+	}
     
     
     /**

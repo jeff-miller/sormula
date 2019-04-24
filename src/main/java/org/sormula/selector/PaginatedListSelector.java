@@ -1,8 +1,6 @@
 package org.sormula.selector;
 
 import java.sql.ResultSet;
-import java.util.HashMap;
-import java.util.Map;
 
 import org.sormula.Table;
 import org.sormula.operation.ArrayListSelectOperation;
@@ -55,73 +53,33 @@ public class PaginatedListSelector<R> extends AbstractPaginatedListSelector<R>
      * @author Jeff Miller
      * @since 4.4
      * @param <R> Class associated with a row in table
+     * @param <B> TODO
+     * @param <T> TODO
      */
-    public static class Builder<R>
+    public static class Builder<R> extends AbstractPaginatedListSelector.Builder<R, Builder<R>, PaginatedListSelector<R>>
     {
-    	int pageSize;
+        int pageSize;
     	Table<R> table;
-    	boolean scrollSensitive;
-    	int pageNumber;
-    	String whereConditionName;
-    	Object[] parameters;
-    	Map<String, Object> parameterMap;
-    	String orderByName;
 
 		public Builder(int pageSize, Table<R> table) 
 		{
-			this.pageSize = pageSize;
+		    this.pageSize = pageSize;
 			this.table = table;
-			pageNumber = 1;
-			parameterMap = new HashMap<>();
 		}
 
+		@Override
 		public PaginatedListSelector<R> build() throws SelectorException
 		{
 			PaginatedListSelector<R> paginatedListSelector = new PaginatedListSelector<>(pageSize, table, scrollSensitive);
-			paginatedListSelector.setPageNumber(pageNumber);
-			paginatedListSelector.setWhere(whereConditionName);
-			if (parameters != null) paginatedListSelector.setParameters(parameters);
-			parameterMap.forEach((k, v) -> paginatedListSelector.setParameter(k, v));
-			paginatedListSelector.setOrderByName(orderByName);
-			paginatedListSelector.execute();
+			init(paginatedListSelector);
 			return paginatedListSelector; 
 		}
 		
-    	public Builder<R> scrollSensitive(boolean scrollSensitive)
-    	{
-    		this.scrollSensitive = scrollSensitive;
-    		return this;
-    	}   
-        
-        public Builder<R> pageNumber(int pageNumber)
+        protected void init(PaginatedListSelector<R> instance) throws SelectorException
         {
-            this.pageNumber = pageNumber;
-            return this;
-        }   
-    	
-    	public Builder<R> where(String whereConditionName)
-    	{
-    		this.whereConditionName = whereConditionName;
-    		return this;
-    	}
-    	
-    	public Builder<R> parameters(Object... parameters)
-    	{
-    		this.parameters = parameters;
-    		return this;
-    	}
-    	
-    	public Builder<R> parameter(String name, Object value)
-    	{
-    		parameterMap.put(name, value);
-    		return this;
-    	}
-		
-    	public Builder<R> orderByName(String orderByName)
-    	{
-    		this.orderByName = orderByName;
-    		return this;
-    	}
+            super.init(instance);
+            instance.execute();
+        }
 	}
     
     

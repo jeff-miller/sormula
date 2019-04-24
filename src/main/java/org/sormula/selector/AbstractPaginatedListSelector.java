@@ -1,7 +1,9 @@
 package org.sormula.selector;
 
 import java.sql.ResultSet;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.sormula.Table;
 import org.sormula.annotation.OrderBy;
@@ -26,6 +28,65 @@ public abstract class AbstractPaginatedListSelector<R> extends PaginatedSelector
     Table<R> table;
     ListSelectOperation<R> listSelectOperation;
     
+    
+    /**
+     * TODO
+     * @author Jeff Miller
+     * @since 4.4
+     * @param <R>
+     * @param <B>
+     * @param <T>
+     */
+    public abstract static class Builder<R, B, T extends AbstractPaginatedListSelector<R>> extends PaginatedSelector.Builder<R, B, T>
+    {
+        String whereConditionName;
+        Object[] parameters;
+        Map<String, Object> parameterMap;
+        String orderByName;
+        
+        public Builder()
+        {
+            parameterMap = new HashMap<>();
+        }
+        
+        protected void init(T instance) throws SelectorException
+        {
+            super.init(instance);
+            instance.setWhere(whereConditionName);;
+            if (parameters != null) instance.setParameters(parameters);
+            parameterMap.forEach((k, v) -> instance.setParameter(k, v));
+            instance.setOrderByName(orderByName);
+        }
+        
+        @SuppressWarnings("unchecked")
+        public B where(String whereConditionName)
+        {
+            this.whereConditionName = whereConditionName;
+            return (B)this;
+        }
+        
+        @SuppressWarnings("unchecked")
+        public B parameters(Object... parameters)
+        {
+            this.parameters = parameters;
+            return (B)this;
+        }
+        
+        @SuppressWarnings("unchecked")
+        public B parameter(String name, Object value)
+        {
+            parameterMap.put(name, value);
+            return (B)this;
+        }
+        
+        @SuppressWarnings("unchecked")
+        public B orderByName(String orderByName)
+        {
+            this.orderByName = orderByName;
+            return (B)this;
+        }
+    }
+
     
     /**
      * Constructs for a page size and table. Scroll sensitivity is false.

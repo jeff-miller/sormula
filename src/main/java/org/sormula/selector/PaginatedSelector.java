@@ -28,6 +28,47 @@ public class PaginatedSelector<R, C> implements AutoCloseable
 
     
     /**
+     * TODO
+     * @author Jeff Miller
+     * @since 4.4
+     * @param <R>
+     * @param <B>
+     * @param <T>
+     */
+    public abstract static class Builder<R, B, T extends PaginatedSelector<R, ?>>
+    {
+        protected boolean scrollSensitive;
+        int pageNumber;
+        
+        public Builder()
+        {
+            pageNumber = 1;
+        }
+        
+        public abstract T build() throws SelectorException;
+        
+        protected void init(T instance) throws SelectorException
+        {
+            instance.setPageNumber(pageNumber);
+        }
+        
+        @SuppressWarnings("unchecked")
+        public B scrollSensitive(boolean scrollSensitive)
+        {
+            this.scrollSensitive = scrollSensitive;
+            return (B)this;
+        }   
+        
+        @SuppressWarnings("unchecked")
+        public B pageNumber(int pageNumber)
+        {
+            this.pageNumber = pageNumber;
+            return (B)this;
+        }
+    }
+    
+    
+    /**
      * Constructs for a page size and select operation. Scroll sensitivity is false.
      * 
      * @param pageSize rows per page

@@ -36,7 +36,7 @@ public class PaginatedListSelector<R> extends AbstractPaginatedListSelector<R>
     
     
     /**
-     * Class for building a {@link PaginatedListSelector} using a fluent style.
+     * Class for building a {@link PaginatedListSelector} instance using a fluent style.
      * <p>
      * Example:
      * <blockquote><pre>

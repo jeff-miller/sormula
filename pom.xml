@@ -6,7 +6,7 @@
 
     <groupId>org.sormula</groupId>
     <artifactId>sormula</artifactId>
-    <version>4.3</version>
+    <version>4.4-SNAPSHOT</version>
     
     <name>${project.groupId}:${project.artifactId}</name>
     <description>Object Relational Mapping for Java</description>

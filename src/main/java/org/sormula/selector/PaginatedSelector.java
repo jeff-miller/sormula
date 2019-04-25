@@ -28,12 +28,13 @@ public class PaginatedSelector<R, C> implements AutoCloseable
 
     
     /**
-     * TODO
+     * Base class for builders of {@link PaginatedSelector} objects.
+     * 
      * @author Jeff Miller
      * @since 4.4
-     * @param <R>
-     * @param <B>
-     * @param <T>
+     * @param <R> Class associated with a row in table
+     * @param <B> Class of builder
+     * @param <T> Class of object returned by {@link #build()}
      */
     public abstract static class Builder<R, B, T extends PaginatedSelector<R, ?>>
     {

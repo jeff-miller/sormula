@@ -30,12 +30,13 @@ public abstract class AbstractPaginatedListSelector<R> extends PaginatedSelector
     
     
     /**
-     * TODO
+     * Base class for builders of {@link AbstractPaginatedListSelector} objects.
+     * 
      * @author Jeff Miller
      * @since 4.4
-     * @param <R>
-     * @param <B>
-     * @param <T>
+     * @param <R> Class associated with a row in table
+     * @param <B> Class of builder
+     * @param <T> Class of object returned by {@link #build()}
      */
     public abstract static class Builder<R, B, T extends AbstractPaginatedListSelector<R>> extends PaginatedSelector.Builder<R, B, T>
     {

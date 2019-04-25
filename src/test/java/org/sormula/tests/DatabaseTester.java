@@ -29,7 +29,7 @@ import org.testng.annotations.Test;
  * 
  * @author Jeff Miller
  */
-public class DatabaseTester extends DatabaseTest<SormulaTestDb>
+public class DatabaseTester extends DatabaseTest<Object>
 {
     String schema = "SomeSchema";
     String dataSourceName = "SomeDataSource";

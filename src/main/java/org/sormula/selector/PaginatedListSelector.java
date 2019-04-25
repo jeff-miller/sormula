@@ -53,8 +53,6 @@ public class PaginatedListSelector<R> extends AbstractPaginatedListSelector<R>
      * @author Jeff Miller
      * @since 4.4
      * @param <R> Class associated with a row in table
-     * @param <B> TODO
-     * @param <T> TODO
      */
     public static class Builder<R> extends AbstractPaginatedListSelector.Builder<R, Builder<R>, PaginatedListSelector<R>>
     {

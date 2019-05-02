@@ -38,7 +38,8 @@ public abstract class AbstractPaginatedListSelector<R> extends PaginatedSelector
      * @param <B> Class of builder
      * @param <T> Class of object returned by {@link #build()}
      */
-    public abstract static class Builder<R, B, T extends AbstractPaginatedListSelector<R>> extends PaginatedSelector.Builder<R, B, T>
+    public abstract static class Builder<R, B extends Builder, T extends AbstractPaginatedListSelector<R>> 
+        extends PaginatedSelector.Builder<R, B, T>
     {
         String whereConditionName;
         Object[] parameters;
@@ -50,13 +51,14 @@ public abstract class AbstractPaginatedListSelector<R> extends PaginatedSelector
             parameterMap = new HashMap<>();
         }
         
-        protected void init(T instance) throws SelectorException
+        @Override
+        protected void init(T selector) throws SelectorException
         {
-            super.init(instance);
-            instance.setWhere(whereConditionName);;
-            if (parameters != null) instance.setParameters(parameters);
-            parameterMap.forEach((k, v) -> instance.setParameter(k, v));
-            instance.setOrderByName(orderByName);
+            super.init(selector);
+            selector.setWhere(whereConditionName);;
+            if (parameters != null) selector.setParameters(parameters);
+            parameterMap.forEach((k, v) -> selector.setParameter(k, v));
+            selector.setOrderByName(orderByName);
         }
         
         @SuppressWarnings("unchecked")

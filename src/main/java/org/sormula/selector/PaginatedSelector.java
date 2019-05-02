@@ -36,7 +36,7 @@ public class PaginatedSelector<R, C> implements AutoCloseable
      * @param <B> Class of builder
      * @param <T> Class of object returned by {@link #build()}
      */
-    public abstract static class Builder<R, B, T extends PaginatedSelector<R, ?>>
+    public abstract static class Builder<R, B extends Builder, T extends PaginatedSelector<R, ?>>
     {
         protected boolean scrollSensitive;
         int pageNumber;
@@ -48,9 +48,9 @@ public class PaginatedSelector<R, C> implements AutoCloseable
         
         public abstract T build() throws SelectorException;
         
-        protected void init(T instance) throws SelectorException
+        protected void init(T selector) throws SelectorException
         {
-            instance.setPageNumber(pageNumber);
+            selector.setPageNumber(pageNumber);
         }
         
         @SuppressWarnings("unchecked")
@@ -68,7 +68,7 @@ public class PaginatedSelector<R, C> implements AutoCloseable
         }
     }
     
-    
+      
     /**
      * Constructs for a page size and select operation. Scroll sensitivity is false.
      * 

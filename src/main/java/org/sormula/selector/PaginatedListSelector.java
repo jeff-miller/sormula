@@ -70,14 +70,9 @@ public class PaginatedListSelector<R> extends AbstractPaginatedListSelector<R>
 		{
 			PaginatedListSelector<R> paginatedListSelector = new PaginatedListSelector<>(pageSize, table, scrollSensitive);
 			init(paginatedListSelector);
+			paginatedListSelector.execute();
 			return paginatedListSelector; 
 		}
-		
-        protected void init(PaginatedListSelector<R> instance) throws SelectorException
-        {
-            super.init(instance);
-            instance.execute();
-        }
 	}
     
     

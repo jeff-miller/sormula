@@ -29,6 +29,7 @@ import org.testng.annotations.Test;
  * 
  * @author Jeff Miller
  */
+@Test(singleThreaded=true, groups="fundamental.database")
 public class DatabaseTester extends DatabaseTest<Object>
 {
     String schema = "SomeSchema";

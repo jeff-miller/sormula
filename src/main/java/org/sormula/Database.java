@@ -836,7 +836,7 @@ try (Database database = Database.builder(dataSource)
      * a way to ensure that a custom subclass of {@link Table} is returned from {@link #getTable(Class)}
      * for the table row class. 
      * 
-     * @param table table object to add to map (table row class cannonical name is key)
+     * @param table table object to add to map (table row class canonical name is key)
      */
     public void addTable(Table<?> table)
     {

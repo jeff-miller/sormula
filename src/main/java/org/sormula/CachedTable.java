@@ -50,6 +50,23 @@ import org.sormula.annotation.cache.Cached;
 @Cached
 public class CachedTable<R> extends Table<R> 
 {
+    // TODO
+    public static CBuilder<?> ctbuilder(Database database, Class<?> rowClass)
+    {
+        return new CBuilder<>(database, rowClass);
+    }
+    
+    
+    // TODO
+    public static class CBuilder<R> extends Table.AbstractBuilder<R, CBuilder<R>, CachedTable<R>>
+    {
+        public CBuilder(Database database, Class<R> rowClass) 
+        {
+            super(database, rowClass);
+        }
+    }
+    
+    
 	public CachedTable(Table<R> table) throws SormulaException 
 	{
 		super(table.getDatabase(), table.getRowClass());

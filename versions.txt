@@ -18,9 +18,6 @@ version-jdk             comments
                           ActiveDatabase
                           ActiveTable
                           ActiveTransaction
-                          other active?
-                          
-                          active operations?
                           
                           ArrayListSelectOperation
                           DeleteOperation
@@ -29,16 +26,11 @@ version-jdk             comments
                           LinkedHashMapSelectOperation
                           SaveOperation
                           ScalarSelectOperation
-                          SelectIterator?
                           UpdateOperation
                           
                           aggregate operations
                           
-                          reflect?
-                          
                           PaginatedListSelector
-                          
-                          translator?
                           
                           
 4.3-jdk1.8              - logging use SormulaLoggerFactory, SormulaLogger for logging API independence

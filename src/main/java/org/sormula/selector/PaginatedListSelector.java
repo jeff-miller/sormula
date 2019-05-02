@@ -1,14 +1,16 @@
 package org.sormula.selector;
 
 import java.sql.ResultSet;
+import java.util.List;
 
 import org.sormula.Table;
 import org.sormula.operation.ArrayListSelectOperation;
 import org.sormula.operation.ListSelectOperation;
+import org.sormula.selector.builder.PaginatedListSelectorBuilder;
 
 
 /**
- * {@link AbstractPaginatedListSelector} that is implemented with {@link ArrayListSelectOperation}. 
+ * A selector where each page of rows are a {@link List}. It is implemented with a {@link ArrayListSelectOperation}. 
  * 
  * @author Jeff Miller
  * @since 4.3
@@ -17,9 +19,11 @@ import org.sormula.operation.ListSelectOperation;
 public class PaginatedListSelector<R> extends AbstractPaginatedListSelector<R>
 {
 	/**
-	 * Creates {@link Builder} that will be used to build a {@link PaginatedListSelector}.
-	 * Set builder parameters and then use {@link Builder#build()} to create an instance
+	 * Creates {@link PaginatedListSelectorBuilder} that will be used to build a {@link PaginatedListSelector}.
+	 * Set builder parameters and then use {@link PaginatedListSelectorBuilder#build()} to create an instance
 	 * of {@link PaginatedListSelector}.
+	 * <p>
+	 * This method is optional. You can also use the standard constructors and setter methods to create an instance.
 	 * 
 	 * @param <R> Class associated with a row in table
      * @param pageSize rows per page
@@ -27,53 +31,10 @@ public class PaginatedListSelector<R> extends AbstractPaginatedListSelector<R>
 	 * @return builder instance
 	 * @since 4.4
 	 */
-    public static <R> Builder<R> builder(int pageSize, Table<R> table)
+    public static <R> PaginatedListSelectorBuilder<R> builder(int pageSize, Table<R> table)
     {
-    	return new Builder<R>(pageSize, table);
+    	return new PaginatedListSelectorBuilder<R>(pageSize, table);
     }
-    
-    
-    /**
-     * Class for building a {@link PaginatedListSelector} instance using a fluent style.
-     * <p>
-     * Example:
-     * <blockquote><pre>
-     *     try (PaginatedListSelector&lt;SormulaPsTest&gt; selector = 
-     *         PaginatedListSelector.builder(rowsPerPage, getTable())
-     *         .where("selectByType")
-     *         .parameter("type", 2)
-     *         .orderByName(orderByName)
-     *         .pageNumber(3)
-     *         .build())
-     *     {
-     *         List&lt;SormulaPsTest&gt; selectedPageRows = selector.selectPage();
-     *     }
-     * </pre></blockquote>
-     *  
-     * @author Jeff Miller
-     * @since 4.4
-     * @param <R> Class associated with a row in table
-     */
-    public static class Builder<R> extends AbstractPaginatedListSelector.Builder<R, Builder<R>, PaginatedListSelector<R>>
-    {
-        int pageSize;
-    	Table<R> table;
-
-		public Builder(int pageSize, Table<R> table) 
-		{
-		    this.pageSize = pageSize;
-			this.table = table;
-		}
-
-		@Override
-		public PaginatedListSelector<R> build() throws SelectorException
-		{
-			PaginatedListSelector<R> paginatedListSelector = new PaginatedListSelector<>(pageSize, table, scrollSensitive);
-			init(paginatedListSelector);
-			paginatedListSelector.execute();
-			return paginatedListSelector; 
-		}
-	}
     
     
     /**

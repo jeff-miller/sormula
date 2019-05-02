@@ -1,9 +1,7 @@
 package org.sormula.selector;
 
 import java.sql.ResultSet;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.sormula.Table;
 import org.sormula.annotation.OrderBy;
@@ -28,68 +26,6 @@ public abstract class AbstractPaginatedListSelector<R> extends PaginatedSelector
     Table<R> table;
     ListSelectOperation<R> listSelectOperation;
     
-    
-    /**
-     * Base class for builders of {@link AbstractPaginatedListSelector} objects.
-     * 
-     * @author Jeff Miller
-     * @since 4.4
-     * @param <R> Class associated with a row in table
-     * @param <B> Class of builder
-     * @param <T> Class of object returned by {@link #build()}
-     */
-    public abstract static class Builder<R, B extends Builder, T extends AbstractPaginatedListSelector<R>> 
-        extends PaginatedSelector.Builder<R, B, T>
-    {
-        String whereConditionName;
-        Object[] parameters;
-        Map<String, Object> parameterMap;
-        String orderByName;
-        
-        public Builder()
-        {
-            parameterMap = new HashMap<>();
-        }
-        
-        @Override
-        protected void init(T selector) throws SelectorException
-        {
-            super.init(selector);
-            selector.setWhere(whereConditionName);;
-            if (parameters != null) selector.setParameters(parameters);
-            parameterMap.forEach((k, v) -> selector.setParameter(k, v));
-            selector.setOrderByName(orderByName);
-        }
-        
-        @SuppressWarnings("unchecked")
-        public B where(String whereConditionName)
-        {
-            this.whereConditionName = whereConditionName;
-            return (B)this;
-        }
-        
-        @SuppressWarnings("unchecked")
-        public B parameters(Object... parameters)
-        {
-            this.parameters = parameters;
-            return (B)this;
-        }
-        
-        @SuppressWarnings("unchecked")
-        public B parameter(String name, Object value)
-        {
-            parameterMap.put(name, value);
-            return (B)this;
-        }
-        
-        @SuppressWarnings("unchecked")
-        public B orderByName(String orderByName)
-        {
-            this.orderByName = orderByName;
-            return (B)this;
-        }
-    }
-
     
     /**
      * Constructs for a page size and table. Scroll sensitivity is false.

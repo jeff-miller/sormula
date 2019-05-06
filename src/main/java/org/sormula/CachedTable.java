@@ -17,6 +17,7 @@
 package org.sormula;
 
 import org.sormula.annotation.cache.Cached;
+import org.sormula.builder.CachedTableBuilder;
 
 
 /**
@@ -51,19 +52,10 @@ import org.sormula.annotation.cache.Cached;
 public class CachedTable<R> extends Table<R> 
 {
     // TODO
-    public static CBuilder<?> ctbuilder(Database database, Class<?> rowClass)
+    // TODO name? can't use builder() since it conflicts with super class
+    public static <R> CachedTableBuilder<R> builderCached(Database database, Class<R> rowClass)
     {
-        return new CBuilder<>(database, rowClass);
-    }
-    
-    
-    // TODO
-    public static class CBuilder<R> extends Table.AbstractBuilder<R, CBuilder<R>, CachedTable<R>>
-    {
-        public CBuilder(Database database, Class<R> rowClass) 
-        {
-            super(database, rowClass);
-        }
+        return new CachedTableBuilder<>(database, rowClass);
     }
     
     

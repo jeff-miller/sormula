@@ -22,13 +22,18 @@ import org.sormula.SormulaException;
 
 
 /**
- * TODO
- * @since 4.4
+ * Builder for {@link CachedTable} using a fluent style.
+ * <p>
+ * Example:
+ * <blockquote><pre>
+ * CachedTable&lt;SomeTableRow&gt; cachedTable = 
+ *     CachedTable.builderCached(getDatabase(), SomeTableRow.class).build();
+ * </pre></blockquote>
+ *  
  * @author Jeff Miller
- *
- * @param <R>
- */
-public class CachedTableBuilder<R> extends AbstractTableBuilder<R, CachedTableBuilder<R>, CachedTable<R>>
+ * @since 4.4
+ * @param <R> Class associated with a row in table
+ */public class CachedTableBuilder<R> extends AbstractTableBuilder<R, CachedTableBuilder<R>, CachedTable<R>>
 {
     public CachedTableBuilder(Database database, Class<R> rowClass) 
     {

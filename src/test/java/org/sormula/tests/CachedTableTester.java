@@ -49,9 +49,8 @@ public class CachedTableTester extends DatabaseTest<TableTesterRow>
     @Test
     public void builderCached() throws SormulaException
     {
-        CachedTable<TableTesterRow> cachedTable;
-        CachedTableBuilder<TableTesterRow> cachedTableBuilder = CachedTable.builderCached(getDatabase(), TableTesterRow.class);
-        cachedTable = cachedTableBuilder.build();
+        CachedTable<TableTesterRow> cachedTable = 
+                CachedTable.builderCached(getDatabase(), TableTesterRow.class).build();
         assert cachedTable != null : "cached table builder fail";
     }
 }

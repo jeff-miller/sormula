@@ -125,11 +125,16 @@ public class Table<R> implements TypeTranslatorMap, TransactionListener
     
 
     /**
-     * TODO
-     * @param <R>
-     * @param database
-     * @param rowClass
-     * @return
+     * Creates {@link TableBuilder} that will be used to build a {@link Table}.
+     * Set builder parameters and then use {@link TableBuilder#build()} to create an instance
+     * of {@link Table}.
+     * <p>
+     * This method is optional. You can also use the standard constructor and setter methods to create an instance.
+     * 
+     * @param <R> Class associated with a row in table
+     * @param database database for this table
+     * @param rowClass row objects are of this type
+     * @return builder instance
      * @since 4.4
      */
     public static <R> TableBuilder<R> builder(Database database, Class<R> rowClass)

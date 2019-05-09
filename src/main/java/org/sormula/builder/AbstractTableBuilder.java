@@ -22,13 +22,14 @@ import org.sormula.Table;
 
 
 /**
- * TODO
+ * Base class for {@link Table} builders.
+ * 
  * @since 4.4
  * @author Jeff Miller
  *
- * @param <R>
- * @param <B>
- * @param <T>
+ * @param <R> type of row objects
+ * @param <B> type of builder returned from setter methods
+ * @param <T> type of table returned from {@link #build()}
  */
 public abstract class AbstractTableBuilder<R, B extends AbstractTableBuilder, T extends Table<R>>
 {

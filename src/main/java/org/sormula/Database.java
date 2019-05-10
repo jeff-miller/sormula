@@ -113,7 +113,7 @@ public class Database implements TypeTranslatorMap, AutoCloseable
      * Creates builder for a data source.
      * 
      * @param dataSource data source
-     * @return {@link Database}
+     * @return {@link DatabaseBuilder}
      * @since 4.4
      * @see Database#Database(DataSource)
      */
@@ -127,7 +127,7 @@ public class Database implements TypeTranslatorMap, AutoCloseable
      * Creates builder for a data source name.
      * 
      * @param dataSourceName data source name
-     * @return {@link Database}
+     * @return {@link DatabaseBuilder}
      * @since 4.4
      * @see Database#Database(String)
      */
@@ -141,7 +141,7 @@ public class Database implements TypeTranslatorMap, AutoCloseable
      * Creates builder for a JDBC connection.
      * 
      * @param connection JDBC connection
-     * @return {@link Database}
+     * @return {@link DatabaseBuilder}
      * @since 4.4
      * @see Database#Database(Connection)
      */

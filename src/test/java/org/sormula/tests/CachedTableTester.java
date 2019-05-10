@@ -19,7 +19,7 @@ package org.sormula.tests;
 import org.sormula.CachedTable;
 import org.sormula.SormulaException;
 import org.sormula.builder.CachedTableBuilder;
-import org.sormula.tests.builder.TableBuilderTestRow;
+import org.sormula.tests.builder.BuilderTestRow;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
@@ -31,7 +31,7 @@ import org.testng.annotations.Test;
  * @author Jeff Miller
  */
 @Test(singleThreaded=true, groups="fundamental.table")
-public class CachedTableTester extends DatabaseTest<TableBuilderTestRow>
+public class CachedTableTester extends DatabaseTest<BuilderTestRow>
 {
     @BeforeClass
     public void setUp() throws Exception
@@ -50,8 +50,8 @@ public class CachedTableTester extends DatabaseTest<TableBuilderTestRow>
     @Test
     public void builderCached() throws SormulaException
     {
-        CachedTable<TableBuilderTestRow> cachedTable = 
-                CachedTable.builderCached(getDatabase(), TableBuilderTestRow.class).build();
+        CachedTable<BuilderTestRow> cachedTable = 
+                CachedTable.builderCached(getDatabase(), BuilderTestRow.class).build();
         assert cachedTable != null : "cached table builder fail";
     }
 }

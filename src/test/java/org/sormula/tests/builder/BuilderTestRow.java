@@ -17,23 +17,23 @@
 package org.sormula.tests.builder;
 
 /**
- * Row class for {@link DatabaseTester}.
+ * Row class for tests in org.sormula.tests.builder.
  * 
  * @author Jeff Miller
  */
-public class TableBuilderTestRow
+public class BuilderTestRow
 {
     int id;
     int type;
     String description;
     
     
-    public TableBuilderTestRow()
+    public BuilderTestRow()
     {
     }
 
     
-    public TableBuilderTestRow(int id, int type, String description)
+    public BuilderTestRow(int id, int type, String description)
     {
         this.id = id;
         this.type = type;

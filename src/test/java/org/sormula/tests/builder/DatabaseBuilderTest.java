@@ -14,13 +14,14 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.sormula.tests;
+package org.sormula.tests.builder;
 
 import java.sql.Connection;
 
 import javax.sql.DataSource;
 
 import org.sormula.Database;
+import org.sormula.tests.DatabaseTest;
 import org.testng.annotations.Test;
 
 
@@ -29,8 +30,8 @@ import org.testng.annotations.Test;
  * 
  * @author Jeff Miller
  */
-@Test(singleThreaded=true, groups="fundamental.database")
-public class DatabaseTester extends DatabaseTest<Object>
+@Test(singleThreaded=true, groups="builder.database")
+public class DatabaseBuilderTest extends DatabaseTest<Object>
 {
     String schema = "SomeSchema";
     String dataSourceName = "SomeDataSource";

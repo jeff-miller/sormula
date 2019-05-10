@@ -14,26 +14,26 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.sormula.tests;
+package org.sormula.tests.builder;
 
 /**
- * Row class for {@link DatabaseTester.
+ * Row class for {@link DatabaseTester}.
  * 
  * @author Jeff Miller
  */
-public class TableTesterRow
+public class TableBuilderTestRow
 {
     int id;
     int type;
     String description;
     
     
-    public TableTesterRow()
+    public TableBuilderTestRow()
     {
     }
 
     
-    public TableTesterRow(int id, int type, String description)
+    public TableBuilderTestRow(int id, int type, String description)
     {
         this.id = id;
         this.type = type;

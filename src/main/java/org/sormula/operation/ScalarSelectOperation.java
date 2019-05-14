@@ -216,6 +216,8 @@ public class ScalarSelectOperation<R> extends SqlOperation<R> implements Iterabl
     @Override
     public void execute() throws OperationException
     {
+        if (log.isDebugEnabled()) log.debug("execute()");
+        
         cachePrimaryKeySelect = false;
         cacheContainsPrimaryKey = false;
         initOperationTime();

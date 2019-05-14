@@ -25,7 +25,8 @@ import org.sormula.selector.SelectorException;
  * @since 4.4
  * @param <R> Class associated with a row in table
  */
-public class PaginatedListSelectorBuilder<R> extends AbstractPaginatedListSelectorBuilder<R, PaginatedListSelectorBuilder<R>, PaginatedListSelector<R>>
+public class PaginatedListSelectorBuilder<R> 
+    extends AbstractPaginatedListSelectorBuilder<R, PaginatedListSelectorBuilder<R>, PaginatedListSelector<R>>
 {
     int pageSize;
     Table<R> table;
@@ -41,8 +42,6 @@ public class PaginatedListSelectorBuilder<R> extends AbstractPaginatedListSelect
     {
         PaginatedListSelector<R> paginatedListSelector = new PaginatedListSelector<>(pageSize, table, scrollSensitive);
         init(paginatedListSelector);
-        paginatedListSelector.execute();
         return paginatedListSelector; 
     }
 }
-

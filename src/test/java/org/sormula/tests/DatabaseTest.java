@@ -45,6 +45,8 @@ import org.sormula.Table;
 import org.sormula.cache.Cache;
 import org.sormula.log.SormulaLogger;
 import org.sormula.log.SormulaLoggerFactory;
+import org.testng.annotations.AfterSuite;
+import org.testng.annotations.BeforeSuite;
 
 
 /** 
@@ -135,6 +137,20 @@ public class DatabaseTest<R>
     List<R> all;
     boolean dataSourceDatabase;
     boolean testScrollableResultSets;
+
+    
+    @BeforeSuite
+    public void beforeSuite()
+    {
+        log.info("beforeSuite()");
+    }
+
+    
+    @AfterSuite
+    public void afterSuite()
+    {
+        log.info("afterSuite()");
+    }
     
     
     public DatabaseTest() 

@@ -200,6 +200,7 @@ public class SelectPsTest extends DatabaseTest<SormulaPsTest>
             		 .pageNumber(3) // start on page 3
             		 .build())
             {
+                selector.execute();
                 testExpectedRows(selector);
             }
 
@@ -268,6 +269,7 @@ public class SelectPsTest extends DatabaseTest<SormulaPsTest>
         		.orderByName(orderByName)
         		.build())
         {
+            selector.execute();
             testPages(selector);
         }
     }

@@ -23,7 +23,7 @@ import org.sormula.selector.SelectorException;
  *  
  * @author Jeff Miller
  * @since 4.4
- * @param <R> Class associated with a row in table
+ * @param <R> class associated with a row in table
  */
 public class PaginatedListSelectorBuilder<R> 
     extends AbstractPaginatedListSelectorBuilder<R, PaginatedListSelectorBuilder<R>, PaginatedListSelector<R>>

@@ -9,12 +9,12 @@ import org.sormula.operation.SelectOperation;
  * 
  * @author Jeff Miller
  * @since 4.4
- * @param <R> Class associated with a row in table
- * @param <B> Class of builder
- * @param <T> Class of object returned by {@link #build()}
+ * @param <R> class associated with a row in table
+ * @param <C> collection type returned 
+ * @param <B> class of builder
+ * @param <T> class of object returned by {@link #build()}
  */
-// TODO <R, C, B extends...
-public abstract class SelectOperationBuilder<R, B extends SelectOperationBuilder, T extends SelectOperation<R, ?>>
+public abstract class SelectOperationBuilder<R, C, B extends SelectOperationBuilder, T extends SelectOperation<R, C>>
     extends ScalarSelectOperationBuilder<R, B, T>
 {
     int fetchSize;

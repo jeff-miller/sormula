@@ -1,6 +1,7 @@
 package org.sormula.selector.builder;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.sormula.selector.AbstractPaginatedListSelector;
@@ -12,12 +13,12 @@ import org.sormula.selector.SelectorException;
  * 
  * @author Jeff Miller
  * @since 4.4
- * @param <R> Class associated with a row in table
- * @param <B> Class of builder
- * @param <T> Class of object returned by {@link #build()}
+ * @param <R> class associated with a row in table
+ * @param <B> class of builder
+ * @param <T> class of object returned by {@link #build()}
  */
 public abstract class AbstractPaginatedListSelectorBuilder<R, B extends PaginatedSelectorBuilder, T extends AbstractPaginatedListSelector<R>> 
-    extends PaginatedSelectorBuilder<R, B, T>
+    extends PaginatedSelectorBuilder<R, List<R>, B, T>
 {
     String whereConditionName;
     Object[] parameters;

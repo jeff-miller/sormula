@@ -9,11 +9,12 @@ import org.sormula.selector.SelectorException;
  * 
  * @author Jeff Miller
  * @since 4.4
- * @param <R> Class associated with a row in table
- * @param <B> Class of builder
- * @param <T> Class of object returned by {@link #build()}
+ * @param <R> class associated with a row in table
+ * @param <C> collection type for one page
+ * @param <B> class of builder
+ * @param <T> class of object returned by {@link #build()}
  */
-public abstract class PaginatedSelectorBuilder<R, B extends PaginatedSelectorBuilder, T extends PaginatedSelector<R, ?>>
+public abstract class PaginatedSelectorBuilder<R, C, B extends PaginatedSelectorBuilder, T extends PaginatedSelector<R, C>>
 {
     protected boolean scrollSensitive;
     int pageNumber;

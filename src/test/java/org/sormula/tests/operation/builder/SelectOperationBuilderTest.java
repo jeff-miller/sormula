@@ -88,7 +88,7 @@ public class SelectOperationBuilderTest extends DatabaseTest<SelectOperationBuil
                 .parameters(5)
                 .build())
         {
-            operation.selectAll().forEach(row -> {assert row.getType() == 5 : "row is not type 5";});
+            operation.selectAll(5).forEach(row -> {assert row.getType() == 5 : "row is not type 5";});
         }
         commit();
     }

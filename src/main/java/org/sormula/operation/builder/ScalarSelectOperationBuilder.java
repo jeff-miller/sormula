@@ -9,9 +9,9 @@ import org.sormula.operation.ScalarSelectOperation;
  * 
  * @author Jeff Miller
  * @since 4.4
- * @param <R> Class associated with a row in table
- * @param <B> Class of builder
- * @param <T> Class of object returned by {@link #build()}
+ * @param <R> class associated with a row in table
+ * @param <B> class of builder
+ * @param <T> class of object returned by {@link #build()}
  */
 public abstract class ScalarSelectOperationBuilder<R, B extends ScalarSelectOperationBuilder, T extends ScalarSelectOperation<R>>
     extends SqlOperationBuilder<R, B, T>

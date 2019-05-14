@@ -9,9 +9,9 @@ import org.sormula.operation.SqlOperation;
  * 
  * @author Jeff Miller
  * @since 4.4
- * @param <R> Class associated with a row in table
- * @param <B> Class of builder
- * @param <T> Class of object returned by {@link #build()}
+ * @param <R> class associated with a row in table
+ * @param <B> class of builder
+ * @param <T> class of object returned by {@link #build()}
  */
 public abstract class SqlOperationBuilder<R, B extends SqlOperationBuilder, T extends SqlOperation<R>>
 {

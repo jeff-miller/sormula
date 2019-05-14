@@ -94,6 +94,7 @@ public class DatabaseTest<R>
     @BeforeSuite
     public void beforeSuite()
     {
+        log.info("----beforeSuite()"); // TODO
         if (log.isDebugEnabled()) log.debug("beforeSuite()");
         initJdbcProperties();
         initTestSeed();
@@ -173,6 +174,7 @@ public class DatabaseTest<R>
     @AfterSuite
     public void afterSuite()
     {
+        log.info("----afterSuite()"); // TODO
         if (log.isDebugEnabled()) log.debug("afterSuite()");
         sqlShutdown();
         driverShutdown();
@@ -224,6 +226,7 @@ public class DatabaseTest<R>
     @BeforeClass
     public void beforeClass()
     {
+        log.info("----beforeClass()"); // TODO
         // each instance must use independent Random instance
         random = new Random(testSeed);
     }

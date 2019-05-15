@@ -46,7 +46,6 @@ import org.sormula.cache.Cache;
 import org.sormula.log.SormulaLogger;
 import org.sormula.log.SormulaLoggerFactory;
 import org.testng.annotations.AfterSuite;
-import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeSuite;
 
 
@@ -91,10 +90,9 @@ public class DatabaseTest<R>
     boolean testScrollableResultSets;
 
     
-    @BeforeSuite
+    @BeforeSuite(alwaysRun = true)
     public void beforeSuite()
     {
-        log.info("----beforeSuite()"); // TODO
         if (log.isDebugEnabled()) log.debug("beforeSuite()");
         initJdbcProperties();
         initTestSeed();
@@ -103,6 +101,15 @@ public class DatabaseTest<R>
         initSecurity();
     }
 
+    
+    @AfterSuite(alwaysRun = true)
+    public void afterSuite()
+    {
+        if (log.isDebugEnabled()) log.debug("afterSuite()");
+        sqlShutdown();
+        driverShutdown();
+    }
+    
     
     protected void initJdbcProperties()
     {
@@ -169,16 +176,6 @@ public class DatabaseTest<R>
         // see DERBY-6648
         System.setSecurityManager(null);
     }
-
-    
-    @AfterSuite
-    public void afterSuite()
-    {
-        log.info("----afterSuite()"); // TODO
-        if (log.isDebugEnabled()) log.debug("afterSuite()");
-        sqlShutdown();
-        driverShutdown();
-    }
     
     
     protected void sqlShutdown()
@@ -220,15 +217,6 @@ public class DatabaseTest<R>
         {
             log.error("driver shutdown error", e);
         }
-    }
-    
-    
-    @BeforeClass
-    public void beforeClass()
-    {
-        log.info("----beforeClass()"); // TODO
-        // each instance must use independent Random instance
-        random = new Random(testSeed);
     }
     
     
@@ -386,6 +374,10 @@ public class DatabaseTest<R>
         }
         
         initMetaDataProperties();
+        
+        // each instance must use independent Random instance
+        // create here since dependent upon testSeed
+        random = new Random(testSeed);
     }
     
     

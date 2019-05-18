@@ -24,8 +24,6 @@ import org.sormula.SormulaException;
 import org.sormula.Table;
 import org.sormula.tests.DatabaseTest;
 import org.sormula.translator.TypeTranslator;
-import org.testng.annotations.AfterClass;
-import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 
@@ -40,10 +38,10 @@ public class TypeTranslatorTest extends DatabaseTest<SormulaTestTT>
     SormulaTestTT inserted;
     
     
-    @BeforeClass
-    public void setUp() throws Exception
+    @Override
+    protected void open() throws Exception
     {
-        openDatabase();
+        super.open();
         
         // createTable will use this table with custom type translator
         getDatabase().addTable(new Table<SormulaTestTT>(getDatabase(), SormulaTestTT.class)
@@ -68,13 +66,6 @@ public class TypeTranslatorTest extends DatabaseTest<SormulaTestTT>
             " testEnum SMALLINT " + // convert Enum to/from int's
             ")"
         );
-    }
-
-
-    @AfterClass
-    public void tearDown() throws Exception
-    {
-        closeDatabase();
     }
     
     

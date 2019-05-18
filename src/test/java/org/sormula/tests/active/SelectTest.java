@@ -22,8 +22,6 @@ import org.sormula.active.ActiveDatabase;
 import org.sormula.active.ActiveTable;
 import org.sormula.log.SormulaLogger;
 import org.sormula.log.SormulaLoggerFactory;
-import org.testng.annotations.AfterClass;
-import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 
@@ -37,18 +35,11 @@ public class SelectTest extends ActiveDatabaseTest<SormulaTestAR>
 {
     private static final SormulaLogger log = SormulaLoggerFactory.getClassLogger();
     
-    @BeforeClass
-    public void setUp() throws Exception
+    @Override
+    protected void open() throws Exception
     {
-        openDatabase();
+        super.open();
         createTable(SormulaTestAR.class);
-    }
-    
-    
-    @AfterClass
-    public void tearDown() throws Exception
-    {
-        closeDatabase();
     }
 
     

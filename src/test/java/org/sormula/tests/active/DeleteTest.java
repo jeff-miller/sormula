@@ -19,8 +19,6 @@ package org.sormula.tests.active;
 import java.util.Set;
 
 import org.sormula.active.ActiveTable;
-import org.testng.annotations.AfterClass;
-import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 
@@ -32,18 +30,11 @@ import org.testng.annotations.Test;
 @Test(singleThreaded=true, groups="active.delete", dependsOnGroups="active.insert")
 public class DeleteTest extends ActiveDatabaseTest<SormulaTestAR>
 {
-    @BeforeClass
-    public void setUp() throws Exception
+    @Override
+    protected void open() throws Exception
     {
-        openDatabase();
+        super.open();
         createTable(SormulaTestAR.class);
-    }
-    
-    
-    @AfterClass
-    public void tearDown() throws Exception
-    {
-        closeDatabase();
     }
     
     

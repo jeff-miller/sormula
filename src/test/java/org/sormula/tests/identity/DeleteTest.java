@@ -21,8 +21,6 @@ import org.sormula.annotation.Column;
 import org.sormula.log.SormulaLogger;
 import org.sormula.log.SormulaLoggerFactory;
 import org.sormula.tests.DatabaseTest;
-import org.testng.annotations.AfterClass;
-import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 
@@ -36,28 +34,19 @@ import org.testng.annotations.Test;
 public class DeleteTest extends DatabaseTest<IdentityTest>
 {
     private static final SormulaLogger log = SormulaLoggerFactory.getClassLogger();
+
     
-    @BeforeClass
-    public void setUp() throws Exception
+    @Override
+    protected void open() throws Exception
     {
         if (isTestIdentity())
         {
-            openDatabase();
+            super.open();
             createTable(IdentityTest.class);
         }
         else
         {
             log.info("skipping identity test " + getClass());
-        }
-    }
-    
-    
-    @AfterClass
-    public void tearDown() throws Exception
-    {
-        if (isTestIdentity())
-        {
-            closeDatabase();
         }
     }
     

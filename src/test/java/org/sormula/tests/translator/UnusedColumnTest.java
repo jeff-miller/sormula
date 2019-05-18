@@ -19,8 +19,6 @@ package org.sormula.tests.translator;
 import org.sormula.SormulaException;
 import org.sormula.annotation.UnusedColumn;
 import org.sormula.tests.DatabaseTest;
-import org.testng.annotations.AfterClass;
-import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 
@@ -35,10 +33,10 @@ public class UnusedColumnTest extends DatabaseTest<SormulaTest3>
     private static final int primaryKey = 9999;
     
     
-    @BeforeClass
-    public void setUp() throws Exception
+    @Override
+    protected void open() throws Exception
     {
-        openDatabase();
+        super.open();
         createTable(SormulaTest3.class, 
             "CREATE TABLE " + getSchemaPrefix() + SormulaTest3.class.getSimpleName() + " (" +
             " testInteger INTEGER NOT NULL," +
@@ -46,13 +44,6 @@ public class UnusedColumnTest extends DatabaseTest<SormulaTest3>
             " unusedString VARCHAR(10) NOT NULL" +
             ")"
         );
-    }
-    
-    
-    @AfterClass
-    public void tearDown() throws Exception
-    {
-        closeDatabase();
     }
     
     

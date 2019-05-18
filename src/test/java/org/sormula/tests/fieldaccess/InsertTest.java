@@ -22,8 +22,6 @@ import org.sormula.annotation.Column;
 import org.sormula.annotation.Row;
 import org.sormula.operation.ScalarSelectOperation;
 import org.sormula.tests.DatabaseTest;
-import org.testng.annotations.AfterClass;
-import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 
@@ -35,10 +33,10 @@ import org.testng.annotations.Test;
 @Test(singleThreaded=true, groups="fieldaccess.insert")
 public class InsertTest extends DatabaseTest<SormulaFaTestParent>
 {
-    @BeforeClass
-    public void setUp() throws Exception
+    @Override
+    protected void open() throws Exception
     {
-        openDatabase();
+        super.open();
         createTable(SormulaFaTestParent.class, 
             "CREATE TABLE " + getSchemaPrefix() + SormulaFaTestParent.class.getSimpleName() + " (" +
             " parentid INTEGER NOT NULL PRIMARY KEY," +
@@ -58,13 +56,6 @@ public class InsertTest extends DatabaseTest<SormulaFaTestParent>
                 ")"
             );
         childN.closeDatabase();
-    }
-    
-    
-    @AfterClass
-    public void tearDown() throws Exception
-    {
-        closeDatabase();
     }
     
 

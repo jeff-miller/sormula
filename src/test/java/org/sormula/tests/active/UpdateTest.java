@@ -22,8 +22,6 @@ import org.sormula.active.ActiveDatabase;
 import org.sormula.active.ActiveException;
 import org.sormula.active.ActiveTable;
 import org.sormula.active.ActiveTransaction;
-import org.testng.annotations.AfterClass;
-import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 
@@ -35,18 +33,11 @@ import org.testng.annotations.Test;
 @Test(singleThreaded=true, groups="active.update", dependsOnGroups="active.insert")
 public class UpdateTest extends ActiveDatabaseTest<SormulaTestAR>
 {
-    @BeforeClass
-    public void setUp() throws Exception
+    @Override
+    protected void open() throws Exception
     {
-        openDatabase();
+        super.open();
         createTable(SormulaTestAR.class);
-    }
-    
-    
-    @AfterClass
-    public void tearDown() throws Exception
-    {
-        closeDatabase();
     }
     
     

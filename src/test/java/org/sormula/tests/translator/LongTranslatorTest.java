@@ -23,8 +23,6 @@ import org.sormula.log.SormulaLogger;
 import org.sormula.log.SormulaLoggerFactory;
 import org.sormula.tests.DatabaseTest;
 import org.sormula.translator.standard.LongTranslator;
-import org.testng.annotations.AfterClass;
-import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 
@@ -43,12 +41,12 @@ public class LongTranslatorTest extends DatabaseTest<SormulaTestLong>
 	SormulaTestLong inserted;
     
     
-    @BeforeClass
-    public void setUp() throws Exception
+    @Override
+    protected void open() throws Exception
     {
         if (isTestLong())
         {
-            openDatabase();
+            super.open();
             createTable(SormulaTestLong.class, 
                 "CREATE TABLE " + getSchemaPrefix() + SormulaTestLong.class.getSimpleName() + " (" +
                 " testLong1 BIGINT," +
@@ -56,16 +54,6 @@ public class LongTranslatorTest extends DatabaseTest<SormulaTestLong>
                 " testLong3 BIGINT" +
                 ")"
             );
-        }
-    }
-    
-    
-    @AfterClass
-    public void tearDown() throws Exception
-    {
-        if (isTestLong())
-        {
-            closeDatabase();
         }
     }
     

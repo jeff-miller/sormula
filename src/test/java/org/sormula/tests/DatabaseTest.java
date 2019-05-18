@@ -45,6 +45,8 @@ import org.sormula.Table;
 import org.sormula.cache.Cache;
 import org.sormula.log.SormulaLogger;
 import org.sormula.log.SormulaLoggerFactory;
+import org.testng.annotations.AfterClass;
+import org.testng.annotations.BeforeClass;
 
 
 /** 
@@ -151,6 +153,56 @@ public class DatabaseTest<R>
         // some databases require security permissions, turn off all java security checks since this is not confidential information
         // see DERBY-6648
         System.setSecurityManager(null);
+    }
+    
+    
+    /**
+     * All tests will inherit this method. Don't add BeforeClass annotation to specific tests.
+     * 
+     * @throws Exception if error
+     * @see #open()
+     */
+    @BeforeClass(alwaysRun = true)
+    public void beforeClass() throws Exception
+    {
+        if (log.isDebugEnabled()) log.debug("beforeClass() for " + getClass().getName());
+        open();
+    }
+    
+    
+    /**
+     * Default before class method. Override this method to change. Do not override {@link #beforeClass()}.
+     * 
+     * @throws Exception if error
+     */
+    protected void open() throws Exception
+    {
+        openDatabase();
+    }
+    
+    
+    /**
+     * All tests will inherit this method. Don't add AfterClass annotation to specific tests.
+     * 
+     * @throws Exception if error
+     * @see #close()
+     */
+    @AfterClass(alwaysRun = true)
+    public void afterClass() throws Exception
+    {
+        if (log.isDebugEnabled()) log.debug("afterClass() for " + getClass().getName());
+        close();
+    }
+    
+    
+    /**
+     * Default after class method. Override this method to change. Do not override {@link #afterClass()}.
+     * 
+     * @throws Exception if error
+     */
+    protected void close() throws Exception
+    {
+        closeDatabase(); 
     }
     
     
@@ -420,49 +472,52 @@ public class DatabaseTest<R>
     
     public void closeDatabase()
     {
-        database.logTimings();
-        
-        if (Boolean.parseBoolean(System.getProperty("cache.statistics")))
+        if (database != null) // skip if database is not open
         {
-            // log cache statistics
-            Cache<R> cache = getTable().getCache();
-            if (cache != null) cache.log();
-        }
-        
-        try
-        {
-            if (!dataSourceDatabase) 
+            database.logTimings();
+            
+            if (Boolean.parseBoolean(System.getProperty("cache.statistics")))
             {
-                // database instance created without data source 
-                // database.close() only closes connection if data source used
-                if (log.isDebugEnabled()) log.debug("close connection");
-                database.getConnection().close();
+                // log cache statistics
+                Cache<R> cache = getTable().getCache();
+                if (cache != null) cache.log();
             }
             
-            if (log.isDebugEnabled()) log.debug("close sormula database");
-            database.close();
-            
-            if (sqlShutdown.length() > 0)
+            try
             {
-                if (log.isDebugEnabled()) log.debug("execute sqlShutdown=" + sqlShutdown);
-                Connection connection = getConnection();
-                Statement statement = connection.createStatement();
-                statement.execute(sqlShutdown);
-                statement.close();
-                if (useTransacation) connection.commit();
-                if (log.isDebugEnabled()) log.debug("close shutdown connection");
-                connection.close();
+                if (!dataSourceDatabase) 
+                {
+                    // database instance created without data source 
+                    // database.close() only closes connection if data source used
+                    if (log.isDebugEnabled()) log.debug("close connection");
+                    database.getConnection().close();
+                }
+                
+                if (log.isDebugEnabled()) log.debug("close sormula database");
+                database.close();
+                
+                if (sqlShutdown.length() > 0)
+                {
+                    if (log.isDebugEnabled()) log.debug("execute sqlShutdown=" + sqlShutdown);
+                    Connection connection = getConnection();
+                    Statement statement = connection.createStatement();
+                    statement.execute(sqlShutdown);
+                    statement.close();
+                    if (useTransacation) connection.commit();
+                    if (log.isDebugEnabled()) log.debug("close shutdown connection");
+                    connection.close();
+                }
+                
+                if (driverShutdown.length() > 0)
+                {
+                    if (log.isDebugEnabled()) log.debug("execute driverShutdown=" + driverShutdown);
+                    DriverManager.getConnection(driverShutdown);
+                }
             }
-            
-            if (driverShutdown.length() > 0)
+            catch (SQLException e)
             {
-                if (log.isDebugEnabled()) log.debug("execute driverShutdown=" + driverShutdown);
-                DriverManager.getConnection(driverShutdown);
+                log.error("error closing database", e);
             }
-        }
-        catch (SQLException e)
-        {
-            log.error("error closing database", e);
         }
     }
     

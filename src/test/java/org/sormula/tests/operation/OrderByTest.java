@@ -24,8 +24,6 @@ import org.sormula.operation.ArrayListSelectOperation;
 import org.sormula.operation.ListSelectOperation;
 import org.sormula.operation.OperationException;
 import org.sormula.tests.DatabaseTest;
-import org.testng.annotations.AfterClass;
-import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 
@@ -37,18 +35,11 @@ import org.testng.annotations.Test;
 @Test(singleThreaded=true, groups="operation.order", dependsOnGroups="operation.insert")
 public class OrderByTest extends DatabaseTest<SormulaTest4>
 {
-    @BeforeClass
-    public void setUp() throws Exception
+    @Override
+    protected void open() throws Exception
     {
-        openDatabase();
+        super.open();
         createTable(SormulaTest4.class);
-    }
-    
-    
-    @AfterClass
-    public void tearDown() throws Exception
-    {
-        closeDatabase();
     }
 
     

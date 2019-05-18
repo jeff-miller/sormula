@@ -19,8 +19,6 @@ package org.sormula.tests.operation;
 import org.sormula.Table;
 import org.sormula.tests.DatabaseTest;
 import org.sormula.tests.TestDatabase;
-import org.testng.annotations.AfterClass;
-import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 
@@ -32,18 +30,11 @@ import org.testng.annotations.Test;
 @Test(singleThreaded=true, groups="operation.update", dependsOnGroups="operation.insert")
 public class SaveTestManyConnections extends DatabaseTest<SormulaTest4>
 {
-    @BeforeClass
-    public void setUp() throws Exception
+    @Override
+    protected void open() throws Exception
     {
-        openDatabase();
+        super.open();
         createTable(SormulaTest4.class);
-    }
-    
-    
-    @AfterClass
-    public void tearDown() throws Exception
-    {
-        closeDatabase();
     }
     
     

@@ -19,8 +19,6 @@ package org.sormula.tests.cascade.symbolic;
 import org.sormula.SormulaException;
 import org.sormula.Table;
 import org.sormula.tests.DatabaseTest;
-import org.testng.annotations.AfterClass;
-import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 
@@ -32,10 +30,10 @@ import org.testng.annotations.Test;
 @Test(singleThreaded=true, groups="cascade.insert")
 public class InsertTest extends DatabaseTest<SormulaSymParent>
 {
-    @BeforeClass
-    public void setUp() throws Exception
+    @Override
+    protected void open() throws Exception
     {
-        openDatabase();
+        super.open();
         createTable(SormulaSymParent.class, 
             "CREATE TABLE " + getSchemaPrefix() + SormulaSymParent.class.getSimpleName() + " (" +
             " parentid INTEGER PRIMARY KEY," +
@@ -54,13 +52,6 @@ public class InsertTest extends DatabaseTest<SormulaSymParent>
                 ")"
             );
         child.closeDatabase();
-    }
-    
-    
-    @AfterClass
-    public void tearDown() throws Exception
-    {
-        closeDatabase();
     }
     
     

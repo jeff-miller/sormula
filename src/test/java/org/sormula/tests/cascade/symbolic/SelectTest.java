@@ -23,8 +23,6 @@ import org.sormula.Table;
 import org.sormula.annotation.cascade.OneToManyCascade;
 import org.sormula.annotation.cascade.SelectCascade;
 import org.sormula.tests.DatabaseTest;
-import org.testng.annotations.AfterClass;
-import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 
@@ -37,18 +35,11 @@ import org.testng.annotations.Test;
 @Test(singleThreaded=true, groups="cascade.select", dependsOnGroups="cascade.insert")
 public class SelectTest extends DatabaseTest<SormulaSymParent>
 {
-    @BeforeClass
-    public void setUp() throws Exception
+    @Override
+    protected void open() throws Exception
     {
-        openDatabase();
+        super.open();
         createTable(SormulaSymParent.class);
-    }
-    
-    
-    @AfterClass
-    public void tearDown() throws Exception
-    {
-        closeDatabase();
     }
 
     

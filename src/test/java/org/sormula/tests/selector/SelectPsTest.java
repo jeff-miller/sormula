@@ -30,8 +30,6 @@ import org.sormula.selector.PaginatedListSelector;
 import org.sormula.selector.PaginatedSelector;
 import org.sormula.selector.SelectorException;
 import org.sormula.tests.DatabaseTest;
-import org.testng.annotations.AfterClass;
-import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 
@@ -52,25 +50,18 @@ public class SelectPsTest extends DatabaseTest<SormulaPsTest>
 	Map<Integer, List<Integer>> expectedPageIdMap;
 	
 	
-    @BeforeClass
-    public void setUp() throws Exception
+    @Override
+    protected void open() throws Exception
     {
-        openDatabase();
         if (isTestScrollableResultSets())
         {
+            super.open();
             createTable(SormulaPsTest.class);
         }
         else
         {
             log.info("skipping tests for " + PaginatedSelector.class.getName());
         }
-    }
-    
-    
-    @AfterClass
-    public void tearDown() throws Exception
-    {
-        closeDatabase();
     }
 
     

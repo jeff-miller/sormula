@@ -22,8 +22,6 @@ import java.util.Map;
 
 import org.sormula.SormulaException;
 import org.sormula.tests.DatabaseTest;
-import org.testng.annotations.AfterClass;
-import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 
@@ -40,10 +38,10 @@ public class InsertTest extends DatabaseTest<ZeroAnnotationTest>
     boolean postMethod;
 
     
-    @BeforeClass
-    public void setUp() throws Exception
+    @Override
+    protected void open() throws Exception
     {
-        openDatabase();
+        super.open();
         createTable(ZeroAnnotationTest.class, 
             "CREATE TABLE " + getSchemaPrefix() + ZeroAnnotationTest.class.getSimpleName() + " (" +
             " zatid INTEGER NOT NULL PRIMARY KEY," +
@@ -63,13 +61,6 @@ public class InsertTest extends DatabaseTest<ZeroAnnotationTest>
                 ")"
             );
         child.closeDatabase();
-    }
-    
-    
-    @AfterClass
-    public void tearDown() throws Exception
-    {
-        closeDatabase();
     }
     
     

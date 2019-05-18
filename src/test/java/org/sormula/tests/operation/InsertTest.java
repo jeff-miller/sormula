@@ -21,8 +21,6 @@ import java.util.ArrayList;
 import org.sormula.SormulaException;
 import org.sormula.operation.InsertOperation;
 import org.sormula.tests.DatabaseTest;
-import org.testng.annotations.AfterClass;
-import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 
@@ -39,10 +37,10 @@ public class InsertTest extends DatabaseTest<SormulaTest4>
     boolean postMethod;
 
     
-    @BeforeClass
-    public void setUp() throws Exception
+    @Override
+    protected void open() throws Exception
     {
-        openDatabase();
+        super.open();
         createTable(SormulaTest4.class, 
             "CREATE TABLE " + getSchemaPrefix() + SormulaTest4.class.getSimpleName() + " (" +
             " id INTEGER NOT NULL PRIMARY KEY," +
@@ -50,13 +48,6 @@ public class InsertTest extends DatabaseTest<SormulaTest4>
             " description VARCHAR(30)" +
             ")"
         );
-    }
-    
-    
-    @AfterClass
-    public void tearDown() throws Exception
-    {
-        closeDatabase();
     }
     
     

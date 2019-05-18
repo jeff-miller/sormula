@@ -24,8 +24,6 @@ import org.sormula.tests.DatabaseTest;
 import org.sormula.translator.ExpandedNameTranslator;
 import org.sormula.translator.Sql92KeywordNameTranslator;
 import org.sormula.translator.UpperCaseNameTranslator;
-import org.testng.annotations.AfterClass;
-import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 
@@ -42,10 +40,10 @@ public class NameTranslatorTest extends DatabaseTest<SormulaTest2>
     SormulaTest2 inserted;
     
     
-    @BeforeClass
-    public void setUp() throws Exception
+    @Override
+    protected void open() throws Exception
     {
-        openDatabase();
+        super.open();
         createTable(SormulaTest2.class, 
             "CREATE TABLE " + getSchemaPrefix() + "sormula_test2 (" +
             " test_boolean_yes_no CHAR(1)," +
@@ -55,13 +53,6 @@ public class NameTranslatorTest extends DatabaseTest<SormulaTest2>
             " \"BETWEEN\" VARCHAR(10)" + // tests translators when column name is sql keyword 
             ")"
         );
-    }
-    
-    
-    @AfterClass
-    public void tearDown() throws Exception
-    {
-        closeDatabase();
     }
     
     

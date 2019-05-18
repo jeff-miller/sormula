@@ -21,8 +21,6 @@ import java.util.HashMap;
 import org.sormula.SormulaException;
 import org.sormula.cache.readwrite.ReadWriteCache;
 import org.sormula.tests.cache.CacheTest;
-import org.testng.annotations.AfterClass;
-import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 
@@ -35,8 +33,8 @@ import org.testng.annotations.Test;
 @Test(singleThreaded=true, groups="cache.readwrite.insert")
 public class InsertTest extends CacheTest<SormulaCacheTestRW>
 {
-    @BeforeClass
-    public void setUp() throws Exception
+    @Override
+    protected void open() throws Exception
     {
         openDatabase(true); // true to use data source to test new connection after Database.close()
         createTable(SormulaCacheTestRW.class, 
@@ -46,13 +44,6 @@ public class InsertTest extends CacheTest<SormulaCacheTestRW>
             " description VARCHAR(30)" +
             ")"
         );
-    }
-    
-    
-    @AfterClass
-    public void tearDown() throws Exception
-    {
-        closeDatabase();
     }
     
     

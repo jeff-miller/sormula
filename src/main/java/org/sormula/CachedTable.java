@@ -17,6 +17,7 @@
 package org.sormula;
 
 import org.sormula.annotation.cache.Cached;
+import org.sormula.builder.CachedTableBuilder;
 
 
 /**
@@ -33,7 +34,7 @@ import org.sormula.annotation.cache.Cached;
  * An alternative to using this class is to subclass a table class and annotate it with {@link Cached}
  * supplying any element values that you like:
  * <blockquote><pre>
- * {@literal @}Cached(type=..., size=...) 
+ *{@literal @}Cached(type=..., size=...) 
  * public class MyCachedTable extends Table&lt;SomeRow&gt;
  * {
  *     ...
@@ -50,12 +51,66 @@ import org.sormula.annotation.cache.Cached;
 @Cached
 public class CachedTable<R> extends Table<R> 
 {
+    /**
+     * Creates {@link CachedTableBuilder} that will be used to build a {@link CachedTable}.
+     * Set builder parameters and then use {@link CachedTableBuilder#build()} to create an instance
+     * of {@link CachedTable}.
+     * <p>
+     * This method is optional. You can also use the standard constructors and setter methods to create an instance.
+     * <p>
+     * The name is not "builder" since the signature would conflict with {@link #builder(Database, Class)}.
+     * 
+     * @param <R> Class associated with a row in table
+     * @param database database for this table
+     * @param rowClass row objects are of this type
+     * @return builder instance
+     * @since 4.4
+     */
+    public static <R> CachedTableBuilder<R> builderCached(Database database, Class<R> rowClass)
+    {
+        return new CachedTableBuilder<>(database, rowClass);
+    }
+    
+    
+    /**
+     * Creates {@link CachedTableBuilder} that will be used to build a {@link CachedTable}.
+     * Set builder parameters and then use {@link CachedTableBuilder#build()} to create an instance
+     * of {@link CachedTable}.
+     * <p>
+     * This method is optional. You can also use the standard constructors and setter methods to create an instance.
+     * <p>
+     * The name is not "builder" to be consistent with {@link #builderCached(Database, Class)}.
+     * 
+     * @param <R> Class associated with a row in table
+     * @param table use database and row class from this table
+     * @return builder instance
+     * @since 4.4
+     */
+    public static <R> CachedTableBuilder<R> builderCached(Table<R> table)
+    {
+        return new CachedTableBuilder<>(table.getDatabase(), table.getRowClass());
+    }
+    
+    
+    /**
+     * Constructs from a {@link Table} that is already associated with a {@link Database}.
+     * 
+     * @param table use database and row class from this table 
+     * @throws SormulaException if error
+     */
 	public CachedTable(Table<R> table) throws SormulaException 
 	{
 		super(table.getDatabase(), table.getRowClass());
 	}
 	
 	
+    /**
+     * Constructs for a database and the class that used for row objects.
+     * 
+     * @param database database for this table
+     * @param rowClass row objects are of this type
+     * @throws SormulaException if error
+     */
 	public CachedTable(Database database, Class<R> rowClass) throws SormulaException 
 	{
 		super(database, rowClass);

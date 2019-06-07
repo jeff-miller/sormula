@@ -164,7 +164,7 @@ public abstract class SelectOperation<R, C> extends ScalarSelectOperation<R>
      * more than once will not cause problems since the close methods are idempotent. 
      * 
      * @param parameters query parameters as objects (see {@link #setParameters(Object...)});
-     * ignored if parameters.length <= 0 since version 4.4 
+     * ignored if parameters.length is 0 (since version 4.4) 
      * @return {@link #readAll()}
      * @throws OperationException if error
      * @since 1.4

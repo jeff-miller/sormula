@@ -25,8 +25,6 @@ import org.sormula.log.SormulaLoggerFactory;
 import org.sormula.operation.ArrayListSelectOperation;
 import org.sormula.operation.builder.SelectOperationBuilder;
 import org.sormula.tests.DatabaseTest;
-import org.testng.annotations.AfterClass;
-import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 
@@ -41,10 +39,10 @@ public class SelectOperationBuilderTest extends DatabaseTest<SelectOperationBuil
     SormulaLogger log = SormulaLoggerFactory.getClassLogger();
     
     
-    @BeforeClass
-    public void setUp() throws Exception
+    @Override
+    protected void open() throws Exception
     {
-        openDatabase();
+        super.open();
         
         createTable(SelectOperationBuilderTestRow.class, 
             "CREATE TABLE " + getSchemaPrefix() + SelectOperationBuilderTestRow.class.getSimpleName() + " (" +
@@ -69,13 +67,6 @@ public class SelectOperationBuilderTest extends DatabaseTest<SelectOperationBuil
         begin();
         getTable().insertAll(testRows);
         commit();
-    }
-    
-    
-    @AfterClass
-    public void tearDown() throws Exception
-    {
-        closeDatabase();
     }
     
     

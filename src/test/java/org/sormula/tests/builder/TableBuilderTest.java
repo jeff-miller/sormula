@@ -23,8 +23,6 @@ import org.sormula.SormulaException;
 import org.sormula.Table;
 import org.sormula.builder.TableBuilder;
 import org.sormula.tests.DatabaseTest;
-import org.testng.annotations.AfterClass;
-import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 
@@ -36,10 +34,10 @@ import org.testng.annotations.Test;
 @Test(singleThreaded=true, groups="builder.table")
 public class TableBuilderTest extends DatabaseTest<BuilderTestRow>
 {
-    @BeforeClass
-    public void setUp() throws Exception
+    @Override
+    protected void open() throws Exception
     {
-        openDatabase();
+        super.open();
         
         createTable(BuilderTestRow.class, 
             "CREATE TABLE " + getSchemaPrefix() + BuilderTestRow.class.getSimpleName() + " (" +
@@ -48,13 +46,6 @@ public class TableBuilderTest extends DatabaseTest<BuilderTestRow>
             " description VARCHAR(30)" +
             ")"
         );
-    }
-    
-    
-    @AfterClass
-    public void tearDown() throws Exception
-    {
-        closeDatabase();
     }
     
     

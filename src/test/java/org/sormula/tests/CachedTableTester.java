@@ -20,8 +20,6 @@ import org.sormula.CachedTable;
 import org.sormula.SormulaException;
 import org.sormula.builder.CachedTableBuilder;
 import org.sormula.tests.builder.BuilderTestRow;
-import org.testng.annotations.AfterClass;
-import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 
@@ -33,20 +31,6 @@ import org.testng.annotations.Test;
 @Test(singleThreaded=true, groups="fundamental.table")
 public class CachedTableTester extends DatabaseTest<BuilderTestRow>
 {
-    @BeforeClass
-    public void setUp() throws Exception
-    {
-        openDatabase();
-    }
-    
-    
-    @AfterClass
-    public void tearDown() throws Exception
-    {
-        closeDatabase();
-    }
-    
-    
     @Test
     public void builderCached() throws SormulaException
     {

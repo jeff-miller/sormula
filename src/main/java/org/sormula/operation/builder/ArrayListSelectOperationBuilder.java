@@ -6,13 +6,13 @@ import org.sormula.operation.ArrayListSelectOperation;
 
 
 /**
- * Base class for builders of {@link ArrayListSelectOperation} objects.
+ * Builder for {@link ArrayListSelectOperation} objects.
  * 
  * @author Jeff Miller
  * @since 4.4
- * @param <R> class associated with a row in table
- * @param <B> class of builder
- * @param <T> class of object returned by {@link #build()}
+ * @param <R> type associated with a row in table
+ * @param <B> type of builder
+ * @param <T> type of object returned by {@link #build()}
  */
 public class ArrayListSelectOperationBuilder<R>
     extends ListSelectOperationBuilder<R, ArrayListSelectOperationBuilder<R>, ArrayListSelectOperation<R>>

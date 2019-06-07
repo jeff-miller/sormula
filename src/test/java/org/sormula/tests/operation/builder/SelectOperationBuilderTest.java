@@ -20,8 +20,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.sormula.SormulaException;
-import org.sormula.log.SormulaLogger;
-import org.sormula.log.SormulaLoggerFactory;
 import org.sormula.operation.ArrayListSelectOperation;
 import org.sormula.operation.builder.SelectOperationBuilder;
 import org.sormula.tests.DatabaseTest;
@@ -29,16 +27,13 @@ import org.testng.annotations.Test;
 
 
 /**
- * Tests for {@link SelectOperationBuilder} classes.
+ * Tests for {@link SelectOperationBuilder} and subclasses.
  * 
  * @author Jeff Miller
  */
 @Test(singleThreaded=true, groups="builder.select")
 public class SelectOperationBuilderTest extends DatabaseTest<SelectOperationBuilderTestRow>
 {
-    SormulaLogger log = SormulaLoggerFactory.getClassLogger();
-    
-    
     @Override
     protected void open() throws Exception
     {
@@ -71,7 +66,26 @@ public class SelectOperationBuilderTest extends DatabaseTest<SelectOperationBuil
     
     
     @Test
-    public void testArrayListSelectionBuilder() throws SormulaException
+    public void testSelectOperationBuilder() throws SormulaException
+    {
+        // tests builder methods in SelectOperationBuilder base class
+        begin();
+        try (ArrayListSelectOperation<SelectOperationBuilderTestRow> operation =
+                ArrayListSelectOperation.builder(getTable())
+                .defaultReadAllSize(42)
+                .fetchSize(99)
+                .build())
+        {
+            assert operation.getDefaultReadAllSize() == 42 : "invalid defaultReadAllSize";
+            assert operation.getFetchSize() == 99 : "invalid fetchSize";
+            operation.selectAll();
+        }
+        commit();
+    }
+    
+    
+    @Test
+    public void testArrayListSelectOperationBuilder() throws SormulaException
     {
         begin();
         try (ArrayListSelectOperation<SelectOperationBuilderTestRow> operation =

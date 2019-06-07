@@ -17,6 +17,7 @@ import org.sormula.operation.SelectOperation;
 public abstract class SelectOperationBuilder<R, C, B extends SelectOperationBuilder, T extends SelectOperation<R, C>>
     extends ScalarSelectOperationBuilder<R, B, T>
 {
+    int defaultReadAllSize;
     int fetchSize;
     
     
@@ -24,11 +25,20 @@ public abstract class SelectOperationBuilder<R, C, B extends SelectOperationBuil
     {
         super.init(operation);
         operation.setFetchSize(fetchSize);
+        operation.setDefaultReadAllSize(defaultReadAllSize);
     }
     
     
     @SuppressWarnings("unchecked")
-    public B orderByName(int fetchSize)
+    public B defaultReadAllSize(int defaultReadAllSize)
+    {
+        this.defaultReadAllSize = defaultReadAllSize;
+        return (B)this;
+    }
+    
+    
+    @SuppressWarnings("unchecked")
+    public B fetchSize(int fetchSize)
     {
         this.fetchSize = fetchSize;
         return (B)this;

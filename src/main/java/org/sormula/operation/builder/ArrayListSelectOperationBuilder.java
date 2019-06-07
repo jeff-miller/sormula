@@ -21,7 +21,8 @@ public class ArrayListSelectOperationBuilder<R>
     String whereConditionName;
     
     
-    public ArrayListSelectOperationBuilder(Table<R> table, String whereConditionName) {
+    public ArrayListSelectOperationBuilder(Table<R> table, String whereConditionName) 
+    {
         this.table = table;
         this.whereConditionName = whereConditionName;
     }

@@ -37,6 +37,18 @@ public class ArrayListSelectOperation<R> extends ListSelectOperation<R>
      * @return
      * @since 4.4
      */
+    public static <R> ArrayListSelectOperationBuilder<R> builder(Table<R> table)
+    {
+        return new ArrayListSelectOperationBuilder<R>(table, "");  // TODO no where means all but operation classes means primary key?
+    }
+
+    
+    /**
+     * TODO
+     * @param <R>
+     * @return
+     * @since 4.4
+     */
     public static <R> ArrayListSelectOperationBuilder<R> builder(Table<R> table, String whereConditionName)
     {
         return new ArrayListSelectOperationBuilder<R>(table, whereConditionName);

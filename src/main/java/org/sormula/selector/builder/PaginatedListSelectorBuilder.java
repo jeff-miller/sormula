@@ -31,16 +31,20 @@ public class PaginatedListSelectorBuilder<R>
     int pageSize;
     Table<R> table;
 
+    
     public PaginatedListSelectorBuilder(int pageSize, Table<R> table) 
     {
         this.pageSize = pageSize;
         this.table = table;
     }
 
+    
     @Override
     public PaginatedListSelector<R> build() throws SelectorException
     {
-        PaginatedListSelector<R> paginatedListSelector = new PaginatedListSelector<>(pageSize, table, scrollSensitive);
+        PaginatedListSelector<R> paginatedListSelector;
+        if (scrollSensitive != null) paginatedListSelector = new PaginatedListSelector<>(pageSize, table, scrollSensitive);
+        else                         paginatedListSelector = new PaginatedListSelector<>(pageSize, table);
         init(paginatedListSelector);
         return paginatedListSelector; 
     }

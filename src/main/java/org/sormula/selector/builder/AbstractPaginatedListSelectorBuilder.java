@@ -24,11 +24,13 @@ public abstract class AbstractPaginatedListSelectorBuilder<R, B extends Paginate
     Object[] parameters;
     Map<String, Object> parameterMap;
     String orderByName;
+
     
     public AbstractPaginatedListSelectorBuilder()
     {
         parameterMap = new HashMap<>();
     }
+    
     
     @Override
     protected void init(T selector) throws SelectorException
@@ -37,8 +39,9 @@ public abstract class AbstractPaginatedListSelectorBuilder<R, B extends Paginate
         selector.setWhere(whereConditionName);;
         if (parameters != null) selector.setParameters(parameters);
         parameterMap.forEach((k, v) -> selector.setParameter(k, v));
-        selector.setOrderByName(orderByName);
+        if (orderByName != null) selector.setOrderByName(orderByName);
     }
+    
     
     @SuppressWarnings("unchecked")
     public B where(String whereConditionName)
@@ -47,6 +50,7 @@ public abstract class AbstractPaginatedListSelectorBuilder<R, B extends Paginate
         return (B)this;
     }
     
+    
     @SuppressWarnings("unchecked")
     public B parameters(Object... parameters)
     {
@@ -54,12 +58,14 @@ public abstract class AbstractPaginatedListSelectorBuilder<R, B extends Paginate
         return (B)this;
     }
     
+    
     @SuppressWarnings("unchecked")
     public B parameter(String name, Object value)
     {
         parameterMap.put(name, value);
         return (B)this;
     }
+    
     
     @SuppressWarnings("unchecked")
     public B orderByName(String orderByName)

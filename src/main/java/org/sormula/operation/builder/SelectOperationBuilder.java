@@ -17,15 +17,20 @@ import org.sormula.operation.SelectOperation;
 public abstract class SelectOperationBuilder<R, C, B extends SelectOperationBuilder, T extends SelectOperation<R, C>>
     extends ScalarSelectOperationBuilder<R, B, T>
 {
-    int defaultReadAllSize;
-    int fetchSize;
+    Integer defaultReadAllSize;
+    Integer fetchSize;
+    Integer resultSetType;
+    String whereConditionName;
     
     
     protected void init(T operation) throws SormulaException
     {
         super.init(operation);
-        operation.setFetchSize(fetchSize);
-        operation.setDefaultReadAllSize(defaultReadAllSize);
+        
+        if (defaultReadAllSize != null) operation.setDefaultReadAllSize(defaultReadAllSize);
+        if (fetchSize != null) operation.setFetchSize(fetchSize);
+        if (resultSetType != null) operation.setResultSetType(resultSetType);
+        if (whereConditionName != null) operation.setWhere(whereConditionName);
     }
     
     
@@ -41,6 +46,22 @@ public abstract class SelectOperationBuilder<R, C, B extends SelectOperationBuil
     public B fetchSize(int fetchSize)
     {
         this.fetchSize = fetchSize;
+        return (B)this;
+    }
+    
+    
+    @SuppressWarnings("unchecked")
+    public B resultSetType(int resultSetType)
+    {
+        this.resultSetType = resultSetType;
+        return (B)this;
+    }
+    
+    
+    @SuppressWarnings("unchecked")
+    public B where(String whereConditionName)
+    {
+        this.whereConditionName = whereConditionName;
         return (B)this;
     }
 }

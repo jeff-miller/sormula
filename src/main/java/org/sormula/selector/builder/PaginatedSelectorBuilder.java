@@ -16,14 +16,8 @@ import org.sormula.selector.SelectorException;
  */
 public abstract class PaginatedSelectorBuilder<R, C, B extends PaginatedSelectorBuilder, T extends PaginatedSelector<R, C>>
 {
-    protected boolean scrollSensitive;
-    int pageNumber;
-    
-    
-    public PaginatedSelectorBuilder()
-    {
-        pageNumber = 1;
-    }
+    protected Boolean scrollSensitive;
+    Integer pageNumber;
     
     
     public abstract T build() throws SelectorException;
@@ -31,7 +25,8 @@ public abstract class PaginatedSelectorBuilder<R, C, B extends PaginatedSelector
     
     protected void init(T selector) throws SelectorException
     {
-        selector.setPageNumber(pageNumber);
+        if (pageNumber != null) selector.setPageNumber(pageNumber);
+        // scrollSensitive used by superclasses as a constructor parameter
     }
     
     

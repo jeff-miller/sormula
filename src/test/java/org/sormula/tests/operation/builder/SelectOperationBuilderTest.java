@@ -16,6 +16,7 @@
  */
 package org.sormula.tests.operation.builder;
 
+import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -74,10 +75,12 @@ public class SelectOperationBuilderTest extends DatabaseTest<SelectOperationBuil
                 ArrayListSelectOperation.builder(getTable())
                 .defaultReadAllSize(42)
                 .fetchSize(99)
+                .resultSetType(ResultSet.TYPE_SCROLL_INSENSITIVE)
                 .build())
         {
             assert operation.getDefaultReadAllSize() == 42 : "invalid defaultReadAllSize";
             assert operation.getFetchSize() == 99 : "invalid fetchSize";
+            assert operation.getResultSetType() == ResultSet.TYPE_SCROLL_INSENSITIVE : "invalid resultSetType";
             operation.selectAll();
         }
         commit();
@@ -89,7 +92,8 @@ public class SelectOperationBuilderTest extends DatabaseTest<SelectOperationBuil
     {
         begin();
         try (ArrayListSelectOperation<SelectOperationBuilderTestRow> operation =
-                ArrayListSelectOperation.builder(getTable(), "forType")
+                ArrayListSelectOperation.builder(getTable())
+                .where("forType")
                 .parameters(5)
                 .build())
         {

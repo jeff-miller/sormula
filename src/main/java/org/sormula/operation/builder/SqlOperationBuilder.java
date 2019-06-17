@@ -16,7 +16,7 @@ import org.sormula.operation.SqlOperation;
 public abstract class SqlOperationBuilder<R, B extends SqlOperationBuilder, T extends SqlOperation<R>>
 {
     Object[] parameters;
-    int queryTimeout;
+    Integer queryTimeout;
     
     
     public abstract T build() throws SormulaException;
@@ -25,7 +25,7 @@ public abstract class SqlOperationBuilder<R, B extends SqlOperationBuilder, T ex
     protected void init(T operation) throws SormulaException
     {
         if (parameters != null) operation.setParameters(parameters);
-        operation.setQueryTimeout(queryTimeout);
+        if (queryTimeout != null) operation.setQueryTimeout(queryTimeout);
     }
     
     

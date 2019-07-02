@@ -17,19 +17,39 @@ public abstract class ScalarSelectOperationBuilder<R, B extends ScalarSelectOper
     extends SqlOperationBuilder<R, B, T>
 {
     String orderByName;
+    Integer maximumRowsRead;
+    R rowParameters;
     
     
     protected void init(T operation) throws SormulaException
     {
         super.init(operation);
         if (orderByName != null) operation.setOrderBy(orderByName);
+        if (maximumRowsRead != null) operation.setMaximumRowsRead(maximumRowsRead);
+        if (rowParameters != null) operation.setRowParameters(rowParameters);
     }
     
     
     @SuppressWarnings("unchecked")
-    public B orderByName(String orderByName)
+    public B orderBy(String orderByName)
     {
         this.orderByName = orderByName;
+        return (B)this;
+    }
+    
+    
+    @SuppressWarnings("unchecked")
+    public B maximumRowsRead(int maximumRowsRead)
+    {
+        this.maximumRowsRead = maximumRowsRead;
+        return (B)this;
+    }
+    
+    
+    @SuppressWarnings("unchecked")
+    public B rowParameters(R rowParameters)
+    {
+        this.rowParameters = rowParameters;
         return (B)this;
     }
 }

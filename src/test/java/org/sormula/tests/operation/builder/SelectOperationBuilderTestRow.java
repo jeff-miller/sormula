@@ -16,6 +16,7 @@
  */
 package org.sormula.tests.operation.builder;
 
+import org.sormula.annotation.OrderBy;
 import org.sormula.annotation.Where;
 
 /**
@@ -24,6 +25,7 @@ import org.sormula.annotation.Where;
  * @author Jeff Miller
  */
 @Where(name = "forType", fieldNames = "type")
+@OrderBy(name = "idDescending", descending = "id")
 public class SelectOperationBuilderTestRow
 {
     int id;
@@ -71,5 +73,11 @@ public class SelectOperationBuilderTestRow
     public void setType(int type)
     {
         this.type = type;
+    }
+    
+    
+    public String toString()
+    {
+        return id + " " + type + " " + description;
     }
 }

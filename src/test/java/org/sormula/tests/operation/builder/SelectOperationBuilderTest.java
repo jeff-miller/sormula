@@ -69,7 +69,7 @@ public class SelectOperationBuilderTest extends DatabaseTest<SelectOperationBuil
     @Test
     public void testSelectOperationBuilder() throws SormulaException
     {
-        // tests builder methods in SelectOperationBuilder base class
+        // tests builder methods in SelectOperationBuilder
         begin();
         try (ArrayListSelectOperation<SelectOperationBuilderTestRow> operation =
                 ArrayListSelectOperation.builder(getTable())
@@ -82,6 +82,38 @@ public class SelectOperationBuilderTest extends DatabaseTest<SelectOperationBuil
             assert operation.getFetchSize() == 99 : "invalid fetchSize";
             assert operation.getResultSetType() == ResultSet.TYPE_SCROLL_INSENSITIVE : "invalid resultSetType";
             operation.selectAll();
+        }
+        commit();
+    }
+    
+    
+    @Test
+    public void testScalarSelectOperationBuilder() throws SormulaException
+    {
+        // tests builder methods in ScalarSelectOperationBuilder
+        SelectOperationBuilderTestRow parametersFromRow = new SelectOperationBuilderTestRow();
+        parametersFromRow.setType(1);
+        begin();
+        try (ArrayListSelectOperation<SelectOperationBuilderTestRow> operation =
+                ArrayListSelectOperation.builder(getTable())
+                .where("forType")
+                  .rowParameters(parametersFromRow)
+                .orderBy("idDescending")
+                .maximumRowsRead(13)
+                .build())
+        {
+            assert operation.getOrderByName().equals("idDescending") : "invalid order by";
+
+            List<SelectOperationBuilderTestRow> rows = operation.selectAll();
+            assert rows.size() <= 13 : "too many rows read";
+            
+            int previousId = Integer.MAX_VALUE;
+            for (SelectOperationBuilderTestRow row : rows)
+            {
+                assert row.getType() == 1 : "row is not type 1";
+                assert row.getId() < previousId : "rows are not in descending order by id";
+                previousId = row.getId();
+            }
         }
         commit();
     }

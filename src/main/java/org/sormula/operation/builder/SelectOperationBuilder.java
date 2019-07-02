@@ -25,12 +25,15 @@ public abstract class SelectOperationBuilder<R, C, B extends SelectOperationBuil
     
     protected void init(T operation) throws SormulaException
     {
+        // setWhere prior to super.init to allow maximumRowsRead from builder to override 
+        //  maximumRowsRead from where annotation
+        if (whereConditionName != null) operation.setWhere(whereConditionName);
+        
         super.init(operation);
         
         if (defaultReadAllSize != null) operation.setDefaultReadAllSize(defaultReadAllSize);
         if (fetchSize != null) operation.setFetchSize(fetchSize);
         if (resultSetType != null) operation.setResultSetType(resultSetType);
-        if (whereConditionName != null) operation.setWhere(whereConditionName);
     }
     
     

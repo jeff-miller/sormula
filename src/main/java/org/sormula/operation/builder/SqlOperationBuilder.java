@@ -1,6 +1,7 @@
 package org.sormula.operation.builder;
 
 import org.sormula.SormulaException;
+import org.sormula.Table;
 import org.sormula.operation.SqlOperation;
 
 
@@ -15,14 +16,27 @@ import org.sormula.operation.SqlOperation;
  */
 public abstract class SqlOperationBuilder<R, B extends SqlOperationBuilder, T extends SqlOperation<R>>
 {
+    Table<R> table;
     String whereConditionName;
     Object[] parameters;
     Integer queryTimeout;
     
     
+    public SqlOperationBuilder(Table<R> table) 
+    {
+        this.table = table;
+    }
+
+
     public abstract T build() throws SormulaException;
     
     
+    public Table<R> getTable() 
+    {
+        return table;
+    }
+
+
     protected void init(T operation) throws SormulaException
     {
         // setWhere prior to super.init to allow maximumRowsRead from builder to override 

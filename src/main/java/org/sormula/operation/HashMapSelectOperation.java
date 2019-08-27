@@ -20,6 +20,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.sormula.Table;
+import org.sormula.operation.builder.HashMapSelectOperationBuilder;
 
 
 /**
@@ -32,6 +33,21 @@ import org.sormula.Table;
  */
 public class HashMapSelectOperation<K, R> extends MapSelectOperation<K, R>
 {
+    /**
+     * Creates a builder.
+     * 
+     * @param <K> type of key in map
+     * @param <R> type of row in table
+     * @param table select from this table
+     * @return builder
+     * @since 4.4
+     */
+    public static <K, R> HashMapSelectOperationBuilder<K, R> builder(Table<R> table)
+    {
+        return new HashMapSelectOperationBuilder<K, R>(table);  
+    }
+    
+    
 	/**
      * Constructs for a table to use primary key where condition. This is the standard 
      * constructor for all {@link SqlOperation} classes.

@@ -19,9 +19,11 @@ package org.sormula.tests.operation.builder;
 import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import org.sormula.SormulaException;
 import org.sormula.operation.ArrayListSelectOperation;
+import org.sormula.operation.HashMapSelectOperation;
 import org.sormula.operation.builder.SelectOperationBuilder;
 import org.sormula.tests.DatabaseTest;
 import org.testng.annotations.Test;
@@ -130,6 +132,58 @@ public class SelectOperationBuilderTest extends DatabaseTest<SelectOperationBuil
                 .build())
         {
             operation.selectAll().forEach(row -> {assert row.getType() == 5 : "row is not type 5";});
+        }
+        commit();
+    }
+    
+    
+    @Test
+    public void testMapSelectOperationBuilder() throws SormulaException
+    {
+        // tests builder methods in MapSelectOperationBuilder
+        begin();
+        
+        String keyMethodName = "getId";
+        try (HashMapSelectOperation<Integer, SelectOperationBuilderTestRow> operation =
+                HashMapSelectOperation.<Integer, SelectOperationBuilderTestRow>builder(getTable())
+                .getKeyMethodName(keyMethodName)
+                .build())
+        {
+            assert operation.getGetKeyMethodName() == keyMethodName : "invalid key method name";
+            operation.selectAll();
+        }
+        
+        try (HashMapSelectOperation<Integer, SelectOperationBuilderTestRow> operation =
+                HashMapSelectOperation.<Integer, SelectOperationBuilderTestRow>builder(getTable())
+                .keyFunction(r -> r.getId())
+                .build())
+        {
+            assert operation.getKeyFunction() != null : "key function was not set";
+        }
+        commit();
+    }
+    
+    
+    @Test
+    public void testHashMapSelectOperationBuilder() throws SormulaException
+    {
+        // tests builder methods of HashMapSelectOperationBuilder
+        begin();
+        try (HashMapSelectOperation<Integer, SelectOperationBuilderTestRow> operation =
+                HashMapSelectOperation.<Integer, SelectOperationBuilderTestRow>builder(getTable())
+                .keyFunction(r -> r.getId())
+                .build())
+        {
+            Map<Integer, SelectOperationBuilderTestRow> resultMap = operation.selectAll();
+            List<SelectOperationBuilderTestRow> resultList = getTable().selectAll();
+            
+            assert resultMap.size() == resultList.size() : "map size is incorrect";
+            resultList.forEach(r -> 
+            {
+                int listId = r.getId();
+                SelectOperationBuilderTestRow mapTestRow = resultMap.get(listId);
+                assert mapTestRow != null && mapTestRow.getId() == listId : "map is missing id=" + listId;
+            });
         }
         commit();
     }

@@ -17,19 +17,16 @@ import org.sormula.operation.ArrayListSelectOperation;
 public class ArrayListSelectOperationBuilder<R>
     extends ListSelectOperationBuilder<R, ArrayListSelectOperationBuilder<R>, ArrayListSelectOperation<R>>
 {
-    Table<R> table;
-    
-    
     public ArrayListSelectOperationBuilder(Table<R> table) 
     {
-        this.table = table;
+        super(table);
     }
 
 
     @Override
     public ArrayListSelectOperation<R> build() throws SormulaException 
     {
-        ArrayListSelectOperation<R> operation = new ArrayListSelectOperation<>(table, "");
+        ArrayListSelectOperation<R> operation = new ArrayListSelectOperation<>(getTable(), "");
         init(operation);
         return operation;
     }

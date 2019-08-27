@@ -1,6 +1,7 @@
 package org.sormula.operation.builder;
 
 import org.sormula.SormulaException;
+import org.sormula.Table;
 import org.sormula.operation.SelectOperation;
 
 
@@ -22,6 +23,13 @@ public abstract class SelectOperationBuilder<R, C, B extends SelectOperationBuil
     Integer resultSetType;
     
     
+    public SelectOperationBuilder(Table<R> table) 
+    {
+        super(table);
+    }
+
+
+    @Override
     protected void init(T operation) throws SormulaException
     {
         super.init(operation);

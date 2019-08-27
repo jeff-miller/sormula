@@ -1,6 +1,7 @@
 package org.sormula.operation.builder;
 
 import org.sormula.SormulaException;
+import org.sormula.Table;
 import org.sormula.operation.ScalarSelectOperation;
 
 
@@ -9,9 +10,9 @@ import org.sormula.operation.ScalarSelectOperation;
  * 
  * @author Jeff Miller
  * @since 4.4
- * @param <R> class associated with a row in table
- * @param <B> class of builder
- * @param <T> class of object returned by {@link #build()}
+ * @param <R> type of row in table
+ * @param <B> type of builder
+ * @param <T> type returned by {@link #build()}
  */
 public abstract class ScalarSelectOperationBuilder<R, B extends ScalarSelectOperationBuilder, T extends ScalarSelectOperation<R>>
     extends SqlOperationBuilder<R, B, T>
@@ -21,6 +22,13 @@ public abstract class ScalarSelectOperationBuilder<R, B extends ScalarSelectOper
     R rowParameters;
     
     
+    public ScalarSelectOperationBuilder(Table<R> table) 
+    {
+        super(table);
+    }
+
+
+    @Override
     protected void init(T operation) throws SormulaException
     {
         super.init(operation);

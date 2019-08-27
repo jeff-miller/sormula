@@ -24,6 +24,7 @@ import java.util.Map;
 import org.sormula.SormulaException;
 import org.sormula.operation.ArrayListSelectOperation;
 import org.sormula.operation.HashMapSelectOperation;
+import org.sormula.operation.LinkedHashMapSelectOperation;
 import org.sormula.operation.builder.SelectOperationBuilder;
 import org.sormula.tests.DatabaseTest;
 import org.testng.annotations.Test;
@@ -99,7 +100,7 @@ public class SelectOperationBuilderTest extends DatabaseTest<SelectOperationBuil
         try (ArrayListSelectOperation<SelectOperationBuilderTestRow> operation =
                 ArrayListSelectOperation.builder(getTable())
                 .where("forType")
-                  .rowParameters(parametersFromRow)
+                .rowParameters(parametersFromRow)
                 .orderBy("idDescending")
                 .maximumRowsRead(13)
                 .build())
@@ -184,6 +185,32 @@ public class SelectOperationBuilderTest extends DatabaseTest<SelectOperationBuil
                 SelectOperationBuilderTestRow mapTestRow = resultMap.get(listId);
                 assert mapTestRow != null && mapTestRow.getId() == listId : "map is missing id=" + listId;
             });
+        }
+        commit();
+    }
+    
+    
+    @Test
+    public void testLinkedHashMapSelectOperationBuilder() throws SormulaException
+    {
+        // tests builder methods of LinkedHashMapSelectOperationBuilder
+        begin();
+        try (LinkedHashMapSelectOperation<Integer, SelectOperationBuilderTestRow> operation =
+                LinkedHashMapSelectOperation.<Integer, SelectOperationBuilderTestRow>builder(getTable())
+                .keyFunction(SelectOperationBuilderTestRow::getId)
+                .orderBy("da")
+                .build())
+        {
+            Map<Integer, SelectOperationBuilderTestRow> resultMap = operation.selectAll();
+            
+            String previousDescription = "";
+            for (SelectOperationBuilderTestRow r: resultMap.values())
+            {
+                assert r.getDescription().compareTo(previousDescription) >= 0 : 
+                    r.getId() + " row is not in ascending order by description";
+                
+                assert resultMap.get(r.getId()) != null : r.getId() + " is not in map";
+            }
         }
         commit();
     }

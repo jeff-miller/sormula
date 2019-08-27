@@ -26,6 +26,7 @@ import org.sormula.annotation.Where;
  */
 @Where(name = "forType", fieldNames = "type")
 @OrderBy(name = "idDescending", descending = "id")
+@OrderBy(name = "da", ascending = "description")
 public class SelectOperationBuilderTestRow
 {
     int id;

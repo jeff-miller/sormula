@@ -32,9 +32,11 @@ import org.sormula.operation.builder.ArrayListSelectOperationBuilder;
 public class ArrayListSelectOperation<R> extends ListSelectOperation<R>
 {
     /**
-     * TODO
-     * @param <R>
-     * @return
+     * Creates a builder.
+     * 
+     * @param <R> type of row in table
+     * @param table select from this table
+     * @return builder
      * @since 4.4
      */
     public static <R> ArrayListSelectOperationBuilder<R> builder(Table<R> table)

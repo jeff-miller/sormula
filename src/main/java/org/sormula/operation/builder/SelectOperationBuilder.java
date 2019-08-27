@@ -9,10 +9,10 @@ import org.sormula.operation.SelectOperation;
  * 
  * @author Jeff Miller
  * @since 4.4
- * @param <R> class associated with a row in table
+ * @param <R> type of row in table
  * @param <C> collection type returned 
- * @param <B> class of builder
- * @param <T> class of object returned by {@link #build()}
+ * @param <B> type of builder
+ * @param <T> type returned by {@link #build()}
  */
 public abstract class SelectOperationBuilder<R, C, B extends SelectOperationBuilder, T extends SelectOperation<R, C>>
     extends ScalarSelectOperationBuilder<R, B, T>
@@ -20,15 +20,10 @@ public abstract class SelectOperationBuilder<R, C, B extends SelectOperationBuil
     Integer defaultReadAllSize;
     Integer fetchSize;
     Integer resultSetType;
-    String whereConditionName;
     
     
     protected void init(T operation) throws SormulaException
     {
-        // setWhere prior to super.init to allow maximumRowsRead from builder to override 
-        //  maximumRowsRead from where annotation
-        if (whereConditionName != null) operation.setWhere(whereConditionName);
-        
         super.init(operation);
         
         if (defaultReadAllSize != null) operation.setDefaultReadAllSize(defaultReadAllSize);
@@ -57,14 +52,6 @@ public abstract class SelectOperationBuilder<R, C, B extends SelectOperationBuil
     public B resultSetType(int resultSetType)
     {
         this.resultSetType = resultSetType;
-        return (B)this;
-    }
-    
-    
-    @SuppressWarnings("unchecked")
-    public B where(String whereConditionName)
-    {
-        this.whereConditionName = whereConditionName;
         return (B)this;
     }
 }

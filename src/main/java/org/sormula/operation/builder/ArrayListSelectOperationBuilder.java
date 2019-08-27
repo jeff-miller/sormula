@@ -18,20 +18,18 @@ public class ArrayListSelectOperationBuilder<R>
     extends ListSelectOperationBuilder<R, ArrayListSelectOperationBuilder<R>, ArrayListSelectOperation<R>>
 {
     Table<R> table;
-    String whereConditionName;
     
     
-    public ArrayListSelectOperationBuilder(Table<R> table, String whereConditionName) 
+    public ArrayListSelectOperationBuilder(Table<R> table) 
     {
         this.table = table;
-        this.whereConditionName = whereConditionName;
     }
 
 
     @Override
     public ArrayListSelectOperation<R> build() throws SormulaException 
     {
-        ArrayListSelectOperation<R> operation = new ArrayListSelectOperation<>(table, whereConditionName);
+        ArrayListSelectOperation<R> operation = new ArrayListSelectOperation<>(table, "");
         init(operation);
         return operation;
     }

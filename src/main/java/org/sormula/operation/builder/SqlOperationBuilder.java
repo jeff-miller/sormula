@@ -9,12 +9,13 @@ import org.sormula.operation.SqlOperation;
  * 
  * @author Jeff Miller
  * @since 4.4
- * @param <R> class associated with a row in table
- * @param <B> class of builder
- * @param <T> class of object returned by {@link #build()}
+ * @param <R> type of row in table
+ * @param <B> type of builder
+ * @param <T> type returned by {@link #build()}
  */
 public abstract class SqlOperationBuilder<R, B extends SqlOperationBuilder, T extends SqlOperation<R>>
 {
+    String whereConditionName;
     Object[] parameters;
     Integer queryTimeout;
     
@@ -24,8 +25,20 @@ public abstract class SqlOperationBuilder<R, B extends SqlOperationBuilder, T ex
     
     protected void init(T operation) throws SormulaException
     {
+        // setWhere prior to super.init to allow maximumRowsRead from builder to override 
+        // maximumRowsRead from where annotation
+        if (whereConditionName != null) operation.setWhere(whereConditionName);
+        
         if (parameters != null) operation.setParameters(parameters);
         if (queryTimeout != null) operation.setQueryTimeout(queryTimeout);
+    }
+    
+    
+    @SuppressWarnings("unchecked")
+    public B where(String whereConditionName)
+    {
+        this.whereConditionName = whereConditionName;
+        return (B)this;
     }
     
     

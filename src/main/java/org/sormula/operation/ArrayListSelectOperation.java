@@ -27,7 +27,7 @@ import org.sormula.operation.builder.ArrayListSelectOperationBuilder;
  * 
  * @since 1.0
  * @author Jeff Miller
- * @param <R> Class associated with a row in table
+ * @param <R> type of row in table
  */
 public class ArrayListSelectOperation<R> extends ListSelectOperation<R>
 {
@@ -39,19 +39,7 @@ public class ArrayListSelectOperation<R> extends ListSelectOperation<R>
      */
     public static <R> ArrayListSelectOperationBuilder<R> builder(Table<R> table)
     {
-        return new ArrayListSelectOperationBuilder<R>(table, "");  // TODO no where means all but operation classes means primary key?
-    }
-
-    
-    /**
-     * TODO
-     * @param <R>
-     * @return
-     * @since 4.4
-     */
-    public static <R> ArrayListSelectOperationBuilder<R> builder(Table<R> table, String whereConditionName)
-    {
-        return new ArrayListSelectOperationBuilder<R>(table, whereConditionName);
+        return new ArrayListSelectOperationBuilder<R>(table);  
     }
 
     

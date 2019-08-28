@@ -36,8 +36,8 @@ import org.sormula.translator.ColumnTranslator;
  * associated with column in row R will be used.
  * <p>
  * If expression is not a column, then T should match the expression type. Override {@link #readAggregate()}
- * to provide a customized read for expression. By default where expression is not a column name, then
- * {@link ResultSet#getObject(int)} is used. 
+ * to provide a customized read for expression. When expression is not a column name, then
+ * {@link ResultSet#getObject(1)} is used. 
  * 
  * @since 1.1
  * @author Jeff Miller

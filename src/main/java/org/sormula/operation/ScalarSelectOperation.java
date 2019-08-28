@@ -41,6 +41,7 @@ import org.sormula.cache.Cache;
 import org.sormula.cache.CacheException;
 import org.sormula.log.SormulaLogger;
 import org.sormula.log.SormulaLoggerFactory;
+import org.sormula.operation.builder.ScalarSelectOperationBuilder;
 import org.sormula.operation.cascade.CascadeOperation;
 import org.sormula.operation.cascade.SelectCascadeOperation;
 import org.sormula.operation.cascade.lazy.LazySelectable;
@@ -79,6 +80,20 @@ public class ScalarSelectOperation<R> extends SqlOperation<R> implements Iterabl
     Map<Class<?>, BiPredicate<?, Boolean>> filterPredicateMap;
     BiPredicate<R, Boolean> filterPredicate;
     
+    
+    /**
+     * Creates a builder.
+     * 
+     * @param <R> type of row in table
+     * @param table select from this table
+     * @return builder
+     * @since 4.4
+     */
+    public static <R> ScalarSelectOperationBuilder<R> builderScalar(Table<R> table)
+    {
+        return new ScalarSelectOperationBuilder<R>(table);  
+    }
+
     
     /**
      * Constructs standard sql select by primary key as:<br>

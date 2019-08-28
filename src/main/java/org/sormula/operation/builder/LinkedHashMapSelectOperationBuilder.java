@@ -12,8 +12,6 @@ import org.sormula.operation.LinkedHashMapSelectOperation;
  * @since 4.4
  * @param <K> type of key in map
  * @param <R> type of row in table
- * @param <B> type of builder
- * @param <T> type of object returned by {@link #build()}
  */
 public class LinkedHashMapSelectOperationBuilder<K, R>
     extends MapSelectOperationBuilder<K, R, LinkedHashMapSelectOperationBuilder<K, R>, LinkedHashMapSelectOperation<K, R>>

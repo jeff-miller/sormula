@@ -16,7 +16,7 @@ import org.sormula.operation.SelectOperation;
  * @param <T> type returned by {@link #build()}
  */
 public abstract class SelectOperationBuilder<R, C, B extends SelectOperationBuilder, T extends SelectOperation<R, C>>
-    extends ScalarSelectOperationBuilder<R, B, T>
+    extends AbstractScalarSelectOperationBuilder<R, B, T>
 {
     Integer defaultReadAllSize;
     Integer fetchSize;

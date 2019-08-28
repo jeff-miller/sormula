@@ -25,6 +25,7 @@ import org.sormula.SormulaException;
 import org.sormula.operation.ArrayListSelectOperation;
 import org.sormula.operation.HashMapSelectOperation;
 import org.sormula.operation.LinkedHashMapSelectOperation;
+import org.sormula.operation.ScalarSelectOperation;
 import org.sormula.operation.builder.SelectOperationBuilder;
 import org.sormula.tests.DatabaseTest;
 import org.testng.annotations.Test;
@@ -97,8 +98,8 @@ public class SelectOperationBuilderTest extends DatabaseTest<SelectOperationBuil
         SelectOperationBuilderTestRow parametersFromRow = new SelectOperationBuilderTestRow();
         parametersFromRow.setType(1);
         begin();
-        try (ArrayListSelectOperation<SelectOperationBuilderTestRow> operation =
-                ArrayListSelectOperation.builder(getTable())
+        try (ScalarSelectOperation<SelectOperationBuilderTestRow> operation =
+                ScalarSelectOperation.builderScalar(getTable())
                 .where("forType")
                 .rowParameters(parametersFromRow)
                 .orderBy("idDescending")
@@ -107,16 +108,17 @@ public class SelectOperationBuilderTest extends DatabaseTest<SelectOperationBuil
         {
             assert operation.getOrderByName().equals("idDescending") : "invalid order by";
 
-            List<SelectOperationBuilderTestRow> rows = operation.selectAll();
-            assert rows.size() <= 13 : "too many rows read";
-            
+            int rowCount = 0;
             int previousId = Integer.MAX_VALUE;
-            for (SelectOperationBuilderTestRow row : rows)
+            for (SelectOperationBuilderTestRow row : operation)
             {
+                ++rowCount;
                 assert row.getType() == 1 : "row is not type 1";
                 assert row.getId() < previousId : "rows are not in descending order by id";
                 previousId = row.getId();
             }
+            
+            assert rowCount <= 13 : "too many rows read";
         }
         commit();
     }

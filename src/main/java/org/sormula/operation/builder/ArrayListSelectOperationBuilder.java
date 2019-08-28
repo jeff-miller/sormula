@@ -11,8 +11,6 @@ import org.sormula.operation.ArrayListSelectOperation;
  * @author Jeff Miller
  * @since 4.4
  * @param <R> type associated with a row in table
- * @param <B> type of builder
- * @param <T> type of object returned by {@link #build()}
  */
 public class ArrayListSelectOperationBuilder<R>
     extends ListSelectOperationBuilder<R, ArrayListSelectOperationBuilder<R>, ArrayListSelectOperation<R>>

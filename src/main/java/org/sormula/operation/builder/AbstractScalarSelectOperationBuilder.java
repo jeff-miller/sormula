@@ -14,7 +14,7 @@ import org.sormula.operation.ScalarSelectOperation;
  * @param <B> type of builder
  * @param <T> type returned by {@link #build()}
  */
-public abstract class ScalarSelectOperationBuilder<R, B extends ScalarSelectOperationBuilder, T extends ScalarSelectOperation<R>>
+public abstract class AbstractScalarSelectOperationBuilder<R, B extends AbstractScalarSelectOperationBuilder, T extends ScalarSelectOperation<R>>
     extends SqlOperationBuilder<R, B, T>
 {
     String orderByName;
@@ -22,7 +22,7 @@ public abstract class ScalarSelectOperationBuilder<R, B extends ScalarSelectOper
     R rowParameters;
     
     
-    public ScalarSelectOperationBuilder(Table<R> table) 
+    public AbstractScalarSelectOperationBuilder(Table<R> table) 
     {
         super(table);
     }

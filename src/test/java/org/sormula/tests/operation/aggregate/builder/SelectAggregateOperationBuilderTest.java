@@ -21,8 +21,10 @@ import java.util.List;
 
 import org.sormula.SormulaException;
 import org.sormula.operation.aggregate.SelectAvgOperation;
+import org.sormula.operation.aggregate.SelectCountOperation;
 import org.sormula.operation.aggregate.builder.SelectAggregateOperationBuilder;
 import org.sormula.operation.aggregate.builder.SelectAvgOperationBuilder;
+import org.sormula.operation.aggregate.builder.SelectCountOperationBuilder;
 import org.sormula.tests.DatabaseTest;
 import org.testng.annotations.Test;
 
@@ -91,6 +93,36 @@ public class SelectAggregateOperationBuilderTest extends DatabaseTest<SelectAggr
             Integer expectedIdAverage = expectedAverageIdOperation.readAggregate(); 
 
             assert Integer.compare(averageId, expectedIdAverage) == 0 : "average failure";
+        }
+        commit();
+    }
+    
+    
+    @Test
+    public void testSelectCountOperationBuilder() throws SormulaException
+    {
+        // tests builder methods in testSelectCountOperationBuilder
+        begin();
+        
+        SelectCountOperationBuilder<SelectAggregateOperationBuilderTestRow, Integer> builder = 
+                SelectCountOperation.builder(getTable(), "id");
+        
+        try (SelectCountOperation<SelectAggregateOperationBuilderTestRow, Integer> operation = builder
+                .where("forType")
+                .parameters(5)
+                .build();
+             SelectCountOperation<SelectAggregateOperationBuilderTestRow, Integer> expectedCountOperation =
+                 new SelectCountOperation<>(getTable(), "id"))
+        {
+            operation.execute();
+            Integer testCount = operation.readAggregate();
+            
+            expectedCountOperation.setWhere("forType");
+            expectedCountOperation.setParameters(5);
+            expectedCountOperation.execute();
+            Integer expectedIdAverage = expectedCountOperation.readAggregate(); 
+
+            assert Integer.compare(testCount, expectedIdAverage) == 0 : "count failure";
         }
         commit();
     }

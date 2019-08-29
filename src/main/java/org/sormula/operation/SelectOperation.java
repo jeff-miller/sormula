@@ -178,7 +178,7 @@ public abstract class SelectOperation<R, C> extends ScalarSelectOperation<R>
 	        setParameters(parameters);
 	    }
         C results;
-        try
+        try 
         {
         	execute();
         	results = readAll();

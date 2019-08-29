@@ -123,6 +123,8 @@ public class SelectAggregateOperation<R, T> extends ScalarSelectOperation<R>
         T result = null;
         ResultSet rs = getResultSet();
         
+        if (rs == null) throw new OperationException("execute() must be invoked prior to readAggregate()");
+        
         try
         {
             if (rs.next())

@@ -2,12 +2,11 @@ package org.sormula.operation.aggregate.builder;
 
 import org.sormula.SormulaException;
 import org.sormula.Table;
-import org.sormula.operation.HashMapSelectOperation;
 import org.sormula.operation.aggregate.SelectAvgOperation;
 
 
 /**
- * Builder for {@link HashMapSelectOperation} objects.
+ * Builder for {@link SelectAvgOperation} objects.
  * 
  * @author Jeff Miller
  * @since 4.4

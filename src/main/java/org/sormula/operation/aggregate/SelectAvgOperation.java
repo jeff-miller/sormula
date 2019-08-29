@@ -35,6 +35,7 @@ public class SelectAvgOperation<R, T> extends SelectAggregateOperation<R, T>
      * Creates a builder.
      * 
      * @param <R> type of row in table
+     * @param <T> type of aggregate result
      * @param table select from this table
      * @return builder
      * @since 4.4

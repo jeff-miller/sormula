@@ -23,10 +23,12 @@ import org.sormula.SormulaException;
 import org.sormula.operation.aggregate.SelectAvgOperation;
 import org.sormula.operation.aggregate.SelectCountOperation;
 import org.sormula.operation.aggregate.SelectMaxOperation;
+import org.sormula.operation.aggregate.SelectMinOperation;
 import org.sormula.operation.aggregate.builder.SelectAggregateOperationBuilder;
 import org.sormula.operation.aggregate.builder.SelectAvgOperationBuilder;
 import org.sormula.operation.aggregate.builder.SelectCountOperationBuilder;
 import org.sormula.operation.aggregate.builder.SelectMaxOperationBuilder;
+import org.sormula.operation.aggregate.builder.SelectMinOperationBuilder;
 import org.sormula.tests.DatabaseTest;
 import org.testng.annotations.Test;
 
@@ -155,6 +157,36 @@ public class SelectAggregateOperationBuilderTest extends DatabaseTest<SelectAggr
             Integer expectedResult = expectedOperation.readAggregate(); 
 
             assert Integer.compare(testResult, expectedResult) == 0 : "max failure";
+        }
+        commit();
+    }
+    
+    
+    @Test
+    public void testSelectMinOperationBuilder() throws SormulaException
+    {
+        // tests builder methods in SelectMinOperationBuilder
+        begin();
+        
+        SelectMinOperationBuilder<SelectAggregateOperationBuilderTestRow, Integer> builder = 
+                SelectMinOperation.builder(getTable(), "id");
+        
+        try (SelectMinOperation<SelectAggregateOperationBuilderTestRow, Integer> testOperation = builder
+                .where("forType")
+                .parameters(7)
+                .build();
+             SelectMinOperation<SelectAggregateOperationBuilderTestRow, Integer> expectedOperation =
+                 new SelectMinOperation<>(getTable(), "id"))
+        {
+            testOperation.execute();
+            Integer testResult = testOperation.readAggregate();
+            
+            expectedOperation.setWhere("forType");
+            expectedOperation.setParameters(7);
+            expectedOperation.execute();
+            Integer expectedResult = expectedOperation.readAggregate(); 
+
+            assert Integer.compare(testResult, expectedResult) == 0 : "min failure";
         }
         commit();
     }

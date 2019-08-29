@@ -22,9 +22,11 @@ import java.util.List;
 import org.sormula.SormulaException;
 import org.sormula.operation.aggregate.SelectAvgOperation;
 import org.sormula.operation.aggregate.SelectCountOperation;
+import org.sormula.operation.aggregate.SelectMaxOperation;
 import org.sormula.operation.aggregate.builder.SelectAggregateOperationBuilder;
 import org.sormula.operation.aggregate.builder.SelectAvgOperationBuilder;
 import org.sormula.operation.aggregate.builder.SelectCountOperationBuilder;
+import org.sormula.operation.aggregate.builder.SelectMaxOperationBuilder;
 import org.sormula.tests.DatabaseTest;
 import org.testng.annotations.Test;
 
@@ -77,22 +79,22 @@ public class SelectAggregateOperationBuilderTest extends DatabaseTest<SelectAggr
         SelectAvgOperationBuilder<SelectAggregateOperationBuilderTestRow, Integer> builder = 
                 SelectAvgOperation.builder(getTable(), "id");
         
-        try (SelectAvgOperation<SelectAggregateOperationBuilderTestRow, Integer> operation = builder
+        try (SelectAvgOperation<SelectAggregateOperationBuilderTestRow, Integer> testOperation = builder
                 .where("forType")
                 .parameters(5)
                 .build();
-             SelectAvgOperation<SelectAggregateOperationBuilderTestRow, Integer> expectedAverageIdOperation =
+             SelectAvgOperation<SelectAggregateOperationBuilderTestRow, Integer> expectedOperation =
                  new SelectAvgOperation<>(getTable(), "id"))
         {
-            operation.execute();
-            Integer averageId = operation.readAggregate();
+            testOperation.execute();
+            Integer testResult = testOperation.readAggregate();
             
-            expectedAverageIdOperation.setWhere("forType");
-            expectedAverageIdOperation.setParameters(5);
-            expectedAverageIdOperation.execute();
-            Integer expectedIdAverage = expectedAverageIdOperation.readAggregate(); 
+            expectedOperation.setWhere("forType");
+            expectedOperation.setParameters(5);
+            expectedOperation.execute();
+            Integer expectedResult = expectedOperation.readAggregate(); 
 
-            assert Integer.compare(averageId, expectedIdAverage) == 0 : "average failure";
+            assert Integer.compare(testResult, expectedResult) == 0 : "average failure";
         }
         commit();
     }
@@ -101,28 +103,58 @@ public class SelectAggregateOperationBuilderTest extends DatabaseTest<SelectAggr
     @Test
     public void testSelectCountOperationBuilder() throws SormulaException
     {
-        // tests builder methods in testSelectCountOperationBuilder
+        // tests builder methods in SelectCountOperationBuilder
         begin();
         
         SelectCountOperationBuilder<SelectAggregateOperationBuilderTestRow, Integer> builder = 
                 SelectCountOperation.builder(getTable(), "id");
         
-        try (SelectCountOperation<SelectAggregateOperationBuilderTestRow, Integer> operation = builder
+        try (SelectCountOperation<SelectAggregateOperationBuilderTestRow, Integer> testOperation = builder
                 .where("forType")
                 .parameters(5)
                 .build();
-             SelectCountOperation<SelectAggregateOperationBuilderTestRow, Integer> expectedCountOperation =
+             SelectCountOperation<SelectAggregateOperationBuilderTestRow, Integer> expectedOperation =
                  new SelectCountOperation<>(getTable(), "id"))
         {
-            operation.execute();
-            Integer testCount = operation.readAggregate();
+            testOperation.execute();
+            Integer testResult = testOperation.readAggregate();
             
-            expectedCountOperation.setWhere("forType");
-            expectedCountOperation.setParameters(5);
-            expectedCountOperation.execute();
-            Integer expectedIdAverage = expectedCountOperation.readAggregate(); 
+            expectedOperation.setWhere("forType");
+            expectedOperation.setParameters(5);
+            expectedOperation.execute();
+            Integer expectedResult = expectedOperation.readAggregate(); 
 
-            assert Integer.compare(testCount, expectedIdAverage) == 0 : "count failure";
+            assert Integer.compare(testResult, expectedResult) == 0 : "count failure";
+        }
+        commit();
+    }
+    
+    
+    @Test
+    public void testSelectMaxOperationBuilder() throws SormulaException
+    {
+        // tests builder methods in SelectMaxOperationBuilder
+        begin();
+        
+        SelectMaxOperationBuilder<SelectAggregateOperationBuilderTestRow, Integer> builder = 
+                SelectMaxOperation.builder(getTable(), "id");
+        
+        try (SelectMaxOperation<SelectAggregateOperationBuilderTestRow, Integer> testOperation = builder
+                .where("forType")
+                .parameters(7)
+                .build();
+             SelectMaxOperation<SelectAggregateOperationBuilderTestRow, Integer> expectedOperation =
+                 new SelectMaxOperation<>(getTable(), "id"))
+        {
+            testOperation.execute();
+            Integer testResult = testOperation.readAggregate();
+            
+            expectedOperation.setWhere("forType");
+            expectedOperation.setParameters(7);
+            expectedOperation.execute();
+            Integer expectedResult = expectedOperation.readAggregate(); 
+
+            assert Integer.compare(testResult, expectedResult) == 0 : "max failure";
         }
         commit();
     }

@@ -23,6 +23,7 @@ public abstract class ModifyOperationBuilder<R, B extends ModifyOperationBuilder
     R row;
     Collection<R> rowCollection;
     R[] rowArray;
+    Map<?, R> rowMap;
     
     
     public ModifyOperationBuilder(Table<R> table) 
@@ -36,6 +37,7 @@ public abstract class ModifyOperationBuilder<R, B extends ModifyOperationBuilder
         if (row != null) operation.setRow(row);
         else if (rowCollection != null) operation.setRows(rowCollection);
         else if (rowArray != null) operation.setRows(rowArray);
+        else if (rowMap != null) operation.setRows(rowMap);
     }
     
     
@@ -74,7 +76,7 @@ public abstract class ModifyOperationBuilder<R, B extends ModifyOperationBuilder
     @SuppressWarnings("unchecked")
     public B rows(Map<?, R> rows)
     {
-        // TODO
+        rowMap = rows;
         return (B)this;
     }
     

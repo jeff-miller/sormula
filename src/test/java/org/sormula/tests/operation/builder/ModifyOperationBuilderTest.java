@@ -18,11 +18,14 @@ package org.sormula.tests.operation.builder;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import org.sormula.SormulaException;
 import org.sormula.operation.ArrayListSelectOperation;
 import org.sormula.operation.DeleteOperation;
+import org.sormula.operation.HashMapSelectOperation;
 import org.sormula.operation.InsertOperation;
+import org.sormula.operation.SaveOperation;
 import org.sormula.operation.UpdateOperation;
 import org.sormula.operation.builder.ModifyOperationBuilder;
 import org.sormula.tests.DatabaseTest;
@@ -140,6 +143,41 @@ public class ModifyOperationBuilderTest extends DatabaseTest<ModifyOperationBuil
                 for (ModifyOperationBuilderTestRow row : selectUpdatedOperation.selectAll())
                 {
                     assert row.getDescription().equals("updated") : "update failed";
+                }
+            }
+        }        
+        
+        commit();
+    }
+    
+    
+    @Test
+    public void SaveOperationBuilder() throws SormulaException
+    {
+        // tests builder methods in SaveOperationBuilder
+        begin();
+        
+        try (HashMapSelectOperation<Integer, ModifyOperationBuilderTestRow> selectSavedOperation =
+                new HashMapSelectOperation<>(getTable(), "forType"))
+        {
+            selectSavedOperation.setParameters(5);
+            Map<Integer, ModifyOperationBuilderTestRow> rowsToSave = selectSavedOperation.selectAll();
+            assert rowsToSave.size() > 0 : "no rows to save";
+            rowsToSave.put(555, new ModifyOperationBuilderTestRow(555, 5, "new row for save"));
+            for (ModifyOperationBuilderTestRow row : rowsToSave.values())
+            {
+                row.setDescription("saved");
+            }
+
+            try (SaveOperation<ModifyOperationBuilderTestRow> testOperation =
+                    SaveOperation.builder(getTable())
+                    .rows(rowsToSave) // test rows(Map) method
+                    .build())
+            {
+                testOperation.execute();
+                for (ModifyOperationBuilderTestRow row : selectSavedOperation.selectAll().values())
+                {
+                    assert row.getDescription().equals("saved") : "save failed";
                 }
             }
         }        

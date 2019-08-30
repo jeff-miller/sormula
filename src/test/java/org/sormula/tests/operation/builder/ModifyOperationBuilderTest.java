@@ -184,4 +184,24 @@ public class ModifyOperationBuilderTest extends DatabaseTest<ModifyOperationBuil
         
         commit();
     }
+    
+    
+    @Test
+    public void otherSaveOperationBuilder() throws SormulaException
+    {
+        // tests builder methods in ModifyOperationBuilder
+        begin();
+        try (SaveOperation<ModifyOperationBuilderTestRow> testOperation =
+                SaveOperation.builder(getTable())
+                .batch(true)
+                .parameters("test")
+                .build())
+        {
+            assert testOperation.isBatch() : "batch not set";
+            
+            Object[] parameters = testOperation.getParameters();
+            assert parameters != null && parameters[0].equals("test") : "parameters not set";
+        }
+        commit();
+    }
 }

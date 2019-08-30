@@ -20,7 +20,7 @@ public abstract class SqlOperationBuilder<R, B extends SqlOperationBuilder, T ex
     String whereConditionName;
     Object[] parameters;
     Integer queryTimeout;
-    
+    // TODO other like cached(boolean), cascade(boolean)?
     
     public SqlOperationBuilder(Table<R> table) 
     {

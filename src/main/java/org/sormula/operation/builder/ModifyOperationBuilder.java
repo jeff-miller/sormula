@@ -20,6 +20,8 @@ import org.sormula.operation.ModifyOperation;
 public abstract class ModifyOperationBuilder<R, B extends ModifyOperationBuilder, T extends ModifyOperation<R>>
     extends SqlOperationBuilder<R, B, T>
 {
+    Boolean batch;
+    Object[] parameters;
     R row;
     Collection<R> rowCollection;
     R[] rowArray;
@@ -34,7 +36,10 @@ public abstract class ModifyOperationBuilder<R, B extends ModifyOperationBuilder
 
     protected void init(T operation) throws SormulaException
     {
-        if (row != null) operation.setRow(row);
+        if (batch != null) operation.setBatch(batch);
+        
+        if (parameters != null) operation.setParameters(parameters);
+        else if (row != null) operation.setRow(row);
         else if (rowCollection != null) operation.setRows(rowCollection);
         else if (rowArray != null) operation.setRows(rowArray);
         else if (rowMap != null) operation.setRows(rowMap);
@@ -44,7 +49,7 @@ public abstract class ModifyOperationBuilder<R, B extends ModifyOperationBuilder
     @SuppressWarnings("unchecked")
     public B batch(boolean batch)
     {
-        // TODO
+        this.batch = batch;
         return (B)this;
     }
     
@@ -52,7 +57,7 @@ public abstract class ModifyOperationBuilder<R, B extends ModifyOperationBuilder
     @SuppressWarnings("unchecked")
     public B parameters(Object... parameters)
     {
-        // TODO
+        this.parameters = parameters;
         return (B)this;
     }
     

@@ -16,30 +16,27 @@
  */
 package org.sormula.tests.operation.builder;
 
-import org.sormula.annotation.OrderBy;
 import org.sormula.annotation.Where;
 
 /**
- * Row class for select operation tests in org.sormula.tests.operation.builder.
+ * Row class for modify operation tests in org.sormula.tests.operation.builder.
  * 
  * @author Jeff Miller
  */
 @Where(name = "forType", fieldNames = "type")
-@OrderBy(name = "idDescending", descending = "id")
-@OrderBy(name = "da", ascending = "description")
-public class SelectOperationBuilderTestRow
+public class ModifyOperationBuilderTestRow
 {
     int id;
     int type;
     String description;
     
     
-    public SelectOperationBuilderTestRow()
+    public ModifyOperationBuilderTestRow()
     {
     }
 
     
-    public SelectOperationBuilderTestRow(int id, int type, String description)
+    public ModifyOperationBuilderTestRow(int id, int type, String description)
     {
         this.id = id;
         this.type = type;

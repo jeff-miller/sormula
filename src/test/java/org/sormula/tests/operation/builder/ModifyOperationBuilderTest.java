@@ -20,6 +20,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.sormula.SormulaException;
+import org.sormula.operation.ArrayListSelectOperation;
+import org.sormula.operation.DeleteOperation;
 import org.sormula.operation.InsertOperation;
 import org.sormula.operation.builder.ModifyOperationBuilder;
 import org.sormula.tests.DatabaseTest;
@@ -66,13 +68,40 @@ public class ModifyOperationBuilderTest extends DatabaseTest<ModifyOperationBuil
     
     
     @Test
-    public void testInsertOperationBuilder() throws SormulaException
+    public void DeletetOperationBuilder() throws SormulaException
+    {
+        // tests builder methods in DeletetOperationBuilder
+        begin();
+        
+        try (ArrayListSelectOperation<ModifyOperationBuilderTestRow> selectType1Operation =
+                new ArrayListSelectOperation<>(getTable(), "forType"))
+        {
+            selectType1Operation.setParameters(1);
+            List<ModifyOperationBuilderTestRow> rowsToDelete = selectType1Operation.selectAll();
+            assert rowsToDelete.size() > 0 : "no rows to delete";
+            
+            try (DeleteOperation<ModifyOperationBuilderTestRow> operation =
+                    DeleteOperation.builder(getTable())
+                    .rows(rowsToDelete) // test rows(Collection) method
+                    .build())
+            {
+                operation.execute();
+                assert selectType1Operation.selectAll().size() == 0 : "delete failed";
+            }
+        }        
+        
+        commit();
+    }
+    
+    
+    @Test
+    public void InsertOperationBuilder() throws SormulaException
     {
         // tests builder methods in InsertOperationBuilder
         begin();
         try (InsertOperation<ModifyOperationBuilderTestRow> operation =
                 InsertOperation.builder(getTable())
-                .row(new ModifyOperationBuilderTestRow(999, 9, "insert test row"))
+                .row(new ModifyOperationBuilderTestRow(999, 9, "insert test row")) // test row(Row) method
                 .build())
         {
             operation.execute();

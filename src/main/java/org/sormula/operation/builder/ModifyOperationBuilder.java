@@ -21,6 +21,7 @@ public abstract class ModifyOperationBuilder<R, B extends ModifyOperationBuilder
     extends SqlOperationBuilder<R, B, T>
 {
     R row;
+    Collection<R> rowCollection;
     
     
     public ModifyOperationBuilder(Table<R> table) 
@@ -32,6 +33,7 @@ public abstract class ModifyOperationBuilder<R, B extends ModifyOperationBuilder
     protected void init(T operation) throws SormulaException
     {
         if (row != null) operation.setRow(row);
+        else if (rowCollection != null) operation.setRows(rowCollection);
     }
     
     
@@ -62,7 +64,7 @@ public abstract class ModifyOperationBuilder<R, B extends ModifyOperationBuilder
     @SuppressWarnings("unchecked")
     public B rows(Collection<R> rows)
     {
-        // TODO
+        rowCollection = rows;
         return (B)this;
     }
     

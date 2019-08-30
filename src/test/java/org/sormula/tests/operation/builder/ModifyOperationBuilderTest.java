@@ -23,6 +23,7 @@ import org.sormula.SormulaException;
 import org.sormula.operation.ArrayListSelectOperation;
 import org.sormula.operation.DeleteOperation;
 import org.sormula.operation.InsertOperation;
+import org.sormula.operation.UpdateOperation;
 import org.sormula.operation.builder.ModifyOperationBuilder;
 import org.sormula.tests.DatabaseTest;
 import org.testng.annotations.Test;
@@ -68,25 +69,25 @@ public class ModifyOperationBuilderTest extends DatabaseTest<ModifyOperationBuil
     
     
     @Test
-    public void DeletetOperationBuilder() throws SormulaException
+    public void DeleteOperationBuilder() throws SormulaException
     {
         // tests builder methods in DeletetOperationBuilder
         begin();
         
-        try (ArrayListSelectOperation<ModifyOperationBuilderTestRow> selectType1Operation =
+        try (ArrayListSelectOperation<ModifyOperationBuilderTestRow> selectDeletedOperation =
                 new ArrayListSelectOperation<>(getTable(), "forType"))
         {
-            selectType1Operation.setParameters(1);
-            List<ModifyOperationBuilderTestRow> rowsToDelete = selectType1Operation.selectAll();
+            selectDeletedOperation.setParameters(1);
+            List<ModifyOperationBuilderTestRow> rowsToDelete = selectDeletedOperation.selectAll();
             assert rowsToDelete.size() > 0 : "no rows to delete";
             
-            try (DeleteOperation<ModifyOperationBuilderTestRow> operation =
+            try (DeleteOperation<ModifyOperationBuilderTestRow> testOperation =
                     DeleteOperation.builder(getTable())
                     .rows(rowsToDelete) // test rows(Collection) method
                     .build())
             {
-                operation.execute();
-                assert selectType1Operation.selectAll().size() == 0 : "delete failed";
+                testOperation.execute();
+                assert selectDeletedOperation.selectAll().size() == 0 : "delete failed";
             }
         }        
         
@@ -99,15 +100,50 @@ public class ModifyOperationBuilderTest extends DatabaseTest<ModifyOperationBuil
     {
         // tests builder methods in InsertOperationBuilder
         begin();
-        try (InsertOperation<ModifyOperationBuilderTestRow> operation =
+        try (InsertOperation<ModifyOperationBuilderTestRow> testOperation =
                 InsertOperation.builder(getTable())
                 .row(new ModifyOperationBuilderTestRow(999, 9, "insert test row")) // test row(Row) method
                 .build())
         {
-            operation.execute();
+            testOperation.execute();
             ModifyOperationBuilderTestRow expectedRow = getTable().select(999);
             assert expectedRow != null : "insert failed";
         }
+        commit();
+    }
+    
+    
+    @Test
+    public void UpdateOperationBuilder() throws SormulaException
+    {
+        // tests builder methods in UpdateOperationBuilder
+        begin();
+        
+        try (ArrayListSelectOperation<ModifyOperationBuilderTestRow> selectUpdatedOperation =
+                new ArrayListSelectOperation<>(getTable(), "forType"))
+        {
+            selectUpdatedOperation.setParameters(7);
+            ModifyOperationBuilderTestRow[] rowsToUpdate = selectUpdatedOperation.selectAll()
+                    .toArray(new ModifyOperationBuilderTestRow[0]);
+            assert rowsToUpdate.length > 0 : "no rows to update";
+            for (ModifyOperationBuilderTestRow row : rowsToUpdate)
+            {
+                row.setDescription("updated");
+            }
+            
+            try (UpdateOperation<ModifyOperationBuilderTestRow> testOperation =
+                    UpdateOperation.builder(getTable())
+                    .rows(rowsToUpdate) // test rows(Row[]) method
+                    .build())
+            {
+                testOperation.execute();
+                for (ModifyOperationBuilderTestRow row : selectUpdatedOperation.selectAll())
+                {
+                    assert row.getDescription().equals("updated") : "update failed";
+                }
+            }
+        }        
+        
         commit();
     }
 }

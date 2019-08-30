@@ -22,6 +22,7 @@ public abstract class ModifyOperationBuilder<R, B extends ModifyOperationBuilder
 {
     R row;
     Collection<R> rowCollection;
+    R[] rowArray;
     
     
     public ModifyOperationBuilder(Table<R> table) 
@@ -34,6 +35,7 @@ public abstract class ModifyOperationBuilder<R, B extends ModifyOperationBuilder
     {
         if (row != null) operation.setRow(row);
         else if (rowCollection != null) operation.setRows(rowCollection);
+        else if (rowArray != null) operation.setRows(rowArray);
     }
     
     
@@ -80,7 +82,7 @@ public abstract class ModifyOperationBuilder<R, B extends ModifyOperationBuilder
     @SuppressWarnings("unchecked")
     public B rows(R[] rows)
     {
-        // TODO
+        rowArray = rows;
         return (B)this;
     }
 }

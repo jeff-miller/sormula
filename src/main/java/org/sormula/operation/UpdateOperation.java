@@ -29,6 +29,7 @@ import org.sormula.cache.Cache;
 import org.sormula.cache.CacheException;
 import org.sormula.log.SormulaLogger;
 import org.sormula.log.SormulaLoggerFactory;
+import org.sormula.operation.builder.UpdateOperationBuilder;
 import org.sormula.operation.cascade.CascadeOperation;
 import org.sormula.operation.cascade.UpdateCascadeOperation;
 import org.sormula.reflect.RowField;
@@ -46,6 +47,20 @@ import org.sormula.translator.RowTranslator;
 public class UpdateOperation<R> extends ModifyOperation<R>
 {
     private static final SormulaLogger log = SormulaLoggerFactory.getClassLogger();
+
+    
+    /**
+     * Creates a builder.
+     * 
+     * @param <R> type of row in table
+     * @param table select from this table
+     * @return builder
+     * @since 4.4
+     */
+    public static <R> UpdateOperationBuilder<R> builder(Table<R> table)
+    {
+        return new UpdateOperationBuilder<R>(table);  
+    }
     
     
     /**

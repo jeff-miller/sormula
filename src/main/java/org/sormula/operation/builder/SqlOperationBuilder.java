@@ -1,5 +1,6 @@
 package org.sormula.operation.builder;
 
+import java.util.HashMap;
 import java.util.Map;
 
 import org.sormula.SormulaException;
@@ -22,7 +23,13 @@ public abstract class SqlOperationBuilder<R, B extends SqlOperationBuilder, T ex
     String whereConditionName;
     Object[] parameters;
     Integer queryTimeout;
-
+    Boolean cached;
+    Boolean cascade;
+    String customSql;
+    Boolean includeIdentityColumns;
+    Map<String, Object> namedParameterMap;
+    Boolean readOnly;
+    
     
     public SqlOperationBuilder(Table<R> table) 
     {
@@ -41,12 +48,15 @@ public abstract class SqlOperationBuilder<R, B extends SqlOperationBuilder, T ex
 
     protected void init(T operation) throws SormulaException
     {
-        // setWhere prior to super.init to allow maximumRowsRead from builder to override 
-        // maximumRowsRead from where annotation
         if (whereConditionName != null) operation.setWhere(whereConditionName);
-        
         if (parameters != null) operation.setParameters(parameters);
         if (queryTimeout != null) operation.setQueryTimeout(queryTimeout);
+        if (cached != null) operation.setCached(cached);
+        if (cascade != null) operation.setCascade(cascade);
+        if (customSql != null) operation.setCustomSql(customSql);
+        if (includeIdentityColumns != null) operation.setIncludeIdentityColumns(includeIdentityColumns);
+        if (namedParameterMap != null) operation.setNamedParameterMap(namedParameterMap);
+        if (readOnly != null) operation.setReadOnly(readOnly);
     }
     
     
@@ -77,7 +87,7 @@ public abstract class SqlOperationBuilder<R, B extends SqlOperationBuilder, T ex
     @SuppressWarnings("unchecked")
     public B cached(boolean cached)
     {
-        // TODO
+        this.cached = cached;
         return (B)this;
     }
     
@@ -85,7 +95,7 @@ public abstract class SqlOperationBuilder<R, B extends SqlOperationBuilder, T ex
     @SuppressWarnings("unchecked")
     public B cascade(boolean cascade)
     {
-        // TODO
+        this.cascade = cascade;
         return (B)this;
     }
     
@@ -93,7 +103,7 @@ public abstract class SqlOperationBuilder<R, B extends SqlOperationBuilder, T ex
     @SuppressWarnings("unchecked")
     public B customSql(String customSql)
     {
-        // TODO
+        this.customSql = customSql;
         return (B)this;
     }
     
@@ -101,7 +111,7 @@ public abstract class SqlOperationBuilder<R, B extends SqlOperationBuilder, T ex
     @SuppressWarnings("unchecked")
     public B includeIdentityColumns(boolean includeIdentityColumns)
     {
-        // TODO
+        this.includeIdentityColumns = includeIdentityColumns;
         return (B)this;
     }
     
@@ -109,7 +119,7 @@ public abstract class SqlOperationBuilder<R, B extends SqlOperationBuilder, T ex
     @SuppressWarnings("unchecked")
     public B namedParameterMap(Map<String, Object> namedParameterMap)
     {
-        // TODO
+        this.namedParameterMap = namedParameterMap;
         return (B)this;
     }
     
@@ -117,7 +127,8 @@ public abstract class SqlOperationBuilder<R, B extends SqlOperationBuilder, T ex
     @SuppressWarnings("unchecked")
     public B parameter(String name, Object value)
     {
-        // TODO
+        if (namedParameterMap == null) namedParameterMap = new HashMap<>();
+        namedParameterMap.put(name, value);
         return (B)this;
     }
     
@@ -125,7 +136,7 @@ public abstract class SqlOperationBuilder<R, B extends SqlOperationBuilder, T ex
     @SuppressWarnings("unchecked")
     public B readOnly(boolean readOnly)
     {
-        // TODO
+        this.readOnly = readOnly;
         return (B)this;
     }
     

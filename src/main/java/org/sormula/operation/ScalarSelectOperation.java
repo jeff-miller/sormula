@@ -239,7 +239,7 @@ public class ScalarSelectOperation<R> extends SqlOperation<R> implements Iterabl
         setNextParameter(1);
         resetRowsReadCount();
         
-        if (isCached())
+        if (isCached() && table.isCached())
         {
             // table is cached
         	Cache<R> cache = table.getCache();
@@ -471,7 +471,7 @@ public class ScalarSelectOperation<R> extends SqlOperation<R> implements Iterabl
                         operationTime.stop();
                         postRead(row);
                         
-                        if (isCached())
+                        if (isCached() && cache != null)
                         {
                             // now that row has been selected, key is known, check if cache has newer
                             R cachedRow = cache.selected(row);

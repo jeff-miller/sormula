@@ -18,6 +18,7 @@ package org.sormula.tests.operation.builder;
 
 import java.sql.ResultSet;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -66,6 +67,42 @@ public class SelectOperationBuilderTest extends DatabaseTest<SelectOperationBuil
         
         begin();
         getTable().insertAll(testRows);
+        commit();
+    }
+    
+    
+    @Test
+    public void testSqlOperationBuilder() throws SormulaException
+    {
+        // tests builder methods in SqlOperationBuilder
+        begin();
+        try (ArrayListSelectOperation<SelectOperationBuilderTestRow> operation =
+                ArrayListSelectOperation.builder(getTable())
+                .cached(true)
+                .cascade(false) // true by default so test false
+                .customSql("")
+                .includeIdentityColumns(false) // true by default so test false
+                .namedParameterMap(new HashMap<String, Object>())
+                .parameter("test1", 1)
+                .parameter("test2", "two")
+                .readOnly(true)
+                .build())
+        {
+            assert operation.isCached() : "cached not set";
+            assert !operation.isCascade() : "cascade not set";
+            assert operation.getCustomSql() != null : "custom sql not set";
+            assert !operation.isIncludeIdentityColumns() : "include identity columns not set";
+            assert operation.getNamedParameterMap() != null : "named parameter map not set";
+            
+            Object test1Parameter = operation.getParameter("test1");
+            assert test1Parameter != null && test1Parameter.equals(1) : "named parameter 1 not set";
+            Object test2Parameter = operation.getParameter("test2");
+            assert test2Parameter != null && test2Parameter.equals("two") : "named parameter 2 not set";
+            
+            assert operation.isReadOnly() : "readOnly not set";
+            
+            operation.selectAll();
+        }
         commit();
     }
     

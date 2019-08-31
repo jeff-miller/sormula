@@ -492,7 +492,7 @@ public abstract class SqlOperation<R> implements AutoCloseable
      */
     public void close() throws OperationException
     {
-        if (isCached())
+        if (isCached() && table.isCached())
         {
             try
             {

@@ -15,6 +15,10 @@ import org.sormula.operation.SaveOperation;
 public class SaveOperationBuilder<R>
     extends ModifyOperationBuilder<R, SaveOperationBuilder<R>, SaveOperation<R>>
 {
+    Boolean cached;
+    Boolean cascade;
+    
+    
     public SaveOperationBuilder(Table<R> table) 
     {
         super(table);
@@ -26,6 +30,22 @@ public class SaveOperationBuilder<R>
     {
         SaveOperation<R> operation = new SaveOperation<>(getTable());
         init(operation);
+        if (cached != null) operation.setCached(cached);
+        if (cascade != null) operation.setCascade(cascade);
         return operation;
+    }
+    
+    
+    public SaveOperationBuilder<R> cached(boolean cached)
+    {
+        this.cached = cached;
+        return this;
+    }
+    
+    
+    public SaveOperationBuilder<R> cascade(boolean cascade)
+    {
+        this.cascade = cascade;
+        return this;
     }
 }

@@ -195,12 +195,18 @@ public class ModifyOperationBuilderTest extends DatabaseTest<ModifyOperationBuil
                 SaveOperation.builder(getTable())
                 .batch(true)
                 .parameters("test")
+                .cached(true)
+                .cascade(false) // true by default so test false
                 .build())
         {
             assert testOperation.isBatch() : "batch not set";
             
             Object[] parameters = testOperation.getParameters();
             assert parameters != null && parameters[0].equals("test") : "parameters not set";
+            
+            assert testOperation.isCached() : "cached not set";
+            assert !testOperation.isCascade() : "cascade not set";
+            testOperation.execute();
         }
         commit();
     }

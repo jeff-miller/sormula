@@ -1,5 +1,7 @@
 package org.sormula.operation.builder;
 
+import java.util.Map;
+
 import org.sormula.SormulaException;
 import org.sormula.Table;
 import org.sormula.operation.SqlOperation;
@@ -20,7 +22,7 @@ public abstract class SqlOperationBuilder<R, B extends SqlOperationBuilder, T ex
     String whereConditionName;
     Object[] parameters;
     Integer queryTimeout;
-    // TODO other like cached(boolean), cascade(boolean)?
+
     
     public SqlOperationBuilder(Table<R> table) 
     {
@@ -68,6 +70,86 @@ public abstract class SqlOperationBuilder<R, B extends SqlOperationBuilder, T ex
     public B queryTimeout(int queryTimeout)
     {
         this.queryTimeout = queryTimeout;
+        return (B)this;
+    }
+    
+    
+    @SuppressWarnings("unchecked")
+    public B cached(boolean cached)
+    {
+        // TODO
+        return (B)this;
+    }
+    
+    
+    @SuppressWarnings("unchecked")
+    public B cascade(boolean cascade)
+    {
+        // TODO
+        return (B)this;
+    }
+    
+    
+    @SuppressWarnings("unchecked")
+    public B customSql(String customSql)
+    {
+        // TODO
+        return (B)this;
+    }
+    
+    
+    @SuppressWarnings("unchecked")
+    public B includeIdentityColumns(boolean includeIdentityColumns)
+    {
+        // TODO
+        return (B)this;
+    }
+    
+    
+    @SuppressWarnings("unchecked")
+    public B namedParameterMap(Map<String, Object> namedParameterMap)
+    {
+        // TODO
+        return (B)this;
+    }
+    
+    
+    @SuppressWarnings("unchecked")
+    public B parameter(String name, Object value)
+    {
+        // TODO
+        return (B)this;
+    }
+    
+    
+    @SuppressWarnings("unchecked")
+    public B readOnly(boolean readOnly)
+    {
+        // TODO
+        return (B)this;
+    }
+    
+
+    @SuppressWarnings("unchecked")
+    public B requiredCascades(String... requiredCascades)
+    {
+        // TODO
+        return (B)this;
+    }
+    
+
+    @SuppressWarnings("unchecked")
+    public B timingId(String timingId)
+    {
+        // TODO
+        return (B)this;
+    }
+    
+    
+    @SuppressWarnings("unchecked")
+    public B timings(boolean timings)
+    {
+        // TODO
         return (B)this;
     }
 }

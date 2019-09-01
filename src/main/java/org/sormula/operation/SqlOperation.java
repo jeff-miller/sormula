@@ -513,11 +513,12 @@ public abstract class SqlOperation<R> implements AutoCloseable
      * Gets the timing id for this operation. If none is set then the default is the
      * hexadecimal string of the hash code of {@link #getSql()}.
      * 
-     * @return timing id for this operation
+     * @return timing id for this operation or null if {@link #isTimings()} is false
      * @since 1.5
      */
     public String getTimingId()
     {
+        if (operationTime == null) return timingId;
         return operationTime.getTimingId();
     }
 

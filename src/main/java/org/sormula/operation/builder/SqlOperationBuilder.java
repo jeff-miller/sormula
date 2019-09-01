@@ -29,6 +29,9 @@ public abstract class SqlOperationBuilder<R, B extends SqlOperationBuilder, T ex
     Boolean includeIdentityColumns;
     Map<String, Object> namedParameterMap;
     Boolean readOnly;
+    String[] requiredCascades;
+    String timingId;
+    Boolean timings;
     
     
     public SqlOperationBuilder(Table<R> table) 
@@ -57,6 +60,9 @@ public abstract class SqlOperationBuilder<R, B extends SqlOperationBuilder, T ex
         if (includeIdentityColumns != null) operation.setIncludeIdentityColumns(includeIdentityColumns);
         if (namedParameterMap != null) operation.setNamedParameterMap(namedParameterMap);
         if (readOnly != null) operation.setReadOnly(readOnly);
+        if (requiredCascades != null) operation.setRequiredCascades(requiredCascades);
+        if (timingId != null) operation.setTimingId(timingId);
+        if (timings != null) operation.setTimings(timings);
     }
     
     
@@ -144,7 +150,7 @@ public abstract class SqlOperationBuilder<R, B extends SqlOperationBuilder, T ex
     @SuppressWarnings("unchecked")
     public B requiredCascades(String... requiredCascades)
     {
-        // TODO
+        this.requiredCascades = requiredCascades;
         return (B)this;
     }
     
@@ -152,7 +158,7 @@ public abstract class SqlOperationBuilder<R, B extends SqlOperationBuilder, T ex
     @SuppressWarnings("unchecked")
     public B timingId(String timingId)
     {
-        // TODO
+        this.timingId = timingId;
         return (B)this;
     }
     
@@ -160,7 +166,7 @@ public abstract class SqlOperationBuilder<R, B extends SqlOperationBuilder, T ex
     @SuppressWarnings("unchecked")
     public B timings(boolean timings)
     {
-        // TODO
+        this.timings = timings;
         return (B)this;
     }
 }

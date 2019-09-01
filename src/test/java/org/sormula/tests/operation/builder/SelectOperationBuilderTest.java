@@ -86,6 +86,9 @@ public class SelectOperationBuilderTest extends DatabaseTest<SelectOperationBuil
                 .parameter("test1", 1)
                 .parameter("test2", "two")
                 .readOnly(true)
+                .requiredCascades("a", "b", "c")
+                .timings(true)
+                .timingId("z")
                 .build())
         {
             assert operation.isCached() : "cached not set";
@@ -100,6 +103,16 @@ public class SelectOperationBuilderTest extends DatabaseTest<SelectOperationBuil
             assert test2Parameter != null && test2Parameter.equals("two") : "named parameter 2 not set";
             
             assert operation.isReadOnly() : "readOnly not set";
+            
+            String[] requiredCascades = operation.getRequiredCascades();
+            assert requiredCascades.length == 3 && 
+                    requiredCascades[0].equals("a") &&
+                    requiredCascades[1].equals("b") &&
+                    requiredCascades[2].equals("c")
+                    : "required cascades not set";
+            
+            assert operation.isTimings() : "timings not set";
+            assert operation.getTimingId() != null && operation.getTimingId().equals("z") : "timingId not set";
             
             operation.selectAll();
         }

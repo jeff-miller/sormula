@@ -37,6 +37,7 @@ public class SelectMinOperation<R, T> extends SelectAggregateOperation<R, T>
      * @param <R> type of row in table
      * @param <T> type of aggregate result
      * @param table select from this table
+     * @param expression expression to use as parameter to function
      * @return builder
      * @since 4.4
      */

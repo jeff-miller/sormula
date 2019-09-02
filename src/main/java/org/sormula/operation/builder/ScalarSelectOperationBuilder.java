@@ -24,7 +24,7 @@ public class ScalarSelectOperationBuilder<R>
     @Override
     public ScalarSelectOperation<R> build() throws SormulaException 
     {
-        ScalarSelectOperation<R> operation = new ScalarSelectOperation<>(getTable(), ""); // TODO use primary key constructor?
+        ScalarSelectOperation<R> operation = new ScalarSelectOperation<>(getTable());
         init(operation);
         return operation;
     }

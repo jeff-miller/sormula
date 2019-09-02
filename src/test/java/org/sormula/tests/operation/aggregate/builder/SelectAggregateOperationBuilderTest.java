@@ -75,7 +75,7 @@ public class SelectAggregateOperationBuilderTest extends DatabaseTest<SelectAggr
     
     
     @Test
-    public void testSelectAvgOperationBuilder() throws SormulaException
+    public void buildertestSelectAvgOperation() throws SormulaException
     {
         // tests builder methods in SelectAvgOperationBuilder
         begin();
@@ -105,7 +105,7 @@ public class SelectAggregateOperationBuilderTest extends DatabaseTest<SelectAggr
     
     
     @Test
-    public void testSelectCountOperationBuilder() throws SormulaException
+    public void builderSelectCountOperation() throws SormulaException
     {
         // tests builder methods in SelectCountOperationBuilder
         begin();
@@ -135,7 +135,7 @@ public class SelectAggregateOperationBuilderTest extends DatabaseTest<SelectAggr
     
     
     @Test
-    public void testSelectMaxOperationBuilder() throws SormulaException
+    public void builderSelectMaxOperation() throws SormulaException
     {
         // tests builder methods in SelectMaxOperationBuilder
         begin();
@@ -165,7 +165,7 @@ public class SelectAggregateOperationBuilderTest extends DatabaseTest<SelectAggr
     
     
     @Test
-    public void testSelectMinOperationBuilder() throws SormulaException
+    public void builderSelectMinOperation() throws SormulaException
     {
         // tests builder methods in SelectMinOperationBuilder
         begin();
@@ -195,7 +195,7 @@ public class SelectAggregateOperationBuilderTest extends DatabaseTest<SelectAggr
     
     
     @Test
-    public void testSelectSumOperationBuilder() throws SormulaException
+    public void builderSelectSumOperation() throws SormulaException
     {
         // tests builder methods in SelectSumOperationBuilder
         begin();

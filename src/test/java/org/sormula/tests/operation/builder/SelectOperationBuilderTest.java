@@ -72,7 +72,7 @@ public class SelectOperationBuilderTest extends DatabaseTest<SelectOperationBuil
     
     
     @Test
-    public void testSqlOperationBuilder() throws SormulaException
+    public void builderSqlOperation() throws SormulaException
     {
         // tests builder methods in SqlOperationBuilder
         begin();
@@ -114,6 +114,7 @@ public class SelectOperationBuilderTest extends DatabaseTest<SelectOperationBuil
             assert operation.isTimings() : "timings not set";
             assert operation.getTimingId() != null && operation.getTimingId().equals("z") : "timingId not set";
             
+            operation.setTimings(false); // turn off before select to avoid cluttering test output
             operation.selectAll();
         }
         commit();
@@ -121,7 +122,7 @@ public class SelectOperationBuilderTest extends DatabaseTest<SelectOperationBuil
     
     
     @Test
-    public void testSelectOperationBuilder() throws SormulaException
+    public void builderSelectOperation() throws SormulaException
     {
         // tests builder methods in SelectOperationBuilder
         begin();
@@ -142,7 +143,7 @@ public class SelectOperationBuilderTest extends DatabaseTest<SelectOperationBuil
     
     
     @Test
-    public void testScalarSelectOperationBuilder() throws SormulaException
+    public void builderScalarSelectOperation() throws SormulaException
     {
         // tests builder methods in ScalarSelectOperationBuilder
         SelectOperationBuilderTestRow parametersFromRow = new SelectOperationBuilderTestRow();
@@ -175,7 +176,7 @@ public class SelectOperationBuilderTest extends DatabaseTest<SelectOperationBuil
     
     
     @Test
-    public void testArrayListSelectOperationBuilder() throws SormulaException
+    public void builderArrayListSelectOperation() throws SormulaException
     {
         begin();
         try (ArrayListSelectOperation<SelectOperationBuilderTestRow> operation =
@@ -191,7 +192,7 @@ public class SelectOperationBuilderTest extends DatabaseTest<SelectOperationBuil
     
     
     @Test
-    public void testMapSelectOperationBuilder() throws SormulaException
+    public void builderMapSelectOperation() throws SormulaException
     {
         // tests builder methods in MapSelectOperationBuilder
         begin();
@@ -218,7 +219,7 @@ public class SelectOperationBuilderTest extends DatabaseTest<SelectOperationBuil
     
     
     @Test
-    public void testHashMapSelectOperationBuilder() throws SormulaException
+    public void builderHashMapSelectOperation() throws SormulaException
     {
         // tests builder methods of HashMapSelectOperationBuilder
         begin();
@@ -243,7 +244,7 @@ public class SelectOperationBuilderTest extends DatabaseTest<SelectOperationBuil
     
     
     @Test
-    public void testLinkedHashMapSelectOperationBuilder() throws SormulaException
+    public void builderLinkedHashMapSelectOperation() throws SormulaException
     {
         // tests builder methods of LinkedHashMapSelectOperationBuilder
         begin();

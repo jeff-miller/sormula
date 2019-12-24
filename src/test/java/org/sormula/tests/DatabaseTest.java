@@ -188,6 +188,16 @@ public class DatabaseTest<R>
             if (sqlShutdown.length() > 0)
             {
                 if (log.isDebugEnabled()) log.debug("execute sqlShutdown=" + sqlShutdown);
+                
+                boolean workAround = false;
+                if (url == null && user == null && password == null) 
+                {
+                    // sometimes testng does not invoke beforeClass method
+                    // open database here as a work-around
+                    open();
+                    workAround = true;
+                }
+                
                 Connection connection = getConnection();
                 Statement statement = connection.createStatement();
                 statement.execute(sqlShutdown);
@@ -195,9 +205,14 @@ public class DatabaseTest<R>
                 if (useTransacation) connection.commit();
                 if (log.isDebugEnabled()) log.debug("close shutdown connection");
                 connection.close();
+                
+                if (workAround) 
+                {
+                    close();
+                }
             }
         } 
-        catch (SQLException e) 
+        catch (Exception e) 
         {
             log.error("sql shutdown error", e);
         }

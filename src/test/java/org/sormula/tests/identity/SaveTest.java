@@ -26,8 +26,6 @@ import org.sormula.log.SormulaLoggerFactory;
 import org.sormula.operation.InsertOperation;
 import org.sormula.operation.UpdateOperation;
 import org.sormula.tests.DatabaseTest;
-import org.testng.annotations.AfterClass;
-import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 
@@ -46,27 +44,18 @@ public class SaveTest extends DatabaseTest<IdentityTest>
 {
     private static final SormulaLogger log = SormulaLoggerFactory.getClassLogger();
     
-    @BeforeClass
-    public void setUp() throws Exception
+
+    @Override
+    protected void open() throws Exception
     {
         if (isTestIdentity())
         {
-            openDatabase();
+            super.open();
             createTable(IdentityTest.class);
         }
         else
         {
             log.info("skipping identity test " + getClass());
-        }
-}
-    
-    
-    @AfterClass
-    public void tearDown() throws Exception
-    {
-        if (isTestIdentity())
-        {
-            closeDatabase();
         }
     }
     

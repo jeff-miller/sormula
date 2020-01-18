@@ -19,8 +19,6 @@ package org.sormula.tests.cache.readwrite;
 import org.sormula.SormulaException;
 import org.sormula.cache.readwrite.ReadWriteCache;
 import org.sormula.tests.cache.CacheTest;
-import org.testng.annotations.AfterClass;
-import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 
@@ -32,18 +30,11 @@ import org.testng.annotations.Test;
 @Test(singleThreaded=true, groups="cache.readwrite.delete", dependsOnGroups="cache.readwrite.insert")
 public class DeleteTest extends CacheTest<SormulaCacheTestRW>
 {
-    @BeforeClass
-    public void setUp() throws Exception
+    @Override
+    protected void open() throws Exception
     {
-        openDatabase();
+        super.open();
         createTable(SormulaCacheTestRW.class);
-    }
-    
-    
-    @AfterClass
-    public void tearDown() throws Exception
-    {
-        closeDatabase();
     }
     
     

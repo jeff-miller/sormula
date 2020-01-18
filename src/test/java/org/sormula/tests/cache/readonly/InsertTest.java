@@ -23,8 +23,6 @@ import org.sormula.Table;
 import org.sormula.log.SormulaLogger;
 import org.sormula.log.SormulaLoggerFactory;
 import org.sormula.tests.cache.CacheTest;
-import org.testng.annotations.AfterClass;
-import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 
@@ -39,10 +37,10 @@ public class InsertTest extends CacheTest<SormulaCacheTestRO>
 {
     private static final SormulaLogger log = SormulaLoggerFactory.getClassLogger();
     
-    @BeforeClass
-    public void setUp() throws Exception
+    @Override
+    protected void open() throws Exception
     {
-        openDatabase();
+        super.open();
         createTable(SormulaCacheTestRO.class, 
             "CREATE TABLE " + getSchemaPrefix() + SormulaCacheTestRO.class.getSimpleName() + " (" +
             " id INTEGER NOT NULL PRIMARY KEY," +
@@ -50,13 +48,6 @@ public class InsertTest extends CacheTest<SormulaCacheTestRO>
             " description VARCHAR(30)" +
             ")"
         );
-    }
-    
-    
-    @AfterClass
-    public void tearDown() throws Exception
-    {
-        closeDatabase();
     }
     
     

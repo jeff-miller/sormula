@@ -25,8 +25,6 @@ import org.sormula.log.SormulaLogger;
 import org.sormula.log.SormulaLoggerFactory;
 import org.sormula.tests.DatabaseTest;
 import org.sormula.translator.standard.LocalTimeTranslator;
-import org.testng.annotations.AfterClass;
-import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 
@@ -45,12 +43,12 @@ public class TimeTranslatorTest extends DatabaseTest<SormulaTestTime>
     SormulaTestTime inserted;
     
     
-    @BeforeClass
-    public void setUp() throws Exception
+    @Override
+    protected void open() throws Exception
     {
         if (isTestTime())
         {
-            openDatabase();
+            super.open();
             createTable(SormulaTestTime.class, 
                 "CREATE TABLE " + getSchemaPrefix() + SormulaTestTime.class.getSimpleName() + " (" +
                 " testSqlTime1 TIME, " +
@@ -59,16 +57,6 @@ public class TimeTranslatorTest extends DatabaseTest<SormulaTestTime>
                 " testLocalTime2 TIME " +
                 ")"
             );
-        }
-    }
-    
-    
-    @AfterClass
-    public void tearDown() throws Exception
-    {
-        if (isTestTime())
-        {
-            closeDatabase();
         }
     }
     

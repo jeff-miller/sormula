@@ -20,8 +20,6 @@ import org.sormula.SormulaException;
 import org.sormula.log.SormulaLogger;
 import org.sormula.log.SormulaLoggerFactory;
 import org.sormula.tests.DatabaseTest;
-import org.testng.annotations.AfterClass;
-import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 
@@ -36,12 +34,12 @@ public class InsertTest extends DatabaseTest<SormulaIdentityParent>
     private static final SormulaLogger log = SormulaLoggerFactory.getClassLogger();
     
     
-    @BeforeClass
-    public void setUp() throws Exception
+    @Override
+    protected void open() throws Exception
     {
         if (isTestIdentity())
         {
-            openDatabase();
+            super.open();
             createTable(SormulaIdentityParent.class, 
                 "CREATE TABLE " + getSchemaPrefix() + SormulaIdentityParent.class.getSimpleName() + " (" +
                 " parentid " + getIdentityColumnDDL() + "," +
@@ -65,17 +63,6 @@ public class InsertTest extends DatabaseTest<SormulaIdentityParent>
         {
             log.info("skipping identity test " + getClass());
         }
-    }
-    
-    
-    @AfterClass
-    public void tearDown() throws Exception
-    {
-        if (isTestIdentity())
-        {
-            closeDatabase();
-        }
-
     }
     
     

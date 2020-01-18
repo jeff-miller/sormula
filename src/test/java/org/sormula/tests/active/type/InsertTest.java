@@ -26,8 +26,6 @@ import org.sormula.active.ActiveDatabase;
 import org.sormula.active.ActiveTable;
 import org.sormula.annotation.ExplicitType;
 import org.sormula.tests.active.ActiveDatabaseTest;
-import org.testng.annotations.AfterClass;
-import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 
@@ -40,10 +38,10 @@ import org.testng.annotations.Test;
 @Test(singleThreaded=true, groups="active.insert")
 public class InsertTest extends ActiveDatabaseTest<SormulaTypeTestAR>
 {
-    @BeforeClass
-    public void setUp() throws Exception
+    @Override
+    protected void open() throws Exception
     {
-        openDatabase();
+        super.open();
         
         createTable(SormulaTypeTestAR.class, 
             "CREATE TABLE " + getSchemaPrefix() + SormulaTypeTestAR.class.getSimpleName() + " (" +
@@ -53,13 +51,6 @@ public class InsertTest extends ActiveDatabaseTest<SormulaTypeTestAR>
             " test1 INTEGER NOT NULL " +
             ")"
         );
-    }
-    
-    
-    @AfterClass
-    public void tearDown() throws Exception
-    {
-        closeDatabase();
     }
     
     

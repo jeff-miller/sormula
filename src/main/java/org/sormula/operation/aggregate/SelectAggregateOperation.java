@@ -36,7 +36,7 @@ import org.sormula.translator.ColumnTranslator;
  * associated with column in row R will be used.
  * <p>
  * If expression is not a column, then T should match the expression type. Override {@link #readAggregate()}
- * to provide a customized read for expression. By default where expression is not a column name, then
+ * to provide a customized read for expression. When expression is not a column name, then
  * {@link ResultSet#getObject(int)} is used. 
  * 
  * @since 1.1
@@ -122,6 +122,8 @@ public class SelectAggregateOperation<R, T> extends ScalarSelectOperation<R>
     {
         T result = null;
         ResultSet rs = getResultSet();
+        
+        if (rs == null) throw new OperationException("execute() must be invoked prior to readAggregate()");
         
         try
         {

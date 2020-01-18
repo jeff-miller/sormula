@@ -26,8 +26,6 @@ import org.sormula.operation.DeleteOperation;
 import org.sormula.operation.ReadOnlyException;
 import org.sormula.operation.SqlOperation;
 import org.sormula.tests.DatabaseTest;
-import org.testng.annotations.AfterClass;
-import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 
@@ -39,10 +37,10 @@ import org.testng.annotations.Test;
 @Test(singleThreaded=true, groups="operation.readonly")
 public class ReadOnlyTest extends DatabaseTest<SormulaTest4RO>
 {
-    @BeforeClass
-    public void setUp() throws Exception
+    @Override
+    protected void open() throws Exception
     {
-        openDatabase();
+        super.open();
         createTable(SormulaTest4RO.class, 
             "CREATE TABLE " + getSchemaPrefix() + SormulaTest4RO.class.getSimpleName() + " (" +
             " id INTEGER NOT NULL PRIMARY KEY," +
@@ -62,13 +60,6 @@ public class ReadOnlyTest extends DatabaseTest<SormulaTest4RO>
         table.setReadOnly(false); // explicitly set since table is annotated with @Row(readOnly=true)
         table.insertAll(testRows);
         commit();
-    }
-    
-    
-    @AfterClass
-    public void tearDown() throws Exception
-    {
-        closeDatabase();
     }
     
     

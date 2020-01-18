@@ -20,8 +20,6 @@ import org.sormula.SormulaException;
 import org.sormula.Table;
 import org.sormula.operation.ScalarSelectOperation;
 import org.sormula.tests.DatabaseTest;
-import org.testng.annotations.AfterClass;
-import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 
@@ -33,20 +31,13 @@ import org.testng.annotations.Test;
 @Test(singleThreaded=true, groups="cascade.delete", dependsOnGroups="cascade.insert")
 public class DeleteTest extends DatabaseTest<SormulaNCTestLevel1>
 {
-    @BeforeClass
-    public void setUp() throws Exception
+    @Override
+    protected void open() throws Exception
     {
-        openDatabase();
+        super.open();
         createTable(SormulaNCTestLevel1.class); 
     }
-    
-    
-    @AfterClass
-    public void tearDown() throws Exception
-    {
-        closeDatabase();
-    }
-    
+
     
     @Test
     public void deleteNamedCascades() throws SormulaException

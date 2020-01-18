@@ -24,8 +24,6 @@ import org.sormula.log.SormulaLogger;
 import org.sormula.log.SormulaLoggerFactory;
 import org.sormula.tests.DatabaseTest;
 import org.sormula.translator.standard.BigDecimalTranslator;
-import org.testng.annotations.AfterClass;
-import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 
@@ -44,28 +42,19 @@ public class BigDecimalTranslatorTest extends DatabaseTest<SormulaTestBD>
 	SormulaTestBD inserted;
     
     
-    @BeforeClass
-    public void setUp() throws Exception
+	@Override
+    protected void open() throws Exception
     {
         if (isTestBigDecimal())
         {
-            openDatabase();
+            super.open();
+            
             createTable(SormulaTestBD.class, 
                 "CREATE TABLE " + getSchemaPrefix() + SormulaTestBD.class.getSimpleName() + " (" +
                 " testBigDecimal1 DECIMAL(18,8)," + // firebird only allows max precesion of 18
                 " testBigDecimal2 DECIMAL(18,8)"  + // firebird only allows max precesion of 18
                 ")"
             );
-        }
-    }
-    
-    
-    @AfterClass
-    public void tearDown() throws Exception
-    {
-        if (isTestBigDecimal())
-        {
-            closeDatabase();
         }
     }
     

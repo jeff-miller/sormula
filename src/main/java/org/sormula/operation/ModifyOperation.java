@@ -200,13 +200,15 @@ public abstract class ModifyOperation<R> extends SqlOperation<R>
     public void execute() throws OperationException
     {
         if (readOnly) throw new ReadOnlyException("Attempt to modify when table or operation is read-only");
+        
+        Table<R> table = getTable();
             
-        if (isCached())
+        if (isCached() && table.isCached())
         {
             try
             {
                 // notify cache of start of execution
-                getTable().getCache().execute(this);
+                table.getCache().execute(this);
             }
             catch (CacheException e)
             {
@@ -228,7 +230,7 @@ public abstract class ModifyOperation<R> extends SqlOperation<R>
                 if (log.isDebugEnabled()) log.debug("begin batch");
                 
                 // batch modifications are not cached, flush to avoid inconsistencies
-                getTable().flush();
+                table.flush();
                 
                 // execute all rows as a batch
                 if (rows != null && rows.size() > 0) 

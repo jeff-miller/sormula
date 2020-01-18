@@ -20,8 +20,6 @@ import java.util.ArrayList;
 
 import org.sormula.SormulaException;
 import org.sormula.tests.DatabaseTest;
-import org.testng.annotations.AfterClass;
-import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 
@@ -33,10 +31,10 @@ import org.testng.annotations.Test;
 @Test(singleThreaded=true, groups="operation.insert")
 public class InsertTestPK extends DatabaseTest<SormulaTestPK>
 {
-    @BeforeClass
-    public void setUp() throws Exception
+    @Override
+    protected void open() throws Exception
     {
-        openDatabase();
+        super.open();
         
         // order of columns is intentionally different from class fields
         createTable(SormulaTestPK.class, 
@@ -48,13 +46,6 @@ public class InsertTestPK extends DatabaseTest<SormulaTestPK>
             " primary key (id, type)" +
             ")"
         );
-    }
-    
-    
-    @AfterClass
-    public void tearDown() throws Exception
-    {
-        closeDatabase();
     }
     
     

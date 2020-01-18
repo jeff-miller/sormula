@@ -19,6 +19,7 @@ package org.sormula.operation;
 import java.util.ArrayList;
 
 import org.sormula.Table;
+import org.sormula.operation.builder.ArrayListSelectOperationBuilder;
 
 
 /**
@@ -26,10 +27,24 @@ import org.sormula.Table;
  * 
  * @since 1.0
  * @author Jeff Miller
- * @param <R> Class associated with a row in table
+ * @param <R> type of row in table
  */
 public class ArrayListSelectOperation<R> extends ListSelectOperation<R>
 {
+    /**
+     * Creates a builder.
+     * 
+     * @param <R> type of row in table
+     * @param table select from this table
+     * @return builder
+     * @since 4.4
+     */
+    public static <R> ArrayListSelectOperationBuilder<R> builder(Table<R> table)
+    {
+        return new ArrayListSelectOperationBuilder<R>(table);  
+    }
+
+    
 	/**
      * Constructs for a table to use primary key where condition. This is the standard 
      * constructor for all {@link SqlOperation} classes.

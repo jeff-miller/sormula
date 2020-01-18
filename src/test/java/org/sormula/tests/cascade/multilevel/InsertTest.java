@@ -22,8 +22,6 @@ import org.sormula.log.SormulaLogger;
 import org.sormula.log.SormulaLoggerFactory;
 import org.sormula.operation.ScalarSelectOperation;
 import org.sormula.tests.DatabaseTest;
-import org.testng.annotations.AfterClass;
-import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 
@@ -37,10 +35,11 @@ public class InsertTest extends DatabaseTest<SormulaTestLevel1>
 {
     private static final SormulaLogger log = SormulaLoggerFactory.getClassLogger();
     
-    @BeforeClass
-    public void setUp() throws Exception
+    
+    @Override
+    protected void open() throws Exception
     {
-        openDatabase();
+        super.open();
         
         // drop tables from previous tests in proper order due to foreign key constraints
         dropTable(getSchemaPrefix() + SormulaTestLevel3.class.getSimpleName());
@@ -84,14 +83,6 @@ public class InsertTest extends DatabaseTest<SormulaTestLevel1>
             );
         child3.closeDatabase();
     }
-    
-    
-    @AfterClass
-    public void tearDown() throws Exception
-    {
-        closeDatabase();
-    }
-    
     
     
     @Test

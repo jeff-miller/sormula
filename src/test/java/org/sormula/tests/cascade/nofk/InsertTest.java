@@ -18,8 +18,6 @@ package org.sormula.tests.cascade.nofk;
 
 import org.sormula.SormulaException;
 import org.sormula.tests.DatabaseTest;
-import org.testng.annotations.AfterClass;
-import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 
@@ -31,10 +29,10 @@ import org.testng.annotations.Test;
 @Test(singleThreaded=true, groups="cascade.insert")
 public class InsertTest extends DatabaseTest<SormulaParentNFK>
 {
-    @BeforeClass
-    public void setUp() throws Exception
+    @Override
+    protected void open() throws Exception
     {
-        openDatabase();
+        super.open();
         createTable(SormulaParentNFK.class, 
             "CREATE TABLE " + getSchemaPrefix() + SormulaParentNFK.class.getSimpleName() + " (" +
             " parentid INTEGER PRIMARY KEY," +
@@ -53,13 +51,6 @@ public class InsertTest extends DatabaseTest<SormulaParentNFK>
                 ")"
             );
         childN.closeDatabase();
-    }
-    
-    
-    @AfterClass
-    public void tearDown() throws Exception
-    {
-        closeDatabase();
     }
     
     

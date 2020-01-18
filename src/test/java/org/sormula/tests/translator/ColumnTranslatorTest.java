@@ -26,8 +26,6 @@ import org.sormula.SormulaException;
 import org.sormula.log.SormulaLogger;
 import org.sormula.log.SormulaLoggerFactory;
 import org.sormula.tests.DatabaseTest;
-import org.testng.annotations.AfterClass;
-import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 
@@ -42,11 +40,12 @@ public class ColumnTranslatorTest extends DatabaseTest<SormulaTest1>
 {
     private static final SormulaLogger log = SormulaLoggerFactory.getClassLogger();
     private static final int TEST_STRING_COLUMN_LENGTH = 20;
+
     
-    @BeforeClass
-    public void setUp() throws Exception
+    @Override
+    protected void open() throws Exception
     {
-        openDatabase();
+        super.open();
         String secondsPrecisionDDL = getSecondsPrecisionDDL();
         String timestampNullKeyword = getTimestampNullKeyword(); // insure null values are stored as null
         createTable(SormulaTest1.class, 
@@ -80,13 +79,6 @@ public class ColumnTranslatorTest extends DatabaseTest<SormulaTest1>
             " testEnumTS2 CHAR(1)" +
             ")"
         );
-    }
-    
-    
-    @AfterClass
-    public void tearDown() throws Exception
-    {
-        closeDatabase();
     }
     
     

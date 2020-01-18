@@ -19,8 +19,6 @@ package org.sormula.tests.cache.readonly;
 import org.sormula.SormulaException;
 import org.sormula.cache.readonly.ReadOnlyCache;
 import org.sormula.tests.cache.CacheTest;
-import org.testng.annotations.AfterClass;
-import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 
@@ -32,18 +30,11 @@ import org.testng.annotations.Test;
 @Test(singleThreaded=true, groups="cache.readonly.select", dependsOnGroups="cache.readonly.insert")
 public class SelectTest extends CacheTest<SormulaCacheTestRO>
 {
-    @BeforeClass
-    public void setUp() throws Exception
+    @Override
+    protected void open() throws Exception
     {
-        openDatabase();
+        super.open();
         createTable(SormulaCacheTestRO.class);
-    }
-    
-    
-    @AfterClass
-    public void tearDown() throws Exception
-    {
-        closeDatabase();
     }
     
     

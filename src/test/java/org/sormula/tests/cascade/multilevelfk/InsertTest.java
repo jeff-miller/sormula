@@ -20,8 +20,6 @@ import org.sormula.SormulaException;
 import org.sormula.Table;
 import org.sormula.operation.ScalarSelectOperation;
 import org.sormula.tests.DatabaseTest;
-import org.testng.annotations.AfterClass;
-import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 
@@ -33,10 +31,10 @@ import org.testng.annotations.Test;
 @Test(singleThreaded=true, groups="cascade.insert")
 public class InsertTest extends DatabaseTest<SormulaFkTestLevel1>
 {
-    @BeforeClass
-    public void setUp() throws Exception
+    @Override
+    protected void open() throws Exception
     {
-        openDatabase();
+        super.open();
         
         // need to drop tables in proper order due to foreign key constraints
         dropTable(getSchemaPrefix() + SormulaFkTestLevel3.class.getSimpleName());
@@ -79,13 +77,6 @@ public class InsertTest extends DatabaseTest<SormulaFkTestLevel1>
                 ")"
             );
         child3.closeDatabase();
-    }
-    
-    
-    @AfterClass
-    public void tearDown() throws Exception
-    {
-        closeDatabase();
     }
     
     

@@ -21,8 +21,6 @@ import org.sormula.active.ActiveDatabase;
 import org.sormula.active.ActiveTable;
 import org.sormula.tests.DatabaseTest;
 import org.sormula.tests.active.ActiveDatabaseTest;
-import org.testng.annotations.AfterClass;
-import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 
@@ -38,10 +36,11 @@ import org.testng.annotations.Test;
 @Test(singleThreaded=true, groups="active.insert")
 public class InsertTest extends ActiveDatabaseTest<SormulaTestParentAR>
 {
-    @BeforeClass
-    public void setUp() throws Exception
+    @Override
+    protected void open() throws Exception
     {
-        openDatabase();
+        super.open();
+
         createTable(SormulaTestParentAR.class, 
             "CREATE TABLE " + getSchemaPrefix() + SormulaTestParentAR.class.getSimpleName() + " (" +
             " parentid INTEGER NOT NULL PRIMARY KEY," +
@@ -72,13 +71,6 @@ public class InsertTest extends ActiveDatabaseTest<SormulaTestParentAR>
                 ")"
             );
         childN.closeDatabase();
-    }
-    
-    
-    @AfterClass
-    public void tearDown() throws Exception
-    {
-        closeDatabase();
     }
     
 

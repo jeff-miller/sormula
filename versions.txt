@@ -8,6 +8,31 @@ version-jdk             comments
                           from EnumTranslator<T extends Enum<T>> implements TypeTranslator<Enum<T>>
                           to   EnumTranslator<T extends Enum<T>> implements TypeTranslator<T>
                           This fix will break compiles of references to and subclasses of EnumTranslator 
+                        - PaginatedSelector#setPageNumber may be used prior to #execute to set initial page number
+                        - SelectOperation#selectAll will set parameters only if at least one is supplied
+                        - builder method for creating instances with fluent style programming:
+                          
+                          Database
+                          CachedTable
+                          Table
+                          
+                          ActiveDatabase
+                          ActiveTable
+                          ActiveTransaction
+                          
+                          ArrayListSelectOperation
+                          DeleteOperation
+                          HashMapSelectOperation
+                          InsertOperation
+                          LinkedHashMapSelectOperation
+                          SaveOperation
+                          ScalarSelectOperation
+                          UpdateOperation
+                          
+                          aggregate operations
+                          
+                          PaginatedListSelector
+                          
                           
 4.3-jdk1.8              - logging use SormulaLoggerFactory, SormulaLogger for logging API independence
                         - PreparedStatement#setMaxRows also allowed for using #resetRowsReadCount so that 

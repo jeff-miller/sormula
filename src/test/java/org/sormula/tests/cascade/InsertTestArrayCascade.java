@@ -21,8 +21,6 @@ import org.sormula.Table;
 import org.sormula.annotation.Row;
 import org.sormula.operation.ScalarSelectOperation;
 import org.sormula.tests.DatabaseTest;
-import org.testng.annotations.AfterClass;
-import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 
@@ -34,10 +32,10 @@ import org.testng.annotations.Test;
 @Test(singleThreaded=true, groups="cascade.ac.insert")
 public class InsertTestArrayCascade extends DatabaseTest<SormulaTestParentArrayCascade>
 {
-    @BeforeClass
-    public void setUp() throws Exception
+    @Override
+    protected void open() throws Exception
     {
-        openDatabase();
+        super.open();
         createTable(SormulaTestParentArrayCascade.class, 
                 "CREATE TABLE " + getSchemaPrefix() + 
                 SormulaTestParentArrayCascade.class.getAnnotation(Row.class).tableName() + " (" +
@@ -58,13 +56,6 @@ public class InsertTestArrayCascade extends DatabaseTest<SormulaTestParentArrayC
                     ")"
                 );
             childN.closeDatabase();
-    }
-    
-    
-    @AfterClass
-    public void tearDown() throws Exception
-    {
-        closeDatabase();
     }
     
     

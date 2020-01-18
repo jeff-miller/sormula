@@ -22,8 +22,6 @@ import org.sormula.log.SormulaLogger;
 import org.sormula.log.SormulaLoggerFactory;
 import org.sormula.tests.DatabaseTest;
 import org.sormula.translator.standard.TrimTranslator;
-import org.testng.annotations.AfterClass;
-import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 
@@ -41,10 +39,10 @@ public class TrimTranslatorTest extends DatabaseTest<SormulaTrimTest>
     static final String rightPaddedTestString = "abcd      "; // length of 10 since CHAR(10)
     
     
-    @BeforeClass
-    public void setUp() throws Exception
+    @Override
+    protected void open() throws Exception
     {
-        openDatabase();
+        super.open();
         createTable(SormulaTrimTest.class, 
             "CREATE TABLE " + getSchemaPrefix() + SormulaTrimTest.class.getSimpleName() + " (" +
             " id INTEGER primary key," +
@@ -52,13 +50,6 @@ public class TrimTranslatorTest extends DatabaseTest<SormulaTrimTest>
             " varcharcolumn VARCHAR(" + CHAR_SIZE + ")" +
             ")"
         );
-    }
-    
-    
-    @AfterClass
-    public void tearDown() throws Exception
-    {
-        closeDatabase();
     }
     
     

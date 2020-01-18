@@ -18,6 +18,7 @@ package org.sormula.operation.aggregate;
 
 import org.sormula.Table;
 import org.sormula.operation.OperationException;
+import org.sormula.operation.aggregate.builder.SelectMaxOperationBuilder;
 
 
 /**
@@ -30,6 +31,22 @@ import org.sormula.operation.OperationException;
  */
 public class SelectMaxOperation<R, T> extends SelectAggregateOperation<R, T>
 {
+    /**
+     * Creates a builder.
+     * 
+     * @param <R> type of row in table
+     * @param <T> type of aggregate result
+     * @param table select from this table
+     * @param expression expression to use as parameter to function
+     * @return builder
+     * @since 4.4
+     */
+    public static <R, T> SelectMaxOperationBuilder<R, T> builder(Table<R> table, String expression)
+    {
+        return new SelectMaxOperationBuilder<R, T>(table, expression);  
+    }
+
+    
     /**
      * Constructs for standard sql select statement as:<br>
      * SELECT MAX(e), ... FROM table<br>

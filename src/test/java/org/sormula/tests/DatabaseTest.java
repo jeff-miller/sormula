@@ -45,6 +45,10 @@ import org.sormula.Table;
 import org.sormula.cache.Cache;
 import org.sormula.log.SormulaLogger;
 import org.sormula.log.SormulaLoggerFactory;
+import org.testng.annotations.AfterClass;
+import org.testng.annotations.AfterSuite;
+import org.testng.annotations.BeforeClass;
+import org.testng.annotations.BeforeSuite;
 
 
 /** 
@@ -72,55 +76,8 @@ public class DatabaseTest<R>
     private static final SormulaLogger log = SormulaLoggerFactory.getClassLogger();
     
     static long testSeed;
+    static JdbcProperties jdbcProperties;
     
-    static
-    {
-        // always log JDBC driver properties
-        try
-        {
-            new JdbcProperties(true);
-        }
-        catch (Exception e)
-        {
-            log.error("error reading JDBC properties", e);
-        }
-        
-    	// allow seed to be supplied for repeatable tests
-    	String seed = System.getProperty("seed", "");
-    	if (seed.length() == 0)
-    	{
-    		testSeed = System.currentTimeMillis();
-    		log.info("using random seed=" + testSeed);
-    	}
-    	else
-    	{
-    		testSeed = Long.parseLong(seed);
-    		log.info("using property seed=" + testSeed);
-    	}
-    	
-    	// simulated JNDI context
-    	try
-    	{
-    	    NamingManager.setInitialContextFactoryBuilder(new TestContextFactoryBuilder());
-    	}
-    	catch (NamingException e)
-    	{
-    	    log.error("error setting initial context", e);
-    	}
-    	
-    	// some databases fail if parent of database file does not exist
-    	try
-    	{
-    		Path testOutputDirectory = Paths.get("test-output");
-    		if (!Files.exists(testOutputDirectory)) Files.createDirectory(testOutputDirectory);
-    	}
-    	catch (IOException e)
-    	{
-    		log.error("error creating test directory", e);
-    	}
-    }
-    
-    JdbcProperties jdbcProperties;
     String schema;
     String url;
     String user;
@@ -128,34 +85,211 @@ public class DatabaseTest<R>
     DataSource dataSource;
     TestDatabase database;
     Table<R> table;
-    Random random = new Random(testSeed);
+    Random random;
     boolean useTransacation;
-    String sqlShutdown;
-    String driverShutdown;
     List<R> all;
     boolean dataSourceDatabase;
-    boolean testScrollableResultSets;
+    Boolean testScrollableResultSets;
+
+    
+    @BeforeSuite(alwaysRun = true)
+    public void beforeSuite()
+    {
+        if (log.isDebugEnabled()) log.debug("beforeSuite()");
+        initJdbcProperties();
+        initTestSeed();
+        initJndi();
+        initOutputDirectory();
+        initSecurity();
+    }
+
+    
+    @AfterSuite(alwaysRun = true)
+    public void afterSuite()
+    {
+        if (log.isDebugEnabled()) log.debug("afterSuite()");
+        sqlShutdown();
+        driverShutdown();
+    }
     
     
-    public DatabaseTest() 
+    protected void initJdbcProperties()
     {
         try
         {
-            jdbcProperties = new JdbcProperties(log.isDebugEnabled());
+            jdbcProperties = new JdbcProperties(true);
         }
         catch (IOException e)
         {
             log.error("error opening jdbc properties", e);
         }
-        
+    }
+    
+    
+    protected void initTestSeed()
+    {
+        // allow seed to be supplied for repeatable tests
+        String seed = System.getProperty("seed", "");
+        if (seed.length() == 0)
+        {
+            testSeed = System.currentTimeMillis();
+            log.info("using random seed=" + testSeed);
+        }
+        else
+        {
+            testSeed = Long.parseLong(seed);
+            log.info("using property seed=" + testSeed);
+        }
+    }
+    
+    
+    protected void initJndi()
+    {
+        // simulated JNDI context
+        try
+        {
+            NamingManager.setInitialContextFactoryBuilder(new TestContextFactoryBuilder());
+        }
+        catch (NamingException e)
+        {
+            log.error("error setting initial context", e);
+        }
+    }
+
+    
+    protected void initOutputDirectory()
+    {
+        // some databases fail if parent of database file does not exist
+        try
+        {
+            Path testOutputDirectory = Paths.get("test-output");
+            if (!Files.exists(testOutputDirectory)) Files.createDirectory(testOutputDirectory);
+        }
+        catch (IOException e)
+        {
+            log.error("error creating test directory", e);
+        }
+    }
+    
+    
+    protected void initSecurity()
+    {
         // some databases require security permissions, turn off all java security checks since this is not confidential information
         // see DERBY-6648
         System.setSecurityManager(null);
     }
     
     
+    protected void sqlShutdown()
+    {
+        try 
+        {
+            String sqlShutdown = jdbcProperties.getString("jdbc.shutdown.sql");
+            if (sqlShutdown.length() > 0)
+            {
+                if (log.isDebugEnabled()) log.debug("execute sqlShutdown=" + sqlShutdown);
+                
+                boolean workAround = false;
+                if (url == null && user == null && password == null) 
+                {
+                    // sometimes testng does not invoke beforeClass method
+                    // open database here as a work-around
+                    open();
+                    workAround = true;
+                }
+                
+                Connection connection = getConnection();
+                Statement statement = connection.createStatement();
+                statement.execute(sqlShutdown);
+                statement.close();
+                if (useTransacation) connection.commit();
+                if (log.isDebugEnabled()) log.debug("close shutdown connection");
+                connection.close();
+                
+                if (workAround) 
+                {
+                    close();
+                }
+            }
+        } 
+        catch (Exception e) 
+        {
+            log.error("sql shutdown error", e);
+        }
+    }
+    
+    
+    protected void driverShutdown()
+    {
+        try 
+        {
+            String driverShutdown = jdbcProperties.getString("jdbc.shutdown.driver");
+            if (driverShutdown.length() > 0)
+            {
+                if (log.isDebugEnabled()) log.debug("execute driverShutdown=" + driverShutdown);
+                DriverManager.getConnection(driverShutdown);
+            }
+        } 
+        catch (SQLException e) 
+        {
+            log.error("driver shutdown error", e);
+        }
+    }
+    
+    
+    /**
+     * All tests will inherit this method. Don't add BeforeClass annotation to specific tests.
+     * 
+     * @throws Exception if error
+     * @see #open()
+     */
+    @BeforeClass(alwaysRun = true)
+    public void beforeClass() throws Exception
+    {
+        if (log.isDebugEnabled()) log.debug("beforeClass() for " + getClass().getName());
+        open();
+    }
+    
+    
+    /**
+     * Default before class method. Override this method to change. Do not override {@link #beforeClass()}.
+     * 
+     * @throws Exception if error
+     */
+    protected void open() throws Exception
+    {
+        openDatabase();
+    }
+    
+    
+    /**
+     * All tests will inherit this method. Don't add AfterClass annotation to specific tests.
+     * 
+     * @throws Exception if error
+     * @see #close()
+     */
+    @AfterClass(alwaysRun = true)
+    public void afterClass() throws Exception
+    {
+        if (log.isDebugEnabled()) log.debug("afterClass() for " + getClass().getName());
+        close();
+    }
+    
+    
+    /**
+     * Default after class method. Override this method to change. Do not override {@link #afterClass()}.
+     * 
+     * @throws Exception if error
+     */
+    protected void close() throws Exception
+    {
+        closeDatabase(); 
+    }
+    
+    
     public boolean isTestScrollableResultSets()
     {
+        if (testScrollableResultSets == null) throw new RuntimeException("database must be open to know scrollable property");
         return testScrollableResultSets;
     }
     
@@ -271,10 +405,6 @@ public class DatabaseTest<R>
         user = jdbcProperties.getString("jdbc.user");
         password = jdbcProperties.getString("jdbc.password");
         useTransacation = jdbcProperties.getBoolean("jdbc.transaction");
-        
-        // shutdown commands
-        sqlShutdown = jdbcProperties.getString("jdbc.shutdown.sql");
-        driverShutdown = jdbcProperties.getString("jdbc.shutdown.driver");
 
         // create sormula database
         if (dataSourceName == null)
@@ -312,6 +442,10 @@ public class DatabaseTest<R>
         }
         
         initMetaDataProperties();
+        
+        // each instance must use independent Random instance
+        // create here since dependent upon testSeed
+        random = new Random(testSeed);
     }
     
     
@@ -420,49 +554,34 @@ public class DatabaseTest<R>
     
     public void closeDatabase()
     {
-        database.logTimings();
-        
-        if (Boolean.parseBoolean(System.getProperty("cache.statistics")))
+        if (database != null) // skip if database is not open
         {
-            // log cache statistics
-            Cache<R> cache = getTable().getCache();
-            if (cache != null) cache.log();
-        }
-        
-        try
-        {
-            if (!dataSourceDatabase) 
+            database.logTimings();
+            
+            if (Boolean.parseBoolean(System.getProperty("cache.statistics")))
             {
-                // database instance created without data source 
-                // database.close() only closes connection if data source used
-                if (log.isDebugEnabled()) log.debug("close connection");
-                database.getConnection().close();
+                // log cache statistics
+                Cache<R> cache = getTable().getCache();
+                if (cache != null) cache.log();
             }
             
-            if (log.isDebugEnabled()) log.debug("close sormula database");
-            database.close();
-            
-            if (sqlShutdown.length() > 0)
+            try
             {
-                if (log.isDebugEnabled()) log.debug("execute sqlShutdown=" + sqlShutdown);
-                Connection connection = getConnection();
-                Statement statement = connection.createStatement();
-                statement.execute(sqlShutdown);
-                statement.close();
-                if (useTransacation) connection.commit();
-                if (log.isDebugEnabled()) log.debug("close shutdown connection");
-                connection.close();
+                if (!dataSourceDatabase) 
+                {
+                    // database instance created without data source 
+                    // database.close() only closes connection if data source used
+                    if (log.isDebugEnabled()) log.debug("close connection");
+                    database.getConnection().close();
+                }
+                
+                if (log.isDebugEnabled()) log.debug("close sormula database");
+                database.close();
             }
-            
-            if (driverShutdown.length() > 0)
+            catch (SQLException e)
             {
-                if (log.isDebugEnabled()) log.debug("execute driverShutdown=" + driverShutdown);
-                DriverManager.getConnection(driverShutdown);
+                log.error("error closing database", e);
             }
-        }
-        catch (SQLException e)
-        {
-            log.error("error closing database", e);
         }
     }
     

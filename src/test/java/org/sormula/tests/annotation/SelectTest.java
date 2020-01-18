@@ -31,8 +31,6 @@ import org.sormula.operation.LinkedHashMapSelectOperation;
 import org.sormula.operation.ListSelectOperation;
 import org.sormula.tests.DatabaseTest;
 import org.sormula.tests.TestDatabase;
-import org.testng.annotations.AfterClass;
-import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 
@@ -50,10 +48,10 @@ public class SelectTest extends DatabaseTest<SormulaTestA>
     private static final SormulaLogger log = SormulaLoggerFactory.getClassLogger();
     TestDB db;
     
-    @BeforeClass
-    public void setUp() throws Exception
+    @Override
+    protected void open() throws Exception
     {
-        openDatabase();
+        super.open();
         
         // use database with annotations, getDatabase() override
         Database standardTestDb = super.getDatabase();
@@ -61,14 +59,7 @@ public class SelectTest extends DatabaseTest<SormulaTestA>
 
         createTable(SormulaTestA.class);
     }
-    
-    
-    @AfterClass
-    public void tearDown() throws Exception
-    {
-        closeDatabase();
-    }
-    
+
     
     @Override
     public TestDatabase getDatabase()

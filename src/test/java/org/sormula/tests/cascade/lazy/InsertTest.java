@@ -23,8 +23,6 @@ import org.sormula.SormulaException;
 import org.sormula.Table;
 import org.sormula.operation.ScalarSelectOperation;
 import org.sormula.tests.DatabaseTest;
-import org.testng.annotations.AfterClass;
-import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 
@@ -36,10 +34,10 @@ import org.testng.annotations.Test;
 @Test(singleThreaded=true, groups="cascade.insert")
 public class InsertTest extends DatabaseTest<SormulaTestParentLazy1>
 {
-    @BeforeClass
-    public void setUp() throws Exception
+    @Override
+    protected void open() throws Exception
     {
-        openDatabase();
+        super.open();
         createTable(SormulaTestParentLazy1.class, 
             "CREATE TABLE " + getSchemaPrefix() + "SormulaTestParentLazy (" +
             " id INTEGER NOT NULL PRIMARY KEY," +
@@ -59,14 +57,7 @@ public class InsertTest extends DatabaseTest<SormulaTestParentLazy1>
             );
         childM.closeDatabase();
     }
-    
-    
-    @AfterClass
-    public void tearDown() throws Exception
-    {
-        closeDatabase();
-    }
-    
+
     
     @Test
     public void insertOneToManyMapLazy() throws SormulaException

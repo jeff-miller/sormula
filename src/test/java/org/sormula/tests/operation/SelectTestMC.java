@@ -24,8 +24,6 @@ import org.sormula.log.SormulaLoggerFactory;
 import org.sormula.operation.ArrayListSelectOperation;
 import org.sormula.operation.ListSelectOperation;
 import org.sormula.tests.DatabaseTest;
-import org.testng.annotations.AfterClass;
-import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 
@@ -40,18 +38,11 @@ public class SelectTestMC extends DatabaseTest<SormulaTest4MC>
     private static final SormulaLogger log = SormulaLoggerFactory.getClassLogger();
 	
 	
-    @BeforeClass
-    public void setUp() throws Exception
+    @Override
+    protected void open() throws Exception
     {
-        openDatabase();
+        super.open();
         createTable(SormulaTest4MC.class);
-    }
-    
-    
-    @AfterClass
-    public void tearDown() throws Exception
-    {
-        closeDatabase();
     }
 
     

@@ -21,8 +21,6 @@ import java.util.ArrayList;
 import org.sormula.SormulaException;
 import org.sormula.annotation.Column;
 import org.sormula.tests.DatabaseTest;
-import org.testng.annotations.AfterClass;
-import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 
@@ -35,28 +33,18 @@ import org.testng.annotations.Test;
 @Test(singleThreaded=true, groups="column.insert")
 public class InsertTest extends DatabaseTest<ColumnTestRoid>
 {
-    @BeforeClass
-    public void setUp() throws Exception
+    @Override
+    protected void open() throws Exception
     {
         if (isTestIdentity())
         {
-            openDatabase();
+            super.open();
             createTable(ColumnTestRoid.class, 
                 "CREATE TABLE " + getSchemaPrefix() + ColumnTestRoid.class.getSimpleName() + " (" +
                 " id " + getIdentityColumnDDL() + "," +
                 " description VARCHAR(30)" +
                 ")"
             );
-        }
-    }
-    
-    
-    @AfterClass
-    public void tearDown() throws Exception
-    {
-        if (isTestIdentity())
-        {
-            closeDatabase();
         }
     }
     

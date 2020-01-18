@@ -23,8 +23,6 @@ import org.sormula.Database;
 import org.sormula.SormulaException;
 import org.sormula.tests.DatabaseTest;
 import org.sormula.tests.TestDatabase;
-import org.testng.annotations.AfterClass;
-import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 
@@ -38,10 +36,10 @@ public class InsertTest extends DatabaseTest<SormulaTestA>
 {
     TestDB db;
     
-    @BeforeClass
-    public void setUp() throws Exception
+    @Override
+    protected void open() throws Exception
     {
-        openDatabase();
+        super.open();
         
         // use database with annotations, getDatabase() override
         Database standardTestDb = super.getDatabase();
@@ -58,13 +56,6 @@ public class InsertTest extends DatabaseTest<SormulaTestA>
             " test3 CHAR(1) NOT NULL " + 
             ")"
         );
-    }
-    
-    
-    @AfterClass
-    public void tearDown() throws Exception
-    {
-        closeDatabase();
     }
     
     

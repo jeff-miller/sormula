@@ -19,8 +19,6 @@ package org.sormula.tests.active;
 import java.util.ArrayList;
 
 import org.sormula.active.ActiveTable;
-import org.testng.annotations.AfterClass;
-import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 
@@ -33,10 +31,11 @@ import org.testng.annotations.Test;
 @Test(singleThreaded=true, groups="active.insert")
 public class InsertTest extends ActiveDatabaseTest<SormulaTestAR>
 {
-    @BeforeClass
-    public void setUp() throws Exception
+    @Override
+    protected void open() throws Exception
     {
-        openDatabase();
+        super.open();
+
         createTable(SormulaTestAR.class, 
             "CREATE TABLE " + getSchemaPrefix() + SormulaTestAR.class.getSimpleName() + " (" +
             " id INTEGER NOT NULL PRIMARY KEY," +
@@ -44,13 +43,6 @@ public class InsertTest extends ActiveDatabaseTest<SormulaTestAR>
             " description VARCHAR(30)" +
             ")"
         );
-    }
-    
-    
-    @AfterClass
-    public void tearDown() throws Exception
-    {
-        closeDatabase();
     }
     
     

@@ -20,8 +20,6 @@ import java.util.List;
 
 import org.sormula.SormulaException;
 import org.sormula.tests.DatabaseTest;
-import org.testng.annotations.AfterClass;
-import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 
@@ -35,21 +33,11 @@ import org.testng.annotations.Test;
 @Test(singleThreaded=true, groups="cascade.select", dependsOnGroups="cascade.insert")
 public class SelectTest extends DatabaseTest<SormulaIdentityParent>
 {
-    @BeforeClass
-    public void setUp() throws Exception
+    @Override
+    protected void open() throws Exception
     {
-        openDatabase();
+        super.open();
         createTable(SormulaIdentityParent.class);
-    }
-    
-    
-    @AfterClass
-    public void tearDown() throws Exception
-    {
-        if (isTestIdentity())
-        {
-            closeDatabase();
-        }
     }
 
     

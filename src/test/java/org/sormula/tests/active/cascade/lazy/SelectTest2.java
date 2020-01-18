@@ -24,8 +24,6 @@ import org.sormula.active.ActiveException;
 import org.sormula.active.ActiveTable;
 import org.sormula.active.ActiveTransaction;
 import org.sormula.tests.active.ActiveDatabaseTest;
-import org.testng.annotations.AfterClass;
-import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 
@@ -37,18 +35,11 @@ import org.testng.annotations.Test;
 @Test(singleThreaded=true, groups="active.select", dependsOnGroups="active.insert")
 public class SelectTest2 extends ActiveDatabaseTest<SormulaTestParentLazyAR2>
 {
-    @BeforeClass
-    public void setUp() throws Exception
+    @Override
+    protected void open() throws Exception
     {
-        openDatabase();
+        super.open();
         createTable(SormulaTestParentLazyAR2.class);
-    }
-    
-    
-    @AfterClass
-    public void tearDown() throws Exception
-    {
-        closeDatabase();
     }
 
     

@@ -23,8 +23,6 @@ import org.sormula.SormulaException;
 import org.sormula.tests.DatabaseTest;
 import org.sormula.translator.ExpandedNameTranslator;
 import org.sormula.translator.LowerCaseNameTranslator;
-import org.testng.annotations.AfterClass;
-import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 
@@ -41,10 +39,10 @@ public class NameTranslatorTest2A extends DatabaseTest<SormulaTest2A>
     SormulaTest2A inserted;
     
     
-    @BeforeClass
-    public void setUp() throws Exception
+    @Override
+    protected void open() throws Exception
     {
-        openDatabase();
+        super.open();
         
         // name translator specified here instead of in row annotation
         getDatabase().addNameTranslatorClass(ExpandedNameTranslator.class);
@@ -59,13 +57,6 @@ public class NameTranslatorTest2A extends DatabaseTest<SormulaTest2A>
             " test_string VARCHAR(10)" +
             ")"
         );
-    }
-    
-    
-    @AfterClass
-    public void tearDown() throws Exception
-    {
-        closeDatabase();
     }
     
     

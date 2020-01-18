@@ -20,8 +20,6 @@ import org.sormula.CachedTable;
 import org.sormula.SormulaException;
 import org.sormula.Table;
 import org.sormula.tests.cache.CacheTest;
-import org.testng.annotations.AfterClass;
-import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 
@@ -36,22 +34,15 @@ public class CachedTableTest extends CacheTest<SormulaCacheTestRW>
     CachedTable<SormulaCacheTestRW> cachedTable;
     
     
-    @BeforeClass
-    public void setUp() throws Exception
+    @Override
+    protected void open() throws Exception
     {
-        openDatabase();
+        super.open();
         cachedTable = new CachedTable<>(getDatabase(), SormulaCacheTestRW.class); // must occur before createTable() invocation
         createTable(SormulaCacheTestRW.class);
         
         // confirm that test is using CachedTest class
         assert getTable().getClass() == CachedTable.class : "test table is not CachedTable";
-    }
-    
-    
-    @AfterClass
-    public void tearDown() throws Exception
-    {
-        closeDatabase();
     }
 
     

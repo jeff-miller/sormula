@@ -36,8 +36,6 @@ import org.sormula.operation.ScalarSelectOperation;
 import org.sormula.operation.SelectIterator;
 import org.sormula.operation.aggregate.SelectAggregateOperation;
 import org.sormula.tests.DatabaseTest;
-import org.testng.annotations.AfterClass;
-import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 
@@ -51,18 +49,12 @@ public class SelectTest extends DatabaseTest<SormulaTest4>
 {
     private static final SormulaLogger log = SormulaLoggerFactory.getClassLogger();
     
-    @BeforeClass
-    public void setUp() throws Exception
+
+    @Override
+    protected void open() throws Exception
     {
-        openDatabase();
+        super.open();
         createTable(SormulaTest4.class);
-    }
-    
-    
-    @AfterClass
-    public void tearDown() throws Exception
-    {
-        closeDatabase();
     }
 
     

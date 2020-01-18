@@ -29,6 +29,7 @@ import javax.sql.DataSource;
 import org.sormula.Database;
 import org.sormula.SormulaException;
 import org.sormula.Table;
+import org.sormula.active.builder.ActiveDatabaseBuilder;
 import org.sormula.annotation.Column;
 import org.sormula.operation.ModifyOperation;
 import org.sormula.operation.SqlOperation;
@@ -59,6 +60,34 @@ public class ActiveDatabase implements Serializable
     
     // note: must be transient since can't serialize jdbc connection
     transient ActiveTransaction activeTransaction;
+    
+    
+    /**
+     * Creates builder for a data source.
+     * 
+     * @param dataSource data source
+     * @return {@link ActiveDatabaseBuilder}
+     * @since 4.4
+     * @see ActiveDatabase#ActiveDatabase(DataSource)
+     */
+    public static ActiveDatabaseBuilder builder(DataSource dataSource)
+    {
+        return new ActiveDatabaseBuilder(dataSource);
+    }
+    
+    
+    /**
+     * Creates builder for a data source name.
+     * 
+     * @param dataSourceName data source name
+     * @return {@link ActiveDatabaseBuilder}
+     * @since 4.4
+     * @see ActiveDatabase#ActiveDatabase(String)
+     */
+    public static ActiveDatabaseBuilder builder(String dataSourceName)
+    {
+        return new ActiveDatabaseBuilder(dataSourceName);
+    }
 
 
     /**
@@ -171,6 +200,18 @@ public class ActiveDatabase implements Serializable
     public DataSource getDataSource()
     {
         return dataSource;
+    }
+
+
+    /**
+     * Gets the data source name.
+     * 
+     * @return data source name supplied in constructor
+     * @since 4.4
+     */
+    public String getDataSourceName() 
+    {
+        return dataSourceName;
     }
 
 

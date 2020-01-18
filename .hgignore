@@ -1,9 +1,0 @@
-^javadoc/
-^target/
-^test-output/
-\.log$
-\.orig
-dependency-reduced-pom.xml
-db.script
-db.properties
-^src/main/java/overview.html

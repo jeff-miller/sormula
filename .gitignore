@@ -1,0 +1,9 @@
+*.log$
+*.orig
+db.script
+db.properties
+
+javadoc/
+target/
+test-output/
+src/main/java/overview.html

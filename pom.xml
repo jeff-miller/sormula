@@ -29,9 +29,9 @@
     </developers>
 
     <scm>
-        <connection>scm:hg:https://jeff43017@bitbucket.org/jeff43017/sormula</connection>
-        <developerConnection>scm:hg:https://jeff43017@bitbucket.org/jeff43017/sormula</developerConnection>
-        <url>https://bitbucket.org/jeff43017/sormula</url>
+        <connection>scm:git:https://github.com/jeff-miller/sormula</connection>
+        <developerConnection>scm:git:https://github.com/jeff-miller/sormula</developerConnection>
+        <url>https://github.com/jeff-miller/sormula</url>
     </scm>
   
     <!-- test with specific database: 

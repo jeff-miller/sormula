@@ -7,3 +7,4 @@ javadoc/
 target/
 test-output/
 src/main/java/overview.html
+/.settings/

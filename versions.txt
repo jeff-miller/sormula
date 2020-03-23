@@ -2,7 +2,13 @@ Version History
 
 version-jdk             comments
 ------------------------------------------------------------------------------------------------------------
-4.4-jdk1.8              - print slf4j warning upon first use instead of at initialization of factory
+4.4-jdk1.8              - remove dependencies upon log4j and slf4j
+                          moved Slf4jSormulaLogger.java and Log4jSormulaLogger.java to logger-examples
+                          default logger is now EmptySormulaLogger
+                          ClassLogger delegates to SormulaLogger
+                          ClassLogger methods that use slf4j Marker parameters have been removed
+                            
+                        - print slf4j warning upon first use instead of at initialization of factory
                         - EnumTranslator works with ExplicitType annotation
                         - Fix EnumTranslator base class declaration 
                           from EnumTranslator<T extends Enum<T>> implements TypeTranslator<Enum<T>>

@@ -28,9 +28,7 @@ import java.lang.reflect.Constructor;
  * of {@link SormulaLogger} in org.sormula.log package or any implementation of
  * {@link SormulaLogger}.
  * <p>
- * The default logger class is {@link Slf4jSormulaLogger} for backward compatibility since previous
- * versions of Sormula used {@link ClassLogger} which is dependent upon SLF4J. The default logger does
- * not require any SLF4J jars to be on classpath at runtime if no logging is desired.
+ * The default logger class is {@link EmptySormulaLogger}.
  * 
  * @author Jeff Miller
  * @since 4.3
@@ -41,12 +39,11 @@ public class SormulaLoggerFactory
     private static Class<? extends SormulaLogger> loggerClass;
     private static Constructor<? extends SormulaLogger> loggerConstructor;
     
-    // default logger is Slf4jLogger for backward compatibility
     static
     {
         try
         {
-            setLoggerClass(Slf4jSormulaLogger.class);
+            setLoggerClass(EmptySormulaLogger.class);
         }
         catch (LogException e)
         {
@@ -62,7 +59,7 @@ public class SormulaLoggerFactory
      * {@link SormulaLoggerFactory#getClassLogger()} then a SormulaLogger with 
      * the logical log name of org.sormula.something would be returned.
      * 
-     * @return logger to use
+     * @return logger that implements SormulaLogger interface
      */
     public static SormulaLogger getClassLogger()
     {
@@ -74,17 +71,32 @@ public class SormulaLoggerFactory
             if (stes[i].getClassName().equals(factoryClassName)) 
             {
                 // next on stack is the class that created me
-                try
-                {
-                    return loggerConstructor.newInstance(stes[i + 1].getClassName());
-                }
-                catch (Exception e)
-                {
-                    // should not occur since #setLoggerClass has tested constructor already
-                    e.printStackTrace();
-                    break;
-                }
+                return getLogger(stes[i + 1].getClassName());
             }
+        }
+        
+        // should never get here, avoid NullPointerException
+        return new EmptySormulaLogger("");
+    }
+    
+    
+    /**
+     * Gets a logger with a specific logical name.
+     * 
+     * @param name
+     * @return logger that implements SormulaLogger interface
+     * @since 4.4
+     */
+    public static SormulaLogger getLogger(String name)
+    {
+        try
+        {
+            return loggerConstructor.newInstance(name);
+        }
+        catch (Exception e)
+        {
+            // should not occur since #setLoggerClass has tested constructor already
+            e.printStackTrace();
         }
         
         // should never get here, avoid NullPointerException

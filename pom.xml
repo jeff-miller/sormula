@@ -222,29 +222,6 @@
 
     <!-- dependencies for all profiles -->
     <dependencies>
-        <!-- enable logging with SLF4J -->
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-api</artifactId>
-            <version>1.7.22</version>
-            <scope>compile</scope>
-        </dependency>
-        
-        <!-- for org.sormula.log.Log4jSormulaLogger -->
-        <dependency>
-            <groupId>log4j</groupId>
-            <artifactId>log4j</artifactId>
-            <version>1.2.17</version>
-            <scope>compile</scope>
-        </dependency>
-        
-        <!-- SLF4J logs with log4j (optional) -->
-        <dependency>
-			<groupId>org.slf4j</groupId>
-			<artifactId>slf4j-log4j12</artifactId>
-			<version>1.7.22</version>
-        </dependency>
-        
         <!-- test framework -->
         <dependency>
             <groupId>org.testng</groupId>

@@ -18,8 +18,8 @@ package org.sormula.log;
 
 
 /**
- * Logging interface used by Sormula. Implementing this interface enables use of any logger 
- * API without requiring a dependency upon a logging facade library. 
+ * Sormula logs to this interface. Implementing this interface enables use of any logger 
+ * API without dependency upon a logging facade library. 
  * 
  * @author Jeff Miller
  * @since 4.3

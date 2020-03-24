@@ -83,7 +83,7 @@ public class SormulaLoggerFactory
     /**
      * Gets a logger with a specific logical name.
      * 
-     * @param name
+     * @param name logger name 
      * @return logger that implements SormulaLogger interface
      * @since 4.4
      */
@@ -105,9 +105,7 @@ public class SormulaLoggerFactory
     
     
     /**
-     * Gets the logger class to use in {@link #getClassLogger()}. The default
-     * is {@link Slf4jSormulaLogger} for backward compatibility since the original
-     * logger used by Sormula was {@link ClassLogger} which is dependent upon SLF4J.
+     * Gets the logger implementation class to use in {@link #getClassLogger()}.
      * 
      * @return class of logger to return with {@link #getClassLogger()}
      */

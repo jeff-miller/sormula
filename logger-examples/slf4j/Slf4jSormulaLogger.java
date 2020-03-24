@@ -14,10 +14,9 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.sormula.log;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.sormula.log.SormulaLogger;
 
 
 /**
@@ -31,7 +30,6 @@ import org.slf4j.LoggerFactory;
  */
 public class Slf4jSormulaLogger implements SormulaLogger
 {
-    static final String classLoggerClassName = Slf4jSormulaLogger.class.getName();
     static boolean loggerAvailable;
     static boolean loggerWarning;
     static

@@ -68,6 +68,7 @@ public class SelectTest extends DatabaseTest<SormulaTestA>
     }
 
     
+    @SuppressWarnings("resource")
     @Test
     public void selectInConstant() throws SormulaException
     {

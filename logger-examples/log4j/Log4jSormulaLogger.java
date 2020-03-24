@@ -14,15 +14,16 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.sormula.log;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.sormula.log.SormulaLogger;
 
-import org.apache.log4j.Logger;
 
 /**
- * A {@link SormulaLogger} that logs using log4j api. 
+ * A {@link SormulaLogger} that logs using log4j2 api. 
  * 
  * @author Jeff Miller
- * @since 4.3
+ * @since 4.4
  */
 public class Log4jSormulaLogger implements SormulaLogger
 {
@@ -31,7 +32,7 @@ public class Log4jSormulaLogger implements SormulaLogger
     
     public Log4jSormulaLogger(String name)
     {
-        this.logger = Logger.getLogger(name);
+        this.logger = LogManager.getLogger(name);
     }
 
 

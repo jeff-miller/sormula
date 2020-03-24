@@ -3,8 +3,7 @@ To have sormula log debug messages using log4j:
 For versions 4.3 and later, see logging.txt for instructions to configure any logger.
 
 
-The following are instructions for versions prior to 4.3. They will still work
-for versions 4.3 and later with the default logger of Slf4jSormulaLogger:
+The following are instructions for versions prior to 4.3 with the default logger of Slf4jSormulaLogger:
  
 1. Add the following jars to your classpath (copy from src/examples/resources):
     slf4j-api-1.7.22.jar

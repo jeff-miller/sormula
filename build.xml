@@ -219,14 +219,34 @@
         <tstamp/>
         <property file="build.properties"/>
         <mkdir dir="${target}"/>
+
+        <!-- required if custom SormulaLogger is used -->
+        <!-- point to valid dir if not set to avoid ant error -->
+        <property name="logger.impl" value="doc" /> 
         
-        <path id="main.srcpath">    <pathelement path="${main.srcdir}/java"    /></path>
-        <path id="examples.srcpath"><pathelement path="${examples.srcdir}/java"/></path>
-        <path id="tests.srcpath">   <pathelement path="${tests.srcdir}/java"   /></path>
+        <path id="main.srcpath">    
+            <pathelement path="${main.srcdir}/java"/>
+            <pathelement path="${logger.impl}"/>
+        </path>
+        <path id="examples.srcpath">
+            <pathelement path="${examples.srcdir}/java"/>
+        </path>
+        <path id="tests.srcpath">   
+            <pathelement path="${tests.srcdir}/java"/>
+        </path>
         
-        <path id="main.libpath">    <fileset dir="${main.srcdir}/resources"     includes="*.jar"/></path>
-        <path id="examples.libpath"><fileset dir="${examples.srcdir}/resources" includes="*.jar"/></path>
-        <path id="tests.libpath">   <fileset dir="${tests.srcdir}/resources"    includes="*.jar"/></path>
+        <path id="main.libpath">
+            <fileset dir="${main.srcdir}/resources" includes="*.jar"/>
+            <fileset dir="${logger.impl}" includes="*.jar"/>
+        </path>
+        <path id="examples.libpath">
+            <fileset dir="${examples.srcdir}/resources" includes="*.jar"/>
+            <fileset dir="${logger.impl}" includes="*.jar"/>
+        </path>
+        <path id="tests.libpath">
+            <fileset dir="${tests.srcdir}/resources" includes="*.jar"/>
+            <fileset dir="${logger.impl}" includes="*.jar"/>
+        </path>
         
         <taskdef name="testng" classpathref="tests.libpath" classname="org.testng.TestNGAntTask"/>
     </target>

@@ -113,7 +113,7 @@ public class BasicSelect extends ExampleBase
     }
     
     
-	@SuppressWarnings("resource") // Table#selectAll performs close
+    @SuppressWarnings("resource")
     void selectWhere2() throws SormulaException
     {
         System.out.println("select using SelectJohns class");
@@ -131,8 +131,7 @@ class SelectJohns extends ArrayListSelectOperation<Student>
         super(table, "fn2");
     }
 
-    @Override
-    public List<Student> selectAll(Object... parameters) throws OperationException
+    public List<Student> selectAll() throws OperationException
     {
         return super.selectAll("John");
     }

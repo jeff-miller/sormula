@@ -49,7 +49,7 @@ public class SelectAggregateOperationBuilderTest extends DatabaseTest<SelectAggr
         super.open();
         
         createTable(SelectAggregateOperationBuilderTestRow.class, 
-            "CREATE TABLE " + getSchemaPrefix() + SelectAggregateOperationBuilderTestRow.class.getSimpleName() + " (" +
+            "CREATE TABLE " + getSchemaPrefix() + "SelectAggOperationBuilderRow (" +
             " id INTEGER NOT NULL PRIMARY KEY," +
             " type SMALLINT," +
             " description VARCHAR(30)" +

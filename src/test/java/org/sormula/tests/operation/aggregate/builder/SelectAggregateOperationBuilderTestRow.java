@@ -16,6 +16,7 @@
  */
 package org.sormula.tests.operation.aggregate.builder;
 
+import org.sormula.annotation.Row;
 import org.sormula.annotation.Where;
 
 /**
@@ -23,6 +24,7 @@ import org.sormula.annotation.Where;
  * 
  * @author Jeff Miller
  */
+@Row(tableName = "SelectAggOperationBuilderRow") // oracle has limit on table name length
 @Where(name = "forType", fieldNames = "type")
 public class SelectAggregateOperationBuilderTestRow
 {

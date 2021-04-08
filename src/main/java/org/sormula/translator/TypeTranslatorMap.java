@@ -44,7 +44,7 @@ public interface TypeTranslatorMap
     
     /**
      * Same as {@link #putTypeTranslator(Class, TypeTranslator)} but uses class name. Useful for adding
-     * primative types like "int", "boolean", "float", etc.
+     * primitive types like "int", "boolean", "float", etc.
      * 
      * @param typeClassName class name that translator operates upon
      * @param typeTranslator translator to use for typeClass

@@ -16,10 +16,6 @@
  */
 package org.sormula.cache;
 
-import org.sormula.cache.CacheException;
-
-
-
 /**
  * Invalid cache state caused by cache activity outside of a transaction or failure to 
  * commit or rollback transaction.

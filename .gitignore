@@ -1,4 +1,4 @@
-*.log$
+*.log
 *.orig
 db.script
 db.properties

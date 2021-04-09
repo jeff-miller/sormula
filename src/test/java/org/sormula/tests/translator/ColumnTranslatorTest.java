@@ -20,6 +20,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.time.Instant;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.GregorianCalendar;
 
 import org.sormula.SormulaException;
@@ -185,7 +186,22 @@ public class ColumnTranslatorTest extends DatabaseTest<SormulaTest1>
         assert inserted.getTestSqlTimestamp().equals(selected.getTestSqlTimestamp()) : "testSqlTimestamp" + message;
         assert inserted.getTestGc()          .equals(selected.getTestGc())           : "testGc" + message;
         assert inserted.getTestLocalDate()   .equals(selected.getTestLocalDate())    : "testLocalDate" + message;
-        assert inserted.getTestInstant()     .equals(selected.getTestInstant())      : "testInstant" + message;
+        
+        Instant insertedInstant = inserted.getTestInstant();
+        Instant selectedInstant = selected.getTestInstant();
+        assert inserted.getTestInstant().getEpochSecond() == selected.getTestInstant().getEpochSecond() : 
+            "testInstant" + message + " for nonfractional seconds";
+
+        int secondsPrecision = getSecondsPrecision();
+        if (secondsPrecision > 0)
+        {
+            // compare fractional seconds for precision digits
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("SSSSSSSSS");
+            String insertedFractionalSeconds = formatter.format(insertedInstant);
+            String selectedFractionalSeconds = formatter.format(selectedInstant);
+            assert insertedFractionalSeconds.substring(0, secondsPrecision).equals(selectedFractionalSeconds.substring(0, secondsPrecision)) :
+                "testInstant" + message + " for fractional seconds precision=" + secondsPrecision;
+        }
         
         // enum tests
         assert inserted.getTestEnum1().equals(selected.getTestEnum1()) : "testEnum1" + message;

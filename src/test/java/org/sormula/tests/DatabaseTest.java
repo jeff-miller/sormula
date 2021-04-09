@@ -355,10 +355,18 @@ public class DatabaseTest<R>
     }
     
     
-    public String getSecondsPrecisionDDL()
+    public int getSecondsPrecision()
     {
         String secondsPrecision = jdbcProperties.getString("secondsPrecision").trim();
-        if (secondsPrecision.length() > 0) return "(" + secondsPrecision + ")";
+        if (secondsPrecision.length() > 0) return Integer.parseInt(secondsPrecision);
+        else return 0;
+    }
+    
+    
+    public String getSecondsPrecisionDDL()
+    {
+        int secondsPrecision = getSecondsPrecision();
+        if (secondsPrecision > 0) return "(" + secondsPrecision + ")";
         else return "";
     }
 

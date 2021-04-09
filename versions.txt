@@ -7,6 +7,7 @@ version-jdk             comments
                           default logger is now EmptySormulaLogger
                           ClassLogger delegates to SormulaLogger
                           ClassLogger methods that use slf4j Marker parameters have been removed
+                          fix test for java.time.Instant
                             
                         - print slf4j warning upon first use instead of at initialization of factory
                         - EnumTranslator works with ExplicitType annotation

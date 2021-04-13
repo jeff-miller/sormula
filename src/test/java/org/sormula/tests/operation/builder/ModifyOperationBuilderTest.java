@@ -197,6 +197,7 @@ public class ModifyOperationBuilderTest extends DatabaseTest<ModifyOperationBuil
                 .parameters("test")
                 .cached(true)
                 .cascade(false) // true by default so test false
+                .queryTimeout(9999)  // test SqlOperationBuilder super class
                 .build())
         {
             assert testOperation.isBatch() : "batch not set";
@@ -206,6 +207,7 @@ public class ModifyOperationBuilderTest extends DatabaseTest<ModifyOperationBuil
             
             assert testOperation.isCached() : "cached not set";
             assert !testOperation.isCascade() : "cascade not set";
+            assert testOperation.getQueryTimeout() == 9999 : "query timeout not set";
             testOperation.execute();
         }
         commit();

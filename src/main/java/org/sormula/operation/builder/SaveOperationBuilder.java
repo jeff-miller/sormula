@@ -52,6 +52,7 @@ public class SaveOperationBuilder<R>
     }
     
     
+    @Override
     public SaveOperationBuilder<R> cached(boolean cached)
     {
         this.cached = cached;
@@ -59,6 +60,7 @@ public class SaveOperationBuilder<R>
     }
     
     
+    @Override
     public SaveOperationBuilder<R> cascade(boolean cascade)
     {
         this.cascade = cascade;

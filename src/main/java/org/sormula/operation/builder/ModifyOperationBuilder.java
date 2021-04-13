@@ -50,8 +50,10 @@ public abstract class ModifyOperationBuilder<R, B extends ModifyOperationBuilder
     }
 
 
+    @Override
     protected void init(T operation) throws SormulaException
     {
+        super.init(operation);
         if (batch != null) operation.setBatch(batch);
         
         if (parameters != null) operation.setParameters(parameters);

@@ -33,7 +33,8 @@ import org.sormula.SormulaException;
  * @author Jeff Miller
  * @since 4.4
  * @param <R> Class associated with a row in table
- */public class CachedTableBuilder<R> extends AbstractTableBuilder<R, CachedTableBuilder<R>, CachedTable<R>>
+ */
+public class CachedTableBuilder<R> extends AbstractTableBuilder<R, CachedTableBuilder<R>, CachedTable<R>>
 {
     public CachedTableBuilder(Database database, Class<R> rowClass) 
     {

@@ -45,7 +45,7 @@ public class IdentityInsert extends ExampleBase
         String tableName = getSchemaPrefix() + "student";
         dropTable(tableName);
         createTable("CREATE TABLE " + tableName + 
-                "(id INTEGER GENERATED ALWAYS AS IDENTITY(START WITH 1001) PRIMARY KEY," +
+                "(id " + getIdentityColumnDDL() + "," +
                 " firstname VARCHAR(30)," +
                 " lastname VARCHAR(30)," +
                 " graduationdate TIMESTAMP)" 

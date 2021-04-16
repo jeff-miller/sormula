@@ -47,11 +47,25 @@
     <target name="BasicDelete" description="Runs example">
         <antcall target="run-example"><param name="class" value="org.sormula.examples.basic.BasicDelete"/></antcall>
     </target>
+
     <target name="BasicInsert2" description="Runs example">
         <antcall target="run-example"><param name="class" value="org.sormula.examples.basic2.BasicInsert2"/></antcall>
     </target>
     <target name="BasicSelect2" description="Runs example">
         <antcall target="run-example"><param name="class" value="org.sormula.examples.basic2.BasicSelect2"/></antcall>
+    </target>
+    
+    <target name="BuilderInsert" description="Runs example">
+        <antcall target="run-example"><param name="class" value="org.sormula.examples.builder.BuilderInsert"/></antcall>
+    </target>
+    <target name="BuilderSelect" description="Runs example">
+        <antcall target="run-example"><param name="class" value="org.sormula.examples.builder.BuilderSelect"/></antcall>
+    </target>
+    <target name="BuilderUpdate" description="Runs example">
+        <antcall target="run-example"><param name="class" value="org.sormula.examples.builder.BuilderUpdate"/></antcall>
+    </target>
+    <target name="BuilderDelete" description="Runs example">
+        <antcall target="run-example"><param name="class" value="org.sormula.examples.builder.BuilderDelete"/></antcall>
     </target>
 
 	<target name="NameInsert" description="Runs example">

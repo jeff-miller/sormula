@@ -17,7 +17,6 @@
 package org.sormula.examples.basic;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import org.sormula.Database;
 import org.sormula.SormulaException;
@@ -129,10 +128,6 @@ class SelectJohns extends ArrayListSelectOperation<Student>
     public SelectJohns(Table<Student> table) throws OperationException
     {
         super(table, "fn2");
-    }
-
-    public List<Student> selectAll() throws OperationException
-    {
-        return super.selectAll("John");
+        setParameters("John");
     }
 }

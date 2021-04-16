@@ -21,7 +21,7 @@ import org.sormula.annotation.Row;
 
 
 /**
- * Row class for {@link InsertTest} and {@link SelectTest1}.
+ * Row class for {@link InsertTest}.
  * 
  * @author Jeff Miller
  */

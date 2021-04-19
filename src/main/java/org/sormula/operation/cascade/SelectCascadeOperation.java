@@ -542,6 +542,13 @@ public class SelectCascadeOperation<S, T> extends CascadeOperation<S, T>
     }
     
     
+    /**
+     * Copies collection to new array of type T.
+     * 
+     * @param c copy from this parameter
+     * @return array as a copy of parameter c
+     * @throws OperationException if array cannot be created
+     */
     protected T[] toTargetArray(Collection<T> c) throws OperationException
     {
         try

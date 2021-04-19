@@ -31,12 +31,20 @@ import org.sormula.operation.DeleteOperation;
 public class DeleteOperationBuilder<R>
     extends ModifyOperationBuilder<R, DeleteOperationBuilder<R>, DeleteOperation<R>>
 {
+    /**
+     * Constructs for a table.
+     * 
+     * @param table build for table
+     */
     public DeleteOperationBuilder(Table<R> table) 
     {
         super(table);
     }
 
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public DeleteOperation<R> build() throws SormulaException 
     {

@@ -33,6 +33,10 @@ public class Insert<R extends ActiveRecord<? super R>> extends ActiveOperation<R
     R record;
     
     
+    /**
+     * @param activeTable active table to affect
+     * @param record record to insert
+     */
     public Insert(ActiveTable<R> activeTable, R record)
     {
         super(activeTable, "error inserting active record");
@@ -40,6 +44,9 @@ public class Insert<R extends ActiveRecord<? super R>> extends ActiveOperation<R
     }
 
     
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Integer operate() throws Exception
     {

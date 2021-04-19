@@ -73,6 +73,11 @@ public class PaginatedSelector<R, C> implements AutoCloseable
     }
     
     
+    /**
+     * Initialize this class.
+     * 
+     * @param selectOperation select operation used to select a page of rows
+     */
     protected void init(SelectOperation<R, C> selectOperation)
     {
         this.selectOperation = selectOperation;
@@ -103,6 +108,11 @@ public class PaginatedSelector<R, C> implements AutoCloseable
     }
     
     
+    /**
+     * Invokes {@link #isExecuted()}.
+     * 
+     * @throws SelectorException if select operation has not been executed
+     */
     protected void confirmExecuted() throws SelectorException
     {
         if (!isExecuted())
@@ -112,6 +122,12 @@ public class PaginatedSelector<R, C> implements AutoCloseable
     }
     
     
+    /**
+     * Tests that {@link SelectOperation} provided {@link #init(SelectOperation)} has been 
+     * executed.
+     * @see SelectOperation#execute()
+     * @return true if select operation has been executed
+     */
     protected boolean isExecuted()
     {
     	return selectOperation != null && selectOperation.isExecuted();

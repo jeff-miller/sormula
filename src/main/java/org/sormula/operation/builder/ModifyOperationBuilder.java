@@ -44,12 +44,20 @@ public abstract class ModifyOperationBuilder<R, B extends ModifyOperationBuilder
     Map<?, R> rowMap;
     
     
+    /**
+     * Constructs for a table.
+     * 
+     * @param table build for table
+     */
     public ModifyOperationBuilder(Table<R> table) 
     {
         super(table);
     }
 
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     protected void init(T operation) throws SormulaException
     {
@@ -64,6 +72,10 @@ public abstract class ModifyOperationBuilder<R, B extends ModifyOperationBuilder
     }
     
     
+    /**
+     * @param batch see {@link ModifyOperation}
+     * @return this
+     */
     @SuppressWarnings("unchecked")
     public B batch(boolean batch)
     {
@@ -72,6 +84,10 @@ public abstract class ModifyOperationBuilder<R, B extends ModifyOperationBuilder
     }
     
     
+    /**
+     * @param parameters see {@link ModifyOperation}
+     * @return this
+     */
     @SuppressWarnings("unchecked")
     public B parameters(Object... parameters)
     {
@@ -80,6 +96,10 @@ public abstract class ModifyOperationBuilder<R, B extends ModifyOperationBuilder
     }
     
     
+    /**
+     * @param row see {@link ModifyOperation}
+     * @return this
+     */
     @SuppressWarnings("unchecked")
     public B row(R row)
     {
@@ -88,6 +108,10 @@ public abstract class ModifyOperationBuilder<R, B extends ModifyOperationBuilder
     }
     
     
+    /**
+     * @param rows see {@link ModifyOperation}
+     * @return this
+     */
     @SuppressWarnings("unchecked")
     public B rows(Collection<R> rows)
     {
@@ -96,6 +120,10 @@ public abstract class ModifyOperationBuilder<R, B extends ModifyOperationBuilder
     }
     
     
+    /**
+     * @param rows see {@link ModifyOperation}
+     * @return this
+     */
     @SuppressWarnings("unchecked")
     public B rows(Map<?, R> rows)
     {
@@ -104,6 +132,10 @@ public abstract class ModifyOperationBuilder<R, B extends ModifyOperationBuilder
     }
     
     
+    /**
+     * @param rows see {@link ModifyOperation}
+     * @return this
+     */
     @SuppressWarnings("unchecked")
     public B rows(R[] rows)
     {

@@ -39,6 +39,11 @@ public class NoTypeTranslatorException extends TranslatorException
     private static final long serialVersionUID = 1L;
     
 
+    /**
+     * Constructs for a {@link Field} that does not have a {@link TypeTranslator}.
+     * 
+     * @param field field with no {@link TypeTranslator}
+     */
     public NoTypeTranslatorException(Field field)
     {
         super("no type translator for field=" + field.getName() + 

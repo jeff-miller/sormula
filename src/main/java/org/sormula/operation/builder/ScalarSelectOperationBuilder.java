@@ -31,12 +31,20 @@ import org.sormula.operation.ScalarSelectOperation;
 public class ScalarSelectOperationBuilder<R>
     extends AbstractScalarSelectOperationBuilder<R, ScalarSelectOperationBuilder<R>, ScalarSelectOperation<R>>
 {
+    /**
+     * Constructs for a table.
+     * 
+     * @param table build for table
+     */
     public ScalarSelectOperationBuilder(Table<R> table) 
     {
         super(table);
     }
     
     
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public ScalarSelectOperation<R> build() throws SormulaException 
     {

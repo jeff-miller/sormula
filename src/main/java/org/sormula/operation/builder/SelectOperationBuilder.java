@@ -39,12 +39,20 @@ public abstract class SelectOperationBuilder<R, C, B extends SelectOperationBuil
     Integer resultSetType;
     
     
+    /**
+     * Constructs for a table.
+     * 
+     * @param table build for table
+     */
     public SelectOperationBuilder(Table<R> table) 
     {
         super(table);
     }
 
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     protected void init(T operation) throws SormulaException
     {
@@ -56,6 +64,10 @@ public abstract class SelectOperationBuilder<R, C, B extends SelectOperationBuil
     }
     
     
+    /**
+     * @param defaultReadAllSize see {@link SelectOperation}
+     * @return this
+     */
     @SuppressWarnings("unchecked")
     public B defaultReadAllSize(int defaultReadAllSize)
     {
@@ -63,7 +75,11 @@ public abstract class SelectOperationBuilder<R, C, B extends SelectOperationBuil
         return (B)this;
     }
     
-    
+
+    /**
+     * @param fetchSize see {@link SelectOperation}
+     * @return this
+     */
     @SuppressWarnings("unchecked")
     public B fetchSize(int fetchSize)
     {
@@ -72,6 +88,10 @@ public abstract class SelectOperationBuilder<R, C, B extends SelectOperationBuil
     }
     
     
+    /**
+     * @param resultSetType see {@link SelectOperation}
+     * @return this
+     */
     @SuppressWarnings("unchecked")
     public B resultSetType(int resultSetType)
     {

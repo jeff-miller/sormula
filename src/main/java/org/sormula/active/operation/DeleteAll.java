@@ -35,12 +35,20 @@ public class DeleteAll<R extends ActiveRecord<? super R>> extends ActiveOperatio
     Collection<R> records;
     
     
+    /**
+     * Delete all rows.
+     * @param activeTable active table to affect
+     */
     public DeleteAll(ActiveTable<R> activeTable)
     {
         this(activeTable, null);
     }
     
     
+    /**
+     * @param activeTable active table to affect
+     * @param records records to delete
+     */
     public DeleteAll(ActiveTable<R> activeTable, Collection<R> records)
     {
         super(activeTable, "error deleting active record collection");
@@ -48,6 +56,9 @@ public class DeleteAll<R extends ActiveRecord<? super R>> extends ActiveOperatio
     }
 
     
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Integer operate() throws Exception
     {

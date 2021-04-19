@@ -27,52 +27,83 @@ package org.sormula.operation.monitor;
  */
 public class NoOperationTime extends OperationTime
 {
+    /**
+     * Constructs {@link OperationTime} that does nothing.
+     */
     public NoOperationTime()
     {
         super("no-op");
         setDescription("NoOp");
     }
 
+    /**
+     * Does nothing.
+     */
     @Override
     public void startPrepareTime()
     {
     }
 
+    /**
+     * Does nothing.
+     */
     @Override
     public void startWriteTime()
     {
     }
 
+    /**
+     * Does nothing.
+     */
     @Override
     public void startExecuteTime()
     {
     }
 
+    /**
+     * Does nothing.
+     */
     @Override
     public void startReadTime()
     {
     }
 
+    /**
+     * Does nothing.
+     */
     @Override
     public void stop()
     {
     }
 
+    /**
+     * Does nothing.
+     */
     @Override
     public void cancel()
     {
     }
 
+    /**
+     * Does nothing.
+     */
     @Override
     public void pause()
     {
     }
 
+    /**
+     * Does nothing.
+     */
     @Override
     public void resume()
     {
     }
 
+    /**
+     * Does nothing.
+     * @param stackTraceElement not used
+     */
     @Override
     public void updateSource(StackTraceElement stackTraceElement)
     {

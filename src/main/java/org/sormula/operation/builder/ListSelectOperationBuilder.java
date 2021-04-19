@@ -34,6 +34,11 @@ import org.sormula.operation.ListSelectOperation;
 public abstract class ListSelectOperationBuilder<R, B extends ListSelectOperationBuilder, T extends ListSelectOperation<R>>
     extends SelectOperationBuilder<R, List<R>, B, T>
 {
+    /**
+     * Constructs for a table.
+     * 
+     * @param table build for table
+     */
     public ListSelectOperationBuilder(Table<R> table) 
     {
         super(table);

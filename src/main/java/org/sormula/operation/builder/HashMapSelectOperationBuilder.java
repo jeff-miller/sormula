@@ -32,12 +32,20 @@ import org.sormula.operation.HashMapSelectOperation;
 public class HashMapSelectOperationBuilder<K, R>
     extends MapSelectOperationBuilder<K, R, HashMapSelectOperationBuilder<K, R>, HashMapSelectOperation<K, R>>
 {
+    /**
+     * Constructs for a table.
+     * 
+     * @param table build for table
+     */
     public HashMapSelectOperationBuilder(Table<R> table) 
     {
         super(table);
     }
 
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public HashMapSelectOperation<K, R> build() throws SormulaException 
     {

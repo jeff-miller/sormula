@@ -150,6 +150,9 @@ public abstract class AbstractColumnTranslator<R, T> implements ColumnTranslator
     {
         return identity;
     }
+    /**
+     * {@inheritDoc}
+     */
     public void setIdentity(boolean identity)
     {
         this.identity = identity;
@@ -163,6 +166,9 @@ public abstract class AbstractColumnTranslator<R, T> implements ColumnTranslator
     {
         return readOnly;
     }
+    /**
+     * {@inheritDoc}
+     */
     public void setReadOnly(boolean readOnly)
     {
         this.readOnly = readOnly;

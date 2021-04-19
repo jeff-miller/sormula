@@ -32,12 +32,20 @@ import org.sormula.operation.LinkedHashMapSelectOperation;
 public class LinkedHashMapSelectOperationBuilder<K, R>
     extends MapSelectOperationBuilder<K, R, LinkedHashMapSelectOperationBuilder<K, R>, LinkedHashMapSelectOperation<K, R>>
 {
+    /**
+     * Constructs for a table.
+     * 
+     * @param table build for table
+     */
     public LinkedHashMapSelectOperationBuilder(Table<R> table) 
     {
         super(table);
     }
 
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public LinkedHashMapSelectOperation<K, R> build() throws SormulaException 
     {

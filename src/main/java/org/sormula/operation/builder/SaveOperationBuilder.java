@@ -31,12 +31,20 @@ import org.sormula.operation.SaveOperation;
 public class SaveOperationBuilder<R>
     extends ModifyOperationBuilder<R, SaveOperationBuilder<R>, SaveOperation<R>>
 {
+    /**
+     * Constructs for a table.
+     * 
+     * @param table build for table
+     */
     public SaveOperationBuilder(Table<R> table) 
     {
         super(table);
     }
 
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public SaveOperation<R> build() throws SormulaException 
     {

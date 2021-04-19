@@ -41,12 +41,20 @@ public abstract class MapSelectOperationBuilder<K, R, B extends MapSelectOperati
     Function<R, K> keyFunction;
     
     
+    /**
+     * Constructs for a table.
+     * 
+     * @param table build for table
+     */
     public MapSelectOperationBuilder(Table<R> table) 
     {
         super(table);
     }
     
-    
+
+    /**
+     * {@inheritDoc}
+     */
     @Override
     protected void init(T operation) throws SormulaException
     {
@@ -56,6 +64,10 @@ public abstract class MapSelectOperationBuilder<K, R, B extends MapSelectOperati
     }
     
     
+    /**
+     * @param getKeyMethodName see {@link MapSelectOperation}
+     * @return this 
+     */
     @SuppressWarnings("unchecked")
     public B getKeyMethodName(String getKeyMethodName)
     {
@@ -64,6 +76,10 @@ public abstract class MapSelectOperationBuilder<K, R, B extends MapSelectOperati
     }
     
     
+    /**
+     * @param keyFunction see {@link MapSelectOperation}
+     * @return this
+     */
     @SuppressWarnings("unchecked")
     public B keyFunction(Function<R, K> keyFunction)
     {

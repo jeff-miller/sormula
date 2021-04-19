@@ -48,13 +48,22 @@ public class PaginatedListSelectorBuilder<R>
     Table<R> table;
 
     
+    /**
+     * Constructs for a page size and table.
+     * 
+     * @param pageSize number of rows in a page
+     * @param table table to read rows from
+     */
     public PaginatedListSelectorBuilder(int pageSize, Table<R> table) 
     {
         this.pageSize = pageSize;
         this.table = table;
     }
 
-    
+
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public PaginatedListSelector<R> build() throws SelectorException
     {

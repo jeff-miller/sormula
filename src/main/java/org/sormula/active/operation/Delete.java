@@ -33,6 +33,10 @@ public class Delete<R extends ActiveRecord<? super R>> extends ActiveOperation<R
     R record;
     
     
+    /**
+     * @param activeTable active table to affect
+     * @param record record to delete
+     */
     public Delete(ActiveTable<R> activeTable, R record)
     {
         super(activeTable, "error deleting active record");
@@ -40,6 +44,9 @@ public class Delete<R extends ActiveRecord<? super R>> extends ActiveOperation<R
     }
 
     
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Integer operate() throws Exception
     {

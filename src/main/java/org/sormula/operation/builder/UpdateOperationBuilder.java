@@ -31,12 +31,20 @@ import org.sormula.operation.UpdateOperation;
 public class UpdateOperationBuilder<R>
     extends ModifyOperationBuilder<R, UpdateOperationBuilder<R>, UpdateOperation<R>>
 {
+    /**
+     * Constructs for a table.
+     * 
+     * @param table build for table
+     */
     public UpdateOperationBuilder(Table<R> table) 
     {
         super(table);
     }
 
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public UpdateOperation<R> build() throws SormulaException 
     {

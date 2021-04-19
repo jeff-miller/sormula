@@ -31,12 +31,20 @@ import org.sormula.operation.ArrayListSelectOperation;
 public class ArrayListSelectOperationBuilder<R>
     extends ListSelectOperationBuilder<R, ArrayListSelectOperationBuilder<R>, ArrayListSelectOperation<R>>
 {
+    /**
+     * Constructs for a table.
+     * 
+     * @param table build for table
+     */
     public ArrayListSelectOperationBuilder(Table<R> table) 
     {
         super(table);
     }
 
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public ArrayListSelectOperation<R> build() throws SormulaException 
     {

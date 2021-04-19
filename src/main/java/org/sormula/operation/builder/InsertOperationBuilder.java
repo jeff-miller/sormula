@@ -31,12 +31,20 @@ import org.sormula.operation.InsertOperation;
 public class InsertOperationBuilder<R>
     extends ModifyOperationBuilder<R, InsertOperationBuilder<R>, InsertOperation<R>>
 {
+    /**
+     * Constructs for a table.
+     * 
+     * @param table build for table
+     */
     public InsertOperationBuilder(Table<R> table) 
     {
         super(table);
     }
 
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public InsertOperation<R> build() throws SormulaException 
     {

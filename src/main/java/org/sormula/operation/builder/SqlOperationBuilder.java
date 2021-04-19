@@ -50,21 +50,39 @@ public abstract class SqlOperationBuilder<R, B extends SqlOperationBuilder, T ex
     Boolean timings;
     
     
+    /**
+     * Constructs for a table.
+     * 
+     * @param table build for table
+     */
     public SqlOperationBuilder(Table<R> table) 
     {
         this.table = table;
     }
 
 
+    /**
+     * @return the operation
+     * @throws SormulaException if error
+     */
     public abstract T build() throws SormulaException;
     
     
+    /**
+     * @return table supplied in constructor
+     */
     public Table<R> getTable() 
     {
         return table;
     }
 
 
+    /**
+     * Sets properties of operation parameter from corresponding builder properties.
+     * 
+     * @param operation affect this operation
+     * @throws SormulaException if error
+     */
     protected void init(T operation) throws SormulaException
     {
         if (whereConditionName != null) operation.setWhere(whereConditionName);
@@ -80,8 +98,12 @@ public abstract class SqlOperationBuilder<R, B extends SqlOperationBuilder, T ex
         if (timingId != null) operation.setTimingId(timingId);
         if (timings != null) operation.setTimings(timings);
     }
+
     
-    
+    /**
+     * @param whereConditionName see {@link SqlOperation}
+     * @return this
+     */
     @SuppressWarnings("unchecked")
     public B where(String whereConditionName)
     {
@@ -90,6 +112,10 @@ public abstract class SqlOperationBuilder<R, B extends SqlOperationBuilder, T ex
     }
     
     
+    /**
+     * @param parameters see {@link SqlOperation}
+     * @return this
+     */
     @SuppressWarnings("unchecked")
     public B parameters(Object... parameters)
     {
@@ -98,6 +124,10 @@ public abstract class SqlOperationBuilder<R, B extends SqlOperationBuilder, T ex
     }
     
     
+    /**
+     * @param queryTimeout see {@link SqlOperation}
+     * @return this
+     */
     @SuppressWarnings("unchecked")
     public B queryTimeout(int queryTimeout)
     {
@@ -106,6 +136,10 @@ public abstract class SqlOperationBuilder<R, B extends SqlOperationBuilder, T ex
     }
     
     
+    /**
+     * @param cached see {@link SqlOperation}
+     * @return this
+     */
     @SuppressWarnings("unchecked")
     public B cached(boolean cached)
     {
@@ -114,6 +148,10 @@ public abstract class SqlOperationBuilder<R, B extends SqlOperationBuilder, T ex
     }
     
     
+    /**
+     * @param cascade see {@link SqlOperation}
+     * @return this
+     */
     @SuppressWarnings("unchecked")
     public B cascade(boolean cascade)
     {
@@ -122,6 +160,10 @@ public abstract class SqlOperationBuilder<R, B extends SqlOperationBuilder, T ex
     }
     
     
+    /**
+     * @param customSql see {@link SqlOperation}
+     * @return this
+     */
     @SuppressWarnings("unchecked")
     public B customSql(String customSql)
     {
@@ -130,6 +172,10 @@ public abstract class SqlOperationBuilder<R, B extends SqlOperationBuilder, T ex
     }
     
     
+    /**
+     * @param includeIdentityColumns see {@link SqlOperation}
+     * @return this
+     */
     @SuppressWarnings("unchecked")
     public B includeIdentityColumns(boolean includeIdentityColumns)
     {
@@ -138,6 +184,10 @@ public abstract class SqlOperationBuilder<R, B extends SqlOperationBuilder, T ex
     }
     
     
+    /**
+     * @param namedParameterMap see {@link SqlOperation}
+     * @return this
+     */
     @SuppressWarnings("unchecked")
     public B namedParameterMap(Map<String, Object> namedParameterMap)
     {
@@ -146,6 +196,11 @@ public abstract class SqlOperationBuilder<R, B extends SqlOperationBuilder, T ex
     }
     
     
+    /**
+     * @param name see {@link SqlOperation}
+     * @param value see {@link SqlOperation}
+     * @return this
+     */
     @SuppressWarnings("unchecked")
     public B parameter(String name, Object value)
     {
@@ -155,6 +210,10 @@ public abstract class SqlOperationBuilder<R, B extends SqlOperationBuilder, T ex
     }
     
     
+    /**
+     * @param readOnly see {@link SqlOperation}
+     * @return this
+     */
     @SuppressWarnings("unchecked")
     public B readOnly(boolean readOnly)
     {
@@ -163,6 +222,10 @@ public abstract class SqlOperationBuilder<R, B extends SqlOperationBuilder, T ex
     }
     
 
+    /**
+     * @param requiredCascades see {@link SqlOperation}
+     * @return this
+     */
     @SuppressWarnings("unchecked")
     public B requiredCascades(String... requiredCascades)
     {
@@ -171,6 +234,10 @@ public abstract class SqlOperationBuilder<R, B extends SqlOperationBuilder, T ex
     }
     
 
+    /**
+     * @param timingId see {@link SqlOperation}
+     * @return this
+     */
     @SuppressWarnings("unchecked")
     public B timingId(String timingId)
     {
@@ -179,6 +246,10 @@ public abstract class SqlOperationBuilder<R, B extends SqlOperationBuilder, T ex
     }
     
     
+    /**
+     * @param timings see {@link SqlOperation}
+     * @return this
+     */
     @SuppressWarnings("unchecked")
     public B timings(boolean timings)
     {

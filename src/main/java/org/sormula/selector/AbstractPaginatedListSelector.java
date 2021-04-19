@@ -66,6 +66,11 @@ public abstract class AbstractPaginatedListSelector<R> extends PaginatedSelector
     }
 
     
+    /**
+     * Creates the {@link ListSelectOperation} used by the concrete implementation.
+     * @return list selection operation
+     * @throws Exception if error
+     */
     protected abstract ListSelectOperation<R> createListSelectOperation() throws Exception;
     
     

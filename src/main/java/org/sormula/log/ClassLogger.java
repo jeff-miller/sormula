@@ -52,157 +52,275 @@ public class ClassLogger
         }
     }
 
-    
+
+    /**
+     * @param arg0 see log4j
+     * @param arg1 see log4j
+     * @param arg2 see log4j
+     */
 	public void debug(String arg0, Object arg1, Object arg2) {
 	    log.debug(arg0);
 	}
 
 
+    /**
+     * @param arg0 see log4j
+     * @param arg1 see log4j
+     */
 	public void debug(String arg0, Object arg1) {
 	    log.debug(arg0);
 	}
 
 
+    /**
+     * @param arg0 see log4j
+     * @param arg1 see log4j
+     */
 	public void debug(String arg0, Object[] arg1) {
 	    log.debug(arg0);
 	}
 
 
+    /**
+     * @param arg0 see log4j
+     * @param arg1 see log4j
+     */
 	public void debug(String arg0, Throwable arg1) {
 	    log.debug(arg0);
 	}
 
 
+	/**
+	 * @param arg0 see log4j
+	 */
 	public void debug(String arg0) {
 	    log.debug(arg0);
 	}
 
 
+    /**
+     * @param arg0 see log4j
+     * @param arg1 see log4j
+     * @param arg2 see log4j
+     */
 	public void error(String arg0, Object arg1, Object arg2) {
 	    log.error(arg0);
 	}
 
 
+    /**
+     * @param arg0 see log4j
+     * @param arg1 see log4j
+     */
 	public void error(String arg0, Object arg1) {
 	    log.error(arg0);
 	}
 
 
+    /**
+     * @param arg0 see log4j
+     * @param arg1 see log4j
+     */
 	public void error(String arg0, Object[] arg1) {
 	    log.error(arg0);
 	}
 
 
+    /**
+     * @param arg0 see log4j
+     * @param arg1 see log4j
+     */
 	public void error(String arg0, Throwable arg1) {
 	    log.error(arg0, arg1);
 	}
 
 
+    /**
+     * @param arg0 see log4j
+     */
 	public void error(String arg0) {
 	    log.error(arg0);
 	}
 
 
+	/**
+	 * @return see log4j
+	 */
 	public String getName() {
 	    return log.getClass().getCanonicalName();
 	}
 
 
+    /**
+     * @param arg0 see log4j
+     * @param arg1 see log4j
+     * @param arg2 see log4j
+     */
 	public void info(String arg0, Object arg1, Object arg2) {
 	    log.info(arg0);
 	}
 
 
+    /**
+     * @param arg0 see log4j
+     * @param arg1 see log4j
+     */
 	public void info(String arg0, Object arg1) {
 	    log.info(arg0);
 	}
 
 
+    /**
+     * @param arg0 see log4j 
+     * @param arg1 see log4j
+     */
 	public void info(String arg0, Object[] arg1) {
 	    log.info(arg0);
 	}
 
 
+    /**
+     * @param arg0 see log4j
+     * @param arg1 see log4j
+     */
 	public void info(String arg0, Throwable arg1) {
 	    log.info(arg0);
 	}
 
 
+    /**
+     * @param arg0 see log4j
+     */
 	public void info(String arg0) {
 	    log.info(arg0);
 	}
 
 
+    /**
+     * @return see log4j
+     */
 	public boolean isDebugEnabled() {
 		return log.isDebugEnabled();
 	}
 
 
+    /**
+     * @return see log4j
+     */
 	public boolean isErrorEnabled() {
 	    return true;
 	}
 
 
+    /**
+     * @return see log4j
+     */
 	public boolean isInfoEnabled() {
 		return true;
 	}
 
 
+    /**
+     * @return see log4j
+     */
 	public boolean isTraceEnabled() {
 		return false;
 	}
 
 
+    /**
+     * @return see log4j
+     */
 	public boolean isWarnEnabled() {
 		return false;
 	}
 
 
+    /**
+     * @param arg0 see log4j
+     * @param arg1 see log4j
+     * @param arg2 see log4j
+     */
 	public void trace(String arg0, Object arg1, Object arg2) {
 	    log.info(arg0);
 	}
 
 
+    /**
+     * @param arg0 see log4j
+     * @param arg1 see log4j
+     */
 	public void trace(String arg0, Object arg1) {
 	    log.info(arg0);
 	}
 
 
+    /**
+     * @param arg0 see log4j
+     * @param arg1 see log4j
+     */
 	public void trace(String arg0, Object[] arg1) {
 	    log.info(arg0);
 	}
 
 
+    /**
+     * @param arg0 see log4j
+     * @param arg1 see log4j
+     */
 	public void trace(String arg0, Throwable arg1) {
 	    log.info(arg0);
 	}
 
 
+    /**
+     * @param arg0 see log4j
+     */
 	public void trace(String arg0) {
 	    log.info(arg0);
 	}
 
-
+	
+    /**
+     * @param arg0 see log4j
+     * @param arg1 see log4j
+     * @param arg2 see log4j
+     */
 	public void warn(String arg0, Object arg1, Object arg2) {
 		log.info(arg0);
 	}
 
 
+    /**
+     * @param arg0 see log4j
+     * @param arg1 see log4j
+     */
 	public void warn(String arg0, Object arg1) {
 	    log.info(arg0);
 	}
 
 
+    /**
+     * @param arg0 see log4j
+     * @param arg1 see log4j
+     */
 	public void warn(String arg0, Object[] arg1) {
 	    log.info(arg0);
 	}
 
 
+    /**
+     * @param arg0 see log4j 
+     * @param arg1 see log4j
+     */
 	public void warn(String arg0, Throwable arg1) {
 	    log.info(arg0);
 	}
 
 
+    /**
+     * @param arg0 see log4j
+     */
 	public void warn(String arg0) {
 	    log.info(arg0);
 	}

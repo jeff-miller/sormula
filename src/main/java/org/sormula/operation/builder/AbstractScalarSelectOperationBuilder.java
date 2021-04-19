@@ -38,12 +38,20 @@ public abstract class AbstractScalarSelectOperationBuilder<R, B extends Abstract
     R rowParameters;
     
     
+    /**
+     * Constructs for a table.
+     * 
+     * @param table build for table
+     */
     public AbstractScalarSelectOperationBuilder(Table<R> table) 
     {
         super(table);
     }
 
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     protected void init(T operation) throws SormulaException
     {
@@ -54,6 +62,10 @@ public abstract class AbstractScalarSelectOperationBuilder<R, B extends Abstract
     }
     
     
+    /**
+     * @param orderByName
+     * @return
+     */
     @SuppressWarnings("unchecked")
     public B orderBy(String orderByName)
     {
@@ -62,6 +74,10 @@ public abstract class AbstractScalarSelectOperationBuilder<R, B extends Abstract
     }
     
     
+    /**
+     * @param maximumRowsRead see {@link ScalarSelectOperation}
+     * @return this
+     */
     @SuppressWarnings("unchecked")
     public B maximumRowsRead(int maximumRowsRead)
     {
@@ -70,6 +86,10 @@ public abstract class AbstractScalarSelectOperationBuilder<R, B extends Abstract
     }
     
     
+    /**
+     * @param rowParameters see {@link ScalarSelectOperation}
+     * @return this
+     */
     @SuppressWarnings("unchecked")
     public B rowParameters(R rowParameters)
     {

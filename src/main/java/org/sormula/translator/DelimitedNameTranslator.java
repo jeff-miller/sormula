@@ -47,7 +47,13 @@ public class DelimitedNameTranslator implements NameTranslator
         this("\"", "\"");
     }
     
-    
+
+    /**
+     * Constructs for opening and closing delimiters.
+     * 
+     * @param openingDelimiter delimiter preceding name
+     * @param closingDelimiter delimiter following name
+     */
     public DelimitedNameTranslator(String openingDelimiter, String closingDelimiter)
     {
         this.openingDelimiter = openingDelimiter;

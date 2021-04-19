@@ -28,7 +28,14 @@ public class NoColumnTranslatorException extends TranslatorException
 {
     private static final long serialVersionUID = 1L;
     
-
+    
+    /**
+     * Constructs for source of exception.
+     * 
+     * @param rowClass class that did not have the translator
+     * @param fieldName field name of rowClass parameter that did not have the translator
+     * @param annotationName annotation that needs the translator
+     */
     public NoColumnTranslatorException(Class<?> rowClass, String fieldName, String annotationName)
     {
         super("no column translator for field=" + fieldName + ", in class=" + rowClass.getCanonicalName() +

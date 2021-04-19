@@ -42,12 +42,18 @@ public abstract class AbstractPaginatedListSelectorBuilder<R, B extends Paginate
     String orderByName;
 
     
+    /**
+     * Constructs.
+     */
     public AbstractPaginatedListSelectorBuilder()
     {
         parameterMap = new HashMap<>();
     }
     
     
+    /**
+     * {@inheritDoc}
+     */
     @Override
     protected void init(T selector) throws SelectorException
     {
@@ -59,6 +65,10 @@ public abstract class AbstractPaginatedListSelectorBuilder<R, B extends Paginate
     }
     
     
+    /**
+     * @param whereConditionName see {@link AbstractPaginatedListSelector}
+     * @return this
+     */
     @SuppressWarnings("unchecked")
     public B where(String whereConditionName)
     {
@@ -67,6 +77,10 @@ public abstract class AbstractPaginatedListSelectorBuilder<R, B extends Paginate
     }
     
     
+    /**
+     * @param parameters see {@link AbstractPaginatedListSelector}
+     * @return this
+     */
     @SuppressWarnings("unchecked")
     public B parameters(Object... parameters)
     {
@@ -74,7 +88,12 @@ public abstract class AbstractPaginatedListSelectorBuilder<R, B extends Paginate
         return (B)this;
     }
     
-    
+
+    /**
+     * @param name see {@link AbstractPaginatedListSelector}
+     * @param value see {@link AbstractPaginatedListSelector}
+     * @return this
+     */
     @SuppressWarnings("unchecked")
     public B parameter(String name, Object value)
     {
@@ -83,6 +102,10 @@ public abstract class AbstractPaginatedListSelectorBuilder<R, B extends Paginate
     }
     
     
+    /**
+     * @param orderByName see {@link AbstractPaginatedListSelector}
+     * @return this
+     */
     @SuppressWarnings("unchecked")
     public B orderByName(String orderByName)
     {

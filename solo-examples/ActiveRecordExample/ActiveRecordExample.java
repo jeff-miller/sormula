@@ -57,6 +57,7 @@ public class ActiveRecordExample
         example.selectByRange(1, 10);
         example.selectByRange2(1, 10);
         example.selectIn();
+        example.closeDatabase();
         System.out.println("end");
     }
     
@@ -257,6 +258,16 @@ public class ActiveRecordExample
             System.out.println(inventory.getPartNumber());
         }
     }
+    
+    
+    public void closeDatabase() throws Exception
+    {
+        try (Connection connection = dataSource.getConnection(); Statement statement = connection.createStatement())
+        {
+            System.out.println("close database");
+            statement.execute("shutdown compact;");
+        }
+    }
 }
 
 
@@ -266,46 +277,53 @@ class BasicDataSource implements DataSource
     {
     }
 
+    @Override
     public Connection getConnection() throws SQLException
     {
-        return DriverManager.getConnection("jdbc:hsqldb:file:db;shutdown=true");
+        return DriverManager.getConnection("jdbc:hsqldb:file:db");
     }
 
+    @Override
     public Connection getConnection(String username, String password) throws SQLException
     {
         return null;
     }
     
+    @Override
     public PrintWriter getLogWriter() throws SQLException
     {
         return null;
     }
 
+    @Override
     public void setLogWriter(PrintWriter out) throws SQLException
     {
     }
 
+    @Override
     public void setLoginTimeout(int seconds) throws SQLException
     {
     }
 
+    @Override
     public int getLoginTimeout() throws SQLException
     {
         return 0;
     }
 
+    @Override
     public Logger getParentLogger() // only available in jdk 7 throws SQLFeatureNotSupportedException
     {
         return null;
     }
 
-    /* jdk 7 */
+    @Override
     public <T> T unwrap(Class<T> iface) throws SQLException
     {
         return null;
     }
 
-    /* jdk 7 */
+    @Override
     public boolean isWrapperFor(Class<?> iface) throws SQLException
     {
         return false;

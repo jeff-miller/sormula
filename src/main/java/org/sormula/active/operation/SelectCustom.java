@@ -34,6 +34,13 @@ public class SelectCustom<R extends ActiveRecord<? super R>> extends ActiveOpera
     Object[] parameters;
     
     
+    /**
+     * Construct to select a record.
+     * 
+     * @param activeTable active table to select from
+     * @param customSql custom sql to be appended to base sql (for example, "where somecolumn=?")
+     * @param parameters parameter value to be set in customSql
+     */
     public SelectCustom(ActiveTable<R> activeTable, String customSql, Object... parameters)
     {
         super(activeTable, "error selecting active record");
@@ -42,6 +49,9 @@ public class SelectCustom<R extends ActiveRecord<? super R>> extends ActiveOpera
     }
 
     
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public R operate() throws Exception
     {

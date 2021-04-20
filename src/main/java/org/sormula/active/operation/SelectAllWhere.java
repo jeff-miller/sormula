@@ -36,6 +36,13 @@ public class SelectAllWhere<R extends ActiveRecord<? super R>> extends ActiveOpe
     Object[] parameters;
     
     
+    /**
+     * Construct to select for a where condition.
+     * 
+     * @param activeTable active table to select from
+     * @param whereConditionName name of where condition to use
+     * @param parameters parameter values for where condition
+     */
     public SelectAllWhere(ActiveTable<R> activeTable, String whereConditionName, Object... parameters)
     {
         super(activeTable, "error selecting active record");
@@ -44,6 +51,9 @@ public class SelectAllWhere<R extends ActiveRecord<? super R>> extends ActiveOpe
     }
 
     
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public List<R> operate() throws Exception
     {

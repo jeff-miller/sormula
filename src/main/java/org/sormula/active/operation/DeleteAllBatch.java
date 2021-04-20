@@ -35,13 +35,22 @@ public class DeleteAllBatch<R extends ActiveRecord<? super R>> extends ActiveOpe
     Collection<R> records;
     
     
+    /**
+     * Constructs to delete collection of rows as a batch operation.
+     * 
+     * @param activeTable active table to affect
+     * @param records delete records in this collection
+     */
     public DeleteAllBatch(ActiveTable<R> activeTable, Collection<R> records)
     {
         super(activeTable, "error deleting active record collection in batch");
         this.records = records;
     }
 
-    
+
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Integer operate() throws Exception
     {

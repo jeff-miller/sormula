@@ -35,6 +35,12 @@ public class UpdateAll<R extends ActiveRecord<? super R>> extends ActiveOperatio
     Collection<R> records;
     
     
+    /**
+     * Construct to update a collection of records.
+     * 
+     * @param activeTable active table to affect
+     * @param records records to update
+     */
     public UpdateAll(ActiveTable<R> activeTable, Collection<R> records)
     {
         super(activeTable, "error updating active record collection");
@@ -42,6 +48,9 @@ public class UpdateAll<R extends ActiveRecord<? super R>> extends ActiveOperatio
     }
 
     
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Integer operate() throws Exception
     {

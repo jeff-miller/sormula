@@ -21,6 +21,10 @@ public abstract class SelectAggregateOperationBuilder<R, A, B extends SelectAggr
     String expression;
     
     
+    /**
+     * @param table build for table
+     * @param expression expression to use for aggregate function
+     */
     public SelectAggregateOperationBuilder(Table<R> table, String expression) 
     {
         super(table);
@@ -28,6 +32,9 @@ public abstract class SelectAggregateOperationBuilder<R, A, B extends SelectAggr
     }
 
 
+    /**
+     * @return expression supplied in the constructor
+     */
     public String getExpression() 
     {
         return expression;

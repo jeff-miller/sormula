@@ -32,12 +32,20 @@ import org.sormula.active.ActiveTable;
  */
 public class SelectAll<R extends ActiveRecord<? super R>> extends ActiveOperation<R, List<R>>
 {
+    /**
+     * Construct to select all rows.
+     * 
+     * @param activeTable active table to select from 
+     */
     public SelectAll(ActiveTable<R> activeTable)
     {
         super(activeTable, "error selecting active record collection");
     }
 
-    
+
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public List<R> operate() throws Exception
     {

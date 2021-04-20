@@ -50,7 +50,7 @@ public abstract class ActiveRecord<R extends ActiveRecord<? super R>> implements
     private static final SormulaLogger log = SormulaLoggerFactory.getClassLogger();
     private static final long serialVersionUID = 1L;
     
-    // the following are transient so that they not used as a column when Row.inheritedFields=true 
+    // the following are transient so that they are not used as a column when Row.inheritedFields=true 
     @Transient 
     ActiveDatabase activeDatabase;
     

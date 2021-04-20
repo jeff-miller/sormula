@@ -21,6 +21,7 @@ import java.util.List;
 import org.sormula.Table;
 import org.sormula.active.ActiveRecord;
 import org.sormula.active.ActiveTable;
+import org.sormula.annotation.OrderBy;
 
 
 /**
@@ -37,6 +38,14 @@ public class SelectAllWhereOrdered<R extends ActiveRecord<? super R>> extends Ac
     Object[] parameters;
     
     
+    /**
+     * Construct to select for a where condition with rows returned in a specific order.
+     * 
+     * @param activeTable active table to select from
+     * @param whereConditionName name of where condition to use; empty string to select all rows in table
+     * @param orderByName name of order phrase to use as defined in {@link OrderBy#name()}
+     * @param parameters parameter values for where condition
+     */
     public SelectAllWhereOrdered(ActiveTable<R> activeTable, String whereConditionName, String orderByName, Object... parameters)
     {
         super(activeTable, "error selecting active record");
@@ -45,7 +54,10 @@ public class SelectAllWhereOrdered<R extends ActiveRecord<? super R>> extends Ac
         this.parameters = parameters;
     }
 
-    
+
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public List<R> operate() throws Exception
     {

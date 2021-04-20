@@ -33,6 +33,12 @@ public class SaveBatch<R extends ActiveRecord<? super R>> extends ActiveOperatio
     R record;
     
     
+    /**
+     * Construct to save a record as a batch operation.
+     * 
+     * @param activeTable active table to affect
+     * @param record record to save
+     */
     public SaveBatch(ActiveTable<R> activeTable, R record)
     {
         super(activeTable, "error saving active record in batch");
@@ -40,6 +46,9 @@ public class SaveBatch<R extends ActiveRecord<? super R>> extends ActiveOperatio
     }
 
     
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Integer operate() throws Exception
     {

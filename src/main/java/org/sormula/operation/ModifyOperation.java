@@ -583,6 +583,11 @@ public abstract class ModifyOperation<R> extends SqlOperation<R>
     }
     
 
+    /**
+     * Sets the number of rows affected by operation
+     * 
+     * @param rowsAffected number of rows
+     */
     protected void setRowsAffected(int rowsAffected)
     {
         this.rowsAffected = rowsAffected;

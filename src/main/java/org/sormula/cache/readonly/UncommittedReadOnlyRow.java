@@ -32,6 +32,12 @@ import org.sormula.cache.UncommittedRow;
  */
 public abstract class UncommittedReadOnlyRow<R> extends UncommittedRow<R>
 {
+    /**
+     * Constructs for a key and corresponding row.
+     * 
+     * @param cacheKey cache key based upon primary keys of row
+     * @param row row corresponding to cache key
+     */
     public UncommittedReadOnlyRow(CacheKey cacheKey, R row)
     {
         super(cacheKey, row);

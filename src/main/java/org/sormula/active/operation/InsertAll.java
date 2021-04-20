@@ -35,6 +35,12 @@ public class InsertAll<R extends ActiveRecord<? super R>> extends ActiveOperatio
     Collection<R> records;
     
     
+    /**
+     * Construct to insert a collection of records.
+     * 
+     * @param activeTable active table to affect
+     * @param records records to insert
+     */
     public InsertAll(ActiveTable<R> activeTable, Collection<R> records)
     {
         super(activeTable, "error inserting active record collection");
@@ -42,6 +48,9 @@ public class InsertAll<R extends ActiveRecord<? super R>> extends ActiveOperatio
     }
 
     
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Integer operate() throws Exception
     {

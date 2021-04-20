@@ -30,12 +30,20 @@ public class JavaSormulaLogger implements SormulaLogger
     Logger logger;
     
     
+    /**
+     * Constructs for a logger name.
+     * 
+     * @param name see {@link Logger#getLogger(String)}
+     */
     public JavaSormulaLogger(String name)
     {
         this.logger = Logger.getLogger(name);
     }
 
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void info(String message)
     {

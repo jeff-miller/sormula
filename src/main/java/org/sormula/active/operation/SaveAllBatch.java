@@ -35,6 +35,12 @@ public class SaveAllBatch<R extends ActiveRecord<? super R>> extends ActiveOpera
     Collection<R> records;
     
     
+    /**
+     * Construct to save a collection of records as a batch operation.
+     * 
+     * @param activeTable active table to affect
+     * @param records records to save
+     */
     public SaveAllBatch(ActiveTable<R> activeTable, Collection<R> records)
     {
         super(activeTable, "error saving active record collection in batch");
@@ -42,6 +48,9 @@ public class SaveAllBatch<R extends ActiveRecord<? super R>> extends ActiveOpera
     }
 
     
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Integer operate() throws Exception
     {

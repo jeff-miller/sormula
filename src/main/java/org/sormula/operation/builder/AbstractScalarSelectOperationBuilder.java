@@ -63,8 +63,8 @@ public abstract class AbstractScalarSelectOperationBuilder<R, B extends Abstract
     
     
     /**
-     * @param orderByName
-     * @return
+     * @param orderByName see {@link ScalarSelectOperation}
+     * @return this
      */
     @SuppressWarnings("unchecked")
     public B orderBy(String orderByName)

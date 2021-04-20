@@ -34,12 +34,21 @@ import org.sormula.cache.readwrite.UncommittedSave;
  */
 public class UncommittedSelect<R> extends UncommittedReadOnlyRow<R>
 {
+    /**
+     * Constructs for a key and corresponding row.
+     * 
+     * @param cacheKey cache key based upon primary keys of row
+     * @param row row corresponding to cache key
+     */
     public UncommittedSelect(CacheKey cacheKey, R row)
     {
         super(cacheKey, row);
     }
 
-    
+
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public R select() throws CacheException
     {
@@ -47,6 +56,9 @@ public class UncommittedSelect<R> extends UncommittedReadOnlyRow<R>
     }
 
     
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public UncommittedRow<R> inserted(R row) throws CacheException
     {
@@ -55,6 +67,9 @@ public class UncommittedSelect<R> extends UncommittedReadOnlyRow<R>
     }
 
     
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public UncommittedRow<R> updated(R row) throws CacheException
     {
@@ -63,6 +78,9 @@ public class UncommittedSelect<R> extends UncommittedReadOnlyRow<R>
     }
 
     
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public UncommittedRow<R> saved(R row) throws CacheException
     {
@@ -71,6 +89,9 @@ public class UncommittedSelect<R> extends UncommittedReadOnlyRow<R>
     }
 
     
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public UncommittedRow<R> deleted(R row) throws CacheException
     {
@@ -79,6 +100,9 @@ public class UncommittedSelect<R> extends UncommittedReadOnlyRow<R>
     }
     
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public R selected(R row) throws CacheException
     {
@@ -86,6 +110,9 @@ public class UncommittedSelect<R> extends UncommittedReadOnlyRow<R>
     }
     
     
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void updateCommitted(Cache<R> cache) throws CacheException
     {

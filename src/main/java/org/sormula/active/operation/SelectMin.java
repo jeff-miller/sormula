@@ -36,12 +36,26 @@ public class SelectMin<R extends ActiveRecord<? super R>, T> extends ActiveOpera
     Object[] parameters;
 
     
+    /**
+     * Construct to select a minimum for all records.
+     * 
+     * @param activeTable active table to select from
+     * @param expression expression to use as parameter to function; typically it is the name of a column
+     */
     public SelectMin(ActiveTable<R> activeTable, String expression)
     {
         this(activeTable, expression, null);
     }
     
     
+    /**
+     * Construct to select a minimum for subset of records.
+     * 
+     * @param activeTable active table to select from
+     * @param expression expression to use as parameter to function; typically it is the name of a column
+     * @param whereConditionName name of where condition to use; empty string to count all rows in table
+     * @param parameters parameter values for where condition
+     */
     public SelectMin(ActiveTable<R> activeTable, String expression, String whereConditionName, Object... parameters)
     {
         super(activeTable, "error selecting min");
@@ -51,6 +65,9 @@ public class SelectMin<R extends ActiveRecord<? super R>, T> extends ActiveOpera
     }
 
     
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public T operate() throws Exception
     {

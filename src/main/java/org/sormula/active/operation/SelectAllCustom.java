@@ -36,6 +36,13 @@ public class SelectAllCustom<R extends ActiveRecord<? super R>> extends ActiveOp
     Object[] parameters;
     
     
+    /**
+     * Construct to select using custom sql.
+     * 
+     * @param activeTable active table to select from 
+     * @param customSql custom sql to be appended to base sql (for example, "where somecolumn=?")
+     * @param parameters parameter value to be set in customSql
+     */
     public SelectAllCustom(ActiveTable<R> activeTable, String customSql, Object... parameters)
     {
         super(activeTable, "error selecting active record collection");
@@ -43,7 +50,10 @@ public class SelectAllCustom<R extends ActiveRecord<? super R>> extends ActiveOp
         this.parameters = parameters;
     }
 
-    
+
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public List<R> operate() throws Exception
     {

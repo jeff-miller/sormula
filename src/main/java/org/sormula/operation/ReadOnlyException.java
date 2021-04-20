@@ -37,6 +37,9 @@ public class ReadOnlyException extends OperationException
 {
     private static final long serialVersionUID = 1L;
 
+    /**
+     * @param message description of read only exception
+     */
     public ReadOnlyException(String message)
     {
         super(message);

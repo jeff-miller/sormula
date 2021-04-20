@@ -33,6 +33,12 @@ public class InsertBatch<R extends ActiveRecord<? super R>> extends ActiveOperat
     R record;
     
     
+    /**
+     * Construct to insert a record as a batch operation.
+     * 
+     * @param activeTable active table to affect
+     * @param record record to insert
+     */
     public InsertBatch(ActiveTable<R> activeTable, R record)
     {
         super(activeTable, "error inserting active record in batch");
@@ -40,6 +46,9 @@ public class InsertBatch<R extends ActiveRecord<? super R>> extends ActiveOperat
     }
 
     
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Integer operate() throws Exception
     {

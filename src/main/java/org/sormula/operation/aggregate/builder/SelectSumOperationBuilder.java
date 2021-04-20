@@ -16,12 +16,19 @@ import org.sormula.operation.aggregate.SelectSumOperation;
 public class SelectSumOperationBuilder<R, T>
     extends SelectAggregateOperationBuilder<R, T, SelectSumOperationBuilder<R, T>, SelectSumOperation<R, T>>
 {
+    /**
+     * @param table build for table
+     * @param expression expression to use for aggregate function
+     */
     public SelectSumOperationBuilder(Table<R> table, String expression) 
     {
         super(table, expression);
     }
 
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public SelectSumOperation<R, T> build() throws SormulaException 
     {

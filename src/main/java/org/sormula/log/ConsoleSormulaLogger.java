@@ -29,12 +29,20 @@ public class ConsoleSormulaLogger implements SormulaLogger
     String name;
     
     
+    /**
+     * Constructs for a logger name. 
+     * 
+     * @param name name that is displayed in the output
+     */
     public ConsoleSormulaLogger(String name)
     {
         this.name = name;
     }
 
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void info(String message)
     {
@@ -42,6 +50,9 @@ public class ConsoleSormulaLogger implements SormulaLogger
     }
 
     
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void debug(String message)
     {
@@ -49,6 +60,9 @@ public class ConsoleSormulaLogger implements SormulaLogger
     }
 
     
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void error(String message)
     {
@@ -56,6 +70,9 @@ public class ConsoleSormulaLogger implements SormulaLogger
     }
 
     
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void error(String message, Throwable throwable)
     {
@@ -64,6 +81,9 @@ public class ConsoleSormulaLogger implements SormulaLogger
     }
 
     
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public boolean isDebugEnabled()
     {
@@ -71,12 +91,22 @@ public class ConsoleSormulaLogger implements SormulaLogger
     }
 
 
+    /**
+     * Sets debug status.
+     * 
+     * @param debugEnabled true to display debug level
+     */
     public void setDebugEnabled(boolean debugEnabled)
     {
         this.debugEnabled = debugEnabled;
     }
     
     
+    /**
+     * Prints the log using {@link System#out}
+     * @param type INFO, WARN, ERROR, DEBUG
+     * @param message log message
+     */
     protected void log(String type, String message)
     {
         System.out.println(type + " " + name + " " + message); 

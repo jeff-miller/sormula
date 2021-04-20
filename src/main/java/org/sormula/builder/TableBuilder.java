@@ -39,12 +39,21 @@ Table&lt;SomeTableRow&gt; table =
  */
 public class TableBuilder<R> extends AbstractTableBuilder<R, TableBuilder<R>, Table<R>>
 {
+    /**
+     * Constructs for a database and row class.
+     * 
+     * @param database database for table
+     * @param rowClass class associated with table
+     */
     public TableBuilder(Database database, Class<R> rowClass) 
     {
         super(database, rowClass);
     }
 
     
+    /**
+     * {@inheritDoc}
+     */
     public Table<R> build() throws SormulaException
     {
         Table<R> table = new Table<R>(database, rowClass);

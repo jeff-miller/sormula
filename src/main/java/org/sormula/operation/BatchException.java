@@ -30,6 +30,9 @@ public class BatchException extends OperationException
 {
     private static final long serialVersionUID = 1L;
 
+    /**
+     * @param message description of batch exception
+     */
     public BatchException(String message)
     {
         super(message);

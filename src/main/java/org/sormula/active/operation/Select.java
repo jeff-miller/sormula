@@ -33,6 +33,12 @@ public class Select<R extends ActiveRecord<? super R>> extends ActiveOperation<R
     Object[] primaryKeys;
     
     
+    /**
+     * Construct to select by primary key.
+     * 
+     * @param activeTable active table to select from 
+     * @param primaryKeys values of primary key(s)
+     */
     public Select(ActiveTable<R> activeTable, Object... primaryKeys)
     {
         super(activeTable, "error selecting active record");
@@ -40,6 +46,9 @@ public class Select<R extends ActiveRecord<? super R>> extends ActiveOperation<R
     }
 
     
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public R operate() throws Exception
     {

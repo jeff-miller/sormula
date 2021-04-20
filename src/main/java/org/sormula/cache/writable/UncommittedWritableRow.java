@@ -35,6 +35,12 @@ public abstract class UncommittedWritableRow<R> extends UncommittedRow<R>
     boolean written;
     
     
+    /**
+     * Constructs for a key and corresponding row.
+     * 
+     * @param cacheKey cache key based upon primary keys of row
+     * @param row row corresponding to cache key
+     */
     public UncommittedWritableRow(CacheKey cacheKey, R row)
     {
         super(cacheKey, row);

@@ -33,7 +33,7 @@ public abstract class UncommittedRow<R>
     
     
     /**
-     * Constructs for a key and correspond row.
+     * Constructs for a key and corresponding row.
      * 
      * @param cacheKey cache key based upon primary keys of row
      * @param row row corresponding to cache key

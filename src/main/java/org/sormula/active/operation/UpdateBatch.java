@@ -33,13 +33,22 @@ public class UpdateBatch<R extends ActiveRecord<? super R>> extends ActiveOperat
     R record;
     
     
+    /**
+     * Construct to update a record as a batch operation.
+     * 
+     * @param activeTable active table to affect
+     * @param record record to update
+     */
     public UpdateBatch(ActiveTable<R> activeTable, R record)
     {
         super(activeTable, "error updating active record in batch");
         this.record = record;
     }
 
-    
+
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Integer operate() throws Exception
     {

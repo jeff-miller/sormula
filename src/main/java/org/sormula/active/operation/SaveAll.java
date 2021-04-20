@@ -35,13 +35,22 @@ public class SaveAll<R extends ActiveRecord<? super R>> extends ActiveOperation<
     Collection<R> records;
     
     
+    /**
+     * Construct to save a collection of records
+     * 
+     * @param activeTable active table to affect
+     * @param records records to save
+     */
     public SaveAll(ActiveTable<R> activeTable, Collection<R> records)
     {
         super(activeTable, "error saving active record collection");
         this.records = records;
     }
 
-    
+
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Integer operate() throws Exception
     {

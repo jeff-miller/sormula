@@ -16,12 +16,19 @@ import org.sormula.operation.aggregate.SelectMaxOperation;
 public class SelectMaxOperationBuilder<R, T>
     extends SelectAggregateOperationBuilder<R, T, SelectMaxOperationBuilder<R, T>, SelectMaxOperation<R, T>>
 {
+    /**
+     * @param table build for table
+     * @param expression expression to use for aggregate function
+     */
     public SelectMaxOperationBuilder(Table<R> table, String expression) 
     {
         super(table, expression);
     }
 
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public SelectMaxOperation<R, T> build() throws SormulaException 
     {

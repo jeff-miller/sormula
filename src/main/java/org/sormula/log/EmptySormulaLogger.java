@@ -24,35 +24,55 @@ package org.sormula.log;
  */
 public class EmptySormulaLogger implements SormulaLogger
 {
+    /**
+     * Constructs for a logger name. 
+     * 
+     * @param name name that is displayed in the output
+     */
     public EmptySormulaLogger(String name)
     {
     }
 
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void info(String message)
     {
     }
 
     
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void debug(String message)
     {
     }
 
     
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void error(String message)
     {
     }
 
     
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void error(String message, Throwable throwable)
     {
     }
 
     
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public boolean isDebugEnabled()
     {

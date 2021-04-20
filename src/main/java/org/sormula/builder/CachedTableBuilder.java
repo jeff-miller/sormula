@@ -36,12 +36,21 @@ import org.sormula.SormulaException;
  */
 public class CachedTableBuilder<R> extends AbstractTableBuilder<R, CachedTableBuilder<R>, CachedTable<R>>
 {
+    /**
+     * Constructs for a database and row class.
+     * 
+     * @param database database for table
+     * @param rowClass class associated with table
+     */
     public CachedTableBuilder(Database database, Class<R> rowClass) 
     {
         super(database, rowClass);
     }
     
-    
+
+    /**
+     * {@inheritDoc}
+     */
     public CachedTable<R> build() throws SormulaException
     {
         CachedTable<R> cachedTable = new CachedTable<R>(database, rowClass);

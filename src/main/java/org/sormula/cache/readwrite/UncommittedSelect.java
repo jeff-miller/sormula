@@ -35,12 +35,21 @@ import org.sormula.cache.writable.WriteOperations;
  */
 public class UncommittedSelect<R> extends UncommittedWritableRow<R>
 {
+    /**
+     * Constructs for a key and corresponding row.
+     * 
+     * @param cacheKey cache key based upon primary keys of row
+     * @param row row corresponding to cache key
+     */
     public UncommittedSelect(CacheKey cacheKey, R row)
     {
         super(cacheKey, row);
     }
 
     
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public R select() throws CacheException
     {
@@ -48,6 +57,9 @@ public class UncommittedSelect<R> extends UncommittedWritableRow<R>
     }
 
     
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public UncommittedRow<R> insert(R row) throws CacheException
     {
@@ -55,6 +67,9 @@ public class UncommittedSelect<R> extends UncommittedWritableRow<R>
     }
 
     
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public UncommittedRow<R> update(R row) throws CacheException
     {
@@ -63,6 +78,9 @@ public class UncommittedSelect<R> extends UncommittedWritableRow<R>
     }
 
     
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public UncommittedRow<R> save(R row) throws CacheException
     {
@@ -71,6 +89,9 @@ public class UncommittedSelect<R> extends UncommittedWritableRow<R>
     }
 
     
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public UncommittedRow<R> delete(R row) throws CacheException
     {
@@ -79,6 +100,9 @@ public class UncommittedSelect<R> extends UncommittedWritableRow<R>
     }
     
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public R selected(R row) throws CacheException
     {
@@ -86,6 +110,9 @@ public class UncommittedSelect<R> extends UncommittedWritableRow<R>
     }
     
     
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void write(WriteOperations<R> writeOperations) throws CacheException
     {
@@ -93,6 +120,9 @@ public class UncommittedSelect<R> extends UncommittedWritableRow<R>
     }
 
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void updateCommitted(Cache<R> cache) throws CacheException
     {

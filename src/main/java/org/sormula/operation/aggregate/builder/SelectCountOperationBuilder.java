@@ -16,12 +16,19 @@ import org.sormula.operation.aggregate.SelectCountOperation;
 public class SelectCountOperationBuilder<R, T>
     extends SelectAggregateOperationBuilder<R, T, SelectCountOperationBuilder<R, T>, SelectCountOperation<R, T>>
 {
+    /**
+     * @param table build for table
+     * @param expression expression to use for aggregate function
+     */
     public SelectCountOperationBuilder(Table<R> table, String expression) 
     {
         super(table, expression);
     }
 
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public SelectCountOperation<R, T> build() throws SormulaException 
     {

@@ -16,12 +16,19 @@ import org.sormula.operation.aggregate.SelectAvgOperation;
 public class SelectAvgOperationBuilder<R, T>
     extends SelectAggregateOperationBuilder<R, T, SelectAvgOperationBuilder<R, T>, SelectAvgOperation<R, T>>
 {
+    /**
+     * @param table build for table
+     * @param expression expression to use for aggregate function
+     */
     public SelectAvgOperationBuilder(Table<R> table, String expression) 
     {
         super(table, expression);
     }
 
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public SelectAvgOperation<R, T> build() throws SormulaException 
     {

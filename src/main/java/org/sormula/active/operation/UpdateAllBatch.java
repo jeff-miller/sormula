@@ -35,6 +35,12 @@ public class UpdateAllBatch<R extends ActiveRecord<? super R>> extends ActiveOpe
     Collection<R> records;
     
     
+    /**
+     * Construct to update a collection of records as a batch operation.
+     * 
+     * @param activeTable active table to affect
+     * @param records records to update
+     */
     public UpdateAllBatch(ActiveTable<R> activeTable, Collection<R> records)
     {
         super(activeTable, "error updating active record collection in batch");
@@ -42,6 +48,9 @@ public class UpdateAllBatch<R extends ActiveRecord<? super R>> extends ActiveOpe
     }
 
     
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Integer operate() throws Exception
     {

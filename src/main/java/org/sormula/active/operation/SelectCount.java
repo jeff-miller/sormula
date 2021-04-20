@@ -36,18 +36,37 @@ public class SelectCount<R extends ActiveRecord<? super R>, T> extends ActiveOpe
     Object[] parameters;
 
     
+    /**
+     * Construct to select a count for all records.
+     * 
+     * @param activeTable active table to select from
+     */
     public SelectCount(ActiveTable<R> activeTable)
     {
         this(activeTable, null, null);
     }
 
     
+    /**
+     * Construct to select a count for all records.
+     * 
+     * @param activeTable active table to select from
+     * @param expression expression to use as parameter to function; typically it is the name of a column
+     */
     public SelectCount(ActiveTable<R> activeTable, String expression)
     {
         this(activeTable, expression, null);
     }
     
     
+    /**
+     * Construct to select a count for subset of records.
+     * 
+     * @param activeTable active table to select from
+     * @param expression expression to use as parameter to function; typically it is the name of a column
+     * @param whereConditionName name of where condition to use; empty string to count all rows in table
+     * @param parameters parameter values for where condition
+     */
     public SelectCount(ActiveTable<R> activeTable, String expression, String whereConditionName, Object... parameters)
     {
         super(activeTable, "error selecting count");
@@ -57,6 +76,9 @@ public class SelectCount<R extends ActiveRecord<? super R>, T> extends ActiveOpe
     }
 
     
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public T operate() throws Exception
     {

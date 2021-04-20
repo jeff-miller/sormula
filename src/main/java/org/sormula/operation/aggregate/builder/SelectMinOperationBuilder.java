@@ -16,12 +16,19 @@ import org.sormula.operation.aggregate.SelectMinOperation;
 public class SelectMinOperationBuilder<R, T>
     extends SelectAggregateOperationBuilder<R, T, SelectMinOperationBuilder<R, T>, SelectMinOperation<R, T>>
 {
+    /**
+     * @param table build for table
+     * @param expression expression to use for aggregate function
+     */
     public SelectMinOperationBuilder(Table<R> table, String expression) 
     {
         super(table, expression);
     }
 
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public SelectMinOperation<R, T> build() throws SormulaException 
     {

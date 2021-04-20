@@ -33,6 +33,12 @@ public class Update<R extends ActiveRecord<? super R>> extends ActiveOperation<R
     R record;
     
     
+    /**
+     * Construct to update a record.
+     * 
+     * @param activeTable active table to affect
+     * @param record record to update
+     */
     public Update(ActiveTable<R> activeTable, R record)
     {
         super(activeTable, "error updating active record");
@@ -40,6 +46,9 @@ public class Update<R extends ActiveRecord<? super R>> extends ActiveOperation<R
     }
 
     
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Integer operate() throws Exception
     {

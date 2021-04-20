@@ -33,6 +33,12 @@ public class DeleteBatch<R extends ActiveRecord<? super R>> extends ActiveOperat
     R record;
     
     
+    /**
+     * Constructs to delete a row as a batch operation.
+     * 
+     * @param activeTable active table to affect
+     * @param record delete this record
+     */
     public DeleteBatch(ActiveTable<R> activeTable, R record)
     {
         super(activeTable, "error deleting active record in batch");
@@ -40,6 +46,9 @@ public class DeleteBatch<R extends ActiveRecord<? super R>> extends ActiveOperat
     }
 
     
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Integer operate() throws Exception
     {

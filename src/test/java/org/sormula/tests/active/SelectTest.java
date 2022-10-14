@@ -83,17 +83,21 @@ public class SelectTest extends ActiveDatabaseTest<SormulaTestAR>
             }
         }
         
+        int avg;
+        if (isAvgRounded()) 
+        {
+            avg = Math.round((float)sum / count);
+        }
+        else
+        {
+            avg = sum / count;
+        }
+        
         ActiveTable<SormulaTestAR> table = getActiveTable();
         assert sum == table.<Integer>selectSum("id", "byType", type) : "AR select sum failed";
         assert min == table.<Integer>selectMin("id", "byType", type) : "AR select min failed";
         assert max == table.<Integer>selectMax("id", "byType", type) : "AR select max failed";
-        
-        if (log.isDebugEnabled())
-        {
-            log.debug("J avg="+((float)sum/count));
-            log.debug("T avg="+table.<Integer>selectAvg("id", "byType", type));
-        }
-        assert (Integer)sum/count == table.<Integer>selectAvg("id", "byType", type) : "AR select aggregate avg failed";
+        assert avg == table.<Integer>selectAvg("id", "byType", type) : "AR select aggregate avg failed";
     }
     
     

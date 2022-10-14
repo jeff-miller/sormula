@@ -136,6 +136,16 @@ public class SelectTest extends DatabaseTest<SormulaTest4>
             }
         }
         
+        int avg;
+        if (isAvgRounded()) 
+        {
+            avg = Math.round((float)sum / count);
+        }
+        else
+        {
+            avg = sum / count;
+        }
+        
         // sum with SQL using explicit operation
         try (SelectAggregateOperation<SormulaTest4, Integer> selectSum = 
                 new SelectAggregateOperation<>(getTable(), "SUM", "id"))
@@ -151,13 +161,7 @@ public class SelectTest extends DatabaseTest<SormulaTest4>
         // test with table methods
         assert min == getTable().<Integer>selectMin("id", "byType", type) : "select aggregate min failed";
         assert max == getTable().<Integer>selectMax("id", "byType", type) : "select aggregate max failed";
-        
-        if (log.isDebugEnabled())
-        {
-            log.debug("J avg="+((float)sum/count));
-            log.debug("T avg="+getTable().<Integer>selectAvg("id", "byType", type));
-        }
-        assert (Integer)sum/count == getTable().<Integer>selectAvg("id", "byType", type) : "select aggregate avg failed";
+        assert avg == getTable().<Integer>selectAvg("id", "byType", type) : "select aggregate avg failed";
         
         commit();
     }

@@ -346,6 +346,12 @@ public class DatabaseTest<R>
     }
 
     
+    public boolean isAvgRounded()
+    {
+        return jdbcProperties.getBoolean("avgRounded");
+    }
+
+    
     public String getIdentityColumnDDL()
     {
         String testIdentity = jdbcProperties.getString("testIdentity").trim();

@@ -41,7 +41,7 @@ public class ColumnTranslatorTest extends DatabaseTest<SormulaTest1>
 {
     private static final SormulaLogger log = SormulaLoggerFactory.getClassLogger();
     private static final int TEST_STRING_COLUMN_LENGTH = 20;
-
+    private static DateTimeFormatter fractionalSecondsFormatter = DateTimeFormatter.ofPattern("SSSSSSSSS");
     
     @Override
     protected void open() throws Exception
@@ -196,11 +196,12 @@ public class ColumnTranslatorTest extends DatabaseTest<SormulaTest1>
         if (secondsPrecision > 0)
         {
             // compare fractional seconds for precision digits
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("SSSSSSSSS");
-            String insertedFractionalSeconds = formatter.format(insertedInstant);
-            String selectedFractionalSeconds = formatter.format(selectedInstant);
-            assert insertedFractionalSeconds.substring(0, secondsPrecision).equals(selectedFractionalSeconds.substring(0, secondsPrecision)) :
-                "testInstant" + message + " for fractional seconds precision=" + secondsPrecision;
+            int insertedFractionalSeconds = roundedFractionalSeconds(insertedInstant, secondsPrecision);
+            int selectedFractionalSeconds = roundedFractionalSeconds(selectedInstant, secondsPrecision);
+            assert insertedFractionalSeconds == selectedFractionalSeconds :
+                "testInstant" + message + " for fractional seconds precision=" + secondsPrecision +
+                " insertedFractionalSeconds=" + insertedFractionalSeconds +
+                " selectedFractionalSeconds=" + selectedFractionalSeconds;
         }
         
         // enum tests
@@ -212,7 +213,23 @@ public class ColumnTranslatorTest extends DatabaseTest<SormulaTest1>
         commit();
     }
     
+    
+    private static int roundedFractionalSeconds(Instant instant, int secondsPrecision) 
+    {
+        String fractionalSecondsString = fractionalSecondsFormatter.format(instant);
+        if (secondsPrecision < fractionalSecondsString.length())
+        {
+            Long precisionFractionalSeconds = Math.round(
+                    Double.parseDouble(fractionalSecondsString.substring(0, secondsPrecision + 1)) / 10);
+            return precisionFractionalSeconds.intValue();
+        }
+        else
+        {
+            return Integer.parseInt(fractionalSecondsString); 
+        }
+    }
 
+    
     @Test
     public void nullTest() throws Exception
     {

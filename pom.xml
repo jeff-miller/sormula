@@ -103,7 +103,9 @@
                 </dependency>
             </dependencies>            
         </profile>
-        
+
+        <!-- the following databases have been tested but are not included in the project
+             the test properties and drivers are included but the database must be setup external to this project -->
         <profile>
             <id>postgresql</id>
             <properties>
@@ -130,6 +132,20 @@
 		            <artifactId>jaybird-jdk18</artifactId>
 		            <version>4.0.6.java8</version>
                     <scope>test</scope>
+                </dependency>
+            </dependencies>            
+        </profile>
+        
+        <profile>
+            <id>oracle</id>
+            <properties>
+                <dbdir>oracle</dbdir>
+            </properties>
+            <dependencies>            
+                <dependency>
+                    <groupId>com.oracle.database.jdbc</groupId>
+                    <artifactId>ojdbc8</artifactId>
+                    <version>23.2.0.0</version>
                 </dependency>
             </dependencies>            
         </profile>

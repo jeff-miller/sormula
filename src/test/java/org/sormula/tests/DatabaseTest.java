@@ -100,7 +100,6 @@ public class DatabaseTest<R>
         initTestSeed();
         initJndi();
         initOutputDirectory();
-        initSecurity();
     }
 
     
@@ -169,14 +168,6 @@ public class DatabaseTest<R>
         {
             log.error("error creating test directory", e);
         }
-    }
-    
-    
-    protected void initSecurity()
-    {
-        // some databases require security permissions, turn off all java security checks since this is not confidential information
-        // see DERBY-6648
-        System.setSecurityManager(null);
     }
     
     
